@@ -1,6 +1,8 @@
 package solvve.course.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,13 +14,13 @@ import lombok.Data;
 public class Role {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue()
     private UUID id;
 
     private String title;
 
-    private String type; // main, second, etc
+    @Column(name = "roletype")
+    private String roleType; // main, second, etc
 
     private String description;
 }

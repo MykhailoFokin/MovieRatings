@@ -1,19 +1,19 @@
 package solvve.course.domain;
 
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Data;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.UUID;
-import lombok.Data;
 
-@Entity
 @Data
+@Entity
 public class Movie {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue()
     private UUID id;
 
     private String title;
@@ -22,7 +22,8 @@ public class Movie {
 
     private String genres; // type of genres
 
-    private String release_dates; // different release dates depending on country
+    @Column(name = "releasedates")
+    private String releaseDates; // different release dates depending on country
 
     private String description; // short movie description
 
@@ -51,19 +52,19 @@ public class Movie {
 
     // Technical Specifications
     // it will be dictionaries of appropriate information
-    private String sound_mix; // sound technologies used in movie
+    @Column(name = "soundmix")
+    private String soundMix; // sound technologies used in movie
     private String colour; // optional for color scheme
-    private String aspect_ratio; // examples: 1.43 : 1 (some scenes: 70mm IMAX); 1.90 : 1 (some scenes: Digital IMAX); 2.39 : 1;
+    @Column(name = "aspectratio")
+    private String aspectRatio; // examples: 1.43 : 1 (some scenes: 70mm IMAX); 1.90 : 1 (some scenes: Digital IMAX); 2.39 : 1;
     private String camera; // example: Arriflex 235, Panavision Primo Lenses; Arriflex 435, Panavision Primo Lenses; IMAX MSM 9802, Hasselblad Lenses (some scenes)
     private String laboratory; // post production companies, etc
-    private String negative_format; // example: 35 mm; 65 mm;
-    private String cinematographic_process; // example: Digital Intermediate (4K) (master format); Dolby Vision; IMAX (source format); Super 35 (source format);
-    private String printed_film_format; // example: 35 mm (anamorphic) (Kodak Vision 2383); 70 mm (horizontal) (IMAX DMR blow-up) (Kodak Vision 2383); D-Cinema (also 3-D version);
 
     // Details
     private String countries; // production by
     private String languages; // original production language
-    private String filming_locations; // many-to-many. addresses to movies.
+    @Column(name = "filminglocations")
+    private String filminglocations; // many-to-many. addresses to movies.
 
     private String critique; // movie 1-8 critique 1-1(1-8) crew
 

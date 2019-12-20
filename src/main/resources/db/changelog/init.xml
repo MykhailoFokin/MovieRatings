@@ -1,0 +1,41 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+	
+	<changeSet id="create tables" author="mykhailo">
+		<createTable tableName="movie">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "title" type="varchar(255)"/>
+			<column name = "year" type="smallint"/>
+			<column name = "genres" type="varchar(255)"/>
+			<column name = "releasedates" type="varchar(255)"/>
+			<column name = "description" type="varchar(255)"/>
+			<column name = "crew" type="varchar(255)"/>
+			<column name = "companies" type="varchar(255)"/>
+			<column name = "soundmix" type="varchar(255)"/>
+			<column name = "colour" type="varchar(255)"/>
+			<column name = "aspectratio" type="varchar(255)"/>
+			<column name = "camera" type="varchar(255)"/>
+			<column name = "laboratory" type="varchar(255)"/>
+			<column name = "countries" type="varchar(255)"/>
+			<column name = "languages" type="varchar(255)"/>
+			<column name = "filminglocations" type="varchar(255)"/>
+			<column name = "critique" type="varchar(255)"/>
+		</createTable>
+		<createTable tableName="role">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "title" type="varchar(255)"/>
+			<column name = "roletype" type="varchar(255)"/>
+			<column name = "genres" type="varchar(255)"/>
+			<column name = "description" type="varchar(255)"/>
+		</createTable>
+	</changeSet>
+	
+</databaseChangeLog>

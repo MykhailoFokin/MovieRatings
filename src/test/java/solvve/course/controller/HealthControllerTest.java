@@ -1,4 +1,4 @@
-package solvve.course;
+package solvve.course.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
