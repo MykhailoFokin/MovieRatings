@@ -1,7 +1,5 @@
 package solvve.course.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,6 @@ public class Role {
 
     private String title;
 
-    @Column(name = "roletype")
     private String roleType; // main, second, etc
 
     private String description;
