@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieReadDTO;
+import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieRepository;
 import org.assertj.core.api.Assertions;
 
@@ -33,9 +34,14 @@ public class MovieServiceTest {
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
         movie.setGenres("Comedy");
-        movieRepository.save(movie);
+        movie = movieRepository.save(movie);
 
         MovieReadDTO readDTO = movieService.getMovie(movie.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movie);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testGetMovieWrongId() {
+        movieService.getMovie(UUID.randomUUID());
     }
 }

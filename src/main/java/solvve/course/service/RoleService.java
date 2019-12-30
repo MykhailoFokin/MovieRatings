@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import solvve.course.domain.Movie;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleReadDTO;
+import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
 
 import java.util.UUID;
@@ -18,7 +20,9 @@ public class RoleService {
 
     @Transactional(readOnly = true)
     public RoleReadDTO getRole(UUID id) {
-        Role role = roleRepository.findById(id).get();
+        Role role = roleRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Role.class, id);
+        });
         return toRead(role);
     }
 

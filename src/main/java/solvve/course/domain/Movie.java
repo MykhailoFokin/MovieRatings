@@ -1,12 +1,10 @@
 package solvve.course.domain;
 
-import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.UUID;
 
-@Data
 @Entity
 public class Movie {
 
@@ -62,4 +60,139 @@ public class Movie {
 
     private String critique; // movie 1-8 critique 1-1(1-8) crew
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Short getYear() {
+        return year;
+    }
+
+    public void setYear(Short year) {
+        this.year = year;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getReleaseDates() {
+        return releaseDates;
+    }
+
+    public void setReleaseDates(String releaseDates) {
+        this.releaseDates = releaseDates;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCrew() {
+        return crew;
+    }
+
+    public void setCrew(String crew) {
+        this.crew = crew;
+    }
+
+    public String getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(String companies) {
+        this.companies = companies;
+    }
+
+    public String getSoundMix() {
+        return soundMix;
+    }
+
+    public void setSoundMix(String soundMix) {
+        this.soundMix = soundMix;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    public String getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public void setAspectRatio(String aspectRatio) {
+        this.aspectRatio = aspectRatio;
+    }
+
+    public String getCamera() {
+        return camera;
+    }
+
+    public void setCamera(String camera) {
+        this.camera = camera;
+    }
+
+    public String getLaboratory() {
+        return laboratory;
+    }
+
+    public void setLaboratory(String laboratory) {
+        this.laboratory = laboratory;
+    }
+
+    public String getCountries() {
+        return countries;
+    }
+
+    public void setCountries(String countries) {
+        this.countries = countries;
+    }
+
+    public String getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    public String getFilmingLocations() {
+        return filmingLocations;
+    }
+
+    public void setFilmingLocations(String filmingLocations) {
+        this.filmingLocations = filmingLocations;
+    }
+
+    public String getCritique() {
+        return critique;
+    }
+
+    public void setCritique(String critique) {
+        this.critique = critique;
+    }
 }

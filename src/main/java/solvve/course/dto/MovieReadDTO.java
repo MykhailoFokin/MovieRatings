@@ -34,7 +34,7 @@ public class MovieReadDTO {
 
     private String languages;
 
-    private String filminglocations;
+    private String filmingLocations;
 
     private String critique;
 
@@ -159,11 +159,11 @@ public class MovieReadDTO {
     }
 
     public String getFilminglocations() {
-        return filminglocations;
+        return filmingLocations;
     }
 
-    public void setFilminglocations(String filminglocations) {
-        this.filminglocations = filminglocations;
+    public void setFilminglocations(String filmingLocationsocations) {
+        this.filmingLocations = filmingLocations;
     }
 
     public String getCritique() {

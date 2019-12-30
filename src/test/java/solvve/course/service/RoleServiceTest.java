@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleReadDTO;
+import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
 
 import java.util.UUID;
@@ -32,10 +33,15 @@ public class RoleServiceTest {
         role.setId(UUID.randomUUID());
         role.setTitle("Actor");
         role.setRoleType("Main_Role");
-        role.setDescription("Descriptiion test");
-        roleRepository.save(role);
+        role.setDescription("Description test");
+        role = roleRepository.save(role);
 
         RoleReadDTO readDTO = roleService.getRole(role.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(role);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testGetRoleWrongId() {
+        roleService.getRole(UUID.randomUUID());
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieReadDTO;
+import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieRepository;
 import java.util.UUID;
 
@@ -16,7 +17,10 @@ public class MovieService {
 
     @Transactional(readOnly = true)
     public MovieReadDTO getMovie(UUID id) {
-        Movie movie = movieRepository.findById(id).get();
+        /*Movie movie = movieRepository.findById(id).get();*/
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Movie.class, id);
+        });
         return toRead(movie);
     }
 
