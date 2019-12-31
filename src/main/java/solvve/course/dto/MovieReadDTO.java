@@ -12,11 +12,7 @@ public class MovieReadDTO {
 
     private String genres;
 
-    private String releaseDates;
-
     private String description;
-
-    private String crew;
 
     private String companies;
 
@@ -29,8 +25,6 @@ public class MovieReadDTO {
     private String camera;
 
     private String laboratory;
-
-    private String countries;
 
     private String languages;
 
@@ -70,28 +64,12 @@ public class MovieReadDTO {
         this.genres = genres;
     }
 
-    public String getReleaseDates() {
-        return releaseDates;
-    }
-
-    public void setReleaseDates(String releaseDates) {
-        this.releaseDates = releaseDates;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCrew() {
-        return crew;
-    }
-
-    public void setCrew(String crew) {
-        this.crew = crew;
     }
 
     public String getCompanies() {
@@ -142,14 +120,6 @@ public class MovieReadDTO {
         this.laboratory = laboratory;
     }
 
-    public String getCountries() {
-        return countries;
-    }
-
-    public void setCountries(String countries) {
-        this.countries = countries;
-    }
-
     public String getLanguages() {
         return languages;
     }
@@ -158,11 +128,11 @@ public class MovieReadDTO {
         this.languages = languages;
     }
 
-    public String getFilminglocations() {
+    public String getFilmingLocations() {
         return filmingLocations;
     }
 
-    public void setFilminglocations(String filmingLocationsocations) {
+    public void setFilmingLocations(String filmingLocationsocations) {
         this.filmingLocations = filmingLocations;
     }
 

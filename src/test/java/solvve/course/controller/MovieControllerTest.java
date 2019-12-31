@@ -11,12 +11,15 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import solvve.course.domain.Movie;
+import solvve.course.dto.MovieCreateDTO;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieService;
@@ -84,5 +87,51 @@ public class MovieControllerTest {
         expectedEx.expectMessage("Invalid UUID string: " + illegalArgumentString);
 
         UUID wrongId = UUID.fromString(illegalArgumentString);
+    }
+
+    @Test
+    public void testCreateMovie() throws Exception {
+
+        MovieCreateDTO create = new MovieCreateDTO();
+        create.setTitle("Movie Test");
+        create.setYear((short) 2019);
+        create.setGenres("Comedy");
+        create.setAspectRatio("1:10");
+        create.setCamera("Panasonic");
+        create.setColour("Black");
+        create.setCompanies("Paramount");
+        create.setCritique("123");
+        create.setDescription("Description");
+        create.setFilmingLocations("USA");
+        create.setLaboratory("CaliforniaDreaming");
+        create.setLanguages("English");
+        create.setSoundMix("DolbySurround");
+
+        MovieReadDTO read = new MovieReadDTO();
+        read.setId(UUID.randomUUID());
+        read.setTitle("Movie Test");
+        read.setYear((short) 2019);
+        read.setGenres("Comedy");
+        read.setAspectRatio("1:10");
+        read.setCamera("Panasonic");
+        read.setColour("Black");
+        read.setCompanies("Paramount");
+        read.setCritique("123");
+        read.setDescription("Description");
+        read.setFilmingLocations("USA");
+        read.setLaboratory("CaliforniaDreaming");
+        read.setLanguages("English");
+        read.setSoundMix("DolbySurround");
+
+        Mockito.when(movieService.createMovie(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/movie")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReadDTO.class);
+        Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(read);
     }
 }

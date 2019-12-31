@@ -11,10 +11,12 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Role;
+import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleService;
@@ -22,6 +24,7 @@ import solvve.course.service.RoleService;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -83,5 +86,31 @@ public class RoleControllerTest {
         expectedEx.expectMessage("Invalid UUID string: " + illegalArgumentString);
 
         UUID wrongId = UUID.fromString(illegalArgumentString);
+    }
+
+    @Test
+    public void testCreateRole() throws Exception {
+
+        RoleCreateDTO create = new RoleCreateDTO();
+        create.setTitle("Actor");
+        create.setRoleType("Main_Role");
+        create.setDescription("Description test");
+
+        RoleReadDTO read = new RoleReadDTO();
+        read.setId(UUID.randomUUID());
+        read.setTitle("Role Test");
+        read.setRoleType("Main_Role");
+        read.setDescription("Description test");
+
+        Mockito.when(roleService.createRole(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/role")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assertions.assertThat(actualRole).isEqualToComparingFieldByField(read);
     }
 }

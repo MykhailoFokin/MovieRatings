@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Role;
+import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
@@ -33,5 +34,15 @@ public class RoleService {
         dto.setRoleType(role.getRoleType());
         dto.setDescription(role.getDescription());
         return dto;
+    }
+
+    public RoleReadDTO createRole(RoleCreateDTO create) {
+        Role role = new Role();
+        role.setTitle(create.getTitle());
+        role.setRoleType(create.getRoleType());
+        role.setDescription(create.getDescription());
+
+        role = roleRepository.save(role);
+        return toRead(role);
     }
 }

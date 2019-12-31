@@ -18,23 +18,7 @@ public class Movie {
 
     private String genres; // type of genres
 
-    private String releaseDates; // different release dates depending on country
-
     private String description; // short movie description
-
-    // Movie Crew (one entity for link between entity crew (its list of people) and movie itself
-    // because movie related to crew as many to many we need entity between them
-    // possible types:
-    /*directors
-    writers
-    producers
-    musicby
-    cinematographyby
-    operators
-    specialeffectscrew
-    othercrew*/
-
-    private String crew;
 
     // Company Credits
     // Same as Crew. Entity Companies and Entity for linkage
@@ -54,11 +38,12 @@ public class Movie {
     private String laboratory; // post production companies, etc
 
     // Details
-    private String countries; // production by
     private String languages; // original production language
     private String filmingLocations; // many-to-many. addresses to movies.
 
     private String critique; // movie 1-8 critique 1-1(1-8) crew
+
+    private boolean isPublished;
 
     public UUID getId() {
         return id;
@@ -92,28 +77,12 @@ public class Movie {
         this.genres = genres;
     }
 
-    public String getReleaseDates() {
-        return releaseDates;
-    }
-
-    public void setReleaseDates(String releaseDates) {
-        this.releaseDates = releaseDates;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCrew() {
-        return crew;
-    }
-
-    public void setCrew(String crew) {
-        this.crew = crew;
     }
 
     public String getCompanies() {
@@ -164,14 +133,6 @@ public class Movie {
         this.laboratory = laboratory;
     }
 
-    public String getCountries() {
-        return countries;
-    }
-
-    public void setCountries(String countries) {
-        this.countries = countries;
-    }
-
     public String getLanguages() {
         return languages;
     }
@@ -194,5 +155,13 @@ public class Movie {
 
     public void setCritique(String critique) {
         this.critique = critique;
+    }
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
     }
 }

@@ -13,19 +13,17 @@
 			<column name = "title" type="varchar(255)"/>
 			<column name = "year" type="smallint"/>
 			<column name = "genres" type="varchar(255)"/>
-			<column name = "release_dates" type="varchar(255)"/>
-			<column name = "description" type="varchar(255)"/>
-			<column name = "crew" type="varchar(255)"/>
+			<column name = "description" type="varchar(1000)"/>
 			<column name = "companies" type="varchar(255)"/>
 			<column name = "sound_mix" type="varchar(255)"/>
 			<column name = "colour" type="varchar(255)"/>
 			<column name = "aspect_ratio" type="varchar(255)"/>
 			<column name = "camera" type="varchar(255)"/>
 			<column name = "laboratory" type="varchar(255)"/>
-			<column name = "countries" type="varchar(255)"/>
 			<column name = "languages" type="varchar(255)"/>
 			<column name = "filming_locations" type="varchar(255)"/>
 			<column name = "critique" type="varchar(255)"/>
+			<column name = "is_published" type="int(1)"/>
 		</createTable>
 		<createTable tableName="role">
 			<column name="id" type="uuid">
@@ -34,7 +32,199 @@
 			<column name = "title" type="varchar(255)"/>
 			<column name = "role_type" type="varchar(255)"/>
 			<column name = "genres" type="varchar(255)"/>
+			<column name = "description" type="varchar(1000)"/>
+			<column name = "person_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_role_person" references="persons(id)"/>
+			</column>
+			<column name="movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_role_movie" references="movie(id)"/>
+			</column>
+		</createTable>
+		<createTable tableName="portal_users">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "login" type="varchar(255)"/>
+			<column name = "surname" type="varchar(255)"/>
+			<column name = "name" type="varchar(255)"/>
+			<column name = "middle_name" type="varchar(255)"/>
+			<column name = "user_type" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_pusers_user_types" references="user_types(id)"/>
+			</column>
+		</createTable>
+		<createTable tableName="user_types">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_group" type="varchar(255)"/>
+			<column name = "type" type="varchar(255)"/>
+		</createTable>
+		<createTable tableName="persons">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "surname" type="varchar(255)"/>
+			<column name = "name" type="varchar(255)"/>
+			<column name = "middle_name" type="varchar(255)"/>
+		</createTable>
+		<createTable tableName="crew">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_crew_movie" references="movie(id)"/>
+			</column>
+			<column name = "person_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_crew_person" references="persons(id)"/>
+			</column>
+			<column name = "crew_type" type="varchar(255)"/>
+			<column name = "description" type="varchar(1000)"/>
+		</createTable>
+		<createTable tableName="movie_vote">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvote_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvote_movie" references="movie(id)"/>
+			</column>
+			<column name = "rating" type="int(2)"/>
+			<column name = "description" type="varchar(1000)"/>
+			<column name = "spoiler_start_index" type="int(10)"/>
+			<column name = "spoiler_end_index" type="int(10)"/>
+			<column name = "moderated_status" type="varchar(20)"/>
+			<column name = "moderator_id" type="uuid"/>
+		</createTable>
+		<createTable tableName="role_vote">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvote_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "role_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvote_movie" references="movie(id)"/>
+			</column>
+			<column name = "rating" type="int(2)"/>
 			<column name = "description" type="varchar(255)"/>
+			<column name = "spoiler_start_index" type="int(10)"/>
+			<column name = "spoiler_end_index" type="int(10)"/>
+			<column name = "moderated_status" type="varchar(20)"/>
+			<column name = "moderator_id" type="uuid"/>
+		</createTable>
+		<createTable tableName="movie_vote_compliant">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvcompliant_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvcompliant_movie" references="movie(id)"/>
+			</column>
+			<column name = "movie_vote_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvcompliant_mvote" references="movie_vote(id)"/>
+			</column>
+			<column name = "description" type="varchar(1000)"/>
+			<column name = "moderated_status" type="varchar(20)"/>
+			<column name = "moderator_id" type="uuid"/>
+		</createTable>
+		<createTable tableName="role_vote_compliant">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvcompliant_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "role_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvcompliant_role" references="role(id)"/>
+			</column>
+			<column name = "role_vote_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvcompliant_rvote" references="role_vote(id)"/>
+			</column>
+			<column name = "description" type="varchar(1000)"/>
+			<column name = "moderated_status" type="varchar(20)"/>
+			<column name = "moderator_id" type="uuid"/>
+		</createTable>
+		<createTable tableName="movie_vote_feedback">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvfeedback_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvfeedback_movie" references="movie(id)"/>
+			</column>
+			<column name = "movie_vote_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvfeedback_mvote" references="movie_vote(id)"/>
+			</column>
+			<column name = "is_liked" type="int(1)"/>
+		</createTable>
+		<createTable tableName="role_vote_feedback">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvfeedback_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "role_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvfeedback_role" references="role(id)"/>
+			</column>
+			<column name = "role_vote_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvfeedback_rvote" references="role_vote(id)"/>
+			</column>
+			<column name = "is_liked" type="int(1)"/>
+		</createTable>
+		<createTable tableName="grants">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_type_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_grants_user_types" references="user_types(id)"/>
+			</column>
+			<column name = "user_permission" type="varchar(100)"/>
+			<column name = "object_name" type="varchar(255)"/>
+			<column name = "granted_by" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_grants_pusers" references="portal_users(id)"/>
+			</column>
+		</createTable>
+		<createTable tableName="news">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_news_pusers" references="portal_users(id)"/>
+			</column>
+			<column name = "published" type="date"/>
+			<column name = "topic" type="varchar(255)"/>
+			<column name = "description" type="varchar(1000)"/>
+		</createTable>
+		<createTable tableName="release_details">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rdates_movie" references="movie(id)"/>
+			</column>
+			<column name = "release_date" type="date"/>
+			<column name = "country_id" type="uuid"/>
+		</createTable>
+		<createTable tableName="countries">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "name" type="varchar(255)"/>
+		</createTable>
+		<createTable tableName="movie_prod_countries">
+			<column name="movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mpc_movie" references="movie(id)"/>
+			</column>
+			<column name="country_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mpc_countries" references="countries(id)"/>
+			</column>
 		</createTable>
 	</changeSet>
 	

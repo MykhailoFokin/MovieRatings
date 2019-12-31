@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Role;
+import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
@@ -43,5 +44,18 @@ public class RoleServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testGetRoleWrongId() {
         roleService.getRole(UUID.randomUUID());
+    }
+
+    @Test
+    public void testCreateRole() {
+        RoleCreateDTO create = new RoleCreateDTO();
+        create.setTitle("Actor");
+        create.setRoleType("Main_Role");
+        create.setDescription("Description test");
+        RoleReadDTO read = roleService.createRole(create);
+        Assertions.assertThat(create).isEqualToComparingFieldByField(read);
+
+        Role role = roleRepository.findById(read.getId()).get();
+        Assertions.assertThat(read).isEqualToComparingFieldByField(role);
     }
 }
