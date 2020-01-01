@@ -1,8 +1,9 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -44,6 +45,41 @@ public class Movie {
     private String critique; // movie 1-8 critique 1-1(1-8) crew
 
     private boolean isPublished;
+
+    @OneToMany(
+            mappedBy = "movie",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<MovieProdCountries> movieProdCountries = new ArrayList<>();
+
+    public void addMovieProdCountries(Countries countries) {
+        MovieProdCountries movieProdCountry = new MovieProdCountries(this, countries);
+        movieProdCountries.add(movieProdCountry);
+        //countries.getMovieProdCountries().add(movieProdCountry);
+    }
+
+    public void removeMovieProdCountries(Countries countries) {
+        for (Iterator<MovieProdCountries> iterator = movieProdCountries.iterator(); iterator.hasNext(); ) {
+            MovieProdCountries movieProdCountry = iterator.next();
+
+            if (movieProdCountry.getMovie().equals(this) &&
+                    movieProdCountry.getCountries().equals(countries)) {
+                iterator.remove();
+                //movieProdCountry.getCountries().getMovieProdCountries().remove(movieProdCountry);
+                movieProdCountry.setMovie(null);
+                movieProdCountry.setCountries(null);
+            }
+        }
+    }
+
+    public List<MovieProdCountries> getMovieProdCountries() {
+        return movieProdCountries;
+    }
+
+    public void setMovieProdCountries(List<MovieProdCountries> movieProdCountries) {
+        this.movieProdCountries = movieProdCountries;
+    }
 
     public UUID getId() {
         return id;

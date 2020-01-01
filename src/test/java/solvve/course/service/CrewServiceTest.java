@@ -33,8 +33,6 @@ public class CrewServiceTest {
         Persons persons = new Persons();
         Crew crew = new Crew();
         crew.setId(UUID.randomUUID());
-        crew.setPersonId("Crew Test");
-        crew.setCrewType(UUID);
         crew.setDescription("Description");
         crew = crewRepository.save(crew);
 
@@ -50,22 +48,7 @@ public class CrewServiceTest {
     @Test
     public void testCreateCrew() {
         CrewCreateDTO create = new CrewCreateDTO();
-        create.setTitle("Crew Test");
-        create.setYear((short) 2019);
-        create.setGenres("Comedy");
-        create.setAspectRatio("1:10");
-        create.setCamera("Panasonic");
-        create.setColour("Black");
-        create.setCompanies("Paramount");
-        create.setCountries("USA");
-        create.setCrew("Crew");
-        create.setCritique("123");
         create.setDescription("Description");
-        create.setFilmingLocations("USA");
-        create.setLaboratory("CaliforniaDreaming");
-        create.setLanguages("English");
-        create.setReleaseDates("30.12.2019");
-        create.setSoundMix("DolbySurround");
         CrewReadDTO read = crewService.createCrew(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 

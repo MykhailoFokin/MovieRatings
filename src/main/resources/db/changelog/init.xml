@@ -25,6 +25,14 @@
 			<column name = "critique" type="varchar(255)"/>
 			<column name = "is_published" type="int(1)"/>
 		</createTable>
+		<createTable tableName="persons">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "surname" type="varchar(255)"/>
+			<column name = "name" type="varchar(255)"/>
+			<column name = "middle_name" type="varchar(255)"/>
+		</createTable>
 		<createTable tableName="role">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
@@ -40,6 +48,13 @@
 				<constraints nullable="false" foreignKeyName="fk_role_movie" references="movie(id)"/>
 			</column>
 		</createTable>
+		<createTable tableName="user_types">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_group" type="varchar(255)"/>
+			<column name = "type" type="varchar(255)"/>
+		</createTable>
 		<createTable tableName="portal_users">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
@@ -51,21 +66,6 @@
 			<column name = "user_type" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_pusers_user_types" references="user_types(id)"/>
 			</column>
-		</createTable>
-		<createTable tableName="user_types">
-			<column name="id" type="uuid">
-				<constraints primaryKey="true" />
-			</column>
-			<column name = "user_group" type="varchar(255)"/>
-			<column name = "type" type="varchar(255)"/>
-		</createTable>
-		<createTable tableName="persons">
-			<column name="id" type="uuid">
-				<constraints primaryKey="true" />
-			</column>
-			<column name = "surname" type="varchar(255)"/>
-			<column name = "name" type="varchar(255)"/>
-			<column name = "middle_name" type="varchar(255)"/>
 		</createTable>
 		<createTable tableName="crew">
 			<column name="id" type="uuid">
@@ -95,7 +95,9 @@
 			<column name = "spoiler_start_index" type="int(10)"/>
 			<column name = "spoiler_end_index" type="int(10)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
-			<column name = "moderator_id" type="uuid"/>
+			<column name = "moderator_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_movievote_pusers" references="portal_users(id)"/>
+			</column>
 		</createTable>
 		<createTable tableName="role_vote">
 			<column name="id" type="uuid">
@@ -112,7 +114,9 @@
 			<column name = "spoiler_start_index" type="int(10)"/>
 			<column name = "spoiler_end_index" type="int(10)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
-			<column name = "moderator_id" type="uuid"/>
+			<column name = "moderator_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rolevote_pusers" references="portal_users(id)"/>
+			</column>
 		</createTable>
 		<createTable tableName="movie_vote_compliant">
 			<column name="id" type="uuid">
@@ -129,7 +133,9 @@
 			</column>
 			<column name = "description" type="varchar(1000)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
-			<column name = "moderator_id" type="uuid"/>
+			<column name = "moderator_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_mvc_pusers" references="portal_users(id)"/>
+			</column>
 		</createTable>
 		<createTable tableName="role_vote_compliant">
 			<column name="id" type="uuid">
@@ -146,7 +152,9 @@
 			</column>
 			<column name = "description" type="varchar(1000)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
-			<column name = "moderator_id" type="uuid"/>
+			<column name = "moderator_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rvc_pusers" references="portal_users(id)"/>
+			</column>
 		</createTable>
 		<createTable tableName="movie_vote_feedback">
 			<column name="id" type="uuid">
@@ -225,6 +233,12 @@
 			<column name="country_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_mpc_countries" references="countries(id)"/>
 			</column>
+		</createTable>
+		<createTable tableName="crew_type">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "name" type="varchar(255)"/>
 		</createTable>
 	</changeSet>
 	

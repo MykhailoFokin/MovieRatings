@@ -1,4 +1,4 @@
-package solvve.course.repository;
+package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import solvve.course.domain.News;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.repository.NewsRepository;
 
 import java.util.UUID;
 

@@ -1,27 +1,21 @@
-package solvve.course.dto;
+package solvve.course.domain;
 
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class MovieProdCountriesCreateDTO {
+@Embeddable
+public class MovieProdCountriesId implements Serializable {
 
     private UUID movieId;
 
     private UUID countryId;
 
-    public UUID getMovieId() {
-        return movieId;
-    }
+    private MovieProdCountriesId() {}
 
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public UUID getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(UUID countryId) {
+    public MovieProdCountriesId(UUID movieId,UUID countryId) {
         this.countryId = countryId;
+        this.movieId = movieId;
     }
 
     @Override
@@ -29,7 +23,7 @@ public class MovieProdCountriesCreateDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MovieProdCountriesCreateDTO that = (MovieProdCountriesCreateDTO) o;
+        MovieProdCountriesId that = (MovieProdCountriesId) o;
 
         if (movieId != null ? !movieId.equals(that.movieId) : that.movieId != null) return false;
         return countryId != null ? countryId.equals(that.countryId) : that.countryId == null;

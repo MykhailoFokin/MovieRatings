@@ -1,28 +1,71 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 public class MovieProdCountries {
 
-    private UUID movieId;
+    @EmbeddedId
+    private MovieProdCountriesId id;
 
-    private UUID countryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("movieId")
+    private Movie movie;
 
-    public UUID getMovieId() {
-        return movieId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("countryId")
+    private Countries countries;
+
+    private MovieProdCountries() {}
+
+    public MovieProdCountries(Movie movie, Countries countries) {
+        this.movie = movie;
+        this.countries = countries;
+        this.id = new MovieProdCountriesId(movie.getId(), countries.getId());
     }
 
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
+    public MovieProdCountriesId getId() {
+        return id;
     }
 
-    public UUID getCountryId() {
-        return countryId;
+    public void setId(MovieProdCountriesId id) {
+        this.id = id;
     }
 
-    public void setCountryId(UUID countryId) {
-        this.countryId = countryId;
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
+    public Countries getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Countries countries) {
+        this.countries = countries;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MovieProdCountries that = (MovieProdCountries) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (movie != null ? !movie.equals(that.movie) : that.movie != null) return false;
+        return countries != null ? countries.equals(that.countries) : that.countries == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (movie != null ? movie.hashCode() : 0);
+        result = 31 * result + (countries != null ? countries.hashCode() : 0);
+        return result;
     }
 }
