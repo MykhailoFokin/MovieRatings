@@ -1,5 +1,7 @@
 package solvve.course.dto;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.UUID;
 
 public class RoleVoteCompliantCreateDTO {
@@ -12,7 +14,8 @@ public class RoleVoteCompliantCreateDTO {
 
     private String description;
 
-    private String moderatedStatus;
+    @Enumerated(EnumType.STRING)
+    private UserModeratedStatusType moderatedStatus;
 
     private UUID moderatorId;
 
@@ -48,11 +51,11 @@ public class RoleVoteCompliantCreateDTO {
         this.description = description;
     }
 
-    public String getModeratedStatus() {
+    public UserModeratedStatusType getModeratedStatus() {
         return moderatedStatus;
     }
 
-    public void setModeratedStatus(String moderatedStatus) {
+    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
         this.moderatedStatus = moderatedStatus;
     }
 

@@ -53,7 +53,6 @@
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "user_group" type="varchar(255)"/>
-			<column name = "type" type="varchar(255)"/>
 		</createTable>
 		<createTable tableName="portal_users">
 			<column name="id" type="uuid">
@@ -66,6 +65,7 @@
 			<column name = "user_type" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_pusers_user_types" references="user_types(id)"/>
 			</column>
+			<column name = "user_confidence" type="varchar(50)"/>
 		</createTable>
 		<createTable tableName="crew">
 			<column name="id" type="uuid">
@@ -226,14 +226,7 @@
 			</column>
 			<column name = "name" type="varchar(255)"/>
 		</createTable>
-		<createTable tableName="movie_prod_countries">
-			<column name="movie_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_mpc_movie" references="movie(id)"/>
-			</column>
-			<column name="country_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_mpc_countries" references="countries(id)"/>
-			</column>
-		</createTable>
+
 		<createTable tableName="crew_type">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />

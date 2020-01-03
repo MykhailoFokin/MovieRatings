@@ -1,14 +1,18 @@
 package solvve.course.dto;
 
+import solvve.course.domain.Grants;
+import solvve.course.domain.UserPermType;
+import solvve.course.domain.UserTypes;
+
 import java.util.UUID;
 
 public class GrantsReadDTO {
 
     private UUID id;
 
-    private UUID userTypeId;
+    private UserTypes userTypeId;
 
-    private String userPermission;
+    private UserPermType userPermission;
 
     private String objectName;
 
@@ -22,19 +26,19 @@ public class GrantsReadDTO {
         this.id = id;
     }
 
-    public UUID getUserTypeId() {
+    public UserTypes getUserTypeId() {
         return userTypeId;
     }
 
-    public void setUserTypeId(UUID userTypeId) {
+    public void setUserTypeId(UserTypes userTypeId) {
         this.userTypeId = userTypeId;
     }
 
-    public String getUserPermission() {
+    public UserPermType getUserPermission() {
         return userPermission;
     }
 
-    public void setUserPermission(String userPermission) {
+    public void setUserPermission(UserPermType userPermission) {
         this.userPermission = userPermission;
     }
 

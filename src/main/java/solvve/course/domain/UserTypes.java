@@ -1,8 +1,7 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -12,9 +11,11 @@ public class UserTypes {
     @GeneratedValue()
     private UUID id;
 
-    private String userGroup;
+    @Enumerated(EnumType.STRING)
+    private UserGroupType userGroup;
 
-    private String type;
+    @OneToMany(mappedBy="userTypeId")
+    private Set<Grants> grants;
 
     public UUID getId() {
         return id;
@@ -24,19 +25,19 @@ public class UserTypes {
         this.id = id;
     }
 
-    public String getUserGroup() {
+    public UserGroupType getUserGroup() {
         return userGroup;
     }
 
-    public void setUserGroup(String userGroup) {
+    public void setUserGroup(UserGroupType userGroup) {
         this.userGroup = userGroup;
     }
 
-    public String getType() {
-        return type;
+    public Set<Grants> getUserTypes() {
+        return grants;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserTypes(Set<Grants> grants) {
+        this.grants = grants;
     }
 }

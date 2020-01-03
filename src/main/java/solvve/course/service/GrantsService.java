@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Grants;
+import solvve.course.domain.UserTypes;
 import solvve.course.dto.GrantsCreateDTO;
 import solvve.course.dto.GrantsReadDTO;
 import solvve.course.exception.EntityNotFoundException;

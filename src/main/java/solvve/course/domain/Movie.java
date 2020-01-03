@@ -1,10 +1,7 @@
 package solvve.course.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Movie {
@@ -46,7 +43,14 @@ public class Movie {
 
     private boolean isPublished;
 
-    @OneToMany(
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "movie_prod_countries",
+            joinColumns = {@JoinColumn(name = "movie_id")},
+            inverseJoinColumns = {@JoinColumn(name = "country_id")})
+    //@EqualsAndHashCode.Exclude
+    private Set<Countries> movieProdCountries = new HashSet<>();
+
+    /*@OneToMany(
             mappedBy = "movie",
             cascade = CascadeType.ALL,
             orphanRemoval = true
@@ -79,7 +83,7 @@ public class Movie {
 
     public void setMovieProdCountries(List<MovieProdCountries> movieProdCountries) {
         this.movieProdCountries = movieProdCountries;
-    }
+    }*/
 
     public UUID getId() {
         return id;
@@ -199,5 +203,13 @@ public class Movie {
 
     public void setPublished(boolean published) {
         isPublished = published;
+    }
+
+    public Set<Countries> getMovieProdCountries() {
+        return movieProdCountries;
+    }
+
+    public void setMovieProdCountries(Set<Countries> movieProdCountries) {
+        this.movieProdCountries = movieProdCountries;
     }
 }

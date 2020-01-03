@@ -1,8 +1,7 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,7 +21,11 @@ public class PortalUsers {
 
     private UUID userType;
 
-    private int userConfidence;  // user rating according to activity (set by moderator)
+    @Enumerated(EnumType.STRING)
+    private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
+
+    @OneToMany(mappedBy = "userTypeId")
+    private Set<Grants> grants;
 
     public UUID getId() {
         return id;
@@ -68,11 +71,11 @@ public class PortalUsers {
 
     public void setUserType(UUID userType) { this.userType = userType; }
 
-    public int getUserConfidence() {
+    public UserConfidenceType getUserConfidence() {
         return userConfidence;
     }
 
-    public void setUserConfidence(int userConfidence) {
+    public void setUserConfidence(UserConfidenceType userConfidence) {
         this.userConfidence = userConfidence;
     }
 }

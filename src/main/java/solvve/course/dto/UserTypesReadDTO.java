@@ -1,14 +1,18 @@
 package solvve.course.dto;
 
+import solvve.course.domain.UserGroupType;
+import solvve.course.domain.UserTypes;
+
+import java.util.Set;
 import java.util.UUID;
 
 public class UserTypesReadDTO {
 
     private UUID id;
 
-    private String userGroup;
+    private UserGroupType userGroup;
 
-    private String type;
+    private Set<UserTypes> userTypes;
 
     public UUID getId() {
         return id;
@@ -18,19 +22,19 @@ public class UserTypesReadDTO {
         this.id = id;
     }
 
-    public String getUserGroup() {
+    public UserGroupType getUserGroup() {
         return userGroup;
     }
 
-    public void setUserGroup(String userGroup) {
+    public void setUserGroup(UserGroupType userGroup) {
         this.userGroup = userGroup;
     }
 
-    public String getType() {
-        return type;
+    public Set<UserTypes> getUserTypes() {
+        return userTypes;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserTypes(Set<UserTypes> userTypes) {
+        this.userTypes = userTypes;
     }
 }

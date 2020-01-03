@@ -1,27 +1,31 @@
 package solvve.course.dto;
 
+import solvve.course.domain.UserGroupType;
+import solvve.course.domain.UserTypes;
+
+import java.util.Set;
 import java.util.UUID;
 
 public class UserTypesCreateDTO {
 
-    private String userGroup;
+    private UserGroupType userGroup;
 
-    private String type;
+    private Set<UserTypes> userTypes;
 
-    public String getUserGroup() {
+    public UserGroupType getUserGroup() {
         return userGroup;
     }
 
-    public void setUserGroup(String userGroup) {
+    public void setUserGroup(UserGroupType userGroup) {
         this.userGroup = userGroup;
     }
 
-    public String getType() {
-        return type;
+    public Set<UserTypes> getUserTypes() {
+        return userTypes;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserTypes(Set<UserTypes> userTypes) {
+        this.userTypes = userTypes;
     }
 
     @Override
@@ -31,14 +35,14 @@ public class UserTypesCreateDTO {
 
         UserTypesCreateDTO that = (UserTypesCreateDTO) o;
 
-        if (userGroup != null ? !userGroup.equals(that.userGroup) : that.userGroup != null) return false;
-        return type != null ? type.equals(that.type) : that.type == null;
+        if (userGroup != that.userGroup) return false;
+        return userTypes != null ? userTypes.equals(that.userTypes) : that.userTypes == null;
     }
 
     @Override
     public int hashCode() {
         int result = userGroup != null ? userGroup.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (userTypes != null ? userTypes.hashCode() : 0);
         return result;
     }
 }

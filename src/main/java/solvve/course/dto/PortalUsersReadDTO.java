@@ -1,5 +1,7 @@
 package solvve.course.dto;
 
+import solvve.course.domain.UserConfidenceType;
+
 import java.util.UUID;
 
 public class PortalUsersReadDTO {
@@ -16,7 +18,7 @@ public class PortalUsersReadDTO {
 
     private UUID userType;
 
-    private int userConfidence;  // user rating according to activity (set by moderator)
+    private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
     public UUID getId() {
         return id;
@@ -62,11 +64,11 @@ public class PortalUsersReadDTO {
 
     public void setUserType(UUID userType) { this.userType = userType; }
 
-    public int getUserConfidence() {
+    public UserConfidenceType getUserConfidence() {
         return userConfidence;
     }
 
-    public void setUserConfidence(int userConfidence) {
+    public void setUserConfidence(UserConfidenceType userConfidence) {
         this.userConfidence = userConfidence;
     }
 }

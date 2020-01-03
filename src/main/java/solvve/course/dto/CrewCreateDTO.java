@@ -6,7 +6,9 @@ public class CrewCreateDTO {
 
     private UUID personId;
 
-    private String crewType;
+    private UUID movieId;
+
+    private UUID crewType;
 
     private String description;
 
@@ -18,11 +20,19 @@ public class CrewCreateDTO {
         this.personId = personId;
     }
 
-    public String getCrewType() {
+    public UUID getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
+
+    public UUID getCrewType() {
         return crewType;
     }
 
-    public void setCrewType(String crewType) {
+    public void setCrewType(UUID crewType) {
         this.crewType = crewType;
     }
 
@@ -42,6 +52,7 @@ public class CrewCreateDTO {
         CrewCreateDTO that = (CrewCreateDTO) o;
 
         if (personId != null ? !personId.equals(that.personId) : that.personId != null) return false;
+        if (movieId != null ? !movieId.equals(that.movieId) : that.movieId != null) return false;
         if (crewType != null ? !crewType.equals(that.crewType) : that.crewType != null) return false;
         return description != null ? description.equals(that.description) : that.description == null;
     }
@@ -49,6 +60,7 @@ public class CrewCreateDTO {
     @Override
     public int hashCode() {
         int result = personId != null ? personId.hashCode() : 0;
+        result = 31 * result + (movieId != null ? movieId.hashCode() : 0);
         result = 31 * result + (crewType != null ? crewType.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;

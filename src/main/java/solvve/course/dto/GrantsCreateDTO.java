@@ -1,30 +1,34 @@
 package solvve.course.dto;
 
+import solvve.course.domain.Grants;
+import solvve.course.domain.UserPermType;
+import solvve.course.domain.UserTypes;
+
 import java.util.UUID;
 
 public class GrantsCreateDTO {
 
-    private UUID userTypeId;
+    private UserTypes userTypeId;
 
-    private String userPermission;
+    private UserPermType userPermission;
 
     private String objectName;
 
     private UUID grantedBy;
 
-    public UUID getUserTypeId() {
+    public UserTypes getUserTypeId() {
         return userTypeId;
     }
 
-    public void setUserTypeId(UUID userTypeId) {
+    public void setUserTypeId(UserTypes userTypeId) {
         this.userTypeId = userTypeId;
     }
 
-    public String getUserPermission() {
+    public UserPermType getUserPermission() {
         return userPermission;
     }
 
-    public void setUserPermission(String userPermission) {
+    public void setUserPermission(UserPermType userPermission) {
         this.userPermission = userPermission;
     }
 
@@ -52,8 +56,7 @@ public class GrantsCreateDTO {
         GrantsCreateDTO that = (GrantsCreateDTO) o;
 
         if (userTypeId != null ? !userTypeId.equals(that.userTypeId) : that.userTypeId != null) return false;
-        if (userPermission != null ? !userPermission.equals(that.userPermission) : that.userPermission != null)
-            return false;
+        if (userPermission != that.userPermission) return false;
         if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
         return grantedBy != null ? grantedBy.equals(that.grantedBy) : that.grantedBy == null;
     }

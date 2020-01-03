@@ -1,8 +1,8 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import solvve.course.dto.UserModeratedStatusType;
+
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +20,8 @@ public class RoleVoteCompliant {
 
     private String description;
 
-    private String moderatedStatus;
+    @Enumerated(EnumType.STRING)
+    private UserModeratedStatusType moderatedStatus;
 
     private UUID moderatorId;
 
@@ -64,11 +65,11 @@ public class RoleVoteCompliant {
         this.description = description;
     }
 
-    public String getModeratedStatus() {
+    public UserModeratedStatusType getModeratedStatus() {
         return moderatedStatus;
     }
 
-    public void setModeratedStatus(String moderatedStatus) {
+    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
         this.moderatedStatus = moderatedStatus;
     }
 

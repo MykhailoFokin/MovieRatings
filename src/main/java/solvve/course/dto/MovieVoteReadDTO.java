@@ -1,5 +1,9 @@
 package solvve.course.dto;
 
+import solvve.course.domain.UserVoteRatingType;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.UUID;
 
 public class MovieVoteReadDTO {
@@ -18,7 +22,8 @@ public class MovieVoteReadDTO {
 
     private int spoilerEndIndex;
 
-    private String moderatedStatus;
+    @Enumerated(EnumType.STRING)
+    private UserModeratedStatusType moderatedStatus;
 
     private UUID moderatorId;
 
@@ -46,12 +51,10 @@ public class MovieVoteReadDTO {
         this.movieId = movieId;
     }
 
-    public int getRating() {
-        return rating;
-    }
+    public UserVoteRatingType getRating() { return UserVoteRatingType.parse(this.rating); }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setRating(UserVoteRatingType rating) {
+        this.rating = rating.getValue();
     }
 
     public String getDescription() {
@@ -78,11 +81,11 @@ public class MovieVoteReadDTO {
         this.spoilerEndIndex = spoilerEndIndex;
     }
 
-    public String getModeratedStatus() {
+    public UserModeratedStatusType getModeratedStatus() {
         return moderatedStatus;
     }
 
-    public void setModeratedStatus(String moderatedStatus) {
+    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
         this.moderatedStatus = moderatedStatus;
     }
 

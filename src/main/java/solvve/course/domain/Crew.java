@@ -1,5 +1,7 @@
 package solvve.course.domain;
 
+import solvve.course.dto.CrewTypeReadDTO;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ public class Crew {
 
     private UUID movieId;
 
-    private String crewType;
+    private UUID crewType;
 
     private String description;
 
@@ -36,15 +38,19 @@ public class Crew {
         this.personId = personId;
     }
 
-    public UUID getMovieId() { return movieId; }
+    public UUID getMovieId() {
+        return movieId;
+    }
 
-    public void setMovieId(UUID movieId) { this.movieId = movieId; }
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
 
-    public String getCrewType() {
+    public UUID getCrewType() {
         return crewType;
     }
 
-    public void setCrewType(String crewType) {
+    public void setCrewType(UUID crewType) {
         this.crewType = crewType;
     }
 

@@ -1,8 +1,6 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -12,9 +10,12 @@ public class Grants {
     @GeneratedValue()
     private UUID id;
 
-    private UUID userTypeId;
+    @ManyToOne
+    @JoinColumn(name = "user_type_id", nullable = false)
+    private UserTypes userTypeId;
 
-    private String userPermission;
+    @Enumerated(EnumType.STRING)
+    private UserPermType userPermission;
 
     private String objectName;
 
@@ -28,19 +29,19 @@ public class Grants {
         this.id = id;
     }
 
-    public UUID getUserTypeId() {
+    public UserTypes getUserTypeId() {
         return userTypeId;
     }
 
-    public void setUserTypeId(UUID userTypeId) {
+    public void setUserTypeId(UserTypes userTypeId) {
         this.userTypeId = userTypeId;
     }
 
-    public String getUserPermission() {
+    public UserPermType getUserPermission() {
         return userPermission;
     }
 
-    public void setUserPermission(String userPermission) {
+    public void setUserPermission(UserPermType userPermission) {
         this.userPermission = userPermission;
     }
 

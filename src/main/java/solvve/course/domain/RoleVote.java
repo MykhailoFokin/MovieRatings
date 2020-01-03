@@ -1,8 +1,8 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import solvve.course.dto.UserModeratedStatusType;
+
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +24,8 @@ public class RoleVote {
 
     private int spoilerEndIndex;
 
-    private String moderatedStatus;
+    @Enumerated(EnumType.STRING)
+    private UserModeratedStatusType moderatedStatus;
 
     private UUID moderatorId;
 
@@ -52,12 +53,10 @@ public class RoleVote {
         this.roleId = roleId;
     }
 
-    public int getRating() {
-        return rating;
-    }
+    public UserVoteRatingType getRating() { return UserVoteRatingType.parse(this.rating); }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setRating(UserVoteRatingType rating) {
+        this.rating = rating.getValue();
     }
 
     public String getDescription() {
@@ -84,11 +83,11 @@ public class RoleVote {
         this.spoilerEndIndex = spoilerEndIndex;
     }
 
-    public String getModeratedStatus() {
+    public UserModeratedStatusType getModeratedStatus() {
         return moderatedStatus;
     }
 
-    public void setModeratedStatus(String moderatedStatus) {
+    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
         this.moderatedStatus = moderatedStatus;
     }
 

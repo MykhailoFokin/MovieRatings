@@ -1,5 +1,7 @@
 package solvve.course.dto;
 
+import solvve.course.domain.UserConfidenceType;
+
 import java.util.UUID;
 
 public class PortalUsersCreateDTO {
@@ -14,7 +16,7 @@ public class PortalUsersCreateDTO {
 
     private UUID userType;
 
-    private int userConfidence;  // user rating according to activity (set by moderator)
+    private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
     public String getLogin() {
         return login;
@@ -52,11 +54,11 @@ public class PortalUsersCreateDTO {
 
     public void setUserType(UUID userType) { this.userType = userType; }
 
-    public int getUserConfidence() {
+    public UserConfidenceType getUserConfidence() {
         return userConfidence;
     }
 
-    public void setUserConfidence(int userConfidence) {
+    public void setUserConfidence(UserConfidenceType userConfidence) {
         this.userConfidence = userConfidence;
     }
 
@@ -67,12 +69,12 @@ public class PortalUsersCreateDTO {
 
         PortalUsersCreateDTO that = (PortalUsersCreateDTO) o;
 
-        if (userConfidence != that.userConfidence) return false;
         if (login != null ? !login.equals(that.login) : that.login != null) return false;
         if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (middleName != null ? !middleName.equals(that.middleName) : that.middleName != null) return false;
-        return userType != null ? userType.equals(that.userType) : that.userType == null;
+        if (userType != null ? !userType.equals(that.userType) : that.userType != null) return false;
+        return userConfidence == that.userConfidence;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class PortalUsersCreateDTO {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (middleName != null ? middleName.hashCode() : 0);
         result = 31 * result + (userType != null ? userType.hashCode() : 0);
-        result = 31 * result + userConfidence;
+        result = 31 * result + (userConfidence != null ? userConfidence.hashCode() : 0);
         return result;
     }
 }

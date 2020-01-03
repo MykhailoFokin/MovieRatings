@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface UserTypesRepository extends CrudRepository<UserTypes, UUID> {
+
 }

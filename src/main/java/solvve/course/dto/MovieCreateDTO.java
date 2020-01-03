@@ -120,7 +120,7 @@ public class MovieCreateDTO {
         return filmingLocations;
     }
 
-    public void setFilmingLocations(String filmingLocationsocations) {
+    public void setFilmingLocations(String filmingLocations) {
         this.filmingLocations = filmingLocations;
     }
 

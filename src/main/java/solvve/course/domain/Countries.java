@@ -1,9 +1,7 @@
 package solvve.course.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Countries {
@@ -13,6 +11,9 @@ public class Countries {
     private UUID id;
 
     private String name;
+
+    @ManyToMany(mappedBy = "movieProdCountries")
+    private Set<Movie> movies = new HashSet<>();
 
     /*@OneToMany(
             mappedBy = "tag",
@@ -44,4 +45,12 @@ public class Countries {
     public void setMovieProdCountries(List<MovieProdCountries> movieProdCountries) {
         this.movieProdCountries = movieProdCountries;
     }*/
+
+    public Set<Movie> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Set<Movie> movies) {
+        this.movies = movies;
+    }
 }

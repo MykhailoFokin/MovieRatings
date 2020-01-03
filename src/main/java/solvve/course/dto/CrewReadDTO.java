@@ -8,7 +8,9 @@ public class CrewReadDTO {
 
     private UUID personId;
 
-    private String crewType;
+    private UUID movieId;
+
+    private UUID crewType;
 
     private String description;
 
@@ -28,11 +30,19 @@ public class CrewReadDTO {
         this.personId = personId;
     }
 
-    public String getCrewType() {
+    public UUID getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
+
+    public UUID getCrewType() {
         return crewType;
     }
 
-    public void setCrewType(String crewType) {
+    public void setCrewType(UUID crewType) {
         this.crewType = crewType;
     }
 
@@ -43,5 +53,4 @@ public class CrewReadDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }
