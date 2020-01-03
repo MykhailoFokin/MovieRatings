@@ -3,10 +3,19 @@ package solvve.course.dto;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserTypesCreateDTO {
+public class UserTypesCreateDTO implements Serializable {
+
+    public UserTypesCreateDTO(UserGroupType userGroup, Set<UserTypes> userTypes) {
+        this.userGroup = userGroup;
+        this.userTypes = userTypes;
+    }
+
+    public UserTypesCreateDTO() {
+    }
 
     private UserGroupType userGroup;
 
@@ -31,7 +40,7 @@ public class UserTypesCreateDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserTypesCreateDTO)) return false;
 
         UserTypesCreateDTO that = (UserTypesCreateDTO) o;
 

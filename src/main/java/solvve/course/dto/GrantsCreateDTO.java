@@ -1,12 +1,12 @@
 package solvve.course.dto;
 
-import solvve.course.domain.Grants;
 import solvve.course.domain.UserPermType;
 import solvve.course.domain.UserTypes;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class GrantsCreateDTO {
+public class GrantsCreateDTO implements Serializable {
 
     private UserTypes userTypeId;
 

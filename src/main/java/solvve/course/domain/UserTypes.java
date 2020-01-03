@@ -1,11 +1,21 @@
 package solvve.course.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class UserTypes {
+public class UserTypes implements Serializable {
+
+    public UserTypes(UUID id, UserGroupType userGroup, Set<Grants> grants) {
+        this.id = id;
+        this.userGroup = userGroup;
+        this.grants = grants;
+    }
+
+    public UserTypes() {
+    }
 
     @Id
     @GeneratedValue()

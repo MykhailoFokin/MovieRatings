@@ -4,9 +4,10 @@ import solvve.course.domain.Grants;
 import solvve.course.domain.UserPermType;
 import solvve.course.domain.UserTypes;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class GrantsReadDTO {
+public class GrantsReadDTO implements Serializable {
 
     private UUID id;
 

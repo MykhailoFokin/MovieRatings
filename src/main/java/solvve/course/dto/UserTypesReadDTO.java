@@ -3,10 +3,11 @@ package solvve.course.dto;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserTypesReadDTO {
+public class UserTypesReadDTO implements Serializable {
 
     private UUID id;
 

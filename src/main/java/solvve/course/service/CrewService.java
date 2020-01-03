@@ -31,6 +31,7 @@ public class CrewService {
         dto.setPersonId(crew.getPersonId());
         dto.setCrewType(crew.getCrewType());
         dto.setDescription(crew.getDescription());
+        dto.setMovieId(crew.getMovieId());
         return dto;
     }
 
@@ -39,6 +40,7 @@ public class CrewService {
         crew.setPersonId(create.getPersonId());
         crew.setCrewType(create.getCrewType());
         crew.setDescription(create.getDescription());
+        crew.setMovieId(create.getMovieId());
 
         crew = crewRepository.save(crew);
         return toRead(crew);

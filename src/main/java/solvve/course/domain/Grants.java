@@ -1,16 +1,17 @@
 package solvve.course.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-public class Grants {
+public class Grants implements Serializable {
 
     @Id
     @GeneratedValue()
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_type_id", nullable = false)
     private UserTypes userTypeId;
 
