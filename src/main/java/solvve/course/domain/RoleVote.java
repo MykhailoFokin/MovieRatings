@@ -18,17 +18,6 @@ public class RoleVote {
 
     private int rating;
 
-    private String description;
-
-    private int spoilerStartIndex;
-
-    private int spoilerEndIndex;
-
-    @Enumerated(EnumType.STRING)
-    private UserModeratedStatusType moderatedStatus;
-
-    private UUID moderatorId;
-
     public UUID getId() {
         return id;
     }
@@ -57,45 +46,5 @@ public class RoleVote {
 
     public void setRating(UserVoteRatingType rating) {
         this.rating = rating.getValue();
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getSpoilerStartIndex() {
-        return spoilerStartIndex;
-    }
-
-    public void setSpoilerStartIndex(int spoilerStartIndex) {
-        this.spoilerStartIndex = spoilerStartIndex;
-    }
-
-    public int getSpoilerEndIndex() {
-        return spoilerEndIndex;
-    }
-
-    public void setSpoilerEndIndex(int spoilerEndIndex) {
-        this.spoilerEndIndex = spoilerEndIndex;
-    }
-
-    public UserModeratedStatusType getModeratedStatus() {
-        return moderatedStatus;
-    }
-
-    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
-        this.moderatedStatus = moderatedStatus;
-    }
-
-    public UUID getModeratorId() {
-        return moderatorId;
-    }
-
-    public void setModeratorId(UUID moderatorId) {
-        this.moderatorId = moderatorId;
     }
 }

@@ -9,14 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.GrantsCreateDTO;
 import solvve.course.dto.GrantsReadDTO;
-import solvve.course.dto.PortalUsersReadDTO;
+import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.dto.UserTypesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.GrantsRepository;
-import solvve.course.repository.PortalUsersRepository;
+import solvve.course.repository.PortalUserRepository;
 import solvve.course.repository.UserTypesRepository;
 
 import java.util.HashSet;
@@ -36,12 +37,12 @@ public class GrantsServiceTest {
     private GrantsService grantsService;
 
     @Autowired
-    private PortalUsersService portalUsersService;
+    private PortalUserService portalUserService;
 
     @Autowired
-    private PortalUsersRepository portalUsersRepository;
+    private PortalUserRepository portalUserRepository;
 
-    private PortalUsersReadDTO portalUsersReadDTO;
+    private PortalUserReadDTO portalUserReadDTO;
 
     @Autowired
     private UserTypesRepository userTypesRepository;
@@ -54,35 +55,37 @@ public class GrantsServiceTest {
 
     @Before
     public void setup() {
-        if (portalUsersReadDTO==null) {
+        if (portalUserReadDTO == null) {
             userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
             userTypesReadDTO = userTypesService.getUserTypes(userTypes.getId());
 
-            PortalUsers portalUsers = new PortalUsers();
-            portalUsers.setUserType(userTypesReadDTO.getId());
-            portalUsers.setSurname("Surname");
-            portalUsers.setName("Name");
-            portalUsers.setMiddleName("MiddleName");
-            portalUsers.setLogin("Login");
-            portalUsers.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUsers = portalUsersRepository.save(portalUsers);
+            PortalUser portalUser = new PortalUser();
+            portalUser.setUserType(userTypesReadDTO.getId());
+            portalUser.setSurname("Surname");
+            portalUser.setName("Name");
+            portalUser.setMiddleName("MiddleName");
+            portalUser.setLogin("Login");
+            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+            portalUser = portalUserRepository.save(portalUser);
 
-            portalUsersReadDTO = portalUsersService.getPortalUsers(portalUsers.getId());
+            portalUserReadDTO = portalUserService.getPortalUsers(portalUser.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetGrants() {
-
         Grants grants = new Grants();
         grants.setId(UUID.randomUUID());
         grants.setUserTypeId(userTypes);
         grants.setObjectName("Movie");
         grants.setUserPermission(UserPermType.READ);
-        grants.setGrantedBy(portalUsersReadDTO.getId());
+        grants.setGrantedBy(portalUserReadDTO.getId());
+        System.out.println(userTypesReadDTO.getId());
+
         grants = grantsRepository.save(grants);
 
         GrantsReadDTO readDTO = grantsService.getGrants(grants.getId());
@@ -94,17 +97,18 @@ public class GrantsServiceTest {
         grantsService.getGrants(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateGrants() {
         GrantsCreateDTO create = new GrantsCreateDTO();
         create.setUserTypeId(userTypes);
         create.setObjectName("Movie");
         create.setUserPermission(UserPermType.READ);
-        create.setGrantedBy(portalUsersReadDTO.getId());
+        create.setGrantedBy(portalUserReadDTO.getId());
         GrantsReadDTO read = grantsService.createGrants(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
-        //Grants grants = grantsRepository.findById(read.getId()).get();
-        //Assertions.assertThat(read).isEqualToComparingFieldByField(grants);
+        Grants grants = grantsRepository.findById(read.getId()).get();
+        Assertions.assertThat(read).isEqualToComparingFieldByField(grants);
     }
 }

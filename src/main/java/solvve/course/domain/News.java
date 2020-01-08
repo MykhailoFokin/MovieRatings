@@ -3,7 +3,7 @@ package solvve.course.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +15,7 @@ public class News {
 
     private UUID userId;
 
-    private Date published;
+    private Timestamp published;
 
     private String topic;
 
@@ -37,11 +37,11 @@ public class News {
         this.userId = userId;
     }
 
-    public Date getPublished() {
+    public Timestamp getPublished() {
         return published;
     }
 
-    public void setPublished(Date published) {
+    public void setPublished(Timestamp published) {
         this.published = published;
     }
 

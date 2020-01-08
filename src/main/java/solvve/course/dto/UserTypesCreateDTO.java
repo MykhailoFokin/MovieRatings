@@ -1,5 +1,6 @@
 package solvve.course.dto;
 
+import solvve.course.domain.Grants;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 
@@ -9,17 +10,9 @@ import java.util.UUID;
 
 public class UserTypesCreateDTO implements Serializable {
 
-    public UserTypesCreateDTO(UserGroupType userGroup, Set<UserTypes> userTypes) {
-        this.userGroup = userGroup;
-        this.userTypes = userTypes;
-    }
-
-    public UserTypesCreateDTO() {
-    }
-
     private UserGroupType userGroup;
 
-    private Set<UserTypes> userTypes;
+    private Set<Grants> userTypes;
 
     public UserGroupType getUserGroup() {
         return userGroup;
@@ -29,11 +22,11 @@ public class UserTypesCreateDTO implements Serializable {
         this.userGroup = userGroup;
     }
 
-    public Set<UserTypes> getUserTypes() {
+    public Set<Grants> getUserTypes() {
         return userTypes;
     }
 
-    public void setUserTypes(Set<UserTypes> userTypes) {
+    public void setUserTypes(Set<Grants> userTypes) {
         this.userTypes = userTypes;
     }
 

@@ -8,15 +8,6 @@ import java.util.UUID;
 @Entity
 public class UserTypes implements Serializable {
 
-    public UserTypes(UUID id, UserGroupType userGroup, Set<Grants> grants) {
-        this.id = id;
-        this.userGroup = userGroup;
-        this.grants = grants;
-    }
-
-    public UserTypes() {
-    }
-
     @Id
     @GeneratedValue()
     private UUID id;

@@ -29,12 +29,14 @@ public class UserTypesService {
         UserTypesReadDTO dto = new UserTypesReadDTO();
         dto.setId(userTypes.getId());
         dto.setUserGroup(userTypes.getUserGroup());
+        dto.setUserTypes(userTypes.getUserTypes());
         return dto;
     }
 
     public UserTypesReadDTO createUserTypes(UserTypesCreateDTO create) {
         UserTypes userTypes = new UserTypes();
         userTypes.setUserGroup(create.getUserGroup());
+        userTypes.setUserTypes(create.getUserTypes());
 
         userTypes = userTypesRepository.save(userTypes);
         return toRead(userTypes);

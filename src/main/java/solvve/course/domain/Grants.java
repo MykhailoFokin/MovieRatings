@@ -11,7 +11,7 @@ public class Grants implements Serializable {
     @GeneratedValue()
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_type_id", nullable = false)
     private UserTypes userTypeId;
 

@@ -31,11 +31,6 @@ public class RoleVoteService {
         dto.setUserId(roleVote.getUserId());
         dto.setRoleId(roleVote.getRoleId());
         dto.setRating(roleVote.getRating());
-        dto.setDescription(roleVote.getDescription());
-        dto.setSpoilerStartIndex(roleVote.getSpoilerStartIndex());
-        dto.setSpoilerEndIndex(roleVote.getSpoilerEndIndex());
-        dto.setModeratedStatus(roleVote.getModeratedStatus());
-        dto.setModeratorId(roleVote.getModeratorId());
         return dto;
     }
 
@@ -44,11 +39,6 @@ public class RoleVoteService {
         roleVote.setUserId(create.getUserId());
         roleVote.setRoleId(create.getRoleId());
         roleVote.setRating(create.getRating());
-        roleVote.setDescription(create.getDescription());
-        roleVote.setSpoilerStartIndex(create.getSpoilerStartIndex());
-        roleVote.setSpoilerEndIndex(create.getSpoilerEndIndex());
-        roleVote.setModeratedStatus(create.getModeratedStatus());
-        roleVote.setModeratorId(create.getModeratorId());
 
         roleVote = roleVoteRepository.save(roleVote);
         return toRead(roleVote);

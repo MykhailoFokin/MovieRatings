@@ -30,11 +30,6 @@ public class MovieVoteService {
         dto.setUserId(movieVote.getUserId());
         dto.setMovieId(movieVote.getMovieId());
         dto.setRating(movieVote.getRating());
-        dto.setDescription(movieVote.getDescription());
-        dto.setSpoilerStartIndex(movieVote.getSpoilerStartIndex());
-        dto.setSpoilerEndIndex(movieVote.getSpoilerEndIndex());
-        dto.setModeratedStatus(movieVote.getModeratedStatus());
-        dto.setModeratorId(movieVote.getModeratorId());
         return dto;
     }
 
@@ -43,11 +38,6 @@ public class MovieVoteService {
         movieVote.setUserId(create.getUserId());
         movieVote.setMovieId(create.getMovieId());
         movieVote.setRating(create.getRating());
-        movieVote.setDescription(create.getDescription());
-        movieVote.setSpoilerStartIndex(create.getSpoilerStartIndex());
-        movieVote.setSpoilerEndIndex(create.getSpoilerEndIndex());
-        movieVote.setModeratedStatus(create.getModeratedStatus());
-        movieVote.setModeratorId(create.getModeratorId());
 
         movieVote = movieVoteRepository.save(movieVote);
         return toRead(movieVote);

@@ -2,9 +2,9 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.MovieVoteFeedbackCreateDTO;
-import solvve.course.dto.MovieVoteFeedbackReadDTO;
-import solvve.course.service.MovieVoteFeedbackService;
+import solvve.course.dto.NewsCreateDTO;
+import solvve.course.dto.NewsReadDTO;
+import solvve.course.service.NewsService;
 
 import java.util.UUID;
 
@@ -13,15 +13,15 @@ import java.util.UUID;
 public class NewsController {
 
     @Autowired
-    private MovieVoteFeedbackService newsService;
+    private NewsService newsService;
 
     @GetMapping("/{id}")
-    public MovieVoteFeedbackReadDTO getMovieVoteFeedback(@PathVariable UUID id) {
-        return newsService.getMovieVoteFeedback(id);
+    public NewsReadDTO getNews(@PathVariable UUID id) {
+        return newsService.getNews(id);
     }
 
     @PostMapping
-    public MovieVoteFeedbackReadDTO createMovieVoteFeedback(@RequestBody MovieVoteFeedbackCreateDTO createDTO){
-        return newsService.createMovieVoteFeedback(createDTO);
+    public NewsReadDTO createNews(@RequestBody NewsCreateDTO createDTO){
+        return newsService.createNews(createDTO);
     }
 }

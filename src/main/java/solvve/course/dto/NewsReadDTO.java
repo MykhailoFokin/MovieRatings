@@ -1,6 +1,6 @@
 package solvve.course.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public class NewsReadDTO {
@@ -9,7 +9,7 @@ public class NewsReadDTO {
 
     private UUID userId;
 
-    private Date published;
+    private Timestamp published;
 
     private String topic;
 
@@ -31,11 +31,11 @@ public class NewsReadDTO {
         this.userId = userId;
     }
 
-    public Date getPublished() {
+    public Timestamp getPublished() {
         return published;
     }
 
-    public void setPublished(Date published) {
+    public void setPublished(Timestamp published) {
         this.published = published;
     }
 
