@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 import solvve.course.dto.UserTypesCreateDTO;
@@ -29,6 +30,7 @@ public class UserTypesServiceTest {
     @Autowired
     private UserTypesService userTypesService;
 
+    @Transactional
     @Test
     public void testGetUserTypes() {
         UserTypes userTypes = new UserTypes();
@@ -45,6 +47,7 @@ public class UserTypesServiceTest {
         userTypesService.getUserTypes(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateUserTypes() {
         UserTypesCreateDTO create = new UserTypesCreateDTO();
@@ -52,7 +55,7 @@ public class UserTypesServiceTest {
         UserTypesReadDTO read = userTypesService.createUserTypes(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
-        //UserTypes userTypes = userTypesRepository.findById(read.getId()).get();
-        //Assertions.assertThat(read).isEqualToComparingFieldByField(userTypes);
+        UserTypes userTypes = userTypesRepository.findById(read.getId()).get();
+        Assertions.assertThat(read).isEqualToComparingFieldByField(userTypes);
     }
 }

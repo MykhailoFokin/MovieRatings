@@ -65,13 +65,13 @@ public class PortalUserServiceTest {
         portalUser.setUserConfidence(UserConfidenceType.NORMAL);
         portalUser = portalUserRepository.save(portalUser);
 
-        PortalUserReadDTO readDTO = portalUserService.getPortalUsers(portalUser.getId());
+        PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(portalUser);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void testGetPortalUsersWrongId() {
-        portalUserService.getPortalUsers(UUID.randomUUID());
+        portalUserService.getPortalUser(UUID.randomUUID());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class PortalUserServiceTest {
         create.setMiddleName("MiddleName");
         create.setLogin("Login");
         create.setUserConfidence(UserConfidenceType.NORMAL);
-        PortalUserReadDTO read = portalUserService.createPortalUsers(create);
+        PortalUserReadDTO read = portalUserService.createPortalUser(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         PortalUser portalUser = portalUserRepository.findById(read.getId()).get();

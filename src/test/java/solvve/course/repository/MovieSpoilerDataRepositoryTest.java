@@ -7,26 +7,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import solvve.course.domain.Crew;
-import solvve.course.domain.Role;
+import solvve.course.domain.MovieSpoilerData;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from role", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from movie_spoiler_data", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
-public class RoleRepositoryTest {
+public class MovieSpoilerDataRepositoryTest {
 
     @Autowired
-    private CrewRepository crewRepository;
+    private MovieSpoilerDataRepository movieSpoilerDataRepository;
 
     @Test
     public void testSave() {
-        Crew r = new Crew();
-        r = crewRepository.save(r);
+        MovieSpoilerData r = new MovieSpoilerData();
+        r = movieSpoilerDataRepository.save(r);
         assertNotNull(r.getId());
-        assertTrue(crewRepository.findById(r.getId()).isPresent());
+        assertTrue(movieSpoilerDataRepository.findById(r.getId()).isPresent());
     }
 }

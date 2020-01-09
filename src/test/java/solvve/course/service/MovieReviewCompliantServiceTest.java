@@ -91,7 +91,7 @@ public class MovieReviewCompliantServiceTest {
             portalUser.setUserType(userTypes.getId());
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUsers(portalUser.getId());
+            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
 
         if (movieReviewReadDTO ==null) {

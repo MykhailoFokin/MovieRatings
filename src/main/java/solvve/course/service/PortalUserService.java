@@ -18,7 +18,7 @@ public class PortalUserService {
     private PortalUserRepository portalUserRepository;
 
     @Transactional(readOnly = true)
-    public PortalUserReadDTO getPortalUsers(UUID id) {
+    public PortalUserReadDTO getPortalUser(UUID id) {
         PortalUser portalUser = portalUserRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(PortalUser.class, id);
         });
@@ -37,7 +37,7 @@ public class PortalUserService {
         return dto;
     }
 
-    public PortalUserReadDTO createPortalUsers(PortalUserCreateDTO create) {
+    public PortalUserReadDTO createPortalUser(PortalUserCreateDTO create) {
         PortalUser portalUser = new PortalUser();
         portalUser.setLogin(create.getLogin());
         portalUser.setSurname(create.getSurname());

@@ -9,19 +9,19 @@ import solvve.course.service.PortalUserService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/portalusers")
+@RequestMapping("/api/v1/portaluser")
 public class PortalUserController {
 
     @Autowired
     private PortalUserService portalUserService;
 
     @GetMapping("/{id}")
-    public PortalUserReadDTO getPortalUsers(@PathVariable UUID id) {
-        return portalUserService.getPortalUsers(id);
+    public PortalUserReadDTO getPortalUser(@PathVariable UUID id) {
+        return portalUserService.getPortalUser(id);
     }
 
     @PostMapping
-    public PortalUserReadDTO createPortalUsers(@RequestBody PortalUserCreateDTO createDTO){
-        return portalUserService.createPortalUsers(createDTO);
+    public PortalUserReadDTO createPortalUser(@RequestBody PortalUserCreateDTO createDTO){
+        return portalUserService.createPortalUser(createDTO);
     }
 }

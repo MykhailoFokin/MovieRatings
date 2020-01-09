@@ -89,7 +89,7 @@ public class MovieSpoilerDataServiceTest {
             portalUser.setUserType(userTypes.getId());
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUsers(portalUser.getId());
+            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
 
             MovieReviewCreateDTO create = new MovieReviewCreateDTO();
             MovieReview movieReview = new MovieReview();
