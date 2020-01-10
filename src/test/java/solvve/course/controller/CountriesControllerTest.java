@@ -3,9 +3,7 @@ package solvve.course.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import solvve.course.domain.Countries;
 import solvve.course.dto.CountriesCreateDTO;
 import solvve.course.dto.CountriesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+
 import solvve.course.service.CountriesService;
 
 import java.util.UUID;
@@ -53,7 +52,6 @@ public class CountriesControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         CountriesReadDTO actualMovie = objectMapper.readValue(resultJson, CountriesReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(countries);
 
@@ -74,16 +72,17 @@ public class CountriesControllerTest {
         Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void testGetCountriesWrongFormatId() throws Exception {
-        String illegalArgumentString = "123";
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("Invalid UUID string: " + illegalArgumentString);
+        String wrongId = "123";
 
-        UUID wrongId = UUID.fromString(illegalArgumentString);
+       IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
+
+        String resultJson = mvc.perform(get("/api/v1/countries/{id}",wrongId))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
     @Test

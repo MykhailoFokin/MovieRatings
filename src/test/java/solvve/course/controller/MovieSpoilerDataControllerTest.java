@@ -3,9 +3,7 @@ package solvve.course.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,16 +74,17 @@ public class MovieSpoilerDataControllerTest {
         Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void testGetMovieSpoilerDataWrongFormatId() throws Exception {
-        String illegalArgumentString = "123";
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("Invalid UUID string: " + illegalArgumentString);
+        String wrongId = "123";
 
-        UUID wrongId = UUID.fromString(illegalArgumentString);
+        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
+
+        String resultJson = mvc.perform(get("/api/v1/moviespoilerdata/{id}",wrongId))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
     @Test

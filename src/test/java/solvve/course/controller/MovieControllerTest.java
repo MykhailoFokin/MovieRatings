@@ -77,16 +77,17 @@ public class MovieControllerTest {
         Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void testGetMovieWrongFormatId() throws Exception {
-        String illegalArgumentString = "123";
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("Invalid UUID string: " + illegalArgumentString);
+        String wrongId = "123";
 
-        UUID wrongId = UUID.fromString(illegalArgumentString);
+        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
+
+        String resultJson = mvc.perform(get("/api/v1/movie/{id}",wrongId))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assert.assertTrue(resultJson.contains(exception.getMessage()));
     }
 
     @Test
