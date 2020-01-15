@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
+import solvve.course.dto.CrewTypePatchDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
@@ -28,12 +30,16 @@ public class CrewTypeTest {
     @Autowired
     private CrewTypeService crewTypeService;
 
-    @Test
-    public void testGetCrewType() {
+    private CrewType createCrewType() {
         CrewType crewType = new CrewType();
         crewType.setId(UUID.randomUUID());
         crewType.setName("Director");
-        crewType = crewTypeRepository.save(crewType);
+        return crewTypeRepository.save(crewType);
+    }
+
+    @Test
+    public void testGetCrewType() {
+        CrewType crewType = createCrewType();
 
         CrewTypeReadDTO readDTO = crewTypeService.getCrewType(crewType.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(crewType);
@@ -53,5 +59,48 @@ public class CrewTypeTest {
 
         CrewType crewType = crewTypeRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(crewType);
+    }
+
+    @Test
+    public void testPatchCrewType() {
+        CrewType crewType = createCrewType();
+
+        CrewTypePatchDTO patch = new CrewTypePatchDTO();
+        patch.setName("Director");
+        CrewTypeReadDTO read = crewTypeService.patchCrewType(crewType.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        crewType = crewTypeRepository.findById(read.getId()).get();
+        Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCrewTypeEmptyPatch() {
+        CrewType crewType = createCrewType();
+
+        CrewTypePatchDTO patch = new CrewTypePatchDTO();
+        CrewTypeReadDTO read = crewTypeService.patchCrewType(crewType.getId(), patch);
+
+        Assert.assertNotNull(read.getName());
+
+        CrewType crewTypeAfterUpdate = crewTypeRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(crewTypeAfterUpdate.getName());
+
+        Assertions.assertThat(crewType).isEqualToComparingFieldByField(crewTypeAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteCrewType() {
+        CrewType crewType = createCrewType();
+
+        crewTypeService.deleteCrewType(crewType.getId());
+        Assert.assertFalse(crewTypeRepository.existsById(crewType.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteCrewTypeNotFound() {
+        crewTypeService.deleteCrewType(UUID.randomUUID());
     }
 }

@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,15 @@ public class MovieReviewFeedbackServiceTest {
     private MovieReviewService movieReviewService;
 
     private MovieReviewReadDTO movieReviewReadDTO;
+
+    private MovieReviewFeedback createMovieReviewFeedback() {
+        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
+        movieReviewFeedback.setUserId(portalUserReadDTO.getId());
+        movieReviewFeedback.setMovieId(movieReadDTO.getId());
+        movieReviewFeedback.setMovieReviewId(movieReviewReadDTO.getId());
+        movieReviewFeedback.setIsLiked(true);
+        return movieReviewFeedbackRepository.save(movieReviewFeedback);
+    }
 
     @Before
     public void setup() {
@@ -109,13 +119,7 @@ public class MovieReviewFeedbackServiceTest {
 
     @Test
     public void testGetMovieReviewFeedback() {
-        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setId(UUID.randomUUID());
-        movieReviewFeedback.setUserId(portalUserReadDTO.getId());
-        movieReviewFeedback.setMovieId(movieReadDTO.getId());
-        movieReviewFeedback.setMovieReviewId(movieReviewReadDTO.getId());
-        movieReviewFeedback.setIsLiked(true);
-        movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
 
         MovieReviewFeedbackReadDTO readDTO = movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReviewFeedback);
@@ -139,5 +143,59 @@ public class MovieReviewFeedbackServiceTest {
 
         MovieReviewFeedback movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieReviewFeedback);
+    }
+
+
+
+    @Test
+    public void testPatchMovieReviewFeedback() {
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+
+        MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setMovieId(movieReadDTO.getId());
+        patch.setMovieReviewId(movieReviewReadDTO.getId());
+        patch.setIsLiked(true);
+        MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.patchMovieReviewFeedback(movieReviewFeedback.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieReviewFeedbackEmptyPatch() {
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+
+        MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
+        MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.patchMovieReviewFeedback(movieReviewFeedback.getId(), patch);
+
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getMovieReviewId());
+        Assert.assertNotNull(read.getIsLiked());
+
+        MovieReviewFeedback movieReviewFeedbackAfterUpdate = movieReviewFeedbackRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getUserId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieReviewId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getIsLiked());
+
+        Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(movieReviewFeedbackAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteMovieReviewFeedback() {
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+
+        movieReviewFeedbackService.deleteMovieReviewFeedback(movieReviewFeedback.getId());
+        Assert.assertFalse(movieReviewFeedbackRepository.existsById(movieReviewFeedback.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteMovieReviewFeedbackNotFound() {
+        movieReviewFeedbackService.deleteMovieReviewFeedback(UUID.randomUUID());
     }
 }

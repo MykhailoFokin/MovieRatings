@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
+import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
@@ -21,9 +22,7 @@ public class RoleService {
 
     @Transactional(readOnly = true)
     public RoleReadDTO getRole(UUID id) {
-        Role role = roleRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Role.class, id);
-        });
+        Role role = getRoleRequired(id);
         return toRead(role);
     }
 
@@ -41,8 +40,38 @@ public class RoleService {
         role.setTitle(create.getTitle());
         role.setRoleType(create.getRoleType());
         role.setDescription(create.getDescription());
+        role.setPersonId(create.getPersonId());
 
         role = roleRepository.save(role);
         return toRead(role);
+    }
+
+    public RoleReadDTO patchRole(UUID id, RolePatchDTO patch) {
+        Role role = getRoleRequired(id);
+
+        if (patch.getTitle()!=null) {
+            role.setTitle(patch.getTitle());
+        }
+        if (patch.getRoleType()!=null) {
+            role.setRoleType(patch.getRoleType());
+        }
+        if (patch.getDescription()!=null) {
+            role.setDescription(patch.getDescription());
+        }
+        if (patch.getPersonId()!=null) {
+            role.setPersonId(patch.getPersonId());
+        }
+        role = roleRepository.save(role);
+        return toRead(role);
+    }
+
+    private Role getRoleRequired(UUID id) {
+        return roleRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Role.class, id);
+        });
+    }
+
+    public void deleteRole(UUID id) {
+        roleRepository.delete(getRoleRequired(id));
     }
 }

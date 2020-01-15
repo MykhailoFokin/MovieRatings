@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieReview;
 import solvve.course.dto.MovieReviewCreateDTO;
+import solvve.course.dto.MovieReviewPatchDTO;
 import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewRepository;
@@ -46,5 +47,37 @@ public class MovieReviewService {
 
         movieReview = movieReviewRepository.save(movieReview);
         return toRead(movieReview);
+    }
+
+    public MovieReviewReadDTO patchMovieReview(UUID id, MovieReviewPatchDTO patch) {
+        MovieReview movieReview = getMovieReviewRequired(id);
+
+        if (patch.getUserId()!=null) {
+            movieReview.setUserId(patch.getUserId());
+        }
+        if (patch.getMovieId()!=null) {
+            movieReview.setMovieId(patch.getMovieId());
+        }
+        if (patch.getTextReview()!=null) {
+            movieReview.setTextReview(patch.getTextReview());
+        }
+        if (patch.getModeratedStatus()!=null) {
+            movieReview.setModeratedStatus(patch.getModeratedStatus());
+        }
+        if (patch.getModeratorId()!=null) {
+            movieReview.setModeratorId(patch.getModeratorId());
+        }
+        movieReview = movieReviewRepository.save(movieReview);
+        return toRead(movieReview);
+    }
+
+    private MovieReview getMovieReviewRequired(UUID id) {
+        return movieReviewRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(MovieReview.class, id);
+        });
+    }
+
+    public void deleteMovieReview(UUID id) {
+        movieReviewRepository.delete(getMovieReviewRequired(id));
     }
 }

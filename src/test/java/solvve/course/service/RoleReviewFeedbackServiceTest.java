@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,15 @@ public class RoleReviewFeedbackServiceTest {
 
     private RoleReviewReadDTO roleReviewReadDTO;
 
+    private RoleReviewFeedback createRoleReviewFeedback() {
+        RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
+        roleReviewFeedback.setUserId(portalUserReadDTO.getId());
+        roleReviewFeedback.setRoleId(roleReadDTO.getId());
+        roleReviewFeedback.setRoleReviewId(roleReviewReadDTO.getId());
+        roleReviewFeedback.setIsLiked(true);
+        return roleReviewFeedbackRepository.save(roleReviewFeedback);
+    }
+
     @Before
     public void setup() {
         if (roleReadDTO==null) {
@@ -100,13 +110,7 @@ public class RoleReviewFeedbackServiceTest {
 
     @Test
     public void testGetRoleReviewFeedback() {
-        RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
-        roleReviewFeedback.setId(UUID.randomUUID());
-        roleReviewFeedback.setUserId(portalUserReadDTO.getId());
-        roleReviewFeedback.setRoleId(roleReadDTO.getId());
-        roleReviewFeedback.setRoleReviewId(roleReviewReadDTO.getId());
-        roleReviewFeedback.setIsLiked(true);
-        roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
+        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
 
         RoleReviewFeedbackReadDTO readDTO = roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleReviewFeedback);
@@ -130,5 +134,57 @@ public class RoleReviewFeedbackServiceTest {
 
         RoleReviewFeedback roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleReviewFeedback);
+    }
+
+    @Test
+    public void testPatchRoleReviewFeedback() {
+        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
+
+        RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setRoleId(roleReadDTO.getId());
+        patch.setRoleReviewId(roleReviewReadDTO.getId());
+        patch.setIsLiked(true);
+        RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.patchRoleReviewFeedback(roleReviewFeedback.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleReviewFeedbackEmptyPatch() {
+        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
+
+        RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
+        RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.patchRoleReviewFeedback(roleReviewFeedback.getId(), patch);
+
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getRoleId());
+        Assert.assertNotNull(read.getRoleReviewId());
+        Assert.assertNotNull(read.getIsLiked());
+
+        RoleReviewFeedback roleReviewFeedbackAfterUpdate = roleReviewFeedbackRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(roleReviewFeedbackAfterUpdate.getUserId());
+        Assert.assertNotNull(roleReviewFeedbackAfterUpdate.getRoleId());
+        Assert.assertNotNull(roleReviewFeedbackAfterUpdate.getRoleReviewId());
+        Assert.assertNotNull(roleReviewFeedbackAfterUpdate.getIsLiked());
+
+        Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(roleReviewFeedbackAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteRoleReviewFeedback() {
+        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
+
+        roleReviewFeedbackService.deleteRoleReviewFeedback(roleReviewFeedback.getId());
+        Assert.assertFalse(roleReviewFeedbackRepository.existsById(roleReviewFeedback.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteRoleReviewFeedbackNotFound() {
+        roleReviewFeedbackService.deleteRoleReviewFeedback(UUID.randomUUID());
     }
 }

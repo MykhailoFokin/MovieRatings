@@ -16,14 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Grants;
 import solvve.course.domain.UserPermType;
 import solvve.course.dto.GrantsCreateDTO;
+import solvve.course.dto.GrantsPatchDTO;
 import solvve.course.dto.GrantsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.GrantsService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,14 +40,17 @@ public class GrantsControllerTest {
     @MockBean
     private GrantsService grantsService;
 
-    @Test
-    public void testGetGrants() throws Exception {
+    private GrantsReadDTO createGrantsRead() {
         GrantsReadDTO grants = new GrantsReadDTO();
         grants.setId(UUID.randomUUID());
-        //grants.setUserTypeId(userTypes);
         grants.setObjectName("Movie");
         grants.setUserPermission(UserPermType.READ);
-        //grants.setGrantedBy(portalUserReadDTO.getId());
+        return grants;
+    }
+
+    @Test
+    public void testGetGrants() throws Exception {
+        GrantsReadDTO grants = createGrantsRead();
 
         Mockito.when(grantsService.getGrants(grants.getId())).thenReturn(grants);
 
@@ -80,30 +83,21 @@ public class GrantsControllerTest {
     public void testGetGrantsWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/grants/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateGrants() throws Exception {
 
         GrantsCreateDTO create = new GrantsCreateDTO();
-        //create.setUserTypeId(userTypes);
         create.setObjectName("Movie");
         create.setUserPermission(UserPermType.READ);
-        //create.setGrantedBy(portalUserReadDTO.getId());
 
-        GrantsReadDTO read = new GrantsReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserTypeId(userTypes);
-        read.setObjectName("Movie");
-        read.setUserPermission(UserPermType.READ);
-        //read.setGrantedBy(portalUserReadDTO.getId());
+        GrantsReadDTO read = createGrantsRead();
 
         Mockito.when(grantsService.createGrants(create)).thenReturn(read);
 
@@ -115,5 +109,35 @@ public class GrantsControllerTest {
 
         GrantsReadDTO actualGrants = objectMapper.readValue(resultJson, GrantsReadDTO.class);
         Assertions.assertThat(actualGrants).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchGrants() throws Exception {
+
+        GrantsPatchDTO patchDTO = new GrantsPatchDTO();
+        patchDTO.setObjectName("Movie");
+        patchDTO.setUserPermission(UserPermType.READ);
+
+        GrantsReadDTO read = createGrantsRead();
+
+        Mockito.when(grantsService.patchGrants(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/grants/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        GrantsReadDTO actualGrants = objectMapper.readValue(resultJson, GrantsReadDTO.class);
+        Assert.assertEquals(read, actualGrants);
+    }
+
+    @Test
+    public void testDeleteGrants() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/grants/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(grantsService).deleteGrants(id);
     }
 }

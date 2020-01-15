@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Countries;
 import solvve.course.dto.CountriesCreateDTO;
+import solvve.course.dto.CountriesPatchDTO;
 import solvve.course.dto.CountriesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 
@@ -22,8 +23,7 @@ import solvve.course.service.CountriesService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,11 +40,16 @@ public class CountriesControllerTest {
     @MockBean
     private CountriesService countriesService;
 
-    @Test
-    public void testGetCountries() throws Exception {
+    private CountriesReadDTO createCountriesRead() {
         CountriesReadDTO countries = new CountriesReadDTO();
         countries.setId(UUID.randomUUID());
         countries.setName("Laplandia");
+        return countries;
+    }
+
+    @Test
+    public void testGetCountries() throws Exception {
+        CountriesReadDTO countries = createCountriesRead();
 
         Mockito.when(countriesService.getCountries(countries.getId())).thenReturn(countries);
 
@@ -76,13 +81,11 @@ public class CountriesControllerTest {
     public void testGetCountriesWrongFormatId() throws Exception {
         String wrongId = "123";
 
-       IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/countries/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
@@ -91,9 +94,7 @@ public class CountriesControllerTest {
         CountriesCreateDTO create = new CountriesCreateDTO();
         create.setName("Laplandia");
 
-        CountriesReadDTO read = new CountriesReadDTO();
-        read.setId(UUID.randomUUID());
-        read.setName("Laplandia");
+        CountriesReadDTO read = createCountriesRead();
 
         Mockito.when(countriesService.createCountries(create)).thenReturn(read);
 
@@ -105,5 +106,34 @@ public class CountriesControllerTest {
 
         CountriesReadDTO actualCountries = objectMapper.readValue(resultJson, CountriesReadDTO.class);
         Assertions.assertThat(actualCountries).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCountries() throws Exception {
+
+        CountriesPatchDTO patchDTO = new CountriesPatchDTO();
+        patchDTO.setName("Laplandia");
+
+        CountriesReadDTO read = createCountriesRead();
+
+        Mockito.when(countriesService.patchCountries(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CountriesReadDTO actualCountries = objectMapper.readValue(resultJson, CountriesReadDTO.class);
+        Assert.assertEquals(read, actualCountries);
+    }
+
+    @Test
+    public void testDeleteCountries() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/countries/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(countriesService).deleteCountries(id);
     }
 }

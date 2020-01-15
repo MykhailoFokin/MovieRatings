@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Countries;
 import solvve.course.dto.CountriesCreateDTO;
+import solvve.course.dto.CountriesPatchDTO;
 import solvve.course.dto.CountriesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountriesRepository;
@@ -19,9 +20,7 @@ public class CountriesService {
 
     @Transactional(readOnly = true)
     public CountriesReadDTO getCountries(UUID id) {
-        Countries countries = countriesRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Countries.class, id);
-        });
+        Countries countries = getCountriesRequired(id);
         return toRead(countries);
     }
 
@@ -38,5 +37,28 @@ public class CountriesService {
 
         countries = countriesRepository.save(countries);
         return toRead(countries);
+    }
+
+    public CountriesReadDTO patchCountries(UUID id, CountriesPatchDTO patch) {
+        Countries countries = getCountriesRequired(id);
+
+        if (patch.getName()!=null) {
+            countries.setName(patch.getName());
+        }
+        if (patch.getMovies()!=null) {
+            countries.setMovies(patch.getMovies());
+        }
+        countries = countriesRepository.save(countries);
+        return toRead(countries);
+    }
+
+    private Countries getCountriesRequired(UUID id) {
+        return countriesRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Countries.class, id);
+        });
+    }
+
+    public void deleteCountries(UUID id) {
+        countriesRepository.delete(getCountriesRequired(id));
     }
 }

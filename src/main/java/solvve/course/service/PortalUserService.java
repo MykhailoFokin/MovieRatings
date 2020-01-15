@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
 import solvve.course.dto.PortalUserCreateDTO;
+import solvve.course.dto.PortalUserPatchDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
@@ -19,9 +20,7 @@ public class PortalUserService {
 
     @Transactional(readOnly = true)
     public PortalUserReadDTO getPortalUser(UUID id) {
-        PortalUser portalUser = portalUserRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(PortalUser.class, id);
-        });
+        PortalUser portalUser = getPortalUserRequired(id);
         return toRead(portalUser);
     }
 
@@ -48,5 +47,40 @@ public class PortalUserService {
 
         portalUser = portalUserRepository.save(portalUser);
         return toRead(portalUser);
+    }
+
+    public PortalUserReadDTO patchPortalUser(UUID id, PortalUserPatchDTO patch) {
+        PortalUser portalUser = getPortalUserRequired(id);
+
+        if (patch.getLogin()!=null) {
+            portalUser.setLogin(patch.getLogin());
+        }
+        if (patch.getSurname()!=null) {
+            portalUser.setSurname(patch.getSurname());
+        }
+        if (patch.getName()!=null) {
+            portalUser.setName(patch.getName());
+        }
+        if (patch.getMiddleName()!=null) {
+            portalUser.setMiddleName(patch.getMiddleName());
+        }
+        if (patch.getUserType()!=null) {
+            portalUser.setUserType(patch.getUserType());
+        }
+        if (patch.getUserConfidence()!=null) {
+            portalUser.setUserConfidence(patch.getUserConfidence());
+        }
+        portalUser = portalUserRepository.save(portalUser);
+        return toRead(portalUser);
+    }
+
+    private PortalUser getPortalUserRequired(UUID id) {
+        return portalUserRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(PortalUser.class, id);
+        });
+    }
+
+    public void deletePortalUser(UUID id) {
+        portalUserRepository.delete(getPortalUserRequired(id));
     }
 }

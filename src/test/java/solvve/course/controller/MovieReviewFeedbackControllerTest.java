@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.MovieReviewFeedbackCreateDTO;
+import solvve.course.dto.MovieReviewFeedbackPatchDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieReviewFeedbackService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,14 +39,16 @@ public class MovieReviewFeedbackControllerTest {
     @MockBean
     private MovieReviewFeedbackService movieReviewFeedbackService;
 
-    @Test
-    public void testGetMovieReviewFeedback() throws Exception {
+    private MovieReviewFeedbackReadDTO createMovieReviewFeedbackRead() {
         MovieReviewFeedbackReadDTO movieReviewFeedback = new MovieReviewFeedbackReadDTO();
         movieReviewFeedback.setId(UUID.randomUUID());
-        //movieReviewFeedback.setUserId(portalUserReadDTO.getId());
-        //movieReviewFeedback.setMovieId(movieReadDTO.getId());
-        //movieReviewFeedback.setMovieReviewId(movieReviewReadDTO.getId());
         movieReviewFeedback.setIsLiked(true);
+        return movieReviewFeedback;
+    }
+
+    @Test
+    public void testGetMovieReviewFeedback() throws Exception {
+        MovieReviewFeedbackReadDTO movieReviewFeedback = createMovieReviewFeedbackRead();
 
         Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId())).thenReturn(movieReviewFeedback);
 
@@ -79,30 +81,20 @@ public class MovieReviewFeedbackControllerTest {
     public void testGetMovieReviewFeedbackWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/moviereviewfeedback/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateMovieReviewFeedback() throws Exception {
 
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
-        //create.setMovieId(movieReadDTO.getId());
-        //create.setMovieReviewId(movieReviewReadDTO.getId());
         create.setIsLiked(true);
 
-        MovieReviewFeedbackReadDTO read = new MovieReviewFeedbackReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        //read.setMovieId(movieReadDTO.getId());
-        //read.setMovieReviewId(movieReviewReadDTO.getId());
-        read.setIsLiked(true);
+        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
 
         Mockito.when(movieReviewFeedbackService.createMovieReviewFeedback(create)).thenReturn(read);
 
@@ -114,5 +106,34 @@ public class MovieReviewFeedbackControllerTest {
 
         MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualMovieReviewFeedback).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieReviewFeedback() throws Exception {
+
+        MovieReviewFeedbackPatchDTO patchDTO = new MovieReviewFeedbackPatchDTO();
+        patchDTO.setIsLiked(true);
+
+        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
+
+        Mockito.when(movieReviewFeedbackService.patchMovieReviewFeedback(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/moviereviewfeedback/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
+        Assert.assertEquals(read, actualMovieReviewFeedback);
+    }
+
+    @Test
+    public void testDeleteMovieReviewFeedback() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/moviereviewfeedback/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(movieReviewFeedbackService).deleteMovieReviewFeedback(id);
     }
 }

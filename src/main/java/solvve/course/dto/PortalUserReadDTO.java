@@ -1,9 +1,13 @@
 package solvve.course.dto;
 
+import lombok.Data;
+import solvve.course.domain.Grants;
 import solvve.course.domain.UserConfidenceType;
 
+import java.util.Set;
 import java.util.UUID;
 
+@Data
 public class PortalUserReadDTO {
 
     private UUID id;
@@ -18,57 +22,7 @@ public class PortalUserReadDTO {
 
     private UUID userType;
 
-    private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
+    private UserConfidenceType userConfidence;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public UUID getUserType() { return userType; }
-
-    public void setUserType(UUID userType) { this.userType = userType; }
-
-    public UserConfidenceType getUserConfidence() {
-        return userConfidence;
-    }
-
-    public void setUserConfidence(UserConfidenceType userConfidence) {
-        this.userConfidence = userConfidence;
-    }
+    private Set<Grants> grants;
 }

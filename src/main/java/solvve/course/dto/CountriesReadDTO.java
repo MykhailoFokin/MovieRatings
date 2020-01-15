@@ -1,26 +1,18 @@
 package solvve.course.dto;
 
+import lombok.Data;
+import solvve.course.domain.Movie;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+@Data
 public class CountriesReadDTO {
 
     private UUID id;
 
     private String name;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private Set<Movie> movies = new HashSet<>();
 }

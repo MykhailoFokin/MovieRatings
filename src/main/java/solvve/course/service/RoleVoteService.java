@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.RoleVote;
 import solvve.course.dto.RoleVoteCreateDTO;
+import solvve.course.dto.RoleVotePatchDTO;
 import solvve.course.dto.RoleVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleVoteRepository;
@@ -19,9 +20,7 @@ public class RoleVoteService {
 
     @Transactional(readOnly = true)
     public RoleVoteReadDTO getRoleVote(UUID id) {
-        RoleVote roleVote = roleVoteRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleVote.class, id);
-        });
+        RoleVote roleVote = getRoleVoteRequired(id);
         return toRead(roleVote);
     }
 
@@ -42,5 +41,31 @@ public class RoleVoteService {
 
         roleVote = roleVoteRepository.save(roleVote);
         return toRead(roleVote);
+    }
+
+    public RoleVoteReadDTO patchRoleVote(UUID id, RoleVotePatchDTO patch) {
+        RoleVote roleVote = getRoleVoteRequired(id);
+
+        if (patch.getUserId()!=null) {
+            roleVote.setUserId(patch.getUserId());
+        }
+        if (patch.getRoleId()!=null) {
+            roleVote.setRoleId(patch.getRoleId());
+        }
+        if (patch.getRating()!=null) {
+            roleVote.setRating(patch.getRating());
+        }
+        roleVote = roleVoteRepository.save(roleVote);
+        return toRead(roleVote);
+    }
+
+    private RoleVote getRoleVoteRequired(UUID id) {
+        return roleVoteRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(RoleVote.class, id);
+        });
+    }
+
+    public void deleteRoleVote(UUID id) {
+        roleVoteRepository.delete(getRoleVoteRequired(id));
     }
 }

@@ -1,7 +1,5 @@
 package solvve.course.domain;
 
-import solvve.course.dto.UserModeratedStatusType;
-
 import javax.persistence.*;
 import java.util.UUID;
 

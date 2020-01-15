@@ -1,5 +1,6 @@
 package solvve.course.dto;
 
+import lombok.Data;
 import solvve.course.domain.Grants;
 import solvve.course.domain.UserPermType;
 import solvve.course.domain.UserTypes;
@@ -7,6 +8,7 @@ import solvve.course.domain.UserTypes;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Data
 public class GrantsReadDTO implements Serializable {
 
     private UUID id;
@@ -18,44 +20,4 @@ public class GrantsReadDTO implements Serializable {
     private String objectName;
 
     private UUID grantedBy;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UserTypes getUserTypeId() {
-        return userTypeId;
-    }
-
-    public void setUserTypeId(UserTypes userTypeId) {
-        this.userTypeId = userTypeId;
-    }
-
-    public UserPermType getUserPermission() {
-        return userPermission;
-    }
-
-    public void setUserPermission(UserPermType userPermission) {
-        this.userPermission = userPermission;
-    }
-
-    public String getObjectName() {
-        return objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
-    }
-
-    public UUID getGrantedBy() {
-        return grantedBy;
-    }
-
-    public void setGrantedBy(UUID grantedBy) {
-        this.grantedBy = grantedBy;
-    }
 }

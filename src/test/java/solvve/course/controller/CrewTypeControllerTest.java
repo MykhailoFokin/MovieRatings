@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
+import solvve.course.dto.CrewTypePatchDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.CrewTypeService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,11 +39,16 @@ public class CrewTypeControllerTest {
     @MockBean
     private CrewTypeService crewTypeService;
 
-    @Test
-    public void testGetCrewType() throws Exception {
+    private CrewTypeReadDTO createCrewTypeRead() {
         CrewTypeReadDTO crewType = new CrewTypeReadDTO();
         crewType.setId(UUID.randomUUID());
         crewType.setName("Director");
+        return crewType;
+    }
+
+    @Test
+    public void testGetCrewType() throws Exception {
+        CrewTypeReadDTO crewType = createCrewTypeRead();
 
         Mockito.when(crewTypeService.getCrewType(crewType.getId())).thenReturn(crewType);
 
@@ -76,13 +81,11 @@ public class CrewTypeControllerTest {
     public void testGetCrewTypeWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/crewtype/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
@@ -91,9 +94,7 @@ public class CrewTypeControllerTest {
         CrewTypeCreateDTO create = new CrewTypeCreateDTO();
         create.setName("Director");
 
-        CrewTypeReadDTO read = new CrewTypeReadDTO();
-        read.setId(UUID.randomUUID());
-        read.setName("Director");
+        CrewTypeReadDTO read = createCrewTypeRead();
 
         Mockito.when(crewTypeService.createCrewType(create)).thenReturn(read);
 
@@ -105,5 +106,34 @@ public class CrewTypeControllerTest {
 
         CrewTypeReadDTO actualCrewType = objectMapper.readValue(resultJson, CrewTypeReadDTO.class);
         Assertions.assertThat(actualCrewType).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCrewType() throws Exception {
+
+        CrewTypePatchDTO patchDTO = new CrewTypePatchDTO();
+        patchDTO.setName("Director");
+
+        CrewTypeReadDTO read = createCrewTypeRead();
+
+        Mockito.when(crewTypeService.patchCrewType(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/crewtype/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CrewTypeReadDTO actualCrewType = objectMapper.readValue(resultJson, CrewTypeReadDTO.class);
+        Assert.assertEquals(read, actualCrewType);
+    }
+
+    @Test
+    public void testDeleteCrewType() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/crewtype/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(crewTypeService).deleteCrewType(id);
     }
 }

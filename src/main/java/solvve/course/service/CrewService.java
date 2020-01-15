@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
 import solvve.course.dto.CrewCreateDTO;
+import solvve.course.dto.CrewPatchDTO;
 import solvve.course.dto.CrewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
@@ -19,9 +20,7 @@ public class CrewService {
 
     @Transactional(readOnly = true)
     public CrewReadDTO getCrew(UUID id) {
-        Crew crew = crewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Crew.class, id);
-        });
+        Crew crew = getCrewRequired(id);
         return toRead(crew);
     }
 
@@ -44,5 +43,34 @@ public class CrewService {
 
         crew = crewRepository.save(crew);
         return toRead(crew);
+    }
+
+    public CrewReadDTO patchCrew(UUID id, CrewPatchDTO patch) {
+        Crew crew = getCrewRequired(id);
+
+        if (patch.getMovieId()!=null) {
+            crew.setMovieId(patch.getMovieId());
+        }
+        if (patch.getPersonId()!=null) {
+            crew.setPersonId(patch.getPersonId());
+        }
+        if (patch.getCrewType()!=null) {
+            crew.setCrewType(patch.getCrewType());
+        }
+        if (patch.getDescription()!=null) {
+            crew.setDescription(patch.getDescription());
+        }
+        crew = crewRepository.save(crew);
+        return toRead(crew);
+    }
+
+    private Crew getCrewRequired(UUID id) {
+        return crewRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Crew.class, id);
+        });
+    }
+
+    public void deleteCrew(UUID id) {
+        crewRepository.delete(getCrewRequired(id));
     }
 }

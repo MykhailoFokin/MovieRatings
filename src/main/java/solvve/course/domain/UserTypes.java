@@ -34,11 +34,11 @@ public class UserTypes implements Serializable {
         this.userGroup = userGroup;
     }
 
-    public Set<Grants> getUserTypes() {
+    public Set<Grants> getGrants() {
         return grants;
     }
 
-    public void setUserTypes(Set<Grants> grants) {
+    public void setGrants(Set<Grants> grants) {
         this.grants = grants;
     }
 }

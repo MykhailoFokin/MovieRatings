@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieReviewCompliant;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
+import solvve.course.dto.MovieReviewCompliantPatchDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewCompliantRepository;
@@ -19,9 +20,7 @@ public class MovieReviewCompliantService {
 
     @Transactional(readOnly = true)
     public MovieReviewCompliantReadDTO getMovieReviewCompliant(UUID id) {
-        MovieReviewCompliant movieReviewCompliant = movieReviewCompliantRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieReviewCompliant.class, id);
-        });
+        MovieReviewCompliant movieReviewCompliant = getMovieReviewCompliantRequired(id);
         return toRead(movieReviewCompliant);
     }
 
@@ -48,5 +47,40 @@ public class MovieReviewCompliantService {
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
         return toRead(movieReviewCompliant);
+    }
+
+    public MovieReviewCompliantReadDTO patchMovieReviewCompliant(UUID id, MovieReviewCompliantPatchDTO patch) {
+        MovieReviewCompliant movieReviewCompliant = getMovieReviewCompliantRequired(id);
+
+        if (patch.getUserId()!=null) {
+            movieReviewCompliant.setUserId(patch.getUserId());
+        }
+        if (patch.getMovieId()!=null) {
+            movieReviewCompliant.setMovieId(patch.getMovieId());
+        }
+        if (patch.getMovieReviewId()!=null) {
+            movieReviewCompliant.setMovieReviewId(patch.getMovieReviewId());
+        }
+        if (patch.getDescription()!=null) {
+            movieReviewCompliant.setDescription(patch.getDescription());
+        }
+        if (patch.getModeratedStatus()!=null) {
+            movieReviewCompliant.setModeratedStatus(patch.getModeratedStatus());
+        }
+        if (patch.getModeratorId()!=null) {
+            movieReviewCompliant.setModeratorId(patch.getModeratorId());
+        }
+        movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
+        return toRead(movieReviewCompliant);
+    }
+
+    private MovieReviewCompliant getMovieReviewCompliantRequired(UUID id) {
+        return movieReviewCompliantRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(MovieReviewCompliant.class, id);
+        });
+    }
+
+    public void deleteMovieReviewCompliant(UUID id) {
+        movieReviewCompliantRepository.delete(getMovieReviewCompliantRequired(id));
     }
 }

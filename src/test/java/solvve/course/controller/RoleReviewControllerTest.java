@@ -15,15 +15,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReview;
 import solvve.course.dto.RoleReviewCreateDTO;
+import solvve.course.dto.RoleReviewPatchDTO;
 import solvve.course.dto.RoleReviewReadDTO;
-import solvve.course.dto.UserModeratedStatusType;
+import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleReviewService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,15 +40,17 @@ public class RoleReviewControllerTest {
     @MockBean
     private RoleReviewService roleReviewService;
 
-    @Test
-    public void testGetRoleReview() throws Exception {
+    private RoleReviewReadDTO createRoleReviewRead() {
         RoleReviewReadDTO roleReview = new RoleReviewReadDTO();
         roleReview.setId(UUID.randomUUID());
-        //roleReview.setUserId(portalUserReadDTO.getId());
-        //roleReview.setRoleId(roleReadDTO.getId());
         roleReview.setTextReview("This role can be described as junk.");
         roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //roleReview.setModeratorId(portalUserReadDTO.getId());
+        return roleReview;
+    }
+
+    @Test
+    public void testGetRoleReview() throws Exception {
+        RoleReviewReadDTO roleReview = createRoleReviewRead();
 
         Mockito.when(roleReviewService.getRoleReview(roleReview.getId())).thenReturn(roleReview);
 
@@ -56,7 +58,6 @@ public class RoleReviewControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         RoleReviewReadDTO actualMovie = objectMapper.readValue(resultJson, RoleReviewReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(roleReview);
 
@@ -81,32 +82,21 @@ public class RoleReviewControllerTest {
     public void testGetRoleReviewWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/rolereview/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateRoleReview() throws Exception {
 
         RoleReviewCreateDTO create = new RoleReviewCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
-        //create.setRoleId(roleReadDTO.getId());
         create.setTextReview("This role can be described as junk.");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //create.setModeratorId(portalUserReadDTO.getId());
 
-        RoleReviewReadDTO read = new RoleReviewReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        //read.setRoleId(roleReadDTO.getId());
-        read.setTextReview("This role can be described as junk.");
-        read.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //read.setModeratorId(portalUserReadDTO.getId());
+        RoleReviewReadDTO read = createRoleReviewRead();
 
         Mockito.when(roleReviewService.createRoleReview(create)).thenReturn(read);
 
@@ -118,5 +108,35 @@ public class RoleReviewControllerTest {
 
         RoleReviewReadDTO actualRoleReview = objectMapper.readValue(resultJson, RoleReviewReadDTO.class);
         Assertions.assertThat(actualRoleReview).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleReview() throws Exception {
+
+        RoleReviewPatchDTO patchDTO = new RoleReviewPatchDTO();
+        patchDTO.setTextReview("This role can be described as junk.");
+        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        RoleReviewReadDTO read = createRoleReviewRead();
+
+        Mockito.when(roleReviewService.patchRoleReview(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/rolereview/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReviewReadDTO actualRoleReview = objectMapper.readValue(resultJson, RoleReviewReadDTO.class);
+        Assert.assertEquals(read, actualRoleReview);
+    }
+
+    @Test
+    public void testDeleteRoleReview() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/rolereview/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(roleReviewService).deleteRoleReview(id);
     }
 }

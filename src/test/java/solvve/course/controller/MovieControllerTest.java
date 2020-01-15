@@ -15,14 +15,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieCreateDTO;
+import solvve.course.dto.MoviePatchDTO;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
@@ -41,14 +42,29 @@ public class MovieControllerTest {
     @MockBean
     private MovieService movieService;
 
-    @Test
-    public void testGetMovie() throws Exception {
-
+    private MovieReadDTO createMovieRead() {
         MovieReadDTO movie = new MovieReadDTO();
         movie.setId(UUID.randomUUID());
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
         movie.setGenres("Comedy");
+        movie.setAspectRatio("1:10");
+        movie.setCamera("Panasonic");
+        movie.setColour("Black");
+        movie.setCompanies("Paramount");
+        movie.setCritique("123");
+        movie.setDescription("Description");
+        movie.setFilmingLocations("USA");
+        movie.setLaboratory("CaliforniaDreaming");
+        movie.setLanguages("English");
+        movie.setSoundMix("DolbySurround");
+        return movie;
+    }
+
+    @Test
+    public void testGetMovie() throws Exception {
+
+        MovieReadDTO movie = createMovieRead();
 
         Mockito.when(movieService.getMovie(movie.getId())).thenReturn(movie);
 
@@ -81,13 +97,11 @@ public class MovieControllerTest {
     public void testGetMovieWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/movie/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
@@ -108,21 +122,7 @@ public class MovieControllerTest {
         create.setLanguages("English");
         create.setSoundMix("DolbySurround");
 
-        MovieReadDTO read = new MovieReadDTO();
-        read.setId(UUID.randomUUID());
-        read.setTitle("Movie Test");
-        read.setYear((short) 2019);
-        read.setGenres("Comedy");
-        read.setAspectRatio("1:10");
-        read.setCamera("Panasonic");
-        read.setColour("Black");
-        read.setCompanies("Paramount");
-        read.setCritique("123");
-        read.setDescription("Description");
-        read.setFilmingLocations("USA");
-        read.setLaboratory("CaliforniaDreaming");
-        read.setLanguages("English");
-        read.setSoundMix("DolbySurround");
+        MovieReadDTO read = createMovieRead();
 
         Mockito.when(movieService.createMovie(create)).thenReturn(read);
 
@@ -134,5 +134,46 @@ public class MovieControllerTest {
 
         MovieReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovie() throws Exception {
+
+        MoviePatchDTO patchDTO = new MoviePatchDTO();
+        patchDTO.setTitle("Movie Test");
+        patchDTO.setYear((short) 2019);
+        patchDTO.setGenres("Comedy");
+        patchDTO.setAspectRatio("1:10");
+        patchDTO.setCamera("Panasonic");
+        patchDTO.setColour("Black");
+        patchDTO.setCompanies("Paramount");
+        patchDTO.setCritique("123");
+        patchDTO.setDescription("Description");
+        patchDTO.setFilmingLocations("USA");
+        patchDTO.setLaboratory("CaliforniaDreaming");
+        patchDTO.setLanguages("English");
+        patchDTO.setSoundMix("DolbySurround");
+
+        MovieReadDTO read = createMovieRead();
+
+        Mockito.when(movieService.patchMovie(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/movie/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReadDTO.class);
+        Assert.assertEquals(read, actualMovie);
+    }
+
+    @Test
+    public void testDeleteMovie() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/movie/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(movieService).deleteMovie(id);
     }
 }

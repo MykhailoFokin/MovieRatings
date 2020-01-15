@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,16 @@ public class MovieReviewServiceTest {
 
     private MovieReadDTO movieReadDTO;
 
+    private MovieReview createMovieReview() {
+        MovieReview movieReview = new MovieReview();
+        movieReview.setUserId(portalUserReadDTO.getId());
+        movieReview.setMovieId(movieReadDTO.getId());
+        movieReview.setTextReview("This movie can be described as junk.");
+        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        movieReview.setModeratorId(portalUserReadDTO.getId());
+        return movieReviewRepository.save(movieReview);
+    }
+
     @Before
     public void setup() {
         if (movieReadDTO==null) {
@@ -92,14 +103,7 @@ public class MovieReviewServiceTest {
 
     @Test
     public void testGetMovieReview() {
-        MovieReview movieReview = new MovieReview();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setUserId(portalUserReadDTO.getId());
-        movieReview.setMovieId(movieReadDTO.getId());
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReview.setModeratorId(portalUserReadDTO.getId());
-        movieReview = movieReviewRepository.save(movieReview);
+        MovieReview movieReview = createMovieReview();
 
         MovieReviewReadDTO readDTO = movieReviewService.getMovieReview(movieReview.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReview);
@@ -124,5 +128,60 @@ public class MovieReviewServiceTest {
 
         MovieReview movieReview = movieReviewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieReview);
+    }
+
+    @Test
+    public void testPatchMovieReview() {
+        MovieReview movieReview = createMovieReview();
+
+        MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setMovieId(movieReadDTO.getId());
+        patch.setTextReview("This movie can be described as junk.");
+        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        patch.setModeratorId(portalUserReadDTO.getId());
+        MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        movieReview = movieReviewRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieReview).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieReviewEmptyPatch() {
+        MovieReview movieReview = createMovieReview();
+
+        MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
+        MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
+
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getTextReview());
+        Assert.assertNotNull(read.getModeratorId());
+        Assert.assertNotNull(read.getModeratedStatus());
+
+        MovieReview movieReviewAfterUpdate = movieReviewRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(movieReviewAfterUpdate.getUserId());
+        Assert.assertNotNull(movieReviewAfterUpdate.getMovieId());
+        Assert.assertNotNull(movieReviewAfterUpdate.getTextReview());
+        Assert.assertNotNull(movieReviewAfterUpdate.getModeratorId());
+        Assert.assertNotNull(movieReviewAfterUpdate.getModeratedStatus());
+
+        Assertions.assertThat(movieReview).isEqualToComparingFieldByField(movieReviewAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteMovieReview() {
+        MovieReview movieReview = createMovieReview();
+
+        movieReviewService.deleteMovieReview(movieReview.getId());
+        Assert.assertFalse(movieReviewRepository.existsById(movieReview.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteMovieReviewNotFound() {
+        movieReviewService.deleteMovieReview(UUID.randomUUID());
     }
 }

@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReviewFeedback;
 import solvve.course.dto.RoleReviewFeedbackCreateDTO;
+import solvve.course.dto.RoleReviewFeedbackPatchDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleReviewFeedbackService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,14 +39,16 @@ public class RoleReviewFeedbackControllerTest {
     @MockBean
     private RoleReviewFeedbackService roleReviewFeedbackService;
 
-    @Test
-    public void testGetRoleReviewFeedback() throws Exception {
+    private RoleReviewFeedbackReadDTO createRoleReviewFeedbackRead() {
         RoleReviewFeedbackReadDTO roleReviewFeedback = new RoleReviewFeedbackReadDTO();
         roleReviewFeedback.setId(UUID.randomUUID());
-        //roleReviewFeedback.setUserId(portalUserReadDTO.getId());
-        //roleReviewFeedback.setRoleId(roleReadDTO.getId());
-        //roleReviewFeedback.setRoleReviewId(roleReviewReadDTO.getId());
         roleReviewFeedback.setIsLiked(true);
+        return roleReviewFeedback;
+    }
+
+    @Test
+    public void testGetRoleReviewFeedback() throws Exception {
+        RoleReviewFeedbackReadDTO roleReviewFeedback = createRoleReviewFeedbackRead();
 
         Mockito.when(roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId())).thenReturn(roleReviewFeedback);
 
@@ -54,7 +56,6 @@ public class RoleReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         RoleReviewFeedbackReadDTO actualMovie = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(roleReviewFeedback);
 
@@ -79,30 +80,20 @@ public class RoleReviewFeedbackControllerTest {
     public void testGetMovieReviewFeedbackWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/rolereviewfeedback/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateRoleReviewFeedback() throws Exception {
 
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
-        //create.setRoleId(roleReadDTO.getId());
-        //create.setRoleReviewId(roleReviewReadDTO.getId());
         create.setIsLiked(true);
 
-        RoleReviewFeedbackReadDTO read = new RoleReviewFeedbackReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        //read.setRoleId(roleReadDTO.getId());
-        //read.setRoleReviewId(roleReviewReadDTO.getId());
-        read.setIsLiked(true);
+        RoleReviewFeedbackReadDTO read =createRoleReviewFeedbackRead();
 
         Mockito.when(roleReviewFeedbackService.createRoleReviewFeedback(create)).thenReturn(read);
 
@@ -114,5 +105,34 @@ public class RoleReviewFeedbackControllerTest {
 
         RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualRoleReviewFeedback).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleReviewFeedback() throws Exception {
+
+        RoleReviewFeedbackPatchDTO patchDTO = new RoleReviewFeedbackPatchDTO();
+        patchDTO.setIsLiked(true);
+
+        RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead();
+
+        Mockito.when(roleReviewFeedbackService.patchRoleReviewFeedback(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/rolereviewfeedback/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
+        Assert.assertEquals(read, actualRoleReviewFeedback);
+    }
+
+    @Test
+    public void testDeleteRoleReviewFeedback() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/rolereviewfeedback/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(roleReviewFeedbackService).deleteRoleReviewFeedback(id);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.News;
 import solvve.course.dto.NewsCreateDTO;
+import solvve.course.dto.NewsPatchDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.NewsService;
@@ -23,8 +24,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -41,14 +41,18 @@ public class NewsControllerTest {
     @MockBean
     private NewsService newsService;
 
-    @Test
-    public void testGetNews() throws Exception {
+    private NewsReadDTO createNewsRead() {
         NewsReadDTO news = new NewsReadDTO();
         news.setId(UUID.randomUUID());
-        //news.setUserId(portalUserReadDTO.getId());
         news.setTopic("Main_News");
         news.setDescription("Our main news are absent today!");
         news.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        return news;
+    }
+
+    @Test
+    public void testGetNews() throws Exception {
+        NewsReadDTO news = createNewsRead();
 
         Mockito.when(newsService.getNews(news.getId())).thenReturn(news);
 
@@ -56,7 +60,6 @@ public class NewsControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         NewsReadDTO actualMovie = objectMapper.readValue(resultJson, NewsReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(news);
 
@@ -81,30 +84,22 @@ public class NewsControllerTest {
     public void testGetNewsWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/news/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateNews() throws Exception {
 
         NewsCreateDTO create = new NewsCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
         create.setTopic("Main_News");
         create.setDescription("Our main news are absent today!");
         create.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
-        NewsReadDTO read = new NewsReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        read.setTopic("Main_News");
-        read.setDescription("Our main news are absent today!");
-        read.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        NewsReadDTO read = createNewsRead();
 
         Mockito.when(newsService.createNews(create)).thenReturn(read);
 
@@ -116,5 +111,36 @@ public class NewsControllerTest {
 
         NewsReadDTO actualNews = objectMapper.readValue(resultJson, NewsReadDTO.class);
         Assertions.assertThat(actualNews).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchNews() throws Exception {
+
+        NewsPatchDTO patchDTO = new NewsPatchDTO();
+        patchDTO.setTopic("Main_News");
+        patchDTO.setDescription("Our main news are absent today!");
+        patchDTO.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+
+        NewsReadDTO read = createNewsRead();
+
+        Mockito.when(newsService.patchNews(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/news/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        NewsReadDTO actualNews = objectMapper.readValue(resultJson, NewsReadDTO.class);
+        Assert.assertEquals(read, actualNews);
+    }
+
+    @Test
+    public void testDeleteNews() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/news/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(newsService).deleteNews(id);
     }
 }

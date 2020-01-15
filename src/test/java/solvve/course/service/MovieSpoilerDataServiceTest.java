@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,14 @@ public class MovieSpoilerDataServiceTest {
 
     private MovieReviewReadDTO movieReviewReadDTO;
 
+    private MovieSpoilerData createMovieSpoilerData() {
+        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
+        movieSpoilerData.setMovieReviewId(movieReviewReadDTO.getId());
+        movieSpoilerData.setStartIndex(100);
+        movieSpoilerData.setEndIndex(150);
+        return movieSpoilerDataRepository.save(movieSpoilerData);
+    }
+
     @Before
     public void setup() {
         if (movieReviewReadDTO==null) {
@@ -104,12 +113,7 @@ public class MovieSpoilerDataServiceTest {
 
     @Test
     public void testGetMovieSpoilerData() {
-        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
-        movieSpoilerData.setId(UUID.randomUUID());
-        movieSpoilerData.setMovieReviewId(movieReviewReadDTO.getId());
-        movieSpoilerData.setStartIndex(100);
-        movieSpoilerData.setEndIndex(150);
-        movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
+        MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
 
         MovieSpoilerDataReadDTO readDTO = movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieSpoilerData);
@@ -132,5 +136,54 @@ public class MovieSpoilerDataServiceTest {
 
         MovieSpoilerData movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieSpoilerData);
+    }
+
+    @Test
+    public void testPatchMovieSpoilerData() {
+        MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
+
+        MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
+        patch.setMovieReviewId(movieReviewReadDTO.getId());
+        patch.setStartIndex(100);
+        patch.setEndIndex(150);
+        MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieSpoilerDataEmptyPatch() {
+        MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
+
+        MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
+        MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
+
+        Assert.assertNotNull(read.getMovieReviewId());
+        Assert.assertNotNull(read.getStartIndex());
+        Assert.assertNotNull(read.getEndIndex());
+
+        MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReviewId());
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getStartIndex());
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getEndIndex());
+
+        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(movieSpoilerDataAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteMovieSpoilerData() {
+        MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
+
+        movieSpoilerDataService.deleteMovieSpoilerData(movieSpoilerData.getId());
+        Assert.assertFalse(movieSpoilerDataRepository.existsById(movieSpoilerData.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteMovieSpoilerDataNotFound() {
+        movieSpoilerDataService.deleteMovieSpoilerData(UUID.randomUUID());
     }
 }

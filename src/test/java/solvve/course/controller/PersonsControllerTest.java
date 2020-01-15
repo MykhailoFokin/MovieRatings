@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Persons;
 import solvve.course.dto.PersonsCreateDTO;
+import solvve.course.dto.PersonsPatchDTO;
 import solvve.course.dto.PersonsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.PersonsService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,13 +39,18 @@ public class PersonsControllerTest {
     @MockBean
     private PersonsService personsService;
 
-    @Test
-    public void testGetPersons() throws Exception {
+    private PersonsReadDTO createPersonsRead() {
         PersonsReadDTO persons = new PersonsReadDTO();
         persons.setId(UUID.randomUUID());
         persons.setSurname("Surname");
         persons.setName("Name");
         persons.setMiddleName("MiddleName");
+        return persons;
+    }
+
+    @Test
+    public void testGetPersons() throws Exception {
+        PersonsReadDTO persons = createPersonsRead();
 
         Mockito.when(personsService.getPersons(persons.getId())).thenReturn(persons);
 
@@ -53,7 +58,6 @@ public class PersonsControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         PersonsReadDTO actualMovie = objectMapper.readValue(resultJson, PersonsReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(persons);
 
@@ -78,13 +82,11 @@ public class PersonsControllerTest {
     public void testGetPersonsWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/persons/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
@@ -95,11 +97,7 @@ public class PersonsControllerTest {
         create.setName("Name");
         create.setMiddleName("MiddleName");
 
-        PersonsReadDTO read = new PersonsReadDTO();
-        read.setId(UUID.randomUUID());
-        read.setSurname("Surname");
-        read.setName("Name");
-        read.setMiddleName("MiddleName");
+        PersonsReadDTO read = createPersonsRead();
 
         Mockito.when(personsService.createPersons(create)).thenReturn(read);
 
@@ -111,5 +109,36 @@ public class PersonsControllerTest {
 
         PersonsReadDTO actualPersons = objectMapper.readValue(resultJson, PersonsReadDTO.class);
         Assertions.assertThat(actualPersons).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchPersons() throws Exception {
+
+        PersonsPatchDTO patchDTO = new PersonsPatchDTO();
+        patchDTO.setSurname("Surname");
+        patchDTO.setName("Name");
+        patchDTO.setMiddleName("MiddleName");
+
+        PersonsReadDTO read = createPersonsRead();
+
+        Mockito.when(personsService.patchPersons(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PersonsReadDTO actualPersons = objectMapper.readValue(resultJson, PersonsReadDTO.class);
+        Assert.assertEquals(read, actualPersons);
+    }
+
+    @Test
+    public void testDeletePersons() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/persons/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(personsService).deletePersons(id);
     }
 }

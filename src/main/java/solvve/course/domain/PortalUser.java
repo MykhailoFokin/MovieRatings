@@ -67,9 +67,13 @@ public class PortalUser {
         this.middleName = middleName;
     }
 
-    public UUID getUserType() { return userType; }
+    public UUID getUserType() {
+        return userType;
+    }
 
-    public void setUserType(UUID userType) { this.userType = userType; }
+    public void setUserType(UUID userType) {
+        this.userType = userType;
+    }
 
     public UserConfidenceType getUserConfidence() {
         return userConfidence;
@@ -77,5 +81,13 @@ public class PortalUser {
 
     public void setUserConfidence(UserConfidenceType userConfidence) {
         this.userConfidence = userConfidence;
+    }
+
+    public Set<Grants> getGrants() {
+        return grants;
+    }
+
+    public void setGrants(Set<Grants> grants) {
+        this.grants = grants;
     }
 }

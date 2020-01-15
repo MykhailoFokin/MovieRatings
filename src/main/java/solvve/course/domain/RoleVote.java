@@ -1,7 +1,5 @@
 package solvve.course.domain;
 
-import solvve.course.dto.UserModeratedStatusType;
-
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -16,7 +14,8 @@ public class RoleVote {
 
     private UUID roleId;
 
-    private int rating;
+    @Enumerated(EnumType.ORDINAL)
+    private UserVoteRatingType rating;
 
     public UUID getId() {
         return id;
@@ -42,9 +41,11 @@ public class RoleVote {
         this.roleId = roleId;
     }
 
-    public UserVoteRatingType getRating() { return UserVoteRatingType.parse(this.rating); }
+    public UserVoteRatingType getRating() {
+        return rating;
+    }
 
     public void setRating(UserVoteRatingType rating) {
-        this.rating = rating.getValue();
+        this.rating = rating;
     }
 }

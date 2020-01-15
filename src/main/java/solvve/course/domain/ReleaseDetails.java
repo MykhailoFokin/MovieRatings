@@ -27,6 +27,14 @@ public class ReleaseDetails {
         this.id = id;
     }
 
+    public UUID getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(UUID movieId) {
+        this.movieId = movieId;
+    }
+
     public Date getReleaseDate() {
         return releaseDate;
     }
@@ -41,13 +49,5 @@ public class ReleaseDetails {
 
     public void setCountryId(UUID countryId) {
         this.countryId = countryId;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
     }
 }

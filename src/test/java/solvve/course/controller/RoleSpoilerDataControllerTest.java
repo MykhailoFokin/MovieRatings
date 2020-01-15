@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleSpoilerData;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
+import solvve.course.dto.RoleSpoilerDataPatchDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleSpoilerDataService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,13 +39,17 @@ public class RoleSpoilerDataControllerTest {
     @MockBean
     private RoleSpoilerDataService roleSpoilerDataService;
 
-    @Test
-    public void testGetRoleSpoilerData() throws Exception {
+    private RoleSpoilerDataReadDTO createRoleSpoilerDataRead() {
         RoleSpoilerDataReadDTO roleSpoilerData = new RoleSpoilerDataReadDTO();
         roleSpoilerData.setId(UUID.randomUUID());
-        //roleSpoilerData.setRoleReviewId(roleReviewReadDTO.getId());
         roleSpoilerData.setStartIndex(100);
         roleSpoilerData.setEndIndex(150);
+        return roleSpoilerData;
+    }
+
+    @Test
+    public void testGetRoleSpoilerData() throws Exception {
+        RoleSpoilerDataReadDTO roleSpoilerData = createRoleSpoilerDataRead();
 
         Mockito.when(roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId())).thenReturn(roleSpoilerData);
 
@@ -53,7 +57,6 @@ public class RoleSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         RoleSpoilerDataReadDTO actualMovie = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(roleSpoilerData);
 
@@ -78,28 +81,21 @@ public class RoleSpoilerDataControllerTest {
     public void testGetRoleSpoilerDataWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/rolespoilerdata/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateRoleSpoilerData() throws Exception {
 
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
-        //create.setRoleReviewId(roleReviewReadDTO.getId());
         create.setStartIndex(100);
         create.setEndIndex(150);
 
-        RoleSpoilerDataReadDTO read = new RoleSpoilerDataReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setRoleReviewId(roleReviewReadDTO.getId());
-        read.setStartIndex(100);
-        read.setEndIndex(150);
+        RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead();
 
         Mockito.when(roleSpoilerDataService.createRoleSpoilerData(create)).thenReturn(read);
 
@@ -111,5 +107,35 @@ public class RoleSpoilerDataControllerTest {
 
         RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assertions.assertThat(actualRoleSpoilerData).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleSpoilerData() throws Exception {
+
+        RoleSpoilerDataPatchDTO patchDTO = new RoleSpoilerDataPatchDTO();
+        patchDTO.setStartIndex(100);
+        patchDTO.setEndIndex(150);
+
+        RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead();
+
+        Mockito.when(roleSpoilerDataService.patchRoleSpoilerData(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/rolespoilerdata/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
+        Assert.assertEquals(read, actualRoleSpoilerData);
+    }
+
+    @Test
+    public void testDeleteRoleSpoilerData() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/rolespoilerdata/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(roleSpoilerDataService).deleteRoleSpoilerData(id);
     }
 }

@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,11 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 import solvve.course.dto.PortalUserCreateDTO;
+import solvve.course.dto.PortalUserPatchDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.dto.UserTypesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
@@ -42,6 +45,17 @@ public class PortalUserServiceTest {
 
     private UserTypesReadDTO userTypesReadDTO;
 
+    private PortalUser createPortalUser() {
+        PortalUser portalUser = new PortalUser();
+        portalUser.setUserType(userTypesReadDTO.getId());
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setLogin("Login");
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        return portalUserRepository.save(portalUser);
+    }
+
     @Before
     public void setup() throws Exception {
         if (userTypesReadDTO==null) {
@@ -55,15 +69,7 @@ public class PortalUserServiceTest {
 
     @Test
     public void testGetPortalUsers() {
-        PortalUser portalUser = new PortalUser();
-        portalUser.setId(UUID.randomUUID());
-        portalUser.setUserType(userTypesReadDTO.getId());
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
+        PortalUser portalUser = createPortalUser();
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(portalUser);
@@ -74,6 +80,7 @@ public class PortalUserServiceTest {
         portalUserService.getPortalUser(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreatePortalUsers() {
         PortalUserCreateDTO create = new PortalUserCreateDTO();
@@ -88,5 +95,65 @@ public class PortalUserServiceTest {
 
         PortalUser portalUser = portalUserRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(portalUser);
+    }
+
+    @Transactional
+    @Test
+    public void testPatchPortalUser() {
+        PortalUser portalUser = createPortalUser();
+
+        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        patch.setUserType(userTypesReadDTO.getId());
+        patch.setSurname("Surname");
+        patch.setName("Name");
+        patch.setMiddleName("MiddleName");
+        patch.setLogin("Login");
+        patch.setUserConfidence(UserConfidenceType.NORMAL);
+        PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        portalUser = portalUserRepository.findById(read.getId()).get();
+        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(read);
+    }
+
+    @Transactional
+    @Test
+    public void testPatchPortalUserEmptyPatch() {
+        PortalUser portalUser = createPortalUser();
+
+        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
+
+        Assert.assertNotNull(read.getUserType());
+        Assert.assertNotNull(read.getSurname());
+        Assert.assertNotNull(read.getName());
+        Assert.assertNotNull(read.getMiddleName());
+        Assert.assertNotNull(read.getLogin());
+        Assert.assertNotNull(read.getUserConfidence());
+
+        PortalUser portalUserAfterUpdate = portalUserRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(portalUserAfterUpdate.getUserType());
+        Assert.assertNotNull(portalUserAfterUpdate.getSurname());
+        Assert.assertNotNull(portalUserAfterUpdate.getName());
+        Assert.assertNotNull(portalUserAfterUpdate.getMiddleName());
+        Assert.assertNotNull(portalUserAfterUpdate.getLogin());
+        Assert.assertNotNull(portalUserAfterUpdate.getUserConfidence());
+
+        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(portalUserAfterUpdate);
+    }
+
+    @Test
+    public void testDeletePortalUser() {
+        PortalUser portalUser = createPortalUser();
+
+        portalUserService.deletePortalUser(portalUser.getId());
+        Assert.assertFalse(portalUserRepository.existsById(portalUser.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeletePortalUserNotFound() {
+        portalUserService.deletePortalUser(UUID.randomUUID());
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
+import solvve.course.dto.CrewTypePatchDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
@@ -19,9 +20,7 @@ public class CrewTypeService {
 
     @Transactional(readOnly = true)
     public CrewTypeReadDTO getCrewType(UUID id) {
-        CrewType crewType = crewTypeRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(CrewType.class, id);
-        });
+        CrewType crewType = getCrewTypeRequired(id);
         return toRead(crewType);
     }
 
@@ -38,5 +37,25 @@ public class CrewTypeService {
 
         crewType = crewTypeRepository.save(crewType);
         return toRead(crewType);
+    }
+
+    public CrewTypeReadDTO patchCrewType(UUID id, CrewTypePatchDTO patch) {
+        CrewType crewType = getCrewTypeRequired(id);
+
+        if (patch.getName()!=null) {
+            crewType.setName(patch.getName());
+        }
+        crewType = crewTypeRepository.save(crewType);
+        return toRead(crewType);
+    }
+
+    private CrewType getCrewTypeRequired(UUID id) {
+        return crewTypeRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(CrewType.class, id);
+        });
+    }
+
+    public void deleteCrewType(UUID id) {
+        crewTypeRepository.delete(getCrewTypeRequired(id));
     }
 }

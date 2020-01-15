@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
-import solvve.course.dto.GrantsCreateDTO;
-import solvve.course.dto.GrantsReadDTO;
-import solvve.course.dto.PortalUserReadDTO;
-import solvve.course.dto.UserTypesReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.GrantsRepository;
 import solvve.course.repository.PortalUserRepository;
@@ -53,6 +51,16 @@ public class GrantsServiceTest {
 
     UserTypes userTypes;
 
+    private Grants createGrants() {
+        Grants grants = new Grants();
+        grants.setId(UUID.randomUUID());
+        grants.setUserTypeId(userTypes);
+        grants.setObjectName("Movie");
+        grants.setUserPermission(UserPermType.READ);
+        grants.setGrantedBy(portalUserReadDTO.getId());
+        return grantsRepository.save(grants);
+    }
+
     @Before
     public void setup() {
         if (portalUserReadDTO == null) {
@@ -78,15 +86,7 @@ public class GrantsServiceTest {
     @Transactional
     @Test
     public void testGetGrants() {
-        Grants grants = new Grants();
-        grants.setId(UUID.randomUUID());
-        grants.setUserTypeId(userTypes);
-        grants.setObjectName("Movie");
-        grants.setUserPermission(UserPermType.READ);
-        grants.setGrantedBy(portalUserReadDTO.getId());
-        System.out.println(userTypesReadDTO.getId());
-
-        grants = grantsRepository.save(grants);
+        Grants grants = createGrants();
 
         GrantsReadDTO readDTO = grantsService.getGrants(grants.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(grants);
@@ -110,5 +110,59 @@ public class GrantsServiceTest {
 
         Grants grants = grantsRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(grants);
+    }
+
+    @Transactional
+    @Test
+    public void testPatchGrants() {
+        Grants grants = createGrants();
+
+        GrantsPatchDTO patch = new GrantsPatchDTO();
+        patch.setUserTypeId(userTypes);
+        patch.setObjectName("Movie");
+        patch.setUserPermission(UserPermType.READ);
+        patch.setGrantedBy(portalUserReadDTO.getId());
+        GrantsReadDTO read = grantsService.patchGrants(grants.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        grants = grantsRepository.findById(read.getId()).get();
+        Assertions.assertThat(grants).isEqualToComparingFieldByField(read);
+    }
+
+    @Transactional
+    @Test
+    public void testPatchGrantsEmptyPatch() {
+        Grants grants = createGrants();
+
+        GrantsPatchDTO patch = new GrantsPatchDTO();
+        GrantsReadDTO read = grantsService.patchGrants(grants.getId(), patch);
+
+        Assert.assertNotNull(read.getUserTypeId());
+        Assert.assertNotNull(read.getObjectName());
+        Assert.assertNotNull(read.getUserPermission());
+        Assert.assertNotNull(read.getGrantedBy());
+
+        Grants grantsAfterUpdate = grantsRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(grantsAfterUpdate.getUserTypeId());
+        Assert.assertNotNull(grantsAfterUpdate.getObjectName());
+        Assert.assertNotNull(grantsAfterUpdate.getUserPermission());
+        Assert.assertNotNull(grantsAfterUpdate.getGrantedBy());
+
+        Assertions.assertThat(grants).isEqualToComparingFieldByField(grantsAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteGrants() {
+        Grants grants = createGrants();
+
+        grantsService.deleteGrants(grants.getId());
+        Assert.assertFalse(grantsRepository.existsById(grants.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteGrantsNotFound() {
+        grantsService.deleteGrants(UUID.randomUUID());
     }
 }

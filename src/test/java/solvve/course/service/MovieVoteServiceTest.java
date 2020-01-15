@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,14 @@ public class MovieVoteServiceTest {
 
     private MovieReadDTO movieReadDTO;
 
+    private MovieVote createMovieVote() {
+        MovieVote movieVote = new MovieVote();
+        movieVote.setMovieId(movieReadDTO.getId());
+        movieVote.setUserId(portalUserReadDTO.getId());
+        movieVote.setRating(UserVoteRatingType.R9);
+        return movieVoteRepository.save(movieVote);
+    }
+
     @Before
     public void setup() {
         if (movieReadDTO==null) {
@@ -92,12 +101,7 @@ public class MovieVoteServiceTest {
 
     @Test
     public void testGetMovieVote() {
-        MovieVote movieVote = new MovieVote();
-        movieVote.setId(UUID.randomUUID());
-        movieVote.setMovieId(movieReadDTO.getId());
-        movieVote.setUserId(portalUserReadDTO.getId());
-        movieVote.setRating(UserVoteRatingType.valueOf("R9"));
-        movieVote = movieVoteRepository.save(movieVote);
+        MovieVote movieVote = createMovieVote();
 
         MovieVoteReadDTO readDTO = movieVoteService.getMovieVote(movieVote.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieVote);
@@ -113,11 +117,60 @@ public class MovieVoteServiceTest {
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
         create.setMovieId(movieReadDTO.getId());
         create.setUserId(portalUserReadDTO.getId());
-        create.setRating(UserVoteRatingType.valueOf("R9"));
+        create.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.createMovieVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieVote movieVote = movieVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieVote);
+    }
+
+    @Test
+    public void testPatchMovieVote() {
+        MovieVote movieVote = createMovieVote();
+
+        MovieVotePatchDTO patch = new MovieVotePatchDTO();
+        patch.setMovieId(movieReadDTO.getId());
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setRating(UserVoteRatingType.R9);
+        MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        movieVote = movieVoteRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieVoteEmptyPatch() {
+        MovieVote movieVote = createMovieVote();
+
+        MovieVotePatchDTO patch = new MovieVotePatchDTO();
+        MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
+
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getRating());
+
+        MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(movieVoteAfterUpdate.getMovieId());
+        Assert.assertNotNull(movieVoteAfterUpdate.getUserId());
+        Assert.assertNotNull(movieVoteAfterUpdate.getRating());
+
+        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(movieVoteAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteMovieVote() {
+        MovieVote movieVote = createMovieVote();
+
+        movieVoteService.deleteMovieVote(movieVote.getId());
+        Assert.assertFalse(movieVoteRepository.existsById(movieVote.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteMovieVoteNotFound() {
+        movieVoteService.deleteMovieVote(UUID.randomUUID());
     }
 }

@@ -16,14 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieVote;
 import solvve.course.domain.UserVoteRatingType;
 import solvve.course.dto.MovieVoteCreateDTO;
+import solvve.course.dto.MovieVotePatchDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieVoteService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,13 +40,16 @@ public class MovieVoteControllerTest {
     @MockBean
     private MovieVoteService movieVoteService;
 
-    @Test
-    public void testGetMovieVote() throws Exception {
+    private MovieVoteReadDTO createMovieVoteRead() {
         MovieVoteReadDTO movieVote = new MovieVoteReadDTO();
         movieVote.setId(UUID.randomUUID());
-        //movieVote.setMovieId(movieReadDTO.getId());
-        //movieVote.setUserId(portalUserReadDTO.getId());
-        movieVote.setRating(UserVoteRatingType.valueOf("R9"));
+        movieVote.setRating(UserVoteRatingType.R9);
+        return movieVote;
+    }
+
+    @Test
+    public void testGetMovieVote() throws Exception {
+        MovieVoteReadDTO movieVote = createMovieVoteRead();
 
         Mockito.when(movieVoteService.getMovieVote(movieVote.getId())).thenReturn(movieVote);
 
@@ -54,7 +57,6 @@ public class MovieVoteControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         MovieVoteReadDTO actualMovie = objectMapper.readValue(resultJson, MovieVoteReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(movieVote);
 
@@ -79,28 +81,20 @@ public class MovieVoteControllerTest {
     public void testGetMovieVoteWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/movievote/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateMovieVote() throws Exception {
 
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
-        //create.setMovieId(movieReadDTO.getId());
-        //create.setUserId(portalUserReadDTO.getId());
-        create.setRating(UserVoteRatingType.valueOf("R9"));
+        create.setRating(UserVoteRatingType.R9);
 
-        MovieVoteReadDTO read = new MovieVoteReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setMovieId(movieReadDTO.getId());
-        //read.setUserId(portalUserReadDTO.getId());
-        read.setRating(UserVoteRatingType.valueOf("R9"));
+        MovieVoteReadDTO read = createMovieVoteRead();
 
         Mockito.when(movieVoteService.createMovieVote(create)).thenReturn(read);
 
@@ -112,5 +106,34 @@ public class MovieVoteControllerTest {
 
         MovieVoteReadDTO actualMovieVote = objectMapper.readValue(resultJson, MovieVoteReadDTO.class);
         Assertions.assertThat(actualMovieVote).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieVote() throws Exception {
+
+        MovieVotePatchDTO patchDTO = new MovieVotePatchDTO();
+        patchDTO.setRating(UserVoteRatingType.R9);
+
+        MovieVoteReadDTO read = createMovieVoteRead();
+
+        Mockito.when(movieVoteService.patchMovieVote(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/movievote/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieVoteReadDTO actualMovieVote = objectMapper.readValue(resultJson, MovieVoteReadDTO.class);
+        Assert.assertEquals(read, actualMovieVote);
+    }
+
+    @Test
+    public void testDeleteMovieVote() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/movievote/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(movieVoteService).deleteMovieVote(id);
     }
 }

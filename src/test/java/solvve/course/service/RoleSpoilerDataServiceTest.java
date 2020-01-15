@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,14 @@ public class RoleSpoilerDataServiceTest {
 
     private RoleReviewReadDTO roleReviewReadDTO;
 
+    private RoleSpoilerData createRoleSpoilerData() {
+        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
+        roleSpoilerData.setRoleReviewId(roleReviewReadDTO.getId());
+        roleSpoilerData.setStartIndex(100);
+        roleSpoilerData.setEndIndex(150);
+        return roleSpoilerDataRepository.save(roleSpoilerData);
+    }
+
     @Before
     public void setup() {
         if (roleReviewReadDTO==null) {
@@ -94,12 +103,7 @@ public class RoleSpoilerDataServiceTest {
 
     @Test
     public void testGetRoleSpoilerData() {
-        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
-        roleSpoilerData.setId(UUID.randomUUID());
-        roleSpoilerData.setRoleReviewId(roleReviewReadDTO.getId());
-        roleSpoilerData.setStartIndex(100);
-        roleSpoilerData.setEndIndex(150);
-        roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleSpoilerData);
@@ -122,5 +126,54 @@ public class RoleSpoilerDataServiceTest {
 
         RoleSpoilerData roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleSpoilerData);
+    }
+
+    @Test
+    public void testPatchRoleSpoilerData() {
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+
+        RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
+        patch.setRoleReviewId(roleReviewReadDTO.getId());
+        patch.setStartIndex(100);
+        patch.setEndIndex(150);
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleSpoilerDataEmptyPatch() {
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+
+        RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
+
+        Assert.assertNotNull(read.getRoleReviewId());
+        Assert.assertNotNull(read.getStartIndex());
+        Assert.assertNotNull(read.getEndIndex());
+
+        RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReviewId());
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getStartIndex());
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getEndIndex());
+
+        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(roleSpoilerDataAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteRoleSpoilerData() {
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+
+        roleSpoilerDataService.deleteRoleSpoilerData(roleSpoilerData.getId());
+        Assert.assertFalse(roleSpoilerDataRepository.existsById(roleSpoilerData.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteRoleSpoilerDataNotFound() {
+        roleSpoilerDataService.deleteRoleSpoilerData(UUID.randomUUID());
     }
 }

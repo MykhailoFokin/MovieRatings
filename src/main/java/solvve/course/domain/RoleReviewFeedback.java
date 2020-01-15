@@ -18,7 +18,7 @@ public class RoleReviewFeedback {
 
     private UUID roleReviewId;
 
-    private boolean isLiked;
+    private Boolean isLiked;
 
     public UUID getId() {
         return id;
@@ -52,11 +52,11 @@ public class RoleReviewFeedback {
         this.roleReviewId = roleReviewId;
     }
 
-    public boolean getIsLiked() {
+    public Boolean getIsLiked() {
         return isLiked;
     }
 
-    public void setIsLiked(boolean liked) {
+    public void setIsLiked(Boolean liked) {
         isLiked = liked;
     }
 }

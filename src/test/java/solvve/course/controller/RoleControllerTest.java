@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
+import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,13 +39,18 @@ public class RoleControllerTest {
     @MockBean
     private RoleService roleService;
 
-    @Test
-    public void testGetRole() throws Exception {
+    private RoleReadDTO createRoleRead() {
         RoleReadDTO role = new RoleReadDTO();
         role.setId(UUID.randomUUID());
         role.setTitle("Actor");
         role.setRoleType("Main_Role");
         role.setDescription("Description test");
+        return role;
+    }
+
+    @Test
+    public void testGetRole() throws Exception {
+        RoleReadDTO role = createRoleRead();
 
         Mockito.when(roleService.getRole(role.getId())).thenReturn(role);
 
@@ -53,7 +58,6 @@ public class RoleControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         RoleReadDTO actualMovie = objectMapper.readValue(resultJson, RoleReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(role);
 
@@ -78,13 +82,11 @@ public class RoleControllerTest {
     public void testGetRoleWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/role/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
@@ -95,11 +97,7 @@ public class RoleControllerTest {
         create.setRoleType("Main_Role");
         create.setDescription("Description test");
 
-        RoleReadDTO read = new RoleReadDTO();
-        read.setId(UUID.randomUUID());
-        read.setTitle("Role Test");
-        read.setRoleType("Main_Role");
-        read.setDescription("Description test");
+        RoleReadDTO read = createRoleRead();
 
         Mockito.when(roleService.createRole(create)).thenReturn(read);
 
@@ -111,5 +109,36 @@ public class RoleControllerTest {
 
         RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
         Assertions.assertThat(actualRole).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRole() throws Exception {
+
+        RolePatchDTO patchDTO = new RolePatchDTO();
+        patchDTO.setTitle("Role Test");
+        patchDTO.setRoleType("Main_Role");
+        patchDTO.setDescription("Description test");
+
+        RoleReadDTO read = createRoleRead();
+
+        Mockito.when(roleService.patchRole(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/role/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
+    }
+
+    @Test
+    public void testDeleteRole() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/role/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(roleService).deleteRole(id);
     }
 }

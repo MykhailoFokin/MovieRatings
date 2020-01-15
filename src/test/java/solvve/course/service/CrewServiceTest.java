@@ -1,5 +1,6 @@
 package solvve.course.service;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,16 @@ public class CrewServiceTest {
 
     private MovieReadDTO movieReadDTO;
 
+    private Crew createCrew() {
+        Crew crew = new Crew();
+        crew.setId(UUID.randomUUID());
+        crew.setPersonId(personsReadDTO.getId());
+        crew.setCrewType(crewTypeReadDTO.getId());
+        crew.setMovieId(movieReadDTO.getId());
+        crew.setDescription("Description");
+        return crewRepository.save(crew);
+    }
+
     @Before
     public void setup() {
         if (personsReadDTO==null) {
@@ -97,14 +108,7 @@ public class CrewServiceTest {
 
     @Test
     public void testGetCrew() {
-        Persons persons = new Persons();
-        Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
-        crew.setPersonId(personsReadDTO.getId());
-        crew.setCrewType(crewTypeReadDTO.getId());
-        crew.setMovieId(movieReadDTO.getId());
-        crew.setDescription("Description");
-        crew = crewRepository.save(crew);
+        Crew crew = createCrew();
 
         CrewReadDTO readDTO = crewService.getCrew(crew.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(crew);
@@ -127,5 +131,57 @@ public class CrewServiceTest {
 
         Crew crew = crewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(crew);
+    }
+
+    @Test
+    public void testPatchCrew() {
+        Crew crew = createCrew();
+
+        CrewPatchDTO patch = new CrewPatchDTO();
+        patch.setPersonId(personsReadDTO.getId());
+        patch.setCrewType(crewTypeReadDTO.getId());
+        patch.setMovieId(movieReadDTO.getId());
+        patch.setDescription("Description");
+        CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        crew = crewRepository.findById(read.getId()).get();
+        Assertions.assertThat(crew).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCrewEmptyPatch() {
+        Crew crew = createCrew();
+
+        CrewPatchDTO patch = new CrewPatchDTO();
+        CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
+
+        Assert.assertNotNull(read.getPersonId());
+        Assert.assertNotNull(read.getCrewType());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getDescription());
+
+        Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(crewAfterUpdate.getPersonId());
+        Assert.assertNotNull(crewAfterUpdate.getCrewType());
+        Assert.assertNotNull(crewAfterUpdate.getMovieId());
+        Assert.assertNotNull(crewAfterUpdate.getDescription());
+
+        Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteCrew() {
+        Crew crew = createCrew();
+
+        crewService.deleteCrew(crew.getId());
+        Assert.assertFalse(crewRepository.existsById(crew.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteCrewNotFound() {
+        crewService.deleteCrew(UUID.randomUUID());
     }
 }

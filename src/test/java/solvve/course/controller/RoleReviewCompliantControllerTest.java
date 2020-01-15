@@ -15,15 +15,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReviewCompliant;
 import solvve.course.dto.RoleReviewCompliantCreateDTO;
+import solvve.course.dto.RoleReviewCompliantPatchDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
-import solvve.course.dto.UserModeratedStatusType;
+import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleReviewCompliantService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,16 +40,17 @@ public class RoleReviewCompliantControllerTest {
     @MockBean
     private RoleReviewCompliantService roleReviewCompliantService;
 
-    @Test
-    public void testGetRoleReviewCompliant() throws Exception {
+    private RoleReviewCompliantReadDTO createRoleReviewCompliantRead() {
         RoleReviewCompliantReadDTO roleReviewCompliant = new RoleReviewCompliantReadDTO();
         roleReviewCompliant.setId(UUID.randomUUID());
-        //roleReviewCompliant.setUserId(portalUserReadDTO.getId());
-        //roleReviewCompliant.setRoleId(roleReadDTO.getId());
-        //roleReviewCompliant.setRoleReviewId(roleReviewReadDTO.getId());
         roleReviewCompliant.setDescription("Just punish him!");
         roleReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //roleReviewCompliant.setModeratorId(portalUserReadDTO.getId());
+        return  roleReviewCompliant;
+    }
+
+    @Test
+    public void testGetRoleReviewCompliant() throws Exception {
+        RoleReviewCompliantReadDTO roleReviewCompliant = createRoleReviewCompliantRead();
 
         Mockito.when(roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId())).thenReturn(roleReviewCompliant);
 
@@ -57,7 +58,6 @@ public class RoleReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         RoleReviewCompliantReadDTO actualMovie = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(roleReviewCompliant);
 
@@ -82,34 +82,21 @@ public class RoleReviewCompliantControllerTest {
     public void testGetRoleReviewCompliantWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/rolereviewcompliant/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateRoleReviewCompliant() throws Exception {
 
         RoleReviewCompliantCreateDTO create = new RoleReviewCompliantCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
-        //create.setRoleId(roleReadDTO.getId());
-        //create.setRoleReviewId(roleReviewReadDTO.getId());
         create.setDescription("Just punish him!");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //create.setModeratorId(portalUserReadDTO.getId());
 
-        RoleReviewCompliantReadDTO read = new RoleReviewCompliantReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        //read.setRoleId(roleReadDTO.getId());
-        //read.setRoleReviewId(roleReviewReadDTO.getId());
-        read.setDescription("Just punish him!");
-        read.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //read.setModeratorId(portalUserReadDTO.getId());
+        RoleReviewCompliantReadDTO read = createRoleReviewCompliantRead();
 
         Mockito.when(roleReviewCompliantService.createRoleReviewCompliant(create)).thenReturn(read);
 
@@ -121,5 +108,35 @@ public class RoleReviewCompliantControllerTest {
 
         RoleReviewCompliantReadDTO actualRoleReviewCompliant = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assertions.assertThat(actualRoleReviewCompliant).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleReviewCompliant() throws Exception {
+
+        RoleReviewCompliantPatchDTO patchDTO = new RoleReviewCompliantPatchDTO();
+        patchDTO.setDescription("Just punish him!");
+        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        RoleReviewCompliantReadDTO read = createRoleReviewCompliantRead();
+
+        Mockito.when(roleReviewCompliantService.patchRoleReviewCompliant(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/rolereviewcompliant/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReviewCompliantReadDTO actualRoleReviewCompliant = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
+        Assert.assertEquals(read, actualRoleReviewCompliant);
+    }
+
+    @Test
+    public void testDeleteRoleReviewCompliant() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/rolereviewcompliant/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(roleReviewCompliantService).deleteRoleReviewCompliant(id);
     }
 }

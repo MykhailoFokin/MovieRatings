@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.ReleaseDetails;
 import solvve.course.dto.ReleaseDetailsCreateDTO;
+import solvve.course.dto.ReleaseDetailsPatchDTO;
 import solvve.course.dto.ReleaseDetailsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.ReleaseDetailsRepository;
@@ -19,9 +20,7 @@ public class ReleaseDetailsService {
 
     @Transactional(readOnly = true)
     public ReleaseDetailsReadDTO getReleaseDetails(UUID id) {
-        ReleaseDetails releaseDetails = releaseDetailsRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(ReleaseDetails.class, id);
-        });
+        ReleaseDetails releaseDetails = getReleaseDetailsRequired(id);
         return toRead(releaseDetails);
     }
 
@@ -42,5 +41,31 @@ public class ReleaseDetailsService {
 
         releaseDetails = releaseDetailsRepository.save(releaseDetails);
         return toRead(releaseDetails);
+    }
+
+    public ReleaseDetailsReadDTO patchReleaseDetails(UUID id, ReleaseDetailsPatchDTO patch) {
+        ReleaseDetails releaseDetails = getReleaseDetailsRequired(id);
+
+        if (patch.getMovieId()!=null) {
+            releaseDetails.setMovieId(patch.getMovieId());
+        }
+        if (patch.getReleaseDate()!=null) {
+            releaseDetails.setReleaseDate(patch.getReleaseDate());
+        }
+        if (patch.getCountryId()!=null) {
+            releaseDetails.setCountryId(patch.getCountryId());
+        }
+        releaseDetails = releaseDetailsRepository.save(releaseDetails);
+        return toRead(releaseDetails);
+    }
+
+    private ReleaseDetails getReleaseDetailsRequired(UUID id) {
+        return releaseDetailsRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(ReleaseDetails.class, id);
+        });
+    }
+
+    public void deleteReleaseDetails(UUID id) {
+        releaseDetailsRepository.delete(getReleaseDetailsRequired(id));
     }
 }

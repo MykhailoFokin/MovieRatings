@@ -15,15 +15,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReview;
 import solvve.course.dto.MovieReviewCreateDTO;
+import solvve.course.dto.MovieReviewPatchDTO;
 import solvve.course.dto.MovieReviewReadDTO;
-import solvve.course.dto.UserModeratedStatusType;
+import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieReviewService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,15 +40,17 @@ public class MovieReviewControllerTest {
     @MockBean
     private MovieReviewService movieReviewService;
 
-    @Test
-    public void testGetMovieReview() throws Exception {
+    private MovieReviewReadDTO createMovieReviewRead() {
         MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
         movieReview.setId(UUID.randomUUID());
-        //movieReview.setUserId(portalUserReadDTO.getId());
-        //movieReview.setMovieId(movieReadDTO.getId());
         movieReview.setTextReview("This movie can be described as junk.");
         movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //movieReview.setModeratorId(portalUserReadDTO.getId());
+        return movieReview;
+    }
+
+    @Test
+    public void testGetMovieReview() throws Exception {
+        MovieReviewReadDTO movieReview = createMovieReviewRead();
 
         Mockito.when(movieReviewService.getMovieReview(movieReview.getId())).thenReturn(movieReview);
 
@@ -81,32 +83,21 @@ public class MovieReviewControllerTest {
     public void testGetMovieReviewWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/moviereview/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateMovieReview() throws Exception {
 
         MovieReviewCreateDTO create = new MovieReviewCreateDTO();
-        //create.setUserId(portalUserReadDTO.getId());
-        //create.setMovieId(movieReadDTO.getId());
         create.setTextReview("This movie can be described as junk.");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //create.setModeratorId(portalUserReadDTO.getId());
 
-        MovieReviewReadDTO read = new MovieReviewReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setUserId(portalUserReadDTO.getId());
-        //read.setMovieId(movieReadDTO.getId());
-        read.setTextReview("This movie can be described as junk.");
-        read.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        //read.setModeratorId(portalUserReadDTO.getId());
+        MovieReviewReadDTO read = createMovieReviewRead();
 
         Mockito.when(movieReviewService.createMovieReview(create)).thenReturn(read);
 
@@ -118,5 +109,35 @@ public class MovieReviewControllerTest {
 
         MovieReviewReadDTO actualMovieReview = objectMapper.readValue(resultJson, MovieReviewReadDTO.class);
         Assertions.assertThat(actualMovieReview).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchMovieReview() throws Exception {
+
+        MovieReviewPatchDTO patchDTO = new MovieReviewPatchDTO();
+        patchDTO.setTextReview("This movie can be described as junk.");
+        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        MovieReviewReadDTO read = createMovieReviewRead();
+
+        Mockito.when(movieReviewService.patchMovieReview(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/moviereview/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReviewReadDTO actualMovieReview = objectMapper.readValue(resultJson, MovieReviewReadDTO.class);
+        Assert.assertEquals(read, actualMovieReview);
+    }
+
+    @Test
+    public void testDeleteMovieReview() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/moviereview/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(movieReviewService).deleteMovieReview(id);
     }
 }

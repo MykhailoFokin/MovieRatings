@@ -14,9 +14,9 @@ public class RoleSpoilerData {
 
     private UUID roleReviewId;
 
-    private int startIndex;
+    private Integer startIndex;
 
-    private int endIndex;
+    private Integer endIndex;
 
     public UUID getId() {
         return id;
@@ -34,19 +34,19 @@ public class RoleSpoilerData {
         this.roleReviewId = roleReviewId;
     }
 
-    public int getStartIndex() {
+    public Integer getStartIndex() {
         return startIndex;
     }
 
-    public void setStartIndex(int startIndex) {
+    public void setStartIndex(Integer startIndex) {
         this.startIndex = startIndex;
     }
 
-    public int getEndIndex() {
+    public Integer getEndIndex() {
         return endIndex;
     }
 
-    public void setEndIndex(int endIndex) {
+    public void setEndIndex(Integer endIndex) {
         this.endIndex = endIndex;
     }
 }

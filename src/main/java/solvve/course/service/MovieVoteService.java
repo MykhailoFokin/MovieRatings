@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieVote;
 import solvve.course.dto.MovieVoteCreateDTO;
+import solvve.course.dto.MovieVotePatchDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieVoteRepository;
@@ -18,9 +19,7 @@ public class MovieVoteService {
 
     @Transactional(readOnly = true)
     public MovieVoteReadDTO getMovieVote(UUID id) {
-        MovieVote movieVote = movieVoteRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieVote.class, id);
-        });
+        MovieVote movieVote = getMovieVoteRequired(id);
         return toRead(movieVote);
     }
 
@@ -41,5 +40,31 @@ public class MovieVoteService {
 
         movieVote = movieVoteRepository.save(movieVote);
         return toRead(movieVote);
+    }
+
+    public MovieVoteReadDTO patchMovieVote(UUID id, MovieVotePatchDTO patch) {
+        MovieVote movieVote = getMovieVoteRequired(id);
+
+        if (patch.getUserId()!=null) {
+            movieVote.setUserId(patch.getUserId());
+        }
+        if (patch.getMovieId()!=null) {
+            movieVote.setMovieId(patch.getMovieId());
+        }
+        if (patch.getRating()!=null) {
+            movieVote.setRating(patch.getRating());
+        }
+        movieVote = movieVoteRepository.save(movieVote);
+        return toRead(movieVote);
+    }
+
+    private MovieVote getMovieVoteRequired(UUID id) {
+        return movieVoteRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(MovieVote.class, id);
+        });
+    }
+
+    public void deleteMovieVote(UUID id) {
+        movieVoteRepository.delete(getMovieVoteRequired(id));
     }
 }

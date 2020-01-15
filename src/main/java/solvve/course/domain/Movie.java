@@ -41,14 +41,14 @@ public class Movie {
 
     private String critique; // movie 1-8 critique 1-1(1-8) crew
 
-    private boolean isPublished;
+    private Boolean isPublished;
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "movie_prod_countries",
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "country_id")})
-    //@EqualsAndHashCode.Exclude
-    private Set<Countries> movieProdCountries = new HashSet<>();
+    //private Set<Countries> movieProdCountries = new HashSet<>();
+    private Set<Countries> movieProdCountries;
 
     /*@OneToMany(
             mappedBy = "movie",
@@ -197,11 +197,11 @@ public class Movie {
         this.critique = critique;
     }
 
-    public boolean isPublished() {
+    public Boolean getisPublished() {
         return isPublished;
     }
 
-    public void setPublished(boolean published) {
+    public void setIsPublished(Boolean published) {
         isPublished = published;
     }
 

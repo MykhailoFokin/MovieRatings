@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.RoleReviewCompliant;
 import solvve.course.dto.RoleReviewCompliantCreateDTO;
+import solvve.course.dto.RoleReviewCompliantPatchDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleReviewCompliantRepository;
@@ -19,9 +20,7 @@ public class RoleReviewCompliantService {
 
     @Transactional(readOnly = true)
     public RoleReviewCompliantReadDTO getRoleReviewCompliant(UUID id) {
-        RoleReviewCompliant roleReviewCompliant = roleReviewCompliantRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleReviewCompliant.class, id);
-        });
+        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
         return toRead(roleReviewCompliant);
     }
 
@@ -48,5 +47,40 @@ public class RoleReviewCompliantService {
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
         return toRead(roleReviewCompliant);
+    }
+
+    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(UUID id, RoleReviewCompliantPatchDTO patch) {
+        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
+
+        if (patch.getUserId()!=null) {
+            roleReviewCompliant.setUserId(patch.getUserId());
+        }
+        if (patch.getRoleId()!=null) {
+            roleReviewCompliant.setRoleId(patch.getRoleId());
+        }
+        if (patch.getRoleReviewId()!=null) {
+            roleReviewCompliant.setRoleReviewId(patch.getRoleReviewId());
+        }
+        if (patch.getDescription()!=null) {
+            roleReviewCompliant.setDescription(patch.getDescription());
+        }
+        if (patch.getModeratedStatus()!=null) {
+            roleReviewCompliant.setModeratedStatus(patch.getModeratedStatus());
+        }
+        if (patch.getModeratorId()!=null) {
+            roleReviewCompliant.setModeratorId(patch.getModeratorId());
+        }
+        roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
+        return toRead(roleReviewCompliant);
+    }
+
+    private RoleReviewCompliant getRoleReviewCompliantRequired(UUID id) {
+        return roleReviewCompliantRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(RoleReviewCompliant.class, id);
+        });
+    }
+
+    public void deleteRoleReviewCompliant(UUID id) {
+        roleReviewCompliantRepository.delete(getRoleReviewCompliantRequired(id));
     }
 }

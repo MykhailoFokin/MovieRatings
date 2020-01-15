@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Persons;
 import solvve.course.dto.PersonsCreateDTO;
+import solvve.course.dto.PersonsPatchDTO;
 import solvve.course.dto.PersonsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonsRepository;
@@ -28,14 +30,17 @@ public class PersonsServiceTest {
     @Autowired
     private PersonsService personsService;
 
-    @Test
-    public void testGetPersons() {
+    private Persons createPersons() {
         Persons persons = new Persons();
-        persons.setId(UUID.randomUUID());
         persons.setSurname("Surname");
         persons.setName("Name");
         persons.setMiddleName("MiddleName");
-        persons = personsRepository.save(persons);
+        return personsRepository.save(persons);
+    }
+
+    @Test
+    public void testGetPersons() {
+        Persons persons = createPersons();
 
         PersonsReadDTO readDTO = personsService.getPersons(persons.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(persons);
@@ -57,5 +62,54 @@ public class PersonsServiceTest {
 
         Persons persons = personsRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(persons);
+    }
+
+    @Test
+    public void testPatchPersons() {
+        Persons persons = createPersons();
+
+        PersonsPatchDTO patch = new PersonsPatchDTO();
+        patch.setSurname("Surname");
+        patch.setName("Name");
+        patch.setMiddleName("MiddleName");
+        PersonsReadDTO read = personsService.patchPersons(persons.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        persons = personsRepository.findById(read.getId()).get();
+        Assertions.assertThat(persons).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchPersonsEmptyPatch() {
+        Persons persons = createPersons();
+
+        PersonsPatchDTO patch = new PersonsPatchDTO();
+        PersonsReadDTO read = personsService.patchPersons(persons.getId(), patch);
+
+        Assert.assertNotNull(read.getName());
+        Assert.assertNotNull(read.getSurname());
+        Assert.assertNotNull(read.getMiddleName());
+
+        Persons personsAfterUpdate = personsRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(personsAfterUpdate.getName());
+        Assert.assertNotNull(personsAfterUpdate.getSurname());
+        Assert.assertNotNull(personsAfterUpdate.getMiddleName());
+
+        Assertions.assertThat(persons).isEqualToComparingFieldByField(personsAfterUpdate);
+    }
+
+    @Test
+    public void testDeletePersons() {
+        Persons persons = createPersons();
+
+        personsService.deletePersons(persons.getId());
+        Assert.assertFalse(personsRepository.existsById(persons.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeletePersonsNotFound() {
+        personsService.deletePersons(UUID.randomUUID());
     }
 }

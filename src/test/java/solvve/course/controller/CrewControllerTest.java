@@ -9,20 +9,27 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import solvve.course.domain.Crew;
 import solvve.course.dto.CrewCreateDTO;
+import solvve.course.dto.CrewPatchDTO;
 import solvve.course.dto.CrewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
+import solvve.course.exception.handler.RestExceptionHandler;
 import solvve.course.service.CrewService;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,14 +46,16 @@ public class CrewControllerTest {
     @MockBean
     private CrewService crewService;
 
-    @Test
-    public void testGetCrew() throws Exception {
+    private CrewReadDTO createCrewRead() {
         CrewReadDTO crew = new CrewReadDTO();
         crew.setId(UUID.randomUUID());
-        //crew.setPersonId(personsReadDTO.getId());
-        //crew.setCrewType(crewTypeReadDTO.getId());
-        //crew.setMovieId(movieReadDTO.getId());
         crew.setDescription("Description");
+        return crew;
+    }
+
+    @Test
+    public void testGetCrew() throws Exception {
+        CrewReadDTO crew = createCrewRead();
 
         Mockito.when(crewService.getCrew(crew.getId())).thenReturn(crew);
 
@@ -79,30 +88,20 @@ public class CrewControllerTest {
     public void testGetCrewWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        IllegalArgumentException exception = new IllegalArgumentException("id should be of type java.util.UUID");
-
         String resultJson = mvc.perform(get("/api/v1/crew/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
-        Assert.assertTrue(resultJson.contains(exception.getMessage()));
+        Assert.assertTrue(resultJson.contains("Invalid UUID string"));
     }
 
     @Test
     public void testCreateCrew() throws Exception {
 
         CrewCreateDTO create = new CrewCreateDTO();
-        //create.setPersonId(personsReadDTO.getId());
-        //create.setCrewType(crewTypeReadDTO.getId());
-        //create.setMovieId(movieReadDTO.getId());
         create.setDescription("Description");
 
-        CrewReadDTO read = new CrewReadDTO();
-        read.setId(UUID.randomUUID());
-        //read.setPersonId(personsReadDTO.getId());
-        //read.setCrewType(crewTypeReadDTO.getId());
-        //read.setMovieId(movieReadDTO.getId());
-        read.setDescription("Description");
+        CrewReadDTO read = createCrewRead();
 
         Mockito.when(crewService.createCrew(create)).thenReturn(read);
 
@@ -114,5 +113,34 @@ public class CrewControllerTest {
 
         CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
         Assertions.assertThat(actualCrew).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCrew() throws Exception {
+
+        CrewPatchDTO patchDTO = new CrewPatchDTO();
+        patchDTO.setDescription("Description");
+
+        CrewReadDTO read = createCrewRead();
+
+        Mockito.when(crewService.patchCrew(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/crew/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
+        Assert.assertEquals(read, actualCrew);
+    }
+
+    @Test
+    public void testDeleteCrew() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mvc.perform(delete("/api/v1/crew/{id}",id.toString())).andExpect(status().isOk());
+
+        Mockito.verify(crewService).deleteCrew(id);
     }
 }

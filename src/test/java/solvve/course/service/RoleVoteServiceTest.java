@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,14 @@ public class RoleVoteServiceTest {
 
     private RoleReadDTO roleReadDTO;
 
+    private RoleVote createRoleVote() {
+        RoleVote roleVote = new RoleVote();
+        roleVote.setRoleId(roleReadDTO.getId());
+        roleVote.setUserId(portalUserReadDTO.getId());
+        roleVote.setRating(UserVoteRatingType.R9);
+        return roleVoteRepository.save(roleVote);
+    }
+
     @Before
     public void setup() {
         if (roleReadDTO==null) {
@@ -82,12 +91,7 @@ public class RoleVoteServiceTest {
 
     @Test
     public void testGetRoleVote() {
-        RoleVote roleVote = new RoleVote();
-        roleVote.setId(UUID.randomUUID());
-        roleVote.setRoleId(roleReadDTO.getId());
-        roleVote.setUserId(portalUserReadDTO.getId());
-        roleVote.setRating(UserVoteRatingType.valueOf("R9"));
-        roleVote = roleVoteRepository.save(roleVote);
+        RoleVote roleVote = createRoleVote();
 
         RoleVoteReadDTO readDTO = roleVoteService.getRoleVote(roleVote.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleVote);
@@ -103,11 +107,60 @@ public class RoleVoteServiceTest {
         RoleVoteCreateDTO create = new RoleVoteCreateDTO();
         create.setRoleId(roleReadDTO.getId());
         create.setUserId(portalUserReadDTO.getId());
-        create.setRating(UserVoteRatingType.valueOf("R9"));
+        create.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.createRoleVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleVote roleVote = roleVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleVote);
+    }
+
+    @Test
+    public void testPatchRoleVote() {
+        RoleVote roleVote = createRoleVote();
+
+        RoleVotePatchDTO patch = new RoleVotePatchDTO();
+        patch.setRoleId(roleReadDTO.getId());
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setRating(UserVoteRatingType.R9);
+        RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        roleVote = roleVoteRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleVoteEmptyPatch() {
+        RoleVote roleVote = createRoleVote();
+
+        RoleVotePatchDTO patch = new RoleVotePatchDTO();
+        RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
+
+        Assert.assertNotNull(read.getRoleId());
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getRating());
+
+        RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(roleVoteAfterUpdate.getRoleId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getUserId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getRating());
+
+        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(roleVoteAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteRoleVote() {
+        RoleVote roleVote = createRoleVote();
+
+        roleVoteService.deleteRoleVote(roleVote.getId());
+        Assert.assertFalse(roleVoteRepository.existsById(roleVote.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteRoleVoteNotFound() {
+        roleVoteService.deleteRoleVote(UUID.randomUUID());
     }
 }

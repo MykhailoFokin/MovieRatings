@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +51,16 @@ public class RoleReviewServiceTest {
 
     private RoleReadDTO roleReadDTO;
 
+    private RoleReview createRoleReview() {
+        RoleReview roleReview = new RoleReview();
+        roleReview.setUserId(portalUserReadDTO.getId());
+        roleReview.setRoleId(roleReadDTO.getId());
+        roleReview.setTextReview("This role can be described as junk.");
+        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        roleReview.setModeratorId(portalUserReadDTO.getId());
+        return roleReviewRepository.save(roleReview);
+    }
+
     @Before
     public void setup() {
         if (roleReadDTO==null) {
@@ -82,14 +93,7 @@ public class RoleReviewServiceTest {
 
     @Test
     public void testGetRoleReview() {
-        RoleReview roleReview = new RoleReview();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setUserId(portalUserReadDTO.getId());
-        roleReview.setRoleId(roleReadDTO.getId());
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReview.setModeratorId(portalUserReadDTO.getId());
-        roleReview = roleReviewRepository.save(roleReview);
+        RoleReview roleReview = createRoleReview();
 
         RoleReviewReadDTO readDTO = roleReviewService.getRoleReview(roleReview.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleReview);
@@ -114,5 +118,60 @@ public class RoleReviewServiceTest {
 
         RoleReview roleReview = roleReviewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleReview);
+    }
+
+    @Test
+    public void testPatchRoleReview() {
+        RoleReview roleReview = createRoleReview();
+
+        RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
+        patch.setUserId(portalUserReadDTO.getId());
+        patch.setRoleId(roleReadDTO.getId());
+        patch.setTextReview("This role can be described as junk.");
+        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        patch.setModeratorId(portalUserReadDTO.getId());
+        RoleReviewReadDTO read = roleReviewService.patchRoleReview(roleReview.getId(), patch);
+
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+
+        roleReview = roleReviewRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleReview).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleReviewEmptyPatch() {
+        RoleReview roleReview = createRoleReview();
+
+        RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
+        RoleReviewReadDTO read = roleReviewService.patchRoleReview(roleReview.getId(), patch);
+
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getRoleId());
+        Assert.assertNotNull(read.getTextReview());
+        Assert.assertNotNull(read.getModeratedStatus());
+        Assert.assertNotNull(read.getModeratorId());
+
+        RoleReview roleReviewAfterUpdate = roleReviewRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(roleReviewAfterUpdate.getUserId());
+        Assert.assertNotNull(roleReviewAfterUpdate.getRoleId());
+        Assert.assertNotNull(roleReviewAfterUpdate.getTextReview());
+        Assert.assertNotNull(roleReviewAfterUpdate.getModeratedStatus());
+        Assert.assertNotNull(roleReviewAfterUpdate.getModeratorId());
+
+        Assertions.assertThat(roleReview).isEqualToComparingFieldByField(roleReviewAfterUpdate);
+    }
+
+    @Test
+    public void testDeleteRoleReview() {
+        RoleReview roleReview = createRoleReview();
+
+        roleReviewService.deleteRoleReview(roleReview.getId());
+        Assert.assertFalse(roleReviewRepository.existsById(roleReview.getId()));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteRoleReviewNotFound() {
+        roleReviewService.deleteRoleReview(UUID.randomUUID());
     }
 }

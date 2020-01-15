@@ -15,13 +15,6 @@ public class Countries {
     @ManyToMany(mappedBy = "movieProdCountries")
     private Set<Movie> movies = new HashSet<>();
 
-    /*@OneToMany(
-            mappedBy = "tag",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<MovieProdCountries> movieProdCountries = new ArrayList<>();*/
-
     public UUID getId() {
         return id;
     }
@@ -37,14 +30,6 @@ public class Countries {
     public void setName(String name) {
         this.name = name;
     }
-
-    /*public List<MovieProdCountries> getMovieProdCountries() {
-        return movieProdCountries;
-    }
-
-    public void setMovieProdCountries(List<MovieProdCountries> movieProdCountries) {
-        this.movieProdCountries = movieProdCountries;
-    }*/
 
     public Set<Movie> getMovies() {
         return movies;
