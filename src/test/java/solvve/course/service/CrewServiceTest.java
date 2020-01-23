@@ -11,6 +11,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.assertj.core.api.Assertions;
 import java.util.UUID;
+
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
@@ -22,7 +24,7 @@ import solvve.course.repository.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from crew", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from crew; delete from movie; delete from crew_type; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CrewServiceTest {
 
     @Autowired
@@ -37,7 +39,7 @@ public class CrewServiceTest {
     @Autowired
     private PersonsService personsService;
 
-    private PersonsReadDTO personsReadDTO;
+    private Persons persons;
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;
@@ -45,7 +47,7 @@ public class CrewServiceTest {
     @Autowired
     private CrewTypeService crewTypeService;
 
-    private CrewTypeReadDTO crewTypeReadDTO;
+    private CrewType crewType;
 
     @Autowired
     private MovieRepository movieRepository;
@@ -53,40 +55,36 @@ public class CrewServiceTest {
     @Autowired
     private MovieService movieService;
 
-    private MovieReadDTO movieReadDTO;
+    private Movie movie;
 
     private Crew createCrew() {
         Crew crew = new Crew();
         crew.setId(UUID.randomUUID());
-        crew.setPersonId(personsReadDTO.getId());
-        crew.setCrewType(crewTypeReadDTO.getId());
-        crew.setMovieId(movieReadDTO.getId());
+        crew.setPersonId(persons);
+        crew.setCrewType(crewType);
+        crew.setMovieId(movie);
         crew.setDescription("Description");
         return crewRepository.save(crew);
     }
 
     @Before
     public void setup() {
-        if (personsReadDTO==null) {
-            Persons persons = new Persons();
+        if (persons==null) {
+            persons = new Persons();
             persons.setSurname("Surname");
             persons.setName("Name");
             persons.setMiddleName("MiddleName");
             persons = personsRepository.save(persons);
-
-            personsReadDTO = personsService.getPersons(persons.getId());
         }
 
-        if (crewTypeReadDTO==null) {
-            CrewType crewType = new CrewType();
+        if (crewType==null) {
+            crewType = new CrewType();
             crewType.setName("Director");
             crewType = crewTypeRepository.save(crewType);
-
-            crewTypeReadDTO = crewTypeService.getCrewType(crewType.getId());
         }
 
-        if (movieReadDTO==null) {
-            Movie movie = new Movie();
+        if (movie==null) {
+            movie = new Movie();
             movie.setTitle("Movie Test");
             movie.setYear((short) 2019);
             movie.setGenres("Comedy");
@@ -101,11 +99,10 @@ public class CrewServiceTest {
             movie.setLanguages("English");
             movie.setSoundMix("DolbySurround");
             movie = movieRepository.save(movie);
-
-            movieReadDTO = movieService.getMovie(movie.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetCrew() {
         Crew crew = createCrew();
@@ -119,12 +116,13 @@ public class CrewServiceTest {
         crewService.getCrew(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateCrew() {
         CrewCreateDTO create = new CrewCreateDTO();
-        create.setPersonId(personsReadDTO.getId());
-        create.setCrewType(crewTypeReadDTO.getId());
-        create.setMovieId(movieReadDTO.getId());
+        create.setPersonId(persons);
+        create.setCrewType(crewType);
+        create.setMovieId(movie);
         create.setDescription("Description");
         CrewReadDTO read = crewService.createCrew(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -133,14 +131,15 @@ public class CrewServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(crew);
     }
 
+    @Transactional
     @Test
     public void testPatchCrew() {
         Crew crew = createCrew();
 
         CrewPatchDTO patch = new CrewPatchDTO();
-        patch.setPersonId(personsReadDTO.getId());
-        patch.setCrewType(crewTypeReadDTO.getId());
-        patch.setMovieId(movieReadDTO.getId());
+        patch.setPersonId(persons);
+        patch.setCrewType(crewType);
+        patch.setMovieId(movie);
         patch.setDescription("Description");
         CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
 
@@ -150,6 +149,7 @@ public class CrewServiceTest {
         Assertions.assertThat(crew).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchCrewEmptyPatch() {
         Crew crew = createCrew();

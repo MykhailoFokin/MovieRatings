@@ -1,52 +1,23 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 public class MovieSpoilerData {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID movieReviewId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private MovieReview movieReviewId;
 
     private Integer startIndex;
 
     private Integer endIndex;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getMovieReviewId() {
-        return movieReviewId;
-    }
-
-    public void setMovieReviewId(UUID movieReviewId) {
-        this.movieReviewId = movieReviewId;
-    }
-
-    public Integer getStartIndex() {
-        return startIndex;
-    }
-
-    public void setStartIndex(Integer startIndex) {
-        this.startIndex = startIndex;
-    }
-
-    public Integer getEndIndex() {
-        return endIndex;
-    }
-
-    public void setEndIndex(Integer endIndex) {
-        this.endIndex = endIndex;
-    }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -44,25 +45,25 @@ public class MovieVoteServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
-    private MovieReadDTO movieReadDTO;
+    private Movie movie;
+
+    private PortalUser portalUser;
 
     private MovieVote createMovieVote() {
         MovieVote movieVote = new MovieVote();
-        movieVote.setMovieId(movieReadDTO.getId());
-        movieVote.setUserId(portalUserReadDTO.getId());
+        movieVote.setMovieId(movie);
+        movieVote.setUserId(portalUser);
         movieVote.setRating(UserVoteRatingType.R9);
         return movieVoteRepository.save(movieVote);
     }
 
     @Before
     public void setup() {
-        if (movieReadDTO==null) {
-            Movie movie = new Movie();
+        if (movie==null) {
+            movie = new Movie();
             //movie.setId(UUID.randomUUID());
             movie.setTitle("Movie Test");
             movie.setYear((short) 2019);
@@ -78,27 +79,25 @@ public class MovieVoteServiceTest {
             movie.setLanguages("English");
             movie.setSoundMix("DolbySurround");
             movie = movieRepository.save(movie);
-            //MovieReadDTO readDTO = movieService.getMovie(movie.getId());
-            movieReadDTO = movieService.getMovie(movie.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser == null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetMovieVote() {
         MovieVote movieVote = createMovieVote();
@@ -112,11 +111,12 @@ public class MovieVoteServiceTest {
         movieVoteService.getMovieVote(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateMovieVote() {
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
-        create.setMovieId(movieReadDTO.getId());
-        create.setUserId(portalUserReadDTO.getId());
+        create.setMovieId(movie);
+        create.setUserId(portalUser);
         create.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.createMovieVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -125,13 +125,14 @@ public class MovieVoteServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieVote);
     }
 
+    @Transactional
     @Test
     public void testPatchMovieVote() {
         MovieVote movieVote = createMovieVote();
 
         MovieVotePatchDTO patch = new MovieVotePatchDTO();
-        patch.setMovieId(movieReadDTO.getId());
-        patch.setUserId(portalUserReadDTO.getId());
+        patch.setMovieId(movie);
+        patch.setUserId(portalUser);
         patch.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
 
@@ -141,6 +142,7 @@ public class MovieVoteServiceTest {
         Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchMovieVoteEmptyPatch() {
         MovieVote movieVote = createMovieVote();

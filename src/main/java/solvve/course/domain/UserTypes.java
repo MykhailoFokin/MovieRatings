@@ -1,15 +1,18 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
-public class UserTypes implements Serializable {
+public class UserTypes {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
     @Enumerated(EnumType.STRING)
@@ -18,27 +21,6 @@ public class UserTypes implements Serializable {
     @OneToMany(mappedBy="userTypeId")
     private Set<Grants> grants;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UserGroupType getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(UserGroupType userGroup) {
-        this.userGroup = userGroup;
-    }
-
-    public Set<Grants> getGrants() {
-        return grants;
-    }
-
-    public void setGrants(Set<Grants> grants) {
-        this.grants = grants;
-    }
+    @OneToOne(mappedBy = "userType")
+    private PortalUser portalUser;
 }

@@ -39,7 +39,7 @@ public class MovieService {
         dto.setLanguages(movie.getLanguages());
         dto.setFilmingLocations(movie.getFilmingLocations());
         dto.setCritique(movie.getCritique());
-        dto.setIsPublished(movie.getisPublished());
+        dto.setIsPublished(movie.getIsPublished());
         dto.setMovieProdCountries(movie.getMovieProdCountries());
         return dto;
     }

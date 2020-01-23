@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.PortalUser;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -8,7 +9,7 @@ import java.util.UUID;
 @Data
 public class NewsCreateDTO {
 
-    private UUID userId;
+    private PortalUser userId;
 
     private Timestamp published;
 

@@ -1,13 +1,16 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.*;
 
+@Data
 @Entity
 public class Movie {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
     private String title;
@@ -50,6 +53,24 @@ public class Movie {
     //private Set<Countries> movieProdCountries = new HashSet<>();
     private Set<Countries> movieProdCountries;
 
+    @OneToMany(mappedBy = "movieId")
+    private Set<Crew> crews;
+
+    @OneToMany(mappedBy = "movieId")
+    private Set<MovieReview> movieReview;
+
+    @OneToMany(mappedBy = "movieId")
+    private Set<MovieReviewCompliant> movieReviewCompliants;
+
+    @OneToMany(mappedBy = "movieId")
+    private Set<MovieReviewFeedback> movieReviewFeedbacks;
+
+    @OneToMany(mappedBy = "movieId")
+    private Set<MovieVote> movieVotes;
+
+    @OneToMany(mappedBy = "movieId")
+    private Set<ReleaseDetails> releaseDetails;
+
     /*@OneToMany(
             mappedBy = "movie",
             cascade = CascadeType.ALL,
@@ -84,132 +105,4 @@ public class Movie {
     public void setMovieProdCountries(List<MovieProdCountries> movieProdCountries) {
         this.movieProdCountries = movieProdCountries;
     }*/
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Short getYear() {
-        return year;
-    }
-
-    public void setYear(Short year) {
-        this.year = year;
-    }
-
-    public String getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String genres) {
-        this.genres = genres;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCompanies() {
-        return companies;
-    }
-
-    public void setCompanies(String companies) {
-        this.companies = companies;
-    }
-
-    public String getSoundMix() {
-        return soundMix;
-    }
-
-    public void setSoundMix(String soundMix) {
-        this.soundMix = soundMix;
-    }
-
-    public String getColour() {
-        return colour;
-    }
-
-    public void setColour(String colour) {
-        this.colour = colour;
-    }
-
-    public String getAspectRatio() {
-        return aspectRatio;
-    }
-
-    public void setAspectRatio(String aspectRatio) {
-        this.aspectRatio = aspectRatio;
-    }
-
-    public String getCamera() {
-        return camera;
-    }
-
-    public void setCamera(String camera) {
-        this.camera = camera;
-    }
-
-    public String getLaboratory() {
-        return laboratory;
-    }
-
-    public void setLaboratory(String laboratory) {
-        this.laboratory = laboratory;
-    }
-
-    public String getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(String languages) {
-        this.languages = languages;
-    }
-
-    public String getFilmingLocations() {
-        return filmingLocations;
-    }
-
-    public void setFilmingLocations(String filmingLocations) {
-        this.filmingLocations = filmingLocations;
-    }
-
-    public String getCritique() {
-        return critique;
-    }
-
-    public void setCritique(String critique) {
-        this.critique = critique;
-    }
-
-    public Boolean getisPublished() {
-        return isPublished;
-    }
-
-    public void setIsPublished(Boolean published) {
-        isPublished = published;
-    }
-
-    public Set<Countries> getMovieProdCountries() {
-        return movieProdCountries;
-    }
-
-    public void setMovieProdCountries(Set<Countries> movieProdCountries) {
-        this.movieProdCountries = movieProdCountries;
-    }
 }

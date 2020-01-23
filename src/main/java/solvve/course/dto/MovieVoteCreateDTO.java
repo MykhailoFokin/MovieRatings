@@ -1,6 +1,8 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Movie;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserVoteRatingType;
 
 import javax.persistence.EnumType;
@@ -10,9 +12,9 @@ import java.util.UUID;
 @Data
 public class MovieVoteCreateDTO {
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID movieId;
+    private Movie movieId;
 
     private UserVoteRatingType rating;
 }

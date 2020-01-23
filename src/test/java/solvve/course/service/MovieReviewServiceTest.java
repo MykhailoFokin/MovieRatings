@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -44,27 +45,27 @@ public class MovieReviewServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
-    private MovieReadDTO movieReadDTO;
+    private PortalUser portalUser;
+
+    private Movie movie;
 
     private MovieReview createMovieReview() {
         MovieReview movieReview = new MovieReview();
-        movieReview.setUserId(portalUserReadDTO.getId());
-        movieReview.setMovieId(movieReadDTO.getId());
+        movieReview.setUserId(portalUser);
+        movieReview.setMovieId(movie);
         movieReview.setTextReview("This movie can be described as junk.");
         movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReview.setModeratorId(portalUserReadDTO.getId());
+        movieReview.setModeratorId(portalUser);
         return movieReviewRepository.save(movieReview);
     }
 
     @Before
     public void setup() {
-        if (movieReadDTO==null) {
-            Movie movie = new Movie();
+        if (movie==null) {
+            movie = new Movie();
             //movie.setId(UUID.randomUUID());
             movie.setTitle("Movie Test");
             movie.setYear((short) 2019);
@@ -80,28 +81,26 @@ public class MovieReviewServiceTest {
             movie.setLanguages("English");
             movie.setSoundMix("DolbySurround");
             movie = movieRepository.save(movie);
-            //MovieReadDTO readDTO = movieService.getMovie(movie.getId());
-            movieReadDTO = movieService.getMovie(movie.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser ==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
     }
 
     @Test
+    @Transactional
     public void testGetMovieReview() {
         MovieReview movieReview = createMovieReview();
 
@@ -115,13 +114,14 @@ public class MovieReviewServiceTest {
     }
 
     @Test
+    @Transactional
     public void testCreateMovieReview() {
         MovieReviewCreateDTO create = new MovieReviewCreateDTO();
-        create.setUserId(portalUserReadDTO.getId());
-        create.setMovieId(movieReadDTO.getId());
+        create.setUserId(portalUser);
+        create.setMovieId(movie);
         create.setTextReview("This movie can be described as junk.");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setModeratorId(portalUserReadDTO.getId());
+        create.setModeratorId(portalUser);
 
         MovieReviewReadDTO read = movieReviewService.createMovieReview(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -131,15 +131,16 @@ public class MovieReviewServiceTest {
     }
 
     @Test
+    @Transactional
     public void testPatchMovieReview() {
         MovieReview movieReview = createMovieReview();
 
         MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
-        patch.setUserId(portalUserReadDTO.getId());
-        patch.setMovieId(movieReadDTO.getId());
+        patch.setUserId(portalUser);
+        patch.setMovieId(movie);
         patch.setTextReview("This movie can be described as junk.");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setModeratorId(portalUserReadDTO.getId());
+        patch.setModeratorId(portalUser);
         MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -149,6 +150,7 @@ public class MovieReviewServiceTest {
     }
 
     @Test
+    @Transactional
     public void testPatchMovieReviewEmptyPatch() {
         MovieReview movieReview = createMovieReview();
 
@@ -173,6 +175,7 @@ public class MovieReviewServiceTest {
     }
 
     @Test
+    @Transactional
     public void testDeleteMovieReview() {
         MovieReview movieReview = createMovieReview();
 

@@ -1,6 +1,9 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Movie;
+import solvve.course.domain.MovieReview;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserModeratedStatusType;
 
 import javax.persistence.EnumType;
@@ -12,16 +15,16 @@ public class MovieReviewCompliantReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID movieId;
+    private Movie movieId;
 
-    private UUID movieReviewId;
+    private MovieReview movieReviewId;
 
     private String description;
 
     @Enumerated(EnumType.STRING)
     private UserModeratedStatusType moderatedStatus;
 
-    private UUID moderatorId;
+    private PortalUser moderatorId;
 }

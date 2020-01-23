@@ -25,7 +25,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from grants", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from grants; delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class GrantsServiceTest {
 
     @Autowired
@@ -40,16 +40,14 @@ public class GrantsServiceTest {
     @Autowired
     private PortalUserRepository portalUserRepository;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
     @Autowired UserTypesService userTypesService;
 
-    private UserTypesReadDTO userTypesReadDTO;
+    private PortalUser portalUser;
 
-    UserTypes userTypes;
+    private UserTypes userTypes;
 
     private Grants createGrants() {
         Grants grants = new Grants();
@@ -57,29 +55,25 @@ public class GrantsServiceTest {
         grants.setUserTypeId(userTypes);
         grants.setObjectName("Movie");
         grants.setUserPermission(UserPermType.READ);
-        grants.setGrantedBy(portalUserReadDTO.getId());
+        grants.setGrantedBy(portalUser);
         return grantsRepository.save(grants);
     }
 
     @Before
     public void setup() {
-        if (portalUserReadDTO == null) {
+        if (portalUser == null) {
             userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            userTypesReadDTO = userTypesService.getUserTypes(userTypes.getId());
-
-            PortalUser portalUser = new PortalUser();
-            portalUser.setUserType(userTypesReadDTO.getId());
+            portalUser = new PortalUser();
+            portalUser.setUserType(userTypes);
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
             portalUser.setLogin("Login");
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
     }
 
@@ -104,7 +98,7 @@ public class GrantsServiceTest {
         create.setUserTypeId(userTypes);
         create.setObjectName("Movie");
         create.setUserPermission(UserPermType.READ);
-        create.setGrantedBy(portalUserReadDTO.getId());
+        create.setGrantedBy(portalUser);
         GrantsReadDTO read = grantsService.createGrants(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -121,7 +115,7 @@ public class GrantsServiceTest {
         patch.setUserTypeId(userTypes);
         patch.setObjectName("Movie");
         patch.setUserPermission(UserPermType.READ);
-        patch.setGrantedBy(portalUserReadDTO.getId());
+        patch.setGrantedBy(portalUser);
         GrantsReadDTO read = grantsService.patchGrants(grants.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);

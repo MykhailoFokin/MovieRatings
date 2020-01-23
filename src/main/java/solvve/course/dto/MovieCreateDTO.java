@@ -1,7 +1,7 @@
 package solvve.course.dto;
 
 import lombok.*;
-import solvve.course.domain.Countries;
+import solvve.course.domain.*;
 
 import java.util.Set;
 
@@ -37,4 +37,16 @@ public class MovieCreateDTO {
     private Boolean isPublished;
 
     private Set<Countries> movieProdCountries;
+
+    private Set<Crew> crews;
+
+    private Set<MovieReview> movieReview;
+
+    private Set<MovieReviewCompliant> movieReviewCompliants;
+
+    private Set<MovieReviewFeedback> movieReviewFeedbacks;
+
+    private Set<MovieVote> movieVotes;
+
+    private Set<ReleaseDetails> releaseDetails;
 }

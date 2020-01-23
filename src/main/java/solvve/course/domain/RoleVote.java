@@ -1,51 +1,26 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 public class RoleVote {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private PortalUser userId;
 
-    private UUID roleId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Role roleId;
 
     @Enumerated(EnumType.ORDINAL)
     private UserVoteRatingType rating;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(UUID roleId) {
-        this.roleId = roleId;
-    }
-
-    public UserVoteRatingType getRating() {
-        return rating;
-    }
-
-    public void setRating(UserVoteRatingType rating) {
-        this.rating = rating;
-    }
 }

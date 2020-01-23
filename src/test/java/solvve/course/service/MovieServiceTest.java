@@ -155,7 +155,7 @@ public class MovieServiceTest {
         Assert.assertNotNull(movieAfterUpdate.getLaboratory());
         Assert.assertNotNull(movieAfterUpdate.getLanguages());
         Assert.assertNotNull(movieAfterUpdate.getSoundMix());
-        Assert.assertNotNull(movieAfterUpdate.getisPublished());
+        Assert.assertNotNull(movieAfterUpdate.getIsPublished());
 
         Assertions.assertThat(movie).isEqualToComparingFieldByField(movieAfterUpdate);
     }

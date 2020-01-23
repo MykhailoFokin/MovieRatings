@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from news", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from news; delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class NewsServiceTest {
 
     @Autowired
@@ -42,15 +43,15 @@ public class NewsServiceTest {
     @Autowired
     private PortalUserRepository portalUserRepository;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
+
+    private PortalUser portalUser;
 
     private News createNews() {
         News news = new News();
         news.setId(UUID.randomUUID());
-        news.setUserId(portalUserReadDTO.getId());
+        news.setUserId(portalUser);
         news.setTopic("Main_News");
         news.setDescription("Our main news are absent today!");
         news.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -59,23 +60,23 @@ public class NewsServiceTest {
 
     @Before
     public void setup() {
-        if (portalUserReadDTO ==null) {
+        if (portalUser==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetNews() {
         News news = createNews();
@@ -89,10 +90,11 @@ public class NewsServiceTest {
         newsService.getNews(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateNews() {
         NewsCreateDTO create = new NewsCreateDTO();
-        create.setUserId(portalUserReadDTO.getId());
+        create.setUserId(portalUser);
         create.setTopic("Main_News");
         create.setDescription("Our main news are absent today!");
         create.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -103,12 +105,13 @@ public class NewsServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(news);
     }
 
+    @Transactional
     @Test
     public void testPatchNews() {
         News news = createNews();
 
         NewsPatchDTO patch = new NewsPatchDTO();
-        patch.setUserId(portalUserReadDTO.getId());
+        patch.setUserId(portalUser);
         patch.setTopic("Main_News");
         patch.setDescription("Our main news are absent today!");
         patch.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -120,6 +123,7 @@ public class NewsServiceTest {
         Assertions.assertThat(news).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchNewsEmptyPatch() {
         News news = createNews();

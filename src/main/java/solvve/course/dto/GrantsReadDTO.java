@@ -2,6 +2,7 @@ package solvve.course.dto;
 
 import lombok.Data;
 import solvve.course.domain.Grants;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserPermType;
 import solvve.course.domain.UserTypes;
 
@@ -19,5 +20,5 @@ public class GrantsReadDTO implements Serializable {
 
     private String objectName;
 
-    private UUID grantedBy;
+    private PortalUser grantedBy;
 }

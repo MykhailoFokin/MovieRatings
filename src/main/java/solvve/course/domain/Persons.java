@@ -1,15 +1,17 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
 public class Persons {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
     private String surname;
@@ -18,35 +20,9 @@ public class Persons {
 
     private String middleName;
 
-    public UUID getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "personId")
+    private Set<Crew> crews;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
+    @OneToOne(mappedBy = "personId")
+    private Role role;
 }

@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.MovieReview;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public class MovieSpoilerDataReadDTO {
 
     private UUID id;
 
-    private UUID movieReviewId;
+    private MovieReview movieReviewId;
 
     private Integer startIndex;
 

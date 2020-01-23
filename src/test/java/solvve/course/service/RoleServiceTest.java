@@ -2,6 +2,7 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+import solvve.course.domain.Persons;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.repository.PersonsRepository;
 import solvve.course.repository.RoleRepository;
 
 import java.util.UUID;
@@ -21,7 +25,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleServiceTest {
 
     @Autowired
@@ -30,14 +34,30 @@ public class RoleServiceTest {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private PersonsRepository personsRepository;
+
+    private Persons person;
+
+    @Before
+    public void setup() {
+        if (person == null) {
+            person = new Persons();
+            person.setName("Name");
+            person = personsRepository.save(person);
+        }
+    }
+
     private Role createRole() {
         Role role = new Role();
         role.setTitle("Actor");
         role.setRoleType("Main_Role");
         role.setDescription("Description test");
+        role.setPersonId(person);
         return roleRepository.save(role);
     }
 
+    @Transactional
     @Test
     public void testGetRole() {
         Role role = createRole();
@@ -51,12 +71,14 @@ public class RoleServiceTest {
         roleService.getRole(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateRole() {
         RoleCreateDTO create = new RoleCreateDTO();
         create.setTitle("Actor");
         create.setRoleType("Main_Role");
         create.setDescription("Description test");
+        create.setPersonId(person);
         RoleReadDTO read = roleService.createRole(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -64,6 +86,7 @@ public class RoleServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(role);
     }
 
+    @Transactional
     @Test
     public void testPatchRole() {
         Role role = createRole();
@@ -72,6 +95,7 @@ public class RoleServiceTest {
         patch.setTitle("Actor");
         patch.setRoleType("Main_Role");
         patch.setDescription("Description test");
+        patch.setPersonId(person);
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -80,6 +104,7 @@ public class RoleServiceTest {
         Assertions.assertThat(role).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleEmptyPatch() {
         Role role = createRole();

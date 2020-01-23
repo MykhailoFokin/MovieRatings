@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -47,18 +48,14 @@ public class MovieSpoilerDataServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
-    private MovieReadDTO movieReadDTO;
-
-    private MovieReviewReadDTO movieReviewReadDTO;
+    private MovieReview movieReview;
 
     private MovieSpoilerData createMovieSpoilerData() {
         MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
-        movieSpoilerData.setMovieReviewId(movieReviewReadDTO.getId());
+        movieSpoilerData.setMovieReviewId(movieReview);
         movieSpoilerData.setStartIndex(100);
         movieSpoilerData.setEndIndex(150);
         return movieSpoilerDataRepository.save(movieSpoilerData);
@@ -66,7 +63,7 @@ public class MovieSpoilerDataServiceTest {
 
     @Before
     public void setup() {
-        if (movieReviewReadDTO==null) {
+        if (movieReview==null) {
             Movie movie = new Movie();
             //movie.setId(UUID.randomUUID());
             movie.setTitle("Movie Test");
@@ -83,8 +80,6 @@ public class MovieSpoilerDataServiceTest {
             movie.setLanguages("English");
             movie.setSoundMix("DolbySurround");
             movie = movieRepository.save(movie);
-            //MovieReadDTO readDTO = movieService.getMovie(movie.getId());
-            movieReadDTO = movieService.getMovie(movie.getId());
 
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
@@ -95,22 +90,20 @@ public class MovieSpoilerDataServiceTest {
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
 
-            MovieReviewCreateDTO create = new MovieReviewCreateDTO();
-            MovieReview movieReview = new MovieReview();
-            movieReview.setUserId(portalUserReadDTO.getId());
-            movieReview.setMovieId(movieReadDTO.getId());
+            movieReview = new MovieReview();
+            movieReview.setUserId(portalUser);
+            movieReview.setMovieId(movie);
             movieReview.setTextReview("This movie can be described as junk.");
             movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
             movieReview = movieReviewRepository.save(movieReview);
-            movieReviewReadDTO = movieReviewService.getMovieReview(movieReview.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetMovieSpoilerData() {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
@@ -124,10 +117,11 @@ public class MovieSpoilerDataServiceTest {
         movieSpoilerDataService.getMovieSpoilerData(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateMovieSpoilerData() {
         MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
-        create.setMovieReviewId(movieReviewReadDTO.getId());
+        create.setMovieReviewId(movieReview);
         create.setStartIndex(100);
         create.setEndIndex(150);
 
@@ -138,12 +132,13 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieSpoilerData);
     }
 
+    @Transactional
     @Test
     public void testPatchMovieSpoilerData() {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData();
 
         MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
-        patch.setMovieReviewId(movieReviewReadDTO.getId());
+        patch.setMovieReviewId(movieReview);
         patch.setStartIndex(100);
         patch.setEndIndex(150);
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
@@ -154,6 +149,7 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchMovieSpoilerDataEmptyPatch() {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData();

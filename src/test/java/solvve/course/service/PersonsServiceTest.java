@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Persons;
 import solvve.course.dto.PersonsCreateDTO;
 import solvve.course.dto.PersonsPatchDTO;
@@ -51,6 +52,7 @@ public class PersonsServiceTest {
         personsService.getPersons(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreatePersons() {
         PersonsCreateDTO create = new PersonsCreateDTO();
@@ -64,6 +66,7 @@ public class PersonsServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(persons);
     }
 
+    @Transactional
     @Test
     public void testPatchPersons() {
         Persons persons = createPersons();
@@ -80,6 +83,7 @@ public class PersonsServiceTest {
         Assertions.assertThat(persons).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchPersonsEmptyPatch() {
         Persons persons = createPersons();

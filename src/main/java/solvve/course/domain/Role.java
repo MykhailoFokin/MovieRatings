@@ -1,15 +1,17 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
 public class Role {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
     private String title;
@@ -18,45 +20,19 @@ public class Role {
 
     private String description;
 
-    private UUID personId;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private Persons personId;
 
-    public UUID getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "roleId")
+    private Set<RoleReview> roleReviewSet;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "roleId")
+    private Set<RoleReviewCompliant> roleReviewCompliants;
 
-    public String getTitle() {
-        return title;
-    }
+    @OneToMany(mappedBy = "roleId")
+    private Set<RoleReviewFeedback> roleReviewFeedbacks;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public UUID getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(UUID personId) {
-        this.personId = personId;
-    }
+    @OneToMany(mappedBy = "roleId")
+    private Set<RoleVote> roleVotes;
 }

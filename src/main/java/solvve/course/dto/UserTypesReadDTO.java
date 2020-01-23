@@ -2,6 +2,7 @@ package solvve.course.dto;
 
 import lombok.Data;
 import solvve.course.domain.Grants;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserTypes;
 
@@ -17,4 +18,6 @@ public class UserTypesReadDTO implements Serializable {
     private UserGroupType userGroup;
 
     private Set<Grants> grants;
+
+    private PortalUser portalUser;
 }

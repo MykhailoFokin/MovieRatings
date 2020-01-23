@@ -1,64 +1,29 @@
 package solvve.course.domain;
 
-import solvve.course.dto.CrewTypeReadDTO;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 public class Crew {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID personId;
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Persons personId;
 
-    private UUID movieId;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    private Movie movieId;
 
-    private UUID crewType;
+    @OneToOne
+    @JoinColumn(name = "crew_type", referencedColumnName = "id")
+    private CrewType crewType;
 
     private String description;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(UUID personId) {
-        this.personId = personId;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public UUID getCrewType() {
-        return crewType;
-    }
-
-    public void setCrewType(UUID crewType) {
-        this.crewType = crewType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

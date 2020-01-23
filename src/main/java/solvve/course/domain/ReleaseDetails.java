@@ -1,53 +1,25 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.UUID;
 
+@Data
 @Entity
 public class ReleaseDetails {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID movieId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Movie movieId;
 
     private Date releaseDate;
 
-    private UUID countryId;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public UUID getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(UUID countryId) {
-        this.countryId = countryId;
-    }
+    @OneToOne
+    private Countries countryId;
 }

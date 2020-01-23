@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_review_compliant; delete from role_review; delete from portal_user; delete from user_types; delete from role;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role_review_compliant; delete from role_review; delete from portal_user; delete from user_types; delete from role; delete from persons", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleReviewCompliantServiceTest {
 
     @Autowired
@@ -41,12 +42,8 @@ public class RoleReviewCompliantServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
-
-    private RoleReadDTO roleReadDTO;
 
     @Autowired
     private RoleReviewRepository roleReviewRepository;
@@ -54,61 +51,70 @@ public class RoleReviewCompliantServiceTest {
     @Autowired
     private RoleReviewService roleReviewService;
 
-    private RoleReviewReadDTO roleReviewReadDTO;
+    @Autowired
+    private PersonsRepository personsRepository;
+
+    private RoleReview roleReview;
+
+    private Role role;
+
+    private PortalUser portalUser;
 
     private RoleReviewCompliant createRoleReviewCompliant() {
         RoleReviewCompliant roleReviewCompliant = new RoleReviewCompliant();
-        roleReviewCompliant.setUserId(portalUserReadDTO.getId());
-        roleReviewCompliant.setRoleId(roleReadDTO.getId());
-        roleReviewCompliant.setRoleReviewId(roleReviewReadDTO.getId());
+        roleReviewCompliant.setUserId(portalUser);
+        roleReviewCompliant.setRoleId(role);
+        roleReviewCompliant.setRoleReviewId(roleReview);
         roleReviewCompliant.setDescription("Just punish him!");
         roleReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReviewCompliant.setModeratorId(portalUserReadDTO.getId());
+        roleReviewCompliant.setModeratorId(portalUser);
         return roleReviewCompliantRepository.save(roleReviewCompliant);
     }
 
     @Before
     public void setup() {
-        if (roleReadDTO==null) {
-            Role role = new Role();
+        if (role==null) {
+            Persons person = new Persons();
+            person.setName("Name");
+            person = personsRepository.save(person);
+
+            role = new Role();
             //role.setId(UUID.randomUUID());
             role.setTitle("Actor");
             role.setRoleType("Main_Role");
             role.setDescription("Description test");
+            role.setPersonId(person);
             role = roleRepository.save(role);
-            //RoleReadDTO readDTO = roleService.getRole(role.getId());
-            roleReadDTO = roleService.getRole(role.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
 
-        if (roleReviewReadDTO ==null) {
-            RoleReview roleReview = new RoleReview();
+        if (roleReview==null) {
+            roleReview = new RoleReview();
             roleReview.setId(UUID.randomUUID());
-            roleReview.setUserId(portalUserReadDTO.getId());
-            roleReview.setRoleId(roleReadDTO.getId());
+            roleReview.setUserId(portalUser);
+            roleReview.setRoleId(role);
             roleReview.setTextReview("This role can be described as junk.");
             roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-            roleReview.setModeratorId(portalUserReadDTO.getId());
+            roleReview.setModeratorId(portalUser);
             roleReview = roleReviewRepository.save(roleReview);
-            roleReviewReadDTO = roleReviewService.getRoleReview(roleReview.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetRoleReviewCompliant() {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant();
@@ -122,15 +128,16 @@ public class RoleReviewCompliantServiceTest {
         roleReviewCompliantService.getRoleReviewCompliant(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateRoleReviewCompliant() {
         RoleReviewCompliantCreateDTO create = new RoleReviewCompliantCreateDTO();
-        create.setUserId(portalUserReadDTO.getId());
-        create.setRoleId(roleReadDTO.getId());
-        create.setRoleReviewId(roleReviewReadDTO.getId());
+        create.setUserId(portalUser);
+        create.setRoleId(role);
+        create.setRoleReviewId(roleReview);
         create.setDescription("Just punish him!");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setModeratorId(portalUserReadDTO.getId());
+        create.setModeratorId(portalUser);
 
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.createRoleReviewCompliant(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -139,17 +146,18 @@ public class RoleReviewCompliantServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleReviewCompliant);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleReviewCompliant() {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant();
 
         RoleReviewCompliantPatchDTO patch = new RoleReviewCompliantPatchDTO();
-        patch.setUserId(portalUserReadDTO.getId());
-        patch.setRoleId(roleReadDTO.getId());
-        patch.setRoleReviewId(roleReviewReadDTO.getId());
+        patch.setUserId(portalUser);
+        patch.setRoleId(role);
+        patch.setRoleReviewId(roleReview);
         patch.setDescription("Just punish him!");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setModeratorId(portalUserReadDTO.getId());
+        patch.setModeratorId(portalUser);
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.patchRoleReviewCompliant(roleReviewCompliant.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -158,6 +166,7 @@ public class RoleReviewCompliantServiceTest {
         Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleReviewCompliantEmptyPatch() {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant();

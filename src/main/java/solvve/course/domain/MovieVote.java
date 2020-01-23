@@ -1,51 +1,26 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 public class MovieVote {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private PortalUser userId;
 
-    private UUID movieId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Movie movieId;
 
     @Enumerated(EnumType.ORDINAL)
     private UserVoteRatingType rating;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public UserVoteRatingType getRating() {
-        return rating;
-    }
-
-    public void setRating(UserVoteRatingType rating) {
-        this.rating = rating;
-    }
 }

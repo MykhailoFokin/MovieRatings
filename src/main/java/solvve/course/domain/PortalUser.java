@@ -1,14 +1,17 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
 public class PortalUser {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
     private String login;
@@ -19,75 +22,55 @@ public class PortalUser {
 
     private String middleName;
 
-    private UUID userType;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private UserTypes userType;
 
     @Enumerated(EnumType.STRING)
     private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
-    @OneToMany(mappedBy = "userTypeId")
-    private Set<Grants> grants;
+    @OneToMany(mappedBy = "grantedBy")
+    private  Set<Grants> grants;
 
-    public UUID getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<MovieReview> movieReview;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "moderatorId")
+    private Set<MovieReview> movieReviewModerator;
 
-    public String getLogin() {
-        return login;
-    }
+    @OneToMany(mappedBy = "userId")
+    private  Set<MovieReviewCompliant> movieReviewCompliants;
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
+    @OneToMany(mappedBy = "moderatorId")
+    private  Set<MovieReviewCompliant> movieReviewCompliantsModerator;
 
-    public String getSurname() {
-        return surname;
-    }
+    @OneToMany(mappedBy = "userId")
+    private  Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<RoleReview> roleReviews;
 
-    public String getName() {
-        return name;
-    }
+    @OneToMany(mappedBy = "moderatorId")
+    private Set<RoleReview> roleReviewsModerator;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @OneToMany(mappedBy = "userId")
+    private  Set<RoleReviewCompliant> roleReviewCompliants;
 
-    public String getMiddleName() {
-        return middleName;
-    }
+    @OneToMany(mappedBy = "moderatorId")
+    private  Set<RoleReviewCompliant> roleReviewCompliantsModerator;
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
+    @OneToMany(mappedBy = "userId")
+    private  Set<RoleReviewFeedback> roleReviewFeedbacks;
 
-    public UUID getUserType() {
-        return userType;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<MovieVote> movieVotes;
 
-    public void setUserType(UUID userType) {
-        this.userType = userType;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<News> news;
 
-    public UserConfidenceType getUserConfidence() {
-        return userConfidence;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<RoleVote> roleVotes;
 
-    public void setUserConfidence(UserConfidenceType userConfidence) {
-        this.userConfidence = userConfidence;
-    }
-
-    public Set<Grants> getGrants() {
-        return grants;
-    }
-
-    public void setGrants(Set<Grants> grants) {
-        this.grants = grants;
-    }
+    @OneToMany(mappedBy = "userId")
+    private Set<Visit> visits;
 }

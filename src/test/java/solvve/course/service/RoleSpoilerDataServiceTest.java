@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_spoiler_data; delete from role_review; delete from portal_user; delete from user_types; delete from role;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role_spoiler_data; delete from role_review; delete from portal_user; delete from user_types; delete from role; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleSpoilerDataServiceTest {
 
     @Autowired
@@ -47,18 +48,17 @@ public class RoleSpoilerDataServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
-    private RoleReadDTO roleReadDTO;
+    @Autowired
+    private PersonsRepository personsRepository;
 
-    private RoleReviewReadDTO roleReviewReadDTO;
+    private RoleReview roleReview;
 
     private RoleSpoilerData createRoleSpoilerData() {
         RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
-        roleSpoilerData.setRoleReviewId(roleReviewReadDTO.getId());
+        roleSpoilerData.setRoleReviewId(roleReview);
         roleSpoilerData.setStartIndex(100);
         roleSpoilerData.setEndIndex(150);
         return roleSpoilerDataRepository.save(roleSpoilerData);
@@ -66,15 +66,18 @@ public class RoleSpoilerDataServiceTest {
 
     @Before
     public void setup() {
-        if (roleReviewReadDTO==null) {
+        if (roleReview==null) {
+            Persons person = new Persons();
+            person.setName("Name");
+            person = personsRepository.save(person);
+
             Role role = new Role();
             //role.setId(UUID.randomUUID());
             role.setTitle("Actor");
             role.setRoleType("Main_Role");
             role.setDescription("Description test");
+            role.setPersonId(person);
             role = roleRepository.save(role);
-            //RoleReadDTO readDTO = roleService.getRole(role.getId());
-            roleReadDTO = roleService.getRole(role.getId());
 
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
@@ -85,22 +88,21 @@ public class RoleSpoilerDataServiceTest {
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
 
             RoleReviewCreateDTO create = new RoleReviewCreateDTO();
-            RoleReview roleReview = new RoleReview();
-            roleReview.setUserId(portalUserReadDTO.getId());
-            roleReview.setRoleId(roleReadDTO.getId());
+            roleReview = new RoleReview();
+            roleReview.setUserId(portalUser);
+            roleReview.setRoleId(role);
             roleReview.setTextReview("This role can be described as junk.");
             roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
             roleReview = roleReviewRepository.save(roleReview);
-            roleReviewReadDTO = roleReviewService.getRoleReview(roleReview.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetRoleSpoilerData() {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
@@ -114,10 +116,11 @@ public class RoleSpoilerDataServiceTest {
         roleSpoilerDataService.getRoleSpoilerData(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateRoleSpoilerData() {
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
-        create.setRoleReviewId(roleReviewReadDTO.getId());
+        create.setRoleReviewId(roleReview);
         create.setStartIndex(100);
         create.setEndIndex(150);
 
@@ -128,12 +131,13 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleSpoilerData);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleSpoilerData() {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
-        patch.setRoleReviewId(roleReviewReadDTO.getId());
+        patch.setRoleReviewId(roleReview);
         patch.setStartIndex(100);
         patch.setEndIndex(150);
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
@@ -144,6 +148,7 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleSpoilerDataEmptyPatch() {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData();

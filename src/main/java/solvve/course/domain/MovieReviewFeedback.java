@@ -1,62 +1,29 @@
 package solvve.course.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.UUID;
 
+@Data
 @Entity
 public class MovieReviewFeedback {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private PortalUser userId;
 
-    private UUID movieId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Movie movieId;
 
-    private UUID movieReviewId;
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private MovieReview movieReviewId;
 
     private Boolean isLiked;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public UUID getMovieReviewId() {
-        return movieReviewId;
-    }
-
-    public void setMovieReviewId(UUID movieReviewId) {
-        this.movieReviewId = movieReviewId;
-    }
-
-    public Boolean getIsLiked() {
-        return isLiked;
-    }
-
-    public void setIsLiked(Boolean liked) {
-        isLiked = liked;
-    }
 }

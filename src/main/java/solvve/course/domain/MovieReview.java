@@ -1,71 +1,42 @@
 package solvve.course.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Entity
 public class MovieReview {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private UUID id;
 
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private PortalUser userId;
 
-    private UUID movieId;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    private Movie movieId;
 
     private String textReview;
 
     @Enumerated(EnumType.STRING)
     private UserModeratedStatusType moderatedStatus;
 
-    private UUID moderatorId;
+    @ManyToOne
+    @JoinColumn(name = "moderator_id", referencedColumnName = "id")
+    private PortalUser moderatorId;
 
-    public UUID getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "movieReviewId")
+    private Set<MovieReviewCompliant> movieReviewCompliants;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "movieReviewId")
+    private Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(UUID movieId) {
-        this.movieId = movieId;
-    }
-
-    public String getTextReview() {
-        return textReview;
-    }
-
-    public void setTextReview(String textReview) {
-        this.textReview = textReview;
-    }
-
-    public UserModeratedStatusType getModeratedStatus() {
-        return moderatedStatus;
-    }
-
-    public void setModeratedStatus(UserModeratedStatusType moderatedStatus) {
-        this.moderatedStatus = moderatedStatus;
-    }
-
-    public UUID getModeratorId() {
-        return moderatorId;
-    }
-
-    public void setModeratorId(UUID moderatorId) {
-        this.moderatorId = moderatorId;
-    }
+    @OneToMany(mappedBy = "movieReviewId")
+    private Set<MovieSpoilerData> movieSpoilerData;
 }

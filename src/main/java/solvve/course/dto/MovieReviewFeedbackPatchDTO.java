@@ -1,17 +1,20 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Movie;
+import solvve.course.domain.MovieReview;
+import solvve.course.domain.PortalUser;
 
 import java.util.UUID;
 
 @Data
 public class MovieReviewFeedbackPatchDTO {
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID movieId;
+    private Movie movieId;
 
-    private UUID movieReviewId;
+    private MovieReview movieReviewId;
 
     private Boolean isLiked;
 }

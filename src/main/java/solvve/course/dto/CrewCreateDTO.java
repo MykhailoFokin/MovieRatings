@@ -1,17 +1,20 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.CrewType;
+import solvve.course.domain.Movie;
+import solvve.course.domain.Persons;
 
 import java.util.UUID;
 
 @Data
 public class CrewCreateDTO {
 
-    private UUID personId;
+    private Persons personId;
 
-    private UUID movieId;
+    private Movie movieId;
 
-    private UUID crewType;
+    private CrewType crewType;
 
     private String description;
 }

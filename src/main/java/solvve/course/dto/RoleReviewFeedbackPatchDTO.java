@@ -1,17 +1,20 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.PortalUser;
+import solvve.course.domain.Role;
+import solvve.course.domain.RoleReview;
 
 import java.util.UUID;
 
 @Data
 public class RoleReviewFeedbackPatchDTO {
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID roleId;
+    private Role roleId;
 
-    private UUID roleReviewId;
+    private RoleReview roleReviewId;
 
     private Boolean isLiked;
 }

@@ -1,8 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.Grants;
-import solvve.course.domain.UserConfidenceType;
+import solvve.course.domain.*;
 
 import java.util.Set;
 import java.util.UUID;
@@ -20,9 +19,37 @@ public class PortalUserReadDTO {
 
     private String middleName;
 
-    private UUID userType;
+    private UserTypes userType;
 
     private UserConfidenceType userConfidence;
 
-    private Set<Grants> grants;
+    private  Set<Grants> grants;
+
+    private Set<MovieReview> movieReview;
+
+    private Set<MovieReview> movieReviewModerator;
+
+    private  Set<MovieReviewCompliant> movieReviewCompliants;
+
+    private  Set<MovieReviewCompliant> movieReviewCompliantsModerator;
+
+    private  Set<MovieReviewFeedback> movieReviewFeedbacks;
+
+    private Set<RoleReview> roleReviews;
+
+    private Set<RoleReview> roleReviewsModerator;
+
+    private  Set<RoleReviewCompliant> roleReviewCompliants;
+
+    private  Set<RoleReviewCompliant> roleReviewCompliantsModerator;
+
+    private  Set<RoleReviewFeedback> roleReviewFeedbacks;
+
+    private Set<MovieVote> movieVotes;
+
+    private Set<News> news;
+
+    private Set<RoleVote> roleVotes;
+
+    private Set<Visit> visits;
 }

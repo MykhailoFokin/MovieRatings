@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -41,12 +42,8 @@ public class MovieReviewFeedbackServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
-
-    private MovieReadDTO movieReadDTO;
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
@@ -54,21 +51,25 @@ public class MovieReviewFeedbackServiceTest {
     @Autowired
     private MovieReviewService movieReviewService;
 
-    private MovieReviewReadDTO movieReviewReadDTO;
+    private MovieReview movieReview;
+
+    private PortalUser portalUser;
+
+    private Movie movie;
 
     private MovieReviewFeedback createMovieReviewFeedback() {
         MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setUserId(portalUserReadDTO.getId());
-        movieReviewFeedback.setMovieId(movieReadDTO.getId());
-        movieReviewFeedback.setMovieReviewId(movieReviewReadDTO.getId());
+        movieReviewFeedback.setUserId(portalUser);
+        movieReviewFeedback.setMovieId(movie);
+        movieReviewFeedback.setMovieReviewId(movieReview);
         movieReviewFeedback.setIsLiked(true);
         return movieReviewFeedbackRepository.save(movieReviewFeedback);
     }
 
     @Before
     public void setup() {
-        if (movieReadDTO==null) {
-            Movie movie = new Movie();
+        if (movie==null) {
+            movie = new Movie();
             //movie.setId(UUID.randomUUID());
             movie.setTitle("Movie Test");
             movie.setYear((short) 2019);
@@ -84,39 +85,36 @@ public class MovieReviewFeedbackServiceTest {
             movie.setLanguages("English");
             movie.setSoundMix("DolbySurround");
             movie = movieRepository.save(movie);
-            //MovieReadDTO readDTO = movieService.getMovie(movie.getId());
-            movieReadDTO = movieService.getMovie(movie.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser ==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
 
-        if (movieReviewReadDTO ==null) {
-            MovieReview movieReview = new MovieReview();
+        if (movieReview == null) {
+            movieReview = new MovieReview();
             movieReview.setId(UUID.randomUUID());
-            movieReview.setUserId(portalUserReadDTO.getId());
-            movieReview.setMovieId(movieReadDTO.getId());
+            movieReview.setUserId(portalUser);
+            movieReview.setMovieId(movie);
             movieReview.setTextReview("This movie can be described as junk.");
             movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-            movieReview.setModeratorId(portalUserReadDTO.getId());
+            movieReview.setModeratorId(portalUser);
             movieReview = movieReviewRepository.save(movieReview);
-            movieReviewReadDTO = movieReviewService.getMovieReview(movieReview.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetMovieReviewFeedback() {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
@@ -130,12 +128,13 @@ public class MovieReviewFeedbackServiceTest {
         movieReviewFeedbackService.getMovieReviewFeedback(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateMovieReviewFeedback() {
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
-        create.setUserId(portalUserReadDTO.getId());
-        create.setMovieId(movieReadDTO.getId());
-        create.setMovieReviewId(movieReviewReadDTO.getId());
+        create.setUserId(portalUser);
+        create.setMovieId(movie);
+        create.setMovieReviewId(movieReview);
         create.setIsLiked(true);
 
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.createMovieReviewFeedback(create);
@@ -145,16 +144,15 @@ public class MovieReviewFeedbackServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(movieReviewFeedback);
     }
 
-
-
+    @Transactional
     @Test
     public void testPatchMovieReviewFeedback() {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
-        patch.setUserId(portalUserReadDTO.getId());
-        patch.setMovieId(movieReadDTO.getId());
-        patch.setMovieReviewId(movieReviewReadDTO.getId());
+        patch.setUserId(portalUser);
+        patch.setMovieId(movie);
+        patch.setMovieReviewId(movieReview);
         patch.setIsLiked(true);
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.patchMovieReviewFeedback(movieReviewFeedback.getId(), patch);
 
@@ -164,6 +162,7 @@ public class MovieReviewFeedbackServiceTest {
         Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchMovieReviewFeedbackEmptyPatch() {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();

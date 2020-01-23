@@ -32,6 +32,7 @@ public class RoleService {
         dto.setTitle(role.getTitle());
         dto.setRoleType(role.getRoleType());
         dto.setDescription(role.getDescription());
+        dto.setPersonId(role.getPersonId());
         return dto;
     }
 

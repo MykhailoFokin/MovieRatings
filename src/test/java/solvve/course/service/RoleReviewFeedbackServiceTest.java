@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_review_feedback; delete from role_review; delete from portal_user; delete from user_types; delete from role;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role_review_feedback; delete from role_review; delete from portal_user; delete from user_types; delete from role; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleReviewFeedbackServiceTest {
 
     @Autowired
@@ -41,12 +42,8 @@ public class RoleReviewFeedbackServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
-
-    private RoleReadDTO roleReadDTO;
 
     @Autowired
     private RoleReviewRepository roleReviewRepository;
@@ -54,60 +51,69 @@ public class RoleReviewFeedbackServiceTest {
     @Autowired
     private RoleReviewService roleReviewService;
 
-    private RoleReviewReadDTO roleReviewReadDTO;
+    @Autowired
+    private PersonsRepository personsRepository;
+
+    private RoleReview roleReview;
+
+    private PortalUser portalUser;
+
+    private Role role;
 
     private RoleReviewFeedback createRoleReviewFeedback() {
         RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
-        roleReviewFeedback.setUserId(portalUserReadDTO.getId());
-        roleReviewFeedback.setRoleId(roleReadDTO.getId());
-        roleReviewFeedback.setRoleReviewId(roleReviewReadDTO.getId());
+        roleReviewFeedback.setUserId(portalUser);
+        roleReviewFeedback.setRoleId(role);
+        roleReviewFeedback.setRoleReviewId(roleReview);
         roleReviewFeedback.setIsLiked(true);
         return roleReviewFeedbackRepository.save(roleReviewFeedback);
     }
 
     @Before
     public void setup() {
-        if (roleReadDTO==null) {
-            Role role = new Role();
+        if (role==null) {
+            Persons person = new Persons();
+            person.setName("Name");
+            person = personsRepository.save(person);
+
+            role = new Role();
             //role.setId(UUID.randomUUID());
             role.setTitle("Role Test");
             role.setTitle("Actor");
             role.setRoleType("Main_Role");
             role.setDescription("Description test");
+            role.setPersonId(person);
             role = roleRepository.save(role);
-            //RoleReadDTO readDTO = roleService.getRole(role.getId());
-            roleReadDTO = roleService.getRole(role.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
 
-        if (roleReviewReadDTO ==null) {
-            RoleReview roleReview = new RoleReview();
+        if (roleReview==null) {
+            roleReview = new RoleReview();
             roleReview.setId(UUID.randomUUID());
-            roleReview.setUserId(portalUserReadDTO.getId());
-            roleReview.setRoleId(roleReadDTO.getId());
+            roleReview.setUserId(portalUser);
+            roleReview.setRoleId(role);
             roleReview.setTextReview("This role can be described as junk.");
             roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-            roleReview.setModeratorId(portalUserReadDTO.getId());
+            roleReview.setModeratorId(portalUser);
             roleReview = roleReviewRepository.save(roleReview);
-            roleReviewReadDTO = roleReviewService.getRoleReview(roleReview.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetRoleReviewFeedback() {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
@@ -121,12 +127,13 @@ public class RoleReviewFeedbackServiceTest {
         roleReviewFeedbackService.getRoleReviewFeedback(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateRoleReviewFeedback() {
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
-        create.setUserId(portalUserReadDTO.getId());
-        create.setRoleId(roleReadDTO.getId());
-        create.setRoleReviewId(roleReviewReadDTO.getId());
+        create.setUserId(portalUser);
+        create.setRoleId(role);
+        create.setRoleReviewId(roleReview);
         create.setIsLiked(true);
 
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.createRoleReviewFeedback(create);
@@ -136,14 +143,15 @@ public class RoleReviewFeedbackServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleReviewFeedback);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleReviewFeedback() {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
-        patch.setUserId(portalUserReadDTO.getId());
-        patch.setRoleId(roleReadDTO.getId());
-        patch.setRoleReviewId(roleReviewReadDTO.getId());
+        patch.setUserId(portalUser);
+        patch.setRoleId(role);
+        patch.setRoleReviewId(roleReview);
         patch.setIsLiked(true);
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.patchRoleReviewFeedback(roleReviewFeedback.getId(), patch);
 
@@ -153,6 +161,7 @@ public class RoleReviewFeedbackServiceTest {
         Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleReviewFeedbackEmptyPatch() {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback();

@@ -10,20 +10,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.RoleRepository;
-import solvve.course.repository.RoleVoteRepository;
-import solvve.course.repository.UserTypesRepository;
+import solvve.course.repository.*;
 
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_vote; delete from portal_user; delete from user_types; delete from role;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role_vote; delete from portal_user; delete from user_types; delete from role; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleVoteServiceTest {
 
     @Autowired
@@ -44,51 +42,59 @@ public class RoleVoteServiceTest {
     @Autowired
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO portalUserReadDTO;
-
     @Autowired
     private UserTypesRepository userTypesRepository;
 
-    private RoleReadDTO roleReadDTO;
+    @Autowired
+    private PersonsRepository personsRepository;
+
+    private Role role;
+
+    private PortalUser portalUser;
 
     private RoleVote createRoleVote() {
         RoleVote roleVote = new RoleVote();
-        roleVote.setRoleId(roleReadDTO.getId());
-        roleVote.setUserId(portalUserReadDTO.getId());
+        roleVote.setRoleId(role);
+        roleVote.setUserId(portalUser);
         roleVote.setRating(UserVoteRatingType.R9);
         return roleVoteRepository.save(roleVote);
     }
 
     @Before
     public void setup() {
-        if (roleReadDTO==null) {
-            Role role = new Role();
+        if (role==null) {
+            Persons persons = new Persons();
+            persons.setSurname("Surname");
+            persons.setName("Name");
+            persons.setMiddleName("MiddleName");
+            persons = personsRepository.save(persons);
+
+            role = new Role();
             role.setId(UUID.randomUUID());
             role.setTitle("Actor");
             role.setRoleType("Main_Role");
             role.setDescription("Description test");
-            //RoleReadDTO readDTO = roleService.getRole(role.getId());
+            role.setPersonId(persons);
             role = roleRepository.save(role);
-            roleReadDTO = roleService.getRole(role.getId());
         }
 
-        if (portalUserReadDTO ==null) {
+        if (portalUser==null) {
             UserTypes userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
 
-            PortalUser portalUser = new PortalUser();
+            portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes.getId());
+            portalUser.setUserType(userTypes);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
-            portalUserReadDTO = portalUserService.getPortalUser(portalUser.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetRoleVote() {
         RoleVote roleVote = createRoleVote();
@@ -102,11 +108,12 @@ public class RoleVoteServiceTest {
         roleVoteService.getRoleVote(UUID.randomUUID());
     }
 
+    @Transactional
     @Test
     public void testCreateRoleVote() {
         RoleVoteCreateDTO create = new RoleVoteCreateDTO();
-        create.setRoleId(roleReadDTO.getId());
-        create.setUserId(portalUserReadDTO.getId());
+        create.setRoleId(role);
+        create.setUserId(portalUser);
         create.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.createRoleVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -115,13 +122,14 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(roleVote);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleVote() {
         RoleVote roleVote = createRoleVote();
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
-        patch.setRoleId(roleReadDTO.getId());
-        patch.setUserId(portalUserReadDTO.getId());
+        patch.setRoleId(role);
+        patch.setUserId(portalUser);
         patch.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
 
@@ -131,6 +139,7 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(roleVote).isEqualToComparingFieldByField(read);
     }
 
+    @Transactional
     @Test
     public void testPatchRoleVoteEmptyPatch() {
         RoleVote roleVote = createRoleVote();

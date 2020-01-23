@@ -28,7 +28,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from portal_user", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class PortalUserServiceTest {
 
     @Autowired
@@ -43,11 +43,11 @@ public class PortalUserServiceTest {
     @Autowired
     private UserTypesService userTypesService;
 
-    private UserTypesReadDTO userTypesReadDTO;
+    private UserTypes userTypes;
 
     private PortalUser createPortalUser() {
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userTypesReadDTO.getId());
+        portalUser.setUserType(userTypes);
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");
@@ -58,15 +58,14 @@ public class PortalUserServiceTest {
 
     @Before
     public void setup() throws Exception {
-        if (userTypesReadDTO==null) {
-            UserTypes userTypes = new UserTypes();
+        if (userTypes==null) {
+            userTypes = new UserTypes();
             userTypes.setUserGroup(UserGroupType.USER);
             userTypes = userTypesRepository.save(userTypes);
-
-            userTypesReadDTO = userTypesService.getUserTypes(userTypes.getId());
         }
     }
 
+    @Transactional
     @Test
     public void testGetPortalUsers() {
         PortalUser portalUser = createPortalUser();
@@ -84,7 +83,7 @@ public class PortalUserServiceTest {
     @Test
     public void testCreatePortalUsers() {
         PortalUserCreateDTO create = new PortalUserCreateDTO();
-        create.setUserType(userTypesReadDTO.getId());
+        create.setUserType(userTypes);
         create.setSurname("Surname");
         create.setName("Name");
         create.setMiddleName("MiddleName");
@@ -103,7 +102,7 @@ public class PortalUserServiceTest {
         PortalUser portalUser = createPortalUser();
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
-        patch.setUserType(userTypesReadDTO.getId());
+        patch.setUserType(userTypes);
         patch.setSurname("Surname");
         patch.setName("Name");
         patch.setMiddleName("MiddleName");

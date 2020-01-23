@@ -1,8 +1,9 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.UserModeratedStatusType;
+import solvve.course.domain.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -10,13 +11,19 @@ public class MovieReviewReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID movieId;
+    private Movie movieId;
 
     private String textReview;
 
     private UserModeratedStatusType moderatedStatus;
 
-    private UUID moderatorId;
+    private PortalUser moderatorId;
+
+    private Set<MovieReviewCompliant> movieReviewCompliants;
+
+    private Set<MovieReviewFeedback> movieReviewFeedbacks;
+
+    private Set<MovieSpoilerData> movieSpoilerData;
 }

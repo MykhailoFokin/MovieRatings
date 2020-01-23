@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Crew;
 
 import java.util.UUID;
 
@@ -10,4 +11,6 @@ public class CrewTypeReadDTO {
     private UUID id;
 
     private String name;
+
+    private Crew crew;
 }

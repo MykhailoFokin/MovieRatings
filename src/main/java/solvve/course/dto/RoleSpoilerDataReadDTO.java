@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.RoleReview;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public class RoleSpoilerDataReadDTO {
 
     private UUID id;
 
-    private UUID roleReviewId;
+    private RoleReview roleReviewId;
 
     private Integer startIndex;
 

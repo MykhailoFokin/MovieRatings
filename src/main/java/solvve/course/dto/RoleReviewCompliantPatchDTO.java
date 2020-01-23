@@ -1,6 +1,9 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.PortalUser;
+import solvve.course.domain.Role;
+import solvve.course.domain.RoleReview;
 import solvve.course.domain.UserModeratedStatusType;
 
 import javax.persistence.EnumType;
@@ -10,16 +13,16 @@ import java.util.UUID;
 @Data
 public class RoleReviewCompliantPatchDTO {
 
-    private UUID userId;
+    private PortalUser userId;
 
-    private UUID roleId;
+    private Role roleId;
 
-    private UUID roleReviewId;
+    private RoleReview roleReviewId;
 
     private String description;
 
     @Enumerated(EnumType.STRING)
     private UserModeratedStatusType moderatedStatus;
 
-    private UUID moderatorId;
+    private PortalUser moderatorId;
 }
