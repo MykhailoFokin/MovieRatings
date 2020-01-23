@@ -17,6 +17,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.VisitCreateDTO;
 import solvve.course.dto.VisitPatchDTO;
 import solvve.course.dto.VisitReadDTO;
+import solvve.course.dto.VisitReadExtendedDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.VisitService;
 
@@ -40,8 +41,8 @@ public class VisitControllerTest {
     @MockBean
     private VisitService visitService;
 
-    private VisitReadDTO createVisitRead() {
-        VisitReadDTO visit = new VisitReadDTO();
+    private VisitReadExtendedDTO createVisitRead() {
+        VisitReadExtendedDTO visit = new VisitReadExtendedDTO();
         visit.setId(UUID.randomUUID());
         //visit.setUserId(portalUser);
         //visit.setMasterId(master);
@@ -53,11 +54,11 @@ public class VisitControllerTest {
 
     @Test
     public void testGetVisit() throws Exception {
-        VisitReadDTO visit = createVisitRead();
+        VisitReadExtendedDTO visit = createVisitRead();
 
         Mockito.when(visitService.getVisit(visit.getId())).thenReturn(visit);
 
-        String resultJson = mvc.perform(get("/api/v1/visit/{id}", visit.getId()))
+        String resultJson = mvc.perform(get("/api/v1/visits/{id}", visit.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -74,7 +75,7 @@ public class VisitControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(Visit.class,wrongId);
         Mockito.when(visitService.getVisit(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/visit/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/visits/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -85,7 +86,7 @@ public class VisitControllerTest {
     public void testGetVisitWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/visit/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/visits/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -102,17 +103,17 @@ public class VisitControllerTest {
         create.setFinishAt(Instant.now());
         create.setStatus(VisitStatus.FINISHED);
 
-        VisitReadDTO read = createVisitRead();
+        VisitReadExtendedDTO read = createVisitRead();
 
         Mockito.when(visitService.createVisit(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/visit")
+        String resultJson = mvc.perform(post("/api/v1/visits")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
+        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
         Assertions.assertThat(actualVisit).isEqualToComparingFieldByField(read);
     }
 
@@ -126,17 +127,17 @@ public class VisitControllerTest {
         patchDTO.setFinishAt(Instant.now());
         patchDTO.setStatus(VisitStatus.FINISHED);
 
-        VisitReadDTO read = createVisitRead();
+        VisitReadExtendedDTO read = createVisitRead();
 
         Mockito.when(visitService.patchVisit(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/visit/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/visits/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
+        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
         Assert.assertEquals(read, actualVisit);
     }
 
@@ -144,7 +145,7 @@ public class VisitControllerTest {
     public void testDeleteVisit() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/visit/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/visits/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(visitService).deleteVisit(id);
     }

@@ -19,11 +19,11 @@ public class PortalUserReadDTO {
 
     private String middleName;
 
-    private UserTypes userType;
+    private UserType userType;
 
     private UserConfidenceType userConfidence;
 
-    private  Set<Grants> grants;
+    private  Set<Grant> grants;
 
     private Set<MovieReview> movieReview;
 

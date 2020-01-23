@@ -68,7 +68,7 @@ public class MovieControllerTest {
 
         Mockito.when(movieService.getMovie(movie.getId())).thenReturn(movie);
 
-        String resultJson = mvc.perform(get("/api/v1/movie/{id}", movie.getId()))
+        String resultJson = mvc.perform(get("/api/v1/movies/{id}", movie.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -86,7 +86,7 @@ public class MovieControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(Movie.class,wrongId);
         Mockito.when(movieService.getMovie(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/movie/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/movies/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -97,7 +97,7 @@ public class MovieControllerTest {
     public void testGetMovieWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/movie/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/movies/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -126,7 +126,7 @@ public class MovieControllerTest {
 
         Mockito.when(movieService.createMovie(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/movie")
+        String resultJson = mvc.perform(post("/api/v1/movies")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -158,7 +158,7 @@ public class MovieControllerTest {
 
         Mockito.when(movieService.patchMovie(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/movie/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/movies/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -172,7 +172,7 @@ public class MovieControllerTest {
     public void testDeleteMovie() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/movie/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/movies/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieService).deleteMovie(id);
     }

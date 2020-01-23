@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from movie_review_compliant; delete from movie; delete from movie_review; delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from movie_review_compliant; delete from movie; delete from movie_review; delete from portal_user; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class MovieReviewCompliantRepositoryTest {
 
@@ -28,7 +28,7 @@ public class MovieReviewCompliantRepositoryTest {
     private MovieReviewRepository movieReviewRepository;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Autowired
     private PortalUserRepository portalUserRepository;
@@ -38,11 +38,11 @@ public class MovieReviewCompliantRepositoryTest {
         Movie movie = new Movie();
         movie = movieRepository.save(movie);
 
-        UserTypes userTypes = new UserTypes();
-        userTypes = userTypesRepository.save(userTypes);
+        UserType userType = new UserType();
+        userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userTypes);
+        portalUser.setUserType(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         MovieReview movieReview = new MovieReview();

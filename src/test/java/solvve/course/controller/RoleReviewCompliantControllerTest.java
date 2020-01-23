@@ -54,7 +54,7 @@ public class RoleReviewCompliantControllerTest {
 
         Mockito.when(roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId())).thenReturn(roleReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliant/{id}", roleReviewCompliant.getId()))
+        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliants/{id}", roleReviewCompliant.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -71,7 +71,7 @@ public class RoleReviewCompliantControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(RoleReviewCompliant.class,wrongId);
         Mockito.when(roleReviewCompliantService.getRoleReviewCompliant(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliant/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliants/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -82,7 +82,7 @@ public class RoleReviewCompliantControllerTest {
     public void testGetRoleReviewCompliantWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliant/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliants/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -100,7 +100,7 @@ public class RoleReviewCompliantControllerTest {
 
         Mockito.when(roleReviewCompliantService.createRoleReviewCompliant(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/rolereviewcompliant")
+        String resultJson = mvc.perform(post("/api/v1/rolereviewcompliants")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ public class RoleReviewCompliantControllerTest {
 
         Mockito.when(roleReviewCompliantService.patchRoleReviewCompliant(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/rolereviewcompliant/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/rolereviewcompliants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -135,7 +135,7 @@ public class RoleReviewCompliantControllerTest {
     public void testDeleteRoleReviewCompliant() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/rolereviewcompliant/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/rolereviewcompliants/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleReviewCompliantService).deleteRoleReviewCompliant(id);
     }

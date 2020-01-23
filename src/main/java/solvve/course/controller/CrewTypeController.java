@@ -10,7 +10,7 @@ import solvve.course.service.CrewTypeService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/crewtype")
+@RequestMapping("/api/v1/crewtypes")
 public class CrewTypeController {
 
     @Autowired

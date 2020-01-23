@@ -14,21 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
 import solvve.course.domain.UserGroupType;
-import solvve.course.domain.UserTypes;
+import solvve.course.domain.UserType;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
 import solvve.course.dto.PortalUserReadDTO;
-import solvve.course.dto.UserTypesReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypesRepository;
+import solvve.course.repository.UserTypeRepository;
 
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from portal_user; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class PortalUserServiceTest {
 
     @Autowired
@@ -38,16 +37,16 @@ public class PortalUserServiceTest {
     private PortalUserService portalUserService;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Autowired
-    private UserTypesService userTypesService;
+    private UserTypeService userTypeService;
 
-    private UserTypes userTypes;
+    private UserType userType;
 
     private PortalUser createPortalUser() {
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userTypes);
+        portalUser.setUserType(userType);
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");
@@ -58,10 +57,10 @@ public class PortalUserServiceTest {
 
     @Before
     public void setup() throws Exception {
-        if (userTypes==null) {
-            userTypes = new UserTypes();
-            userTypes.setUserGroup(UserGroupType.USER);
-            userTypes = userTypesRepository.save(userTypes);
+        if (userType ==null) {
+            userType = new UserType();
+            userType.setUserGroup(UserGroupType.USER);
+            userType = userTypeRepository.save(userType);
         }
     }
 
@@ -83,7 +82,7 @@ public class PortalUserServiceTest {
     @Test
     public void testCreatePortalUsers() {
         PortalUserCreateDTO create = new PortalUserCreateDTO();
-        create.setUserType(userTypes);
+        create.setUserType(userType);
         create.setSurname("Surname");
         create.setName("Name");
         create.setMiddleName("MiddleName");
@@ -102,7 +101,7 @@ public class PortalUserServiceTest {
         PortalUser portalUser = createPortalUser();
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
-        patch.setUserType(userTypes);
+        patch.setUserType(userType);
         patch.setSurname("Surname");
         patch.setName("Name");
         patch.setMiddleName("MiddleName");

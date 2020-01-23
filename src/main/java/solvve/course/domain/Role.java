@@ -22,7 +22,7 @@ public class Role {
 
     @OneToOne
     @JoinColumn(nullable = false)
-    private Persons personId;
+    private Person personId;
 
     @OneToMany(mappedBy = "roleId")
     private Set<RoleReview> roleReviewSet;

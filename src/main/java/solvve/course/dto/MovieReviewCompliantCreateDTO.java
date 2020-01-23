@@ -21,7 +21,6 @@ public class MovieReviewCompliantCreateDTO {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
     private UserModeratedStatusType moderatedStatus;
 
     private PortalUser moderatorId;

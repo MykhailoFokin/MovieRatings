@@ -52,7 +52,7 @@ public class CrewTypeControllerTest {
 
         Mockito.when(crewTypeService.getCrewType(crewType.getId())).thenReturn(crewType);
 
-        String resultJson = mvc.perform(get("/api/v1/crewtype/{id}", crewType.getId()))
+        String resultJson = mvc.perform(get("/api/v1/crewtypes/{id}", crewType.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -70,7 +70,7 @@ public class CrewTypeControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(CrewType.class,wrongId);
         Mockito.when(crewTypeService.getCrewType(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/crewtype/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/crewtypes/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -81,7 +81,7 @@ public class CrewTypeControllerTest {
     public void testGetCrewTypeWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/crewtype/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/crewtypes/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -98,7 +98,7 @@ public class CrewTypeControllerTest {
 
         Mockito.when(crewTypeService.createCrewType(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/crewtype")
+        String resultJson = mvc.perform(post("/api/v1/crewtypes")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class CrewTypeControllerTest {
 
         Mockito.when(crewTypeService.patchCrewType(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/crewtype/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/crewtypes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -132,7 +132,7 @@ public class CrewTypeControllerTest {
     public void testDeleteCrewType() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/crewtype/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/crewtypes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(crewTypeService).deleteCrewType(id);
     }

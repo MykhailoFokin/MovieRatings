@@ -55,7 +55,7 @@ public class MasterControllerTest {
 
         Mockito.when(masterService.getMaster(master.getId())).thenReturn(master);
 
-        String resultJson = mvc.perform(get("/api/v1/master/{id}", master.getId()))
+        String resultJson = mvc.perform(get("/api/v1/masters/{id}", master.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -72,7 +72,7 @@ public class MasterControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(Master.class,wrongId);
         Mockito.when(masterService.getMaster(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/master/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/masters/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -83,7 +83,7 @@ public class MasterControllerTest {
     public void testGetMasterWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/master/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/masters/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -102,7 +102,7 @@ public class MasterControllerTest {
 
         Mockito.when(masterService.createMaster(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/master")
+        String resultJson = mvc.perform(post("/api/v1/masters")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -124,7 +124,7 @@ public class MasterControllerTest {
 
         Mockito.when(masterService.patchMaster(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/master/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/masters/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -138,7 +138,7 @@ public class MasterControllerTest {
     public void testDeleteMaster() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/master/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/masters/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(masterService).deleteMaster(id);
     }

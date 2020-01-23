@@ -10,7 +10,7 @@ import solvve.course.service.MovieReviewCompliantService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/moviereviewcompliant")
+@RequestMapping("/api/v1/moviereviewcompliants")
 public class MovieReviewCompliantController {
 
     @Autowired

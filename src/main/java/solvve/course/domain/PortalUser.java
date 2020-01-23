@@ -24,13 +24,13 @@ public class PortalUser {
 
     @OneToOne
     @JoinColumn(nullable = false)
-    private UserTypes userType;
+    private UserType userType;
 
     @Enumerated(EnumType.STRING)
     private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
     @OneToMany(mappedBy = "grantedBy")
-    private  Set<Grants> grants;
+    private  Set<Grant> grants;
 
     @OneToMany(mappedBy = "userId")
     private Set<MovieReview> movieReview;

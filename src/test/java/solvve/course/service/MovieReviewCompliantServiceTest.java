@@ -21,7 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie_review_compliant; delete from movie_review; delete from portal_user; delete from user_types; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from movie_review_compliant; delete from movie_review; delete from portal_user; delete from user_type; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieReviewCompliantServiceTest {
 
     @Autowired
@@ -43,7 +43,7 @@ public class MovieReviewCompliantServiceTest {
     private PortalUserService portalUserService;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
@@ -90,16 +90,16 @@ public class MovieReviewCompliantServiceTest {
         }
 
         if (portalUser == null) {
-            UserTypes userTypes = new UserTypes();
-            userTypes.setUserGroup(UserGroupType.USER);
-            userTypes = userTypesRepository.save(userTypes);
+            UserType userType = new UserType();
+            userType.setUserGroup(UserGroupType.USER);
+            userType = userTypeRepository.save(userType);
 
             portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes);
+            portalUser.setUserType(userType);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
         }

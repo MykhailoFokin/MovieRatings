@@ -3,14 +3,12 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
-import solvve.course.domain.Persons;
-
-import java.util.UUID;
+import solvve.course.domain.Person;
 
 @Data
 public class CrewPatchDTO {
 
-    private Persons personId;
+    private Person personId;
 
     private Movie movieId;
 

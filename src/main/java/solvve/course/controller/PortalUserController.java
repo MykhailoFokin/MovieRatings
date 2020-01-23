@@ -10,7 +10,7 @@ import solvve.course.service.PortalUserService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/portaluser")
+@RequestMapping("/api/v1/portalusers")
 public class PortalUserController {
 
     @Autowired

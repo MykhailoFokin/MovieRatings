@@ -11,13 +11,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import solvve.course.domain.Persons;
+import solvve.course.domain.Person;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.PersonsRepository;
+import solvve.course.repository.PersonRepository;
 import solvve.course.repository.RoleRepository;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleServiceTest {
 
     @Autowired
@@ -35,16 +35,16 @@ public class RoleServiceTest {
     private RoleService roleService;
 
     @Autowired
-    private PersonsRepository personsRepository;
+    private PersonRepository personRepository;
 
-    private Persons person;
+    private Person person;
 
     @Before
     public void setup() {
         if (person == null) {
-            person = new Persons();
+            person = new Person();
             person.setName("Name");
-            person = personsRepository.save(person);
+            person = personRepository.save(person);
         }
     }
 

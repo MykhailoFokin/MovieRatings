@@ -15,7 +15,7 @@ public class Crew {
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Persons personId;
+    private Person personId;
 
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")

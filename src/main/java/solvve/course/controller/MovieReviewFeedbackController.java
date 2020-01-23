@@ -10,7 +10,7 @@ import solvve.course.service.MovieReviewFeedbackService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/moviereviewfeedback")
+@RequestMapping("/api/v1/moviereviewfeedbacks")
 public class MovieReviewFeedbackController {
 
     @Autowired

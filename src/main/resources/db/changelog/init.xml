@@ -25,7 +25,7 @@
 			<column name = "critique" type="varchar(255)"/>
 			<column name = "is_published" type="int(1)"/>
 		</createTable>
-		<createTable tableName="persons">
+		<createTable tableName="person">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
@@ -42,13 +42,13 @@
 			<column name = "genres" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
 			<column name = "person_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_role_person" references="persons(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_role_person" references="person(id)"/>
 			</column>
 			<column name="movie_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_role_movie" references="movie(id)"/>
 			</column>
 		</createTable>
-		<createTable tableName="user_types">
+		<createTable tableName="user_type">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
@@ -63,7 +63,7 @@
 			<column name = "name" type="varchar(255)"/>
 			<column name = "middle_name" type="varchar(255)"/>
 			<column name = "user_type" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_pusers_user_types" references="user_types(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_pusers_user_type" references="user_type(id)"/>
 			</column>
 			<column name = "user_confidence" type="varchar(50)"/>
 		</createTable>
@@ -75,7 +75,7 @@
 				<constraints nullable="false" foreignKeyName="fk_crew_movie" references="movie(id)"/>
 			</column>
 			<column name = "person_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_crew_person" references="persons(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_crew_person" references="person(id)"/>
 			</column>
 			<column name = "crew_type" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
@@ -175,7 +175,7 @@
 			<column name = "movie_review_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_mrfeedback_mreview" references="movie_review(id)"/>
 			</column>
-			<column name = "is_liked" type="int(1)"/>
+			<column name = "is_liked" type="boolean"/>
 		</createTable>
 		<createTable tableName="role_review_feedback">
 			<column name="id" type="uuid">
@@ -190,14 +190,14 @@
 			<column name = "role_review_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_rrfeedback_rreview" references="role_review(id)"/>
 			</column>
-			<column name = "is_liked" type="int(1)"/>
+			<column name = "is_liked" type="boolean"/>
 		</createTable>
-		<createTable tableName="grants">
+		<createTable tableName="grant">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "user_type_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_grants_user_types" references="user_types(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_grants_user_type" references="user_type(id)"/>
 			</column>
 			<column name = "user_permission" type="varchar(100)"/>
 			<column name = "object_name" type="varchar(255)"/>
@@ -216,7 +216,7 @@
 			<column name = "topic" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
 		</createTable>
-		<createTable tableName="release_details">
+		<createTable tableName="release_detail">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
@@ -226,7 +226,7 @@
 			<column name = "release_date" type="date"/>
 			<column name = "country_id" type="uuid"/>
 		</createTable>
-		<createTable tableName="countries">
+		<createTable tableName="country">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>

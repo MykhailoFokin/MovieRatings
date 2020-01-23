@@ -53,7 +53,7 @@ public class MovieVoteControllerTest {
 
         Mockito.when(movieVoteService.getMovieVote(movieVote.getId())).thenReturn(movieVote);
 
-        String resultJson = mvc.perform(get("/api/v1/movievote/{id}", movieVote.getId()))
+        String resultJson = mvc.perform(get("/api/v1/movievotes/{id}", movieVote.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -70,7 +70,7 @@ public class MovieVoteControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(MovieVote.class,wrongId);
         Mockito.when(movieVoteService.getMovieVote(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/movievote/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/movievotes/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -81,7 +81,7 @@ public class MovieVoteControllerTest {
     public void testGetMovieVoteWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/movievote/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/movievotes/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -98,7 +98,7 @@ public class MovieVoteControllerTest {
 
         Mockito.when(movieVoteService.createMovieVote(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/movievote")
+        String resultJson = mvc.perform(post("/api/v1/movievotes")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class MovieVoteControllerTest {
 
         Mockito.when(movieVoteService.patchMovieVote(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/movievote/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/movievotes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -132,7 +132,7 @@ public class MovieVoteControllerTest {
     public void testDeleteMovieVote() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/movievote/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/movievotes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieVoteService).deleteMovieVote(id);
     }

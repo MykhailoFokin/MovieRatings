@@ -54,7 +54,7 @@ public class MovieReviewCompliantControllerTest {
 
         Mockito.when(movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId())).thenReturn(movieReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliant/{id}", movieReviewCompliant.getId()))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliants/{id}", movieReviewCompliant.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -72,7 +72,7 @@ public class MovieReviewCompliantControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(MovieReviewCompliant.class,wrongId);
         Mockito.when(movieReviewCompliantService.getMovieReviewCompliant(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliant/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliants/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -83,7 +83,7 @@ public class MovieReviewCompliantControllerTest {
     public void testGetMovieReviewCompliantWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliant/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliants/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -101,7 +101,7 @@ public class MovieReviewCompliantControllerTest {
 
         Mockito.when(movieReviewCompliantService.createMovieReviewCompliant(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/moviereviewcompliant")
+        String resultJson = mvc.perform(post("/api/v1/moviereviewcompliants")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -122,7 +122,7 @@ public class MovieReviewCompliantControllerTest {
 
         Mockito.when(movieReviewCompliantService.patchMovieReviewCompliant(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/moviereviewcompliant/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/moviereviewcompliants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,7 +136,7 @@ public class MovieReviewCompliantControllerTest {
     public void testDeleteMovieReviewCompliant() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/moviereviewcompliant/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/moviereviewcompliants/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewCompliantService).deleteMovieReviewCompliant(id);
     }

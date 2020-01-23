@@ -11,7 +11,7 @@ import solvve.course.service.MasterService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/master")
+@RequestMapping("/api/v1/masters")
 public class MasterController {
 
     @Autowired

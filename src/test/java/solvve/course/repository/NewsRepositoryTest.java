@@ -9,14 +9,14 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.News;
 import solvve.course.domain.PortalUser;
-import solvve.course.domain.UserTypes;
+import solvve.course.domain.UserType;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from news; delete from portal_user; delete from user_types; ", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from news; delete from portal_user; delete from user_type; ", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class NewsRepositoryTest {
 
@@ -27,15 +27,15 @@ public class NewsRepositoryTest {
     private PortalUserRepository portalUserRepository;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Test
     public void testSave() {
-        UserTypes userTypes = new UserTypes();
-        userTypes = userTypesRepository.save(userTypes);
+        UserType userType = new UserType();
+        userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userTypes);
+        portalUser.setUserType(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         News r = new News();

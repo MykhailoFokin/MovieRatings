@@ -50,8 +50,8 @@ public class Movie {
     @JoinTable(name = "movie_prod_countries",
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "country_id")})
-    //private Set<Countries> movieProdCountries = new HashSet<>();
-    private Set<Countries> movieProdCountries;
+    //private Set<Country> movieProdCountries = new HashSet<>();
+    private Set<Country> movieProdCountries;
 
     @OneToMany(mappedBy = "movieId")
     private Set<Crew> crews;
@@ -69,7 +69,7 @@ public class Movie {
     private Set<MovieVote> movieVotes;
 
     @OneToMany(mappedBy = "movieId")
-    private Set<ReleaseDetails> releaseDetails;
+    private Set<ReleaseDetail> releaseDetails;
 
     /*@OneToMany(
             mappedBy = "movie",
@@ -78,13 +78,13 @@ public class Movie {
     )
     private List<MovieProdCountries> movieProdCountries = new ArrayList<>();
 
-    public void addMovieProdCountries(Countries countries) {
+    public void addMovieProdCountries(Country countries) {
         MovieProdCountries movieProdCountry = new MovieProdCountries(this, countries);
         movieProdCountries.add(movieProdCountry);
         //countries.getMovieProdCountries().add(movieProdCountry);
     }
 
-    public void removeMovieProdCountries(Countries countries) {
+    public void removeMovieProdCountries(Country countries) {
         for (Iterator<MovieProdCountries> iterator = movieProdCountries.iterator(); iterator.hasNext(); ) {
             MovieProdCountries movieProdCountry = iterator.next();
 

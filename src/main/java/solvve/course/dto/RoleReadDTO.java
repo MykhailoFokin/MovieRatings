@@ -17,7 +17,7 @@ public class RoleReadDTO {
 
     private String description;
 
-    private Persons personId;
+    private Person personId;
 
     private Set<RoleReview> roleReviewSet;
 

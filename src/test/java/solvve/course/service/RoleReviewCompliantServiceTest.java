@@ -21,7 +21,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_review_compliant; delete from role_review; delete from portal_user; delete from user_types; delete from role; delete from persons", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from role_review_compliant; delete from role_review; delete from portal_user; delete from user_type; delete from role; delete from person", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleReviewCompliantServiceTest {
 
     @Autowired
@@ -43,7 +43,7 @@ public class RoleReviewCompliantServiceTest {
     private PortalUserService portalUserService;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     @Autowired
     private RoleReviewRepository roleReviewRepository;
@@ -52,7 +52,7 @@ public class RoleReviewCompliantServiceTest {
     private RoleReviewService roleReviewService;
 
     @Autowired
-    private PersonsRepository personsRepository;
+    private PersonRepository personRepository;
 
     private RoleReview roleReview;
 
@@ -74,9 +74,9 @@ public class RoleReviewCompliantServiceTest {
     @Before
     public void setup() {
         if (role==null) {
-            Persons person = new Persons();
+            Person person = new Person();
             person.setName("Name");
-            person = personsRepository.save(person);
+            person = personRepository.save(person);
 
             role = new Role();
             //role.setId(UUID.randomUUID());
@@ -88,16 +88,16 @@ public class RoleReviewCompliantServiceTest {
         }
 
         if (portalUser==null) {
-            UserTypes userTypes = new UserTypes();
-            userTypes.setUserGroup(UserGroupType.USER);
-            userTypes = userTypesRepository.save(userTypes);
+            UserType userType = new UserType();
+            userType.setUserGroup(UserGroupType.USER);
+            userType = userTypeRepository.save(userType);
 
             portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes);
+            portalUser.setUserType(userType);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
         }

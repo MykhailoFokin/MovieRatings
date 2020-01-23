@@ -36,7 +36,7 @@ public class MovieCreateDTO {
 
     private Boolean isPublished;
 
-    private Set<Countries> movieProdCountries;
+    private Set<Country> movieProdCountries;
 
     private Set<Crew> crews;
 
@@ -48,5 +48,5 @@ public class MovieCreateDTO {
 
     private Set<MovieVote> movieVotes;
 
-    private Set<ReleaseDetails> releaseDetails;
+    private Set<ReleaseDetail> releaseDetails;
 }

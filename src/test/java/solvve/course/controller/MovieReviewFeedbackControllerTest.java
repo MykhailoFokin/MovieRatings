@@ -52,7 +52,7 @@ public class MovieReviewFeedbackControllerTest {
 
         Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId())).thenReturn(movieReviewFeedback);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedback/{id}", movieReviewFeedback.getId()))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedbacks/{id}", movieReviewFeedback.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -70,7 +70,7 @@ public class MovieReviewFeedbackControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(MovieReviewFeedback.class,wrongId);
         Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedback/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedbacks/{id}",wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -81,7 +81,7 @@ public class MovieReviewFeedbackControllerTest {
     public void testGetMovieReviewFeedbackWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedback/{id}",wrongId))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedbacks/{id}",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -98,7 +98,7 @@ public class MovieReviewFeedbackControllerTest {
 
         Mockito.when(movieReviewFeedbackService.createMovieReviewFeedback(create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/moviereviewfeedback")
+        String resultJson = mvc.perform(post("/api/v1/moviereviewfeedbacks")
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class MovieReviewFeedbackControllerTest {
 
         Mockito.when(movieReviewFeedbackService.patchMovieReviewFeedback(read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/moviereviewfeedback/{id}", read.getId().toString())
+        String resultJson = mvc.perform(patch("/api/v1/moviereviewfeedbacks/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -132,7 +132,7 @@ public class MovieReviewFeedbackControllerTest {
     public void testDeleteMovieReviewFeedback() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/moviereviewfeedback/{id}",id.toString())).andExpect(status().isOk());
+        mvc.perform(delete("/api/v1/moviereviewfeedbacks/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewFeedbackService).deleteMovieReviewFeedback(id);
     }

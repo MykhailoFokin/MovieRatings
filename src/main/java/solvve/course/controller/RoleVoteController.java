@@ -10,7 +10,7 @@ import solvve.course.service.RoleVoteService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/rolevote")
+@RequestMapping("/api/v1/rolevotes")
 public class RoleVoteController {
 
     @Autowired

@@ -15,11 +15,10 @@ import solvve.course.domain.*;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
 import solvve.course.dto.NewsReadDTO;
-import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsRepository;
 import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypesRepository;
+import solvve.course.repository.UserTypeRepository;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -28,7 +27,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from news; delete from portal_user; delete from user_types;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from news; delete from portal_user; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class NewsServiceTest {
 
     @Autowired
@@ -44,7 +43,7 @@ public class NewsServiceTest {
     private PortalUserRepository portalUserRepository;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     private PortalUser portalUser;
 
@@ -61,16 +60,16 @@ public class NewsServiceTest {
     @Before
     public void setup() {
         if (portalUser==null) {
-            UserTypes userTypes = new UserTypes();
-            userTypes.setUserGroup(UserGroupType.USER);
-            userTypes = userTypesRepository.save(userTypes);
+            UserType userType = new UserType();
+            userType.setUserGroup(UserGroupType.USER);
+            userType = userTypeRepository.save(userType);
 
             portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes);
+            portalUser.setUserType(userType);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
         }

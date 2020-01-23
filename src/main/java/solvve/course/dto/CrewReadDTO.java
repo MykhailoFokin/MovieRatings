@@ -3,7 +3,7 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
-import solvve.course.domain.Persons;
+import solvve.course.domain.Person;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ public class CrewReadDTO {
 
     private UUID id;
 
-    private Persons personId;
+    private Person personId;
 
     private Movie movieId;
 

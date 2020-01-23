@@ -17,14 +17,14 @@ import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieRepository;
 import solvve.course.repository.MovieVoteRepository;
 import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypesRepository;
+import solvve.course.repository.UserTypeRepository;
 
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie_vote; delete from portal_user; delete from user_types; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from movie_vote; delete from portal_user; delete from user_type; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieVoteServiceTest {
 
     @Autowired
@@ -46,7 +46,7 @@ public class MovieVoteServiceTest {
     private PortalUserService portalUserService;
 
     @Autowired
-    private UserTypesRepository userTypesRepository;
+    private UserTypeRepository userTypeRepository;
 
     private Movie movie;
 
@@ -82,16 +82,16 @@ public class MovieVoteServiceTest {
         }
 
         if (portalUser == null) {
-            UserTypes userTypes = new UserTypes();
-            userTypes.setUserGroup(UserGroupType.USER);
-            userTypes = userTypesRepository.save(userTypes);
+            UserType userType = new UserType();
+            userType.setUserGroup(UserGroupType.USER);
+            userType = userTypeRepository.save(userType);
 
             portalUser = new PortalUser();
             portalUser.setLogin("Login");
             portalUser.setSurname("Surname");
             portalUser.setName("Name");
             portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userTypes);
+            portalUser.setUserType(userType);
             portalUser.setUserConfidence(UserConfidenceType.NORMAL);
             portalUser = portalUserRepository.save(portalUser);
         }

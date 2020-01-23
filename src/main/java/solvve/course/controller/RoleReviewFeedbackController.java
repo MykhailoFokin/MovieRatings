@@ -10,7 +10,7 @@ import solvve.course.service.RoleReviewFeedbackService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/rolereviewfeedback")
+@RequestMapping("/api/v1/rolereviewfeedbacks")
 public class RoleReviewFeedbackController {
 
     @Autowired

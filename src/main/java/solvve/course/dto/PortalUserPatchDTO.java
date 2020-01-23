@@ -4,7 +4,6 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 public class PortalUserPatchDTO {
@@ -17,11 +16,11 @@ public class PortalUserPatchDTO {
 
     private String middleName;
 
-    private UserTypes userType;
+    private UserType userType;
 
     private UserConfidenceType userConfidence;
 
-    private  Set<Grants> grants;
+    private  Set<Grant> grants;
 
     private Set<MovieReview> movieReview;
 

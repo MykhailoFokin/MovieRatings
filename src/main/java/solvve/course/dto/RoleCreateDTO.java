@@ -4,7 +4,6 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 public class RoleCreateDTO {
@@ -15,7 +14,7 @@ public class RoleCreateDTO {
 
     private String description;
 
-    private Persons personId;
+    private Person personId;
 
     private Set<RoleReview> roleReviewSet;
 

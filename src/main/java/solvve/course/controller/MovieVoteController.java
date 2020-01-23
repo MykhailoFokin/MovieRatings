@@ -10,7 +10,7 @@ import solvve.course.service.MovieVoteService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/movievote")
+@RequestMapping("/api/v1/movievotes")
 public class MovieVoteController {
 
     @Autowired

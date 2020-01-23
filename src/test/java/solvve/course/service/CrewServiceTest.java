@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
-import solvve.course.domain.Persons;
+import solvve.course.domain.Person;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
@@ -24,7 +24,7 @@ import solvve.course.repository.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from crew; delete from movie; delete from crew_type; delete from persons;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from crew; delete from movie; delete from crew_type; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CrewServiceTest {
 
     @Autowired
@@ -34,12 +34,12 @@ public class CrewServiceTest {
     private CrewService crewService;
 
     @Autowired
-    private PersonsRepository personsRepository;
+    private PersonRepository personRepository;
 
     @Autowired
-    private PersonsService personsService;
+    private PersonService personService;
 
-    private Persons persons;
+    private Person person;
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;
@@ -60,7 +60,7 @@ public class CrewServiceTest {
     private Crew createCrew() {
         Crew crew = new Crew();
         crew.setId(UUID.randomUUID());
-        crew.setPersonId(persons);
+        crew.setPersonId(person);
         crew.setCrewType(crewType);
         crew.setMovieId(movie);
         crew.setDescription("Description");
@@ -69,12 +69,12 @@ public class CrewServiceTest {
 
     @Before
     public void setup() {
-        if (persons==null) {
-            persons = new Persons();
-            persons.setSurname("Surname");
-            persons.setName("Name");
-            persons.setMiddleName("MiddleName");
-            persons = personsRepository.save(persons);
+        if (person ==null) {
+            person = new Person();
+            person.setSurname("Surname");
+            person.setName("Name");
+            person.setMiddleName("MiddleName");
+            person = personRepository.save(person);
         }
 
         if (crewType==null) {
@@ -120,7 +120,7 @@ public class CrewServiceTest {
     @Test
     public void testCreateCrew() {
         CrewCreateDTO create = new CrewCreateDTO();
-        create.setPersonId(persons);
+        create.setPersonId(person);
         create.setCrewType(crewType);
         create.setMovieId(movie);
         create.setDescription("Description");
@@ -137,7 +137,7 @@ public class CrewServiceTest {
         Crew crew = createCrew();
 
         CrewPatchDTO patch = new CrewPatchDTO();
-        patch.setPersonId(persons);
+        patch.setPersonId(person);
         patch.setCrewType(crewType);
         patch.setMovieId(movie);
         patch.setDescription("Description");
