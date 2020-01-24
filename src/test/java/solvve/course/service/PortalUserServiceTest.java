@@ -17,6 +17,7 @@ import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
+import solvve.course.dto.PortalUserPutDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
@@ -39,12 +40,7 @@ public class PortalUserServiceTest {
     @Autowired
     private UserTypeRepository userTypeRepository;
 
-    @Autowired
-    private UserTypeService userTypeService;
-
-    private UserType userType;
-
-    private PortalUser createPortalUser() {
+    private PortalUser createPortalUser(UserType userType) {
         PortalUser portalUser = new PortalUser();
         portalUser.setUserType(userType);
         portalUser.setSurname("Surname");
@@ -55,19 +51,18 @@ public class PortalUserServiceTest {
         return portalUserRepository.save(portalUser);
     }
 
-    @Before
-    public void setup() throws Exception {
-        if (userType ==null) {
-            userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
-        }
+    private UserType createUserType() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
+        return userType;
     }
 
     @Transactional
     @Test
     public void testGetPortalUsers() {
-        PortalUser portalUser = createPortalUser();
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(portalUser);
@@ -81,6 +76,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testCreatePortalUsers() {
+        UserType userType = createUserType();
+
         PortalUserCreateDTO create = new PortalUserCreateDTO();
         create.setUserType(userType);
         create.setSurname("Surname");
@@ -98,7 +95,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPatchPortalUser() {
-        PortalUser portalUser = createPortalUser();
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
         patch.setUserType(userType);
@@ -118,7 +116,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPatchPortalUserEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
         PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
@@ -144,7 +143,8 @@ public class PortalUserServiceTest {
 
     @Test
     public void testDeletePortalUser() {
-        PortalUser portalUser = createPortalUser();
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
 
         portalUserService.deletePortalUser(portalUser.getId());
         Assert.assertFalse(portalUserRepository.existsById(portalUser.getId()));
@@ -153,5 +153,26 @@ public class PortalUserServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeletePortalUserNotFound() {
         portalUserService.deletePortalUser(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutPortalUser() {
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
+
+        PortalUserPutDTO put = new PortalUserPutDTO();
+        put.setUserType(userType);
+        put.setSurname("Surname");
+        put.setName("Name");
+        put.setMiddleName("MiddleName");
+        put.setLogin("Login");
+        put.setUserConfidence(UserConfidenceType.NORMAL);
+        PortalUserReadDTO read = portalUserService.putPortalUser(portalUser.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        portalUser = portalUserRepository.findById(read.getId()).get();
+        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(read);
     }
 }

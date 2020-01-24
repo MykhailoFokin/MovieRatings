@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Person;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
+import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.PersonService;
@@ -140,5 +141,27 @@ public class PersonControllerTest {
         mvc.perform(delete("/api/v1/persons/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(personService).deletePersons(id);
+    }
+
+    @Test
+    public void testPutPersons() throws Exception {
+
+        PersonPutDTO putDTO = new PersonPutDTO();
+        putDTO.setSurname("Surname");
+        putDTO.setName("Name");
+        putDTO.setMiddleName("MiddleName");
+
+        PersonReadDTO read = createPersonsRead();
+
+        Mockito.when(personService.putPersons(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PersonReadDTO actualPersons = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assert.assertEquals(read, actualPersons);
     }
 }

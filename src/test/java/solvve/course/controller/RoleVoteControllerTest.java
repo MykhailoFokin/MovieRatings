@@ -17,6 +17,7 @@ import solvve.course.domain.RoleVote;
 import solvve.course.domain.UserVoteRatingType;
 import solvve.course.dto.RoleVoteCreateDTO;
 import solvve.course.dto.RoleVotePatchDTO;
+import solvve.course.dto.RoleVotePutDTO;
 import solvve.course.dto.RoleVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleVoteService;
@@ -135,5 +136,25 @@ public class RoleVoteControllerTest {
         mvc.perform(delete("/api/v1/rolevotes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleVoteService).deleteRoleVote(id);
+    }
+
+    @Test
+    public void testPutRoleVote() throws Exception {
+
+        RoleVotePutDTO putDTO = new RoleVotePutDTO();
+        putDTO.setRating(UserVoteRatingType.R9);
+
+        RoleVoteReadDTO read = createRoleVoteRead();
+
+        Mockito.when(roleVoteService.putRoleVote(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/rolevotes/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleVoteReadDTO actualRoleVote = objectMapper.readValue(resultJson, RoleVoteReadDTO.class);
+        Assert.assertEquals(read, actualRoleVote);
     }
 }

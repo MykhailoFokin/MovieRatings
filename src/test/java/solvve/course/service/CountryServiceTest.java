@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
 import solvve.course.dto.CountryCreateDTO;
 import solvve.course.dto.CountryPatchDTO;
+import solvve.course.dto.CountryPutDTO;
 import solvve.course.dto.CountryReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
@@ -106,5 +107,20 @@ public class CountryServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteCountriesNotFound() {
         countryService.deleteCountries(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutCountries() {
+        Country country = createCountries();
+
+        CountryPutDTO put = new CountryPutDTO();
+        put.setName("Laplandia");
+        CountryReadDTO read = countryService.putCountries(country.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        country = countryRepository.findById(read.getId()).get();
+        Assertions.assertThat(country).isEqualToComparingFieldByField(read);
     }
 }

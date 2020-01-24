@@ -34,19 +34,10 @@ public class RoleSpoilerDataServiceTest {
     private RoleReviewRepository roleReviewRepository;
 
     @Autowired
-    private RoleReviewService roleReviewService;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
@@ -54,9 +45,7 @@ public class RoleSpoilerDataServiceTest {
     @Autowired
     private PersonRepository personRepository;
 
-    private RoleReview roleReview;
-
-    private RoleSpoilerData createRoleSpoilerData() {
+    private RoleSpoilerData createRoleSpoilerData(RoleReview roleReview) {
         RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
         roleSpoilerData.setRoleReviewId(roleReview);
         roleSpoilerData.setStartIndex(100);
@@ -64,48 +53,58 @@ public class RoleSpoilerDataServiceTest {
         return roleSpoilerDataRepository.save(roleSpoilerData);
     }
 
-    @Before
-    public void setup() {
-        if (roleReview==null) {
-            Person person = new Person();
-            person.setName("Name");
-            person = personRepository.save(person);
+    public Role createRole() {
+        Person person = new Person();
+        person.setName("Name");
+        person = personRepository.save(person);
 
-            Role role = new Role();
-            //role.setId(UUID.randomUUID());
-            role.setTitle("Actor");
-            role.setRoleType("Main_Role");
-            role.setDescription("Description test");
-            role.setPersonId(person);
-            role = roleRepository.save(role);
+        Role role = new Role();
+        //role.setId(UUID.randomUUID());
+        role.setTitle("Actor");
+        role.setRoleType("Main_Role");
+        role.setDescription("Description test");
+        role.setPersonId(person);
+        role = roleRepository.save(role);
 
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+        return role;
+    }
 
-            PortalUser portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
+    public PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
 
-            RoleReviewCreateDTO create = new RoleReviewCreateDTO();
-            roleReview = new RoleReview();
-            roleReview.setUserId(portalUser);
-            roleReview.setRoleId(role);
-            roleReview.setTextReview("This role can be described as junk.");
-            roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-            roleReview = roleReviewRepository.save(roleReview);
-        }
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
+    }
+
+    public RoleReview createRoleReview(PortalUser portalUser, Role role) {
+        RoleReview roleReview = new RoleReview();
+        roleReview.setId(UUID.randomUUID());
+        roleReview.setUserId(portalUser);
+        roleReview.setRoleId(role);
+        roleReview.setTextReview("This role can be described as junk.");
+        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        roleReview.setModeratorId(portalUser);
+        roleReview = roleReviewRepository.save(roleReview);
+        return roleReview;
     }
 
     @Transactional
     @Test
     public void testGetRoleSpoilerData() {
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleSpoilerData);
@@ -119,6 +118,10 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testCreateRoleSpoilerData() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
         create.setRoleReviewId(roleReview);
         create.setStartIndex(100);
@@ -134,7 +137,10 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchRoleSpoilerData() {
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
         patch.setRoleReviewId(roleReview);
@@ -151,7 +157,10 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchRoleSpoilerDataEmptyPatch() {
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
@@ -171,7 +180,10 @@ public class RoleSpoilerDataServiceTest {
 
     @Test
     public void testDeleteRoleSpoilerData() {
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         roleSpoilerDataService.deleteRoleSpoilerData(roleSpoilerData.getId());
         Assert.assertFalse(roleSpoilerDataRepository.existsById(roleSpoilerData.getId()));
@@ -180,5 +192,25 @@ public class RoleSpoilerDataServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteRoleSpoilerDataNotFound() {
         roleSpoilerDataService.deleteRoleSpoilerData(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutRoleSpoilerData() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+
+        RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
+        put.setRoleReviewId(roleReview);
+        put.setStartIndex(100);
+        put.setEndIndex(150);
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
     }
 }

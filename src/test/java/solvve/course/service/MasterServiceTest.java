@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
 import solvve.course.dto.MasterCreateDTO;
 import solvve.course.dto.MasterPatchDTO;
+import solvve.course.dto.MasterPutDTO;
 import solvve.course.dto.MasterReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
@@ -110,5 +111,22 @@ public class MasterServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteMasterNotFound() {
         masterService.deleteMaster(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutMaster() {
+        Master master = createMaster();
+
+        MasterPutDTO put = new MasterPutDTO();
+        put.setName("MasterName");
+        put.setPhone("645768767");
+        put.setAbout("What about");
+        MasterReadDTO read = masterService.putMaster(master.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        master = masterRepository.findById(read.getId()).get();
+        Assertions.assertThat(master).isEqualToComparingFieldByField(read);
     }
 }

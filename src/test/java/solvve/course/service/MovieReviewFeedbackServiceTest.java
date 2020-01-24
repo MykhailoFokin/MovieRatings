@@ -34,13 +34,7 @@ public class MovieReviewFeedbackServiceTest {
     private MovieRepository movieRepository;
 
     @Autowired
-    private MovieService movieService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
@@ -48,16 +42,7 @@ public class MovieReviewFeedbackServiceTest {
     @Autowired
     private MovieReviewRepository movieReviewRepository;
 
-    @Autowired
-    private MovieReviewService movieReviewService;
-
-    private MovieReview movieReview;
-
-    private PortalUser portalUser;
-
-    private Movie movie;
-
-    private MovieReviewFeedback createMovieReviewFeedback() {
+    private MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser, Movie movie, MovieReview movieReview) {
         MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
         movieReviewFeedback.setUserId(portalUser);
         movieReviewFeedback.setMovieId(movie);
@@ -66,58 +51,62 @@ public class MovieReviewFeedbackServiceTest {
         return movieReviewFeedbackRepository.save(movieReviewFeedback);
     }
 
-    @Before
-    public void setup() {
-        if (movie==null) {
-            movie = new Movie();
-            //movie.setId(UUID.randomUUID());
-            movie.setTitle("Movie Test");
-            movie.setYear((short) 2019);
-            movie.setGenres("Comedy");
-            movie.setAspectRatio("1:10");
-            movie.setCamera("Panasonic");
-            movie.setColour("Black");
-            movie.setCompanies("Paramount");
-            movie.setCritique("123");
-            movie.setDescription("Description");
-            movie.setFilmingLocations("USA");
-            movie.setLaboratory("CaliforniaDreaming");
-            movie.setLanguages("English");
-            movie.setSoundMix("DolbySurround");
-            movie = movieRepository.save(movie);
-        }
+    private Movie createMovie() {
+        Movie movie = new Movie();
+        //movie.setId(UUID.randomUUID());
+        movie.setTitle("Movie Test");
+        movie.setYear((short) 2019);
+        movie.setGenres("Comedy");
+        movie.setAspectRatio("1:10");
+        movie.setCamera("Panasonic");
+        movie.setColour("Black");
+        movie.setCompanies("Paramount");
+        movie.setCritique("123");
+        movie.setDescription("Description");
+        movie.setFilmingLocations("USA");
+        movie.setLaboratory("CaliforniaDreaming");
+        movie.setLanguages("English");
+        movie.setSoundMix("DolbySurround");
+        movie = movieRepository.save(movie);
+        return movie;
+    }
 
-        if (portalUser ==null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+    private PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
 
-        if (movieReview == null) {
-            movieReview = new MovieReview();
-            movieReview.setId(UUID.randomUUID());
-            movieReview.setUserId(portalUser);
-            movieReview.setMovieId(movie);
-            movieReview.setTextReview("This movie can be described as junk.");
-            movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-            movieReview.setModeratorId(portalUser);
-            movieReview = movieReviewRepository.save(movieReview);
-        }
+        return portalUser;
+    }
+
+    private MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
+        MovieReview movieReview = new MovieReview();
+        movieReview.setId(UUID.randomUUID());
+        movieReview.setUserId(portalUser);
+        movieReview.setMovieId(movie);
+        movieReview.setTextReview("This movie can be described as junk.");
+        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        movieReview.setModeratorId(portalUser);
+        movieReview = movieReviewRepository.save(movieReview);
+        return movieReview;
     }
 
     @Transactional
     @Test
     public void testGetMovieReviewFeedback() {
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackReadDTO readDTO = movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReviewFeedback);
@@ -131,6 +120,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testCreateMovieReviewFeedback() {
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
         create.setUserId(portalUser);
         create.setMovieId(movie);
@@ -147,7 +140,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewFeedback() {
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         patch.setUserId(portalUser);
@@ -165,7 +161,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewFeedbackEmptyPatch() {
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.patchMovieReviewFeedback(movieReviewFeedback.getId(), patch);
@@ -187,7 +186,10 @@ public class MovieReviewFeedbackServiceTest {
 
     @Test
     public void testDeleteMovieReviewFeedback() {
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         movieReviewFeedbackService.deleteMovieReviewFeedback(movieReviewFeedback.getId());
         Assert.assertFalse(movieReviewFeedbackRepository.existsById(movieReviewFeedback.getId()));
@@ -196,5 +198,26 @@ public class MovieReviewFeedbackServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteMovieReviewFeedbackNotFound() {
         movieReviewFeedbackService.deleteMovieReviewFeedback(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutMovieReviewFeedback() {
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+
+        MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
+        put.setUserId(portalUser);
+        put.setMovieId(movie);
+        put.setMovieReviewId(movieReview);
+        put.setIsLiked(true);
+        MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.putMovieReviewFeedback(movieReviewFeedback.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(read);
     }
 }

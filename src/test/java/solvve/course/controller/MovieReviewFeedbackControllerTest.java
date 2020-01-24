@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.MovieReviewFeedbackCreateDTO;
 import solvve.course.dto.MovieReviewFeedbackPatchDTO;
+import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieReviewFeedbackService;
@@ -135,5 +136,25 @@ public class MovieReviewFeedbackControllerTest {
         mvc.perform(delete("/api/v1/moviereviewfeedbacks/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewFeedbackService).deleteMovieReviewFeedback(id);
+    }
+
+    @Test
+    public void testPutMovieReviewFeedback() throws Exception {
+
+        MovieReviewFeedbackPutDTO putDTO = new MovieReviewFeedbackPutDTO();
+        putDTO.setIsLiked(true);
+
+        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
+
+        Mockito.when(movieReviewFeedbackService.putMovieReviewFeedback(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/moviereviewfeedbacks/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
+        Assert.assertEquals(read, actualMovieReviewFeedback);
     }
 }

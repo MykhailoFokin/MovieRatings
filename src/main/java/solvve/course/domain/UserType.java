@@ -18,7 +18,7 @@ public class UserType {
     private UserGroupType userGroup;
 
     @OneToMany(mappedBy="userTypeId")
-    private Set<Grant> grants;
+    private Set<UserGrant> userGrants;
 
     @OneToOne(mappedBy = "userType")
     private PortalUser portalUser;

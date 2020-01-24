@@ -20,7 +20,7 @@ public class PortalUserCreateDTO {
 
     private UserConfidenceType userConfidence;
 
-    private  Set<Grant> grants;
+    private  Set<UserGrant> userGrants;
 
     private Set<MovieReview> movieReview;
 

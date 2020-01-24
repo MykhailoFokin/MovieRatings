@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import solvve.course.domain.Grant;
+import solvve.course.domain.UserGrant;
 import solvve.course.domain.UserType;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -16,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from grant; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = "delete from user_grant; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
-public class GrantRepositoryTest {
+public class UserGrantRepositoryTest {
 
     @Autowired
-    private GrantRepository grantRepository;
+    private UserGrantRepository userGrantRepository;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
@@ -31,10 +31,10 @@ public class GrantRepositoryTest {
     public void testSave() {
         UserType u = new UserType();
         u = userTypeRepository.save(u);
-        Grant g = new Grant();
+        UserGrant g = new UserGrant();
         g.setUserTypeId(u);
-        g = grantRepository.save(g);
+        g = userGrantRepository.save(g);
         assertNotNull(g.getId());
-        assertTrue(grantRepository.findById(g.getId()).isPresent());
+        assertTrue(userGrantRepository.findById(g.getId()).isPresent());
     }
 }

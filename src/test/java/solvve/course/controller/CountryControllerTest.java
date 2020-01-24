@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Country;
 import solvve.course.dto.CountryCreateDTO;
 import solvve.course.dto.CountryPatchDTO;
+import solvve.course.dto.CountryPutDTO;
 import solvve.course.dto.CountryReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 
@@ -135,5 +136,25 @@ public class CountryControllerTest {
         mvc.perform(delete("/api/v1/countries/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(countryService).deleteCountries(id);
+    }
+
+    @Test
+    public void testPutCountries() throws Exception {
+
+        CountryPutDTO putDTO = new CountryPutDTO();
+        putDTO.setName("Laplandia");
+
+        CountryReadDTO read = createCountriesRead();
+
+        Mockito.when(countryService.putCountries(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CountryReadDTO actualCountries = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assert.assertEquals(read, actualCountries);
     }
 }

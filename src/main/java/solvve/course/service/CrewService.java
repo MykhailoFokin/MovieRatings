@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
-import solvve.course.dto.CrewCreateDTO;
-import solvve.course.dto.CrewPatchDTO;
-import solvve.course.dto.CrewReadDTO;
+import solvve.course.domain.CrewType;
+import solvve.course.domain.Movie;
+import solvve.course.domain.Person;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
 
@@ -18,50 +19,29 @@ public class CrewService {
     @Autowired
     private CrewRepository crewRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
-    public CrewReadDTO getCrew(UUID id) {
+    public CrewReadExtendedDTO getCrew(UUID id) {
         Crew crew = getCrewRequired(id);
-        return toRead(crew);
+        return translationService.toReadExtended(crew);
     }
 
-    private CrewReadDTO toRead(Crew crew) {
-        CrewReadDTO dto = new CrewReadDTO();
-        dto.setId(crew.getId());
-        dto.setPersonId(crew.getPersonId());
-        dto.setCrewType(crew.getCrewType());
-        dto.setDescription(crew.getDescription());
-        dto.setMovieId(crew.getMovieId());
-        return dto;
-    }
-
-    public CrewReadDTO createCrew(CrewCreateDTO create) {
-        Crew crew = new Crew();
-        crew.setPersonId(create.getPersonId());
-        crew.setCrewType(create.getCrewType());
-        crew.setDescription(create.getDescription());
-        crew.setMovieId(create.getMovieId());
+    public CrewReadExtendedDTO createCrew(CrewCreateDTO create) {
+        Crew crew = translationService.toEntity(create);
 
         crew = crewRepository.save(crew);
-        return toRead(crew);
+        return translationService.toReadExtended(crew);
     }
 
-    public CrewReadDTO patchCrew(UUID id, CrewPatchDTO patch) {
+    public CrewReadExtendedDTO patchCrew(UUID id, CrewPatchDTO patch) {
         Crew crew = getCrewRequired(id);
 
-        if (patch.getMovieId()!=null) {
-            crew.setMovieId(patch.getMovieId());
-        }
-        if (patch.getPersonId()!=null) {
-            crew.setPersonId(patch.getPersonId());
-        }
-        if (patch.getCrewType()!=null) {
-            crew.setCrewType(patch.getCrewType());
-        }
-        if (patch.getDescription()!=null) {
-            crew.setDescription(patch.getDescription());
-        }
+        translationService.patchEntity(patch, crew);
+
         crew = crewRepository.save(crew);
-        return toRead(crew);
+        return translationService.toReadExtended(crew);
     }
 
     private Crew getCrewRequired(UUID id) {
@@ -72,5 +52,14 @@ public class CrewService {
 
     public void deleteCrew(UUID id) {
         crewRepository.delete(getCrewRequired(id));
+    }
+
+    public CrewReadExtendedDTO putCrew(UUID id, CrewPutDTO put) {
+        Crew crew = getCrewRequired(id);
+
+        translationService.putEntity(put, crew);
+
+        crew = crewRepository.save(crew);
+        return translationService.toReadExtended(crew);
     }
 }

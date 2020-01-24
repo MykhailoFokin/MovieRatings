@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.ReleaseDetail;
 import solvve.course.dto.ReleaseDetailCreateDTO;
 import solvve.course.dto.ReleaseDetailPatchDTO;
+import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.ReleaseDetailService;
@@ -136,5 +137,25 @@ public class ReleaseDetailControllerTest {
         mvc.perform(delete("/api/v1/releasedetails/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(releaseDetailService).deleteReleaseDetails(id);
+    }
+
+    @Test
+    public void testPutReleaseDetail() throws Exception {
+
+        ReleaseDetailPutDTO putDTO = new ReleaseDetailPutDTO();
+        putDTO.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
+
+        ReleaseDetailReadDTO read = createReleaseDetailRead();
+
+        Mockito.when(releaseDetailService.putReleaseDetails(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/releasedetails/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        ReleaseDetailReadDTO actualReleaseDetail = objectMapper.readValue(resultJson, ReleaseDetailReadDTO.class);
+        Assert.assertEquals(read, actualReleaseDetail);
     }
 }

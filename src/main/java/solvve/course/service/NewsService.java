@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.News;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
+import solvve.course.dto.NewsPutDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsRepository;
@@ -18,50 +19,29 @@ public class NewsService {
     @Autowired
     private NewsRepository newsRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public NewsReadDTO getNews(UUID id) {
         News news = getNewsRequired(id);
-        return toRead(news);
-    }
-
-    private NewsReadDTO toRead(News news) {
-        NewsReadDTO dto = new NewsReadDTO();
-        dto.setId(news.getId());
-        dto.setUserId(news.getUserId());
-        dto.setPublished(news.getPublished());
-        dto.setTopic(news.getTopic());
-        dto.setDescription(news.getDescription());
-        return dto;
+        return translationService.toRead(news);
     }
 
     public NewsReadDTO createNews(NewsCreateDTO create) {
-        News news = new News();
-        news.setUserId(create.getUserId());
-        news.setPublished(create.getPublished());
-        news.setTopic(create.getTopic());
-        news.setDescription(create.getDescription());
+        News news = translationService.toEntity(create);
 
         news = newsRepository.save(news);
-        return toRead(news);
+        return translationService.toRead(news);
     }
 
     public NewsReadDTO patchNews(UUID id, NewsPatchDTO patch) {
         News news = getNewsRequired(id);
 
-        if (patch.getUserId()!=null) {
-            news.setUserId(patch.getUserId());
-        }
-        if (patch.getPublished()!=null) {
-            news.setPublished(patch.getPublished());
-        }
-        if (patch.getTopic()!=null) {
-            news.setTopic(patch.getTopic());
-        }
-        if (patch.getDescription()!=null) {
-            news.setDescription(patch.getDescription());
-        }
+        translationService.patchEntity(patch, news);
+
         news = newsRepository.save(news);
-        return toRead(news);
+        return translationService.toRead(news);
     }
 
     private News getNewsRequired(UUID id) {
@@ -72,5 +52,14 @@ public class NewsService {
 
     public void deleteNews(UUID id) {
         newsRepository.delete(getNewsRequired(id));
+    }
+
+    public NewsReadDTO putNews(UUID id, NewsPutDTO put) {
+        News news = getNewsRequired(id);
+
+        translationService.putEntity(put, news);
+
+        news = newsRepository.save(news);
+        return translationService.toRead(news);
     }
 }

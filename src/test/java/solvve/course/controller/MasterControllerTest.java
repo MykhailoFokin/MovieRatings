@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
 import solvve.course.dto.MasterCreateDTO;
 import solvve.course.dto.MasterPatchDTO;
+import solvve.course.dto.MasterPutDTO;
 import solvve.course.dto.MasterReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MasterService;
@@ -141,5 +142,27 @@ public class MasterControllerTest {
         mvc.perform(delete("/api/v1/masters/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(masterService).deleteMaster(id);
+    }
+
+    @Test
+    public void testPutMaster() throws Exception {
+
+        MasterPutDTO putDTO = new MasterPutDTO();
+        putDTO.setName("MasterName");
+        putDTO.setPhone("645768767");
+        putDTO.setAbout("What about");
+
+        MasterReadDTO read = createMasterRead();
+
+        Mockito.when(masterService.putMaster(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/masters/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MasterReadDTO actualMaster = objectMapper.readValue(resultJson, MasterReadDTO.class);
+        Assert.assertEquals(read, actualMaster);
     }
 }

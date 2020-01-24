@@ -37,22 +37,12 @@ public class MovieReviewServiceTest {
     private MovieRepository movieRepository;
 
     @Autowired
-    private MovieService movieService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
 
-    private PortalUser portalUser;
-
-    private Movie movie;
-
-    private MovieReview createMovieReview() {
+    private MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
         MovieReview movieReview = new MovieReview();
         movieReview.setUserId(portalUser);
         movieReview.setMovieId(movie);
@@ -62,47 +52,49 @@ public class MovieReviewServiceTest {
         return movieReviewRepository.save(movieReview);
     }
 
-    @Before
-    public void setup() {
-        if (movie==null) {
-            movie = new Movie();
-            //movie.setId(UUID.randomUUID());
-            movie.setTitle("Movie Test");
-            movie.setYear((short) 2019);
-            movie.setGenres("Comedy");
-            movie.setAspectRatio("1:10");
-            movie.setCamera("Panasonic");
-            movie.setColour("Black");
-            movie.setCompanies("Paramount");
-            movie.setCritique("123");
-            movie.setDescription("Description");
-            movie.setFilmingLocations("USA");
-            movie.setLaboratory("CaliforniaDreaming");
-            movie.setLanguages("English");
-            movie.setSoundMix("DolbySurround");
-            movie = movieRepository.save(movie);
-        }
+    private Movie createMovie() {
+        Movie movie = new Movie();
+        //movie.setId(UUID.randomUUID());
+        movie.setTitle("Movie Test");
+        movie.setYear((short) 2019);
+        movie.setGenres("Comedy");
+        movie.setAspectRatio("1:10");
+        movie.setCamera("Panasonic");
+        movie.setColour("Black");
+        movie.setCompanies("Paramount");
+        movie.setCritique("123");
+        movie.setDescription("Description");
+        movie.setFilmingLocations("USA");
+        movie.setLaboratory("CaliforniaDreaming");
+        movie.setLanguages("English");
+        movie.setSoundMix("DolbySurround");
+        movie = movieRepository.save(movie);
+        return movie;
+    }
 
-        if (portalUser ==null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+    private PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
     }
 
     @Test
     @Transactional
     public void testGetMovieReview() {
-        MovieReview movieReview = createMovieReview();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewReadDTO readDTO = movieReviewService.getMovieReview(movieReview.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReview);
@@ -116,6 +108,9 @@ public class MovieReviewServiceTest {
     @Test
     @Transactional
     public void testCreateMovieReview() {
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+
         MovieReviewCreateDTO create = new MovieReviewCreateDTO();
         create.setUserId(portalUser);
         create.setMovieId(movie);
@@ -133,7 +128,9 @@ public class MovieReviewServiceTest {
     @Test
     @Transactional
     public void testPatchMovieReview() {
-        MovieReview movieReview = createMovieReview();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
         patch.setUserId(portalUser);
@@ -152,7 +149,9 @@ public class MovieReviewServiceTest {
     @Test
     @Transactional
     public void testPatchMovieReviewEmptyPatch() {
-        MovieReview movieReview = createMovieReview();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
         MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
@@ -177,7 +176,9 @@ public class MovieReviewServiceTest {
     @Test
     @Transactional
     public void testDeleteMovieReview() {
-        MovieReview movieReview = createMovieReview();
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
 
         movieReviewService.deleteMovieReview(movieReview.getId());
         Assert.assertFalse(movieReviewRepository.existsById(movieReview.getId()));
@@ -186,5 +187,26 @@ public class MovieReviewServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteMovieReviewNotFound() {
         movieReviewService.deleteMovieReview(UUID.randomUUID());
+    }
+
+    @Test
+    @Transactional
+    public void testPutMovieReview() {
+        Movie movie = createMovie();
+        PortalUser portalUser = createPortalUser();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+
+        MovieReviewPutDTO put = new MovieReviewPutDTO();
+        put.setUserId(portalUser);
+        put.setMovieId(movie);
+        put.setTextReview("This movie can be described as junk.");
+        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        put.setModeratorId(portalUser);
+        MovieReviewReadDTO read = movieReviewService.putMovieReview(movieReview.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        movieReview = movieReviewRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieReview).isEqualToComparingFieldByField(read);
     }
 }

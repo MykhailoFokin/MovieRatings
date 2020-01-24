@@ -3,10 +3,7 @@ package solvve.course.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.VisitCreateDTO;
-import solvve.course.dto.VisitPatchDTO;
-import solvve.course.dto.VisitReadDTO;
-import solvve.course.dto.VisitReadExtendedDTO;
+import solvve.course.dto.*;
 import solvve.course.service.VisitService;
 
 import java.util.UUID;
@@ -36,5 +33,10 @@ public class VisitController {
     @DeleteMapping("/{id}")
     public void deleteVisit(@PathVariable UUID id){
         visitService.deleteVisit(id);
+    }
+
+    @PutMapping("/{id}")
+    public VisitReadExtendedDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put){
+        return visitService.putVisit(id, put);
     }
 }

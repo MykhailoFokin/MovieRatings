@@ -16,6 +16,7 @@ import solvve.course.domain.Movie;
 import solvve.course.domain.ReleaseDetail;
 import solvve.course.dto.ReleaseDetailCreateDTO;
 import solvve.course.dto.ReleaseDetailPatchDTO;
+import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
@@ -44,26 +45,21 @@ public class ReleaseDetailServiceTest {
     @Autowired
     private CountryRepository countryRepository;
 
-    private Movie movie;
-
-    private Country country;
-
-    @Before
-    public void setup() throws Exception {
-        if (movie == null) {
-            movie = new Movie();
-            movie.setTitle("Movie");
-            movie = movieRepository.save(movie);
-        }
-
-        if (country == null) {
-            country = new Country();
-            country.setName("Germany");
-            country = countryRepository.save(country);
-        }
+    public Movie createMovie() {
+        Movie movie = new Movie();
+        movie.setTitle("Movie");
+        movie = movieRepository.save(movie);
+        return movie;
     }
 
-    private ReleaseDetail createCountries() {
+    public Country createCountry() {
+        Country country = new Country();
+        country.setName("Germany");
+        country = countryRepository.save(country);
+        return  country;
+    }
+
+    private ReleaseDetail createCountries(Movie movie, Country country) {
         ReleaseDetail releaseDetail = new ReleaseDetail();
         releaseDetail.setId(UUID.randomUUID());
         releaseDetail.setMovieId(movie);
@@ -75,7 +71,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testGetCountries() {
-        ReleaseDetail releaseDetail = createCountries();
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
 
         ReleaseDetailReadDTO readDTO = releaseDetailService.getReleaseDetails(releaseDetail.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(releaseDetail);
@@ -89,6 +87,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testCreateCountries() {
+        Movie movie = createMovie();
+        Country country = createCountry();
+
         ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
         create.setMovieId(movie);
         create.setCountryId(country);
@@ -103,7 +104,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPatchCountries() {
-        ReleaseDetail releaseDetail = createCountries();
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
         patch.setMovieId(movie);
@@ -120,7 +123,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPatchCountriesEmptyPatch() {
-        ReleaseDetail releaseDetail = createCountries();
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
         ReleaseDetailReadDTO read = releaseDetailService.patchReleaseDetails(releaseDetail.getId(), patch);
@@ -136,7 +141,9 @@ public class ReleaseDetailServiceTest {
 
     @Test
     public void testDeleteCountries() {
-        ReleaseDetail releaseDetail = createCountries();
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
 
         releaseDetailService.deleteReleaseDetails(releaseDetail.getId());
         Assert.assertFalse(releaseDetailRepository.existsById(releaseDetail.getId()));
@@ -145,5 +152,24 @@ public class ReleaseDetailServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteCountriesNotFound() {
         releaseDetailService.deleteReleaseDetails(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutCountries() {
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
+
+        ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
+        put.setMovieId(movie);
+        put.setCountryId(country);
+        put.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
+        ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        releaseDetail = releaseDetailRepository.findById(read.getId()).get();
+        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(read);
     }
 }

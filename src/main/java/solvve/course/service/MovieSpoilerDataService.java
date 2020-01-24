@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieSpoilerData;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
+import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieSpoilerDataRepository;
@@ -18,45 +19,29 @@ public class MovieSpoilerDataService {
     @Autowired
     private MovieSpoilerDataRepository movieSpoilerDataRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public MovieSpoilerDataReadDTO getMovieSpoilerData(UUID id) {
         MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
-        return toRead(movieSpoilerData);
-    }
-
-    private MovieSpoilerDataReadDTO toRead(MovieSpoilerData movieSpoilerData) {
-        MovieSpoilerDataReadDTO dto = new MovieSpoilerDataReadDTO();
-        dto.setId(movieSpoilerData.getId());
-        dto.setMovieReviewId(movieSpoilerData.getMovieReviewId());
-        dto.setStartIndex(movieSpoilerData.getStartIndex());
-        dto.setEndIndex(movieSpoilerData.getEndIndex());
-        return dto;
+        return translationService.toRead(movieSpoilerData);
     }
 
     public MovieSpoilerDataReadDTO createMovieSpoilerData(MovieSpoilerDataCreateDTO create) {
-        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
-        movieSpoilerData.setMovieReviewId(create.getMovieReviewId());
-        movieSpoilerData.setStartIndex(create.getStartIndex());
-        movieSpoilerData.setEndIndex(create.getEndIndex());
+        MovieSpoilerData movieSpoilerData = translationService.toEntity(create);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
-        return toRead(movieSpoilerData);
+        return translationService.toRead(movieSpoilerData);
     }
 
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(UUID id, MovieSpoilerDataPatchDTO patch) {
         MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
 
-        if (patch.getMovieReviewId()!=null) {
-            movieSpoilerData.setMovieReviewId(patch.getMovieReviewId());
-        }
-        if (patch.getStartIndex()!=null) {
-            movieSpoilerData.setStartIndex(patch.getStartIndex());
-        }
-        if (patch.getEndIndex()!=null) {
-            movieSpoilerData.setEndIndex(patch.getEndIndex());
-        }
+        translationService.patchEntity(patch, movieSpoilerData);
+
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
-        return toRead(movieSpoilerData);
+        return translationService.toRead(movieSpoilerData);
     }
 
     private MovieSpoilerData getMovieSpoilerDataRequired(UUID id) {
@@ -67,5 +52,14 @@ public class MovieSpoilerDataService {
 
     public void deleteMovieSpoilerData(UUID id) {
         movieSpoilerDataRepository.delete(getMovieSpoilerDataRequired(id));
+    }
+
+    public MovieSpoilerDataReadDTO putMovieSpoilerData(UUID id, MovieSpoilerDataPutDTO put) {
+        MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
+
+        translationService.putEntity(put, movieSpoilerData);
+
+        movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
+        return translationService.toRead(movieSpoilerData);
     }
 }

@@ -34,25 +34,14 @@ public class RoleReviewServiceTest {
     private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
 
     @Autowired
     private PersonRepository personRepository;
-
-    private Role role;
-
-    private PortalUser portalUser;
-
-    private RoleReview createRoleReview() {
+    private RoleReview createRoleReview(PortalUser portalUser, Role role) {
         RoleReview roleReview = new RoleReview();
         roleReview.setUserId(portalUser);
         roleReview.setRoleId(role);
@@ -62,42 +51,45 @@ public class RoleReviewServiceTest {
         return roleReviewRepository.save(roleReview);
     }
 
-    @Before
-    public void setup() {
-        if (role==null) {
-            Person person = new Person();
-            person.setName("Name");
-            person = personRepository.save(person);
+    public Role createRole() {
+        Person person = new Person();
+        person.setName("Name");
+        person = personRepository.save(person);
 
-            role = new Role();
-            //role.setId(UUID.randomUUID());
-            role.setTitle("Actor");
-            role.setRoleType("Main_Role");
-            role.setDescription("Description test");
-            role.setPersonId(person);
-            role = roleRepository.save(role);
-        }
+        Role role = new Role();
+        //role.setId(UUID.randomUUID());
+        role.setTitle("Actor");
+        role.setRoleType("Main_Role");
+        role.setDescription("Description test");
+        role.setPersonId(person);
+        role = roleRepository.save(role);
 
-        if (portalUser==null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+        return role;
+    }
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+    public PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
+
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
     }
 
     @Transactional
     @Test
     public void testGetRoleReview() {
-        RoleReview roleReview = createRoleReview();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewReadDTO readDTO = roleReviewService.getRoleReview(roleReview.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleReview);
@@ -111,6 +103,9 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testCreateRoleReview() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+
         RoleReviewCreateDTO create = new RoleReviewCreateDTO();
         create.setUserId(portalUser);
         create.setRoleId(role);
@@ -128,7 +123,9 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReview() {
-        RoleReview roleReview = createRoleReview();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
         patch.setUserId(portalUser);
@@ -147,7 +144,9 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReviewEmptyPatch() {
-        RoleReview roleReview = createRoleReview();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
         RoleReviewReadDTO read = roleReviewService.patchRoleReview(roleReview.getId(), patch);
@@ -171,7 +170,9 @@ public class RoleReviewServiceTest {
 
     @Test
     public void testDeleteRoleReview() {
-        RoleReview roleReview = createRoleReview();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
 
         roleReviewService.deleteRoleReview(roleReview.getId());
         Assert.assertFalse(roleReviewRepository.existsById(roleReview.getId()));
@@ -180,5 +181,26 @@ public class RoleReviewServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteRoleReviewNotFound() {
         roleReviewService.deleteRoleReview(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutRoleReview() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+
+        RoleReviewPutDTO put = new RoleReviewPutDTO();
+        put.setUserId(portalUser);
+        put.setRoleId(role);
+        put.setTextReview("This role can be described as junk.");
+        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        put.setModeratorId(portalUser);
+        RoleReviewReadDTO read = roleReviewService.putRoleReview(roleReview.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        roleReview = roleReviewRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleReview).isEqualToComparingFieldByField(read);
     }
 }

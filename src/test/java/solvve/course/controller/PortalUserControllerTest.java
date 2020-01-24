@@ -17,6 +17,7 @@ import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
+import solvve.course.dto.PortalUserPutDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.PortalUserService;
@@ -147,5 +148,29 @@ public class PortalUserControllerTest {
         mvc.perform(delete("/api/v1/portalusers/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(portalUserService).deletePortalUser(id);
+    }
+
+    @Test
+    public void testPutPortalUser() throws Exception {
+
+        PortalUserPutDTO putDTO = new PortalUserPutDTO();
+        putDTO.setSurname("Surname");
+        putDTO.setName("Name");
+        putDTO.setMiddleName("MiddleName");
+        putDTO.setLogin("Login");
+        putDTO.setUserConfidence(UserConfidenceType.NORMAL);
+
+        PortalUserReadDTO read = createPortalUserRead();
+
+        Mockito.when(portalUserService.putPortalUser(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/portalusers/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PortalUserReadDTO actualPortalUser = objectMapper.readValue(resultJson, PortalUserReadDTO.class);
+        Assert.assertEquals(read, actualPortalUser);
     }
 }

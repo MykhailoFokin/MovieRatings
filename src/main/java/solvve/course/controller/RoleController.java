@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
+import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.service.RoleService;
 import java.util.UUID;
@@ -33,5 +34,10 @@ public class RoleController {
     @DeleteMapping("/{id}")
     public void deleteRole(@PathVariable UUID id){
         roleService.deleteRole(id);
+    }
+
+    @PutMapping("/{id}")
+    public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody RolePutDTO put){
+        return roleService.putRole(id, put);
     }
 }

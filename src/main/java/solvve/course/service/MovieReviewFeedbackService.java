@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.MovieReviewFeedbackCreateDTO;
 import solvve.course.dto.MovieReviewFeedbackPatchDTO;
+import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewFeedbackRepository;
@@ -18,50 +19,29 @@ public class MovieReviewFeedbackService {
     @Autowired
     private MovieReviewFeedbackRepository movieReviewFeedbackRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public MovieReviewFeedbackReadDTO getMovieReviewFeedback(UUID id) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
-        return toRead(movieReviewFeedback);
-    }
-
-    private MovieReviewFeedbackReadDTO toRead(MovieReviewFeedback movieReviewFeedback) {
-        MovieReviewFeedbackReadDTO dto = new MovieReviewFeedbackReadDTO();
-        dto.setId(movieReviewFeedback.getId());
-        dto.setUserId(movieReviewFeedback.getUserId());
-        dto.setMovieId(movieReviewFeedback.getMovieId());
-        dto.setMovieReviewId(movieReviewFeedback.getMovieReviewId());
-        dto.setIsLiked(movieReviewFeedback.getIsLiked());
-        return dto;
+        return translationService.toRead(movieReviewFeedback);
     }
 
     public MovieReviewFeedbackReadDTO createMovieReviewFeedback(MovieReviewFeedbackCreateDTO create) {
-        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setUserId(create.getUserId());
-        movieReviewFeedback.setMovieId(create.getMovieId());
-        movieReviewFeedback.setMovieReviewId(create.getMovieReviewId());
-        movieReviewFeedback.setIsLiked(create.getIsLiked());
+        MovieReviewFeedback movieReviewFeedback = translationService.toEntity(create);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
-        return toRead(movieReviewFeedback);
+        return translationService.toRead(movieReviewFeedback);
     }
 
     public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(UUID id, MovieReviewFeedbackPatchDTO patch) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
 
-        if (patch.getMovieId()!=null) {
-            movieReviewFeedback.setMovieId(patch.getMovieId());
-        }
-        if (patch.getMovieReviewId()!=null) {
-            movieReviewFeedback.setMovieReviewId(patch.getMovieReviewId());
-        }
-        if (patch.getUserId()!=null) {
-            movieReviewFeedback.setUserId(patch.getUserId());
-        }
-        if (patch.getIsLiked()!=null) {
-            movieReviewFeedback.setIsLiked(patch.getIsLiked());
-        }
+        translationService.patchEntity(patch, movieReviewFeedback);
+
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
-        return toRead(movieReviewFeedback);
+        return translationService.toRead(movieReviewFeedback);
     }
 
     private MovieReviewFeedback getMovieReviewFeedbackRequired(UUID id) {
@@ -72,5 +52,14 @@ public class MovieReviewFeedbackService {
 
     public void deleteMovieReviewFeedback(UUID id) {
         movieReviewFeedbackRepository.delete(getMovieReviewFeedbackRequired(id));
+    }
+
+    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(UUID id, MovieReviewFeedbackPutDTO put) {
+        MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
+
+        translationService.putEntity(put, movieReviewFeedback);
+
+        movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
+        return translationService.toRead(movieReviewFeedback);
     }
 }

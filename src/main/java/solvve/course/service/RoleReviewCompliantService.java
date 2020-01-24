@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.RoleReviewCompliant;
 import solvve.course.dto.RoleReviewCompliantCreateDTO;
 import solvve.course.dto.RoleReviewCompliantPatchDTO;
+import solvve.course.dto.RoleReviewCompliantPutDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleReviewCompliantRepository;
@@ -18,60 +19,29 @@ public class RoleReviewCompliantService {
     @Autowired
     private RoleReviewCompliantRepository roleReviewCompliantRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public RoleReviewCompliantReadDTO getRoleReviewCompliant(UUID id) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
-        return toRead(roleReviewCompliant);
-    }
-
-    private RoleReviewCompliantReadDTO toRead(RoleReviewCompliant roleReviewCompliant) {
-        RoleReviewCompliantReadDTO dto = new RoleReviewCompliantReadDTO();
-        dto.setId(roleReviewCompliant.getId());
-        dto.setUserId(roleReviewCompliant.getUserId());
-        dto.setRoleId(roleReviewCompliant.getRoleId());
-        dto.setRoleReviewId(roleReviewCompliant.getRoleReviewId());
-        dto.setDescription(roleReviewCompliant.getDescription());
-        dto.setModeratedStatus(roleReviewCompliant.getModeratedStatus());
-        dto.setModeratorId(roleReviewCompliant.getModeratorId());
-        return dto;
+        return translationService.toRead(roleReviewCompliant);
     }
 
     public RoleReviewCompliantReadDTO createRoleReviewCompliant(RoleReviewCompliantCreateDTO create) {
-        RoleReviewCompliant roleReviewCompliant = new RoleReviewCompliant();
-        roleReviewCompliant.setUserId(create.getUserId());
-        roleReviewCompliant.setRoleId(create.getRoleId());
-        roleReviewCompliant.setRoleReviewId(create.getRoleReviewId());
-        roleReviewCompliant.setDescription(create.getDescription());
-        roleReviewCompliant.setModeratedStatus(create.getModeratedStatus());
-        roleReviewCompliant.setModeratorId(create.getModeratorId());
+        RoleReviewCompliant roleReviewCompliant = translationService.toEntity(create);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
-        return toRead(roleReviewCompliant);
+        return translationService.toRead(roleReviewCompliant);
     }
 
     public RoleReviewCompliantReadDTO patchRoleReviewCompliant(UUID id, RoleReviewCompliantPatchDTO patch) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
 
-        if (patch.getUserId()!=null) {
-            roleReviewCompliant.setUserId(patch.getUserId());
-        }
-        if (patch.getRoleId()!=null) {
-            roleReviewCompliant.setRoleId(patch.getRoleId());
-        }
-        if (patch.getRoleReviewId()!=null) {
-            roleReviewCompliant.setRoleReviewId(patch.getRoleReviewId());
-        }
-        if (patch.getDescription()!=null) {
-            roleReviewCompliant.setDescription(patch.getDescription());
-        }
-        if (patch.getModeratedStatus()!=null) {
-            roleReviewCompliant.setModeratedStatus(patch.getModeratedStatus());
-        }
-        if (patch.getModeratorId()!=null) {
-            roleReviewCompliant.setModeratorId(patch.getModeratorId());
-        }
+        translationService.patchEntity(patch, roleReviewCompliant);
+
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
-        return toRead(roleReviewCompliant);
+        return translationService.toRead(roleReviewCompliant);
     }
 
     private RoleReviewCompliant getRoleReviewCompliantRequired(UUID id) {
@@ -82,5 +52,14 @@ public class RoleReviewCompliantService {
 
     public void deleteRoleReviewCompliant(UUID id) {
         roleReviewCompliantRepository.delete(getRoleReviewCompliantRequired(id));
+    }
+
+    public RoleReviewCompliantReadDTO putRoleReviewCompliant(UUID id, RoleReviewCompliantPutDTO put) {
+        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
+
+        translationService.putEntity(put, roleReviewCompliant);
+
+        roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
+        return translationService.toRead(roleReviewCompliant);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.MovieVoteCreateDTO;
 import solvve.course.dto.MovieVotePatchDTO;
+import solvve.course.dto.MovieVotePutDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.service.MovieVoteService;
 
@@ -34,5 +35,10 @@ public class MovieVoteController {
     @DeleteMapping("/{id}")
     public void deleteMovieVote(@PathVariable UUID id){
         movieVoteService.deleteMovieVote(id);
+    }
+
+    @PutMapping("/{id}")
+    public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody MovieVotePutDTO put){
+        return movieVoteService.putMovieVote(id, put);
     }
 }

@@ -8,6 +8,7 @@ import solvve.course.domain.Movie;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
+import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
@@ -20,50 +21,29 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public RoleReadDTO getRole(UUID id) {
         Role role = getRoleRequired(id);
-        return toRead(role);
-    }
-
-    private RoleReadDTO toRead(Role role) {
-        RoleReadDTO dto = new RoleReadDTO();
-        dto.setId(role.getId());
-        dto.setTitle(role.getTitle());
-        dto.setRoleType(role.getRoleType());
-        dto.setDescription(role.getDescription());
-        dto.setPersonId(role.getPersonId());
-        return dto;
+        return translationService.toRead(role);
     }
 
     public RoleReadDTO createRole(RoleCreateDTO create) {
-        Role role = new Role();
-        role.setTitle(create.getTitle());
-        role.setRoleType(create.getRoleType());
-        role.setDescription(create.getDescription());
-        role.setPersonId(create.getPersonId());
+        Role role = translationService.toEntity(create);
 
         role = roleRepository.save(role);
-        return toRead(role);
+        return translationService.toRead(role);
     }
 
     public RoleReadDTO patchRole(UUID id, RolePatchDTO patch) {
         Role role = getRoleRequired(id);
 
-        if (patch.getTitle()!=null) {
-            role.setTitle(patch.getTitle());
-        }
-        if (patch.getRoleType()!=null) {
-            role.setRoleType(patch.getRoleType());
-        }
-        if (patch.getDescription()!=null) {
-            role.setDescription(patch.getDescription());
-        }
-        if (patch.getPersonId()!=null) {
-            role.setPersonId(patch.getPersonId());
-        }
+        translationService.patchEntity(patch, role);
+
         role = roleRepository.save(role);
-        return toRead(role);
+        return translationService.toRead(role);
     }
 
     private Role getRoleRequired(UUID id) {
@@ -74,5 +54,14 @@ public class RoleService {
 
     public void deleteRole(UUID id) {
         roleRepository.delete(getRoleRequired(id));
+    }
+
+    public RoleReadDTO putRole(UUID id, RolePutDTO put) {
+        Role role = getRoleRequired(id);
+
+        translationService.putEntity(put, role);
+
+        role = roleRepository.save(role);
+        return translationService.toRead(role);
     }
 }

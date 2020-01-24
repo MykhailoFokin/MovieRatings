@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
+import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.service.PersonService;
 
@@ -34,5 +35,10 @@ public class PersonController {
     @DeleteMapping("/{id}")
     public void deletePersons(@PathVariable UUID id){
         personService.deletePersons(id);
+    }
+
+    @PutMapping("/{id}")
+    public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody PersonPutDTO put){
+        return personService.putPersons(id, put);
     }
 }

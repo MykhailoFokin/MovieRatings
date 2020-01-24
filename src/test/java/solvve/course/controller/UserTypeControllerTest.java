@@ -17,6 +17,7 @@ import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
 import solvve.course.dto.UserTypeCreateDTO;
 import solvve.course.dto.UserTypePatchDTO;
+import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.UserTypeService;
@@ -135,5 +136,25 @@ public class UserTypeControllerTest {
         mvc.perform(delete("/api/v1/usertypes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(userTypeService).deleteUserTypes(id);
+    }
+
+    @Test
+    public void testPutUserTypes() throws Exception {
+
+        UserTypePutDTO putDTO = new UserTypePutDTO();
+        putDTO.setUserGroup(UserGroupType.USER);
+
+        UserTypeReadDTO read =createUserTypesRead();
+
+        Mockito.when(userTypeService.putUserTypes(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/usertypes/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserTypeReadDTO actualUserTypes = objectMapper.readValue(resultJson, UserTypeReadDTO.class);
+        Assert.assertEquals(read, actualUserTypes);
     }
 }

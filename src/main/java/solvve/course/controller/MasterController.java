@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.MasterCreateDTO;
 import solvve.course.dto.MasterPatchDTO;
+import solvve.course.dto.MasterPutDTO;
 import solvve.course.dto.MasterReadDTO;
 import solvve.course.service.MasterService;
 
@@ -35,5 +36,10 @@ public class MasterController {
     @DeleteMapping("/{id}")
     public void deleteMaster(@PathVariable UUID id){
         masterService.deleteMaster(id);
+    }
+
+    @PutMapping("/{id}")
+    public MasterReadDTO putMaster(@PathVariable UUID id, @RequestBody MasterPutDTO put){
+        return masterService.putMaster(id, put);
     }
 }

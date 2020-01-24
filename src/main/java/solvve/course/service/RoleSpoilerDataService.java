@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.RoleSpoilerData;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
+import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleSpoilerDataRepository;
@@ -18,45 +19,29 @@ public class RoleSpoilerDataService {
     @Autowired
     private RoleSpoilerDataRepository roleSpoilerDataRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public RoleSpoilerDataReadDTO getRoleSpoilerData(UUID id) {
         RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
-        return toRead(roleSpoilerData);
-    }
-
-    private RoleSpoilerDataReadDTO toRead(RoleSpoilerData roleSpoilerData) {
-        RoleSpoilerDataReadDTO dto = new RoleSpoilerDataReadDTO();
-        dto.setId(roleSpoilerData.getId());
-        dto.setRoleReviewId(roleSpoilerData.getRoleReviewId());
-        dto.setStartIndex(roleSpoilerData.getStartIndex());
-        dto.setEndIndex(roleSpoilerData.getEndIndex());
-        return dto;
+        return translationService.toRead(roleSpoilerData);
     }
 
     public RoleSpoilerDataReadDTO createRoleSpoilerData(RoleSpoilerDataCreateDTO create) {
-        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
-        roleSpoilerData.setRoleReviewId(create.getRoleReviewId());
-        roleSpoilerData.setStartIndex(create.getStartIndex());
-        roleSpoilerData.setEndIndex(create.getEndIndex());
+        RoleSpoilerData roleSpoilerData = translationService.toEntity(create);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
-        return toRead(roleSpoilerData);
+        return translationService.toRead(roleSpoilerData);
     }
 
     public RoleSpoilerDataReadDTO patchRoleSpoilerData(UUID id, RoleSpoilerDataPatchDTO patch) {
         RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
 
-        if (patch.getRoleReviewId()!=null) {
-            roleSpoilerData.setRoleReviewId(patch.getRoleReviewId());
-        }
-        if (patch.getStartIndex()!=null) {
-            roleSpoilerData.setStartIndex(patch.getStartIndex());
-        }
-        if (patch.getEndIndex()!=null) {
-            roleSpoilerData.setEndIndex(patch.getEndIndex());
-        }
+        translationService.patchEntity(patch, roleSpoilerData);
+
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
-        return toRead(roleSpoilerData);
+        return translationService.toRead(roleSpoilerData);
     }
 
     private RoleSpoilerData getRoleSpoilerDataRequired(UUID id) {
@@ -67,5 +52,14 @@ public class RoleSpoilerDataService {
 
     public void deleteRoleSpoilerData(UUID id) {
         roleSpoilerDataRepository.delete(getRoleSpoilerDataRequired(id));
+    }
+
+    public RoleSpoilerDataReadDTO putRoleSpoilerData(UUID id, RoleSpoilerDataPutDTO put) {
+        RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
+
+        translationService.putEntity(put, roleSpoilerData);
+
+        roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
+        return translationService.toRead(roleSpoilerData);
     }
 }

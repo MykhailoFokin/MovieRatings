@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
+import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.service.MovieSpoilerDataService;
 
@@ -34,5 +35,10 @@ public class MovieSpoilerDataController {
     @DeleteMapping("/{id}")
     public void deleteMovieSpoilerData(@PathVariable UUID id){
         movieSpoilerDataService.deleteMovieSpoilerData(id);
+    }
+
+    @PutMapping("/{id}")
+    public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPutDTO put){
+        return movieSpoilerDataService.putMovieSpoilerData(id, put);
     }
 }

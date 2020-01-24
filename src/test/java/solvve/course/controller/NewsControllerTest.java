@@ -16,12 +16,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.News;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
+import solvve.course.dto.NewsPutDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.NewsService;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,7 +49,7 @@ public class NewsControllerTest {
         news.setId(UUID.randomUUID());
         news.setTopic("Main_News");
         news.setDescription("Our main news are absent today!");
-        news.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        news.setPublished(Instant.now());
         return news;
     }
 
@@ -97,7 +100,7 @@ public class NewsControllerTest {
         NewsCreateDTO create = new NewsCreateDTO();
         create.setTopic("Main_News");
         create.setDescription("Our main news are absent today!");
-        create.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        create.setPublished(Instant.now());
 
         NewsReadDTO read = createNewsRead();
 
@@ -119,7 +122,7 @@ public class NewsControllerTest {
         NewsPatchDTO patchDTO = new NewsPatchDTO();
         patchDTO.setTopic("Main_News");
         patchDTO.setDescription("Our main news are absent today!");
-        patchDTO.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        patchDTO.setPublished(Instant.now());
 
         NewsReadDTO read = createNewsRead();
 
@@ -142,5 +145,27 @@ public class NewsControllerTest {
         mvc.perform(delete("/api/v1/news/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(newsService).deleteNews(id);
+    }
+
+    @Test
+    public void testPutNews() throws Exception {
+
+        NewsPutDTO putDTO = new NewsPutDTO();
+        putDTO.setTopic("Main_News");
+        putDTO.setDescription("Our main news are absent today!");
+        putDTO.setPublished(Instant.now());
+
+        NewsReadDTO read = createNewsRead();
+
+        Mockito.when(newsService.putNews(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/news/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        NewsReadDTO actualNews = objectMapper.readValue(resultJson, NewsReadDTO.class);
+        Assert.assertEquals(read, actualNews);
     }
 }

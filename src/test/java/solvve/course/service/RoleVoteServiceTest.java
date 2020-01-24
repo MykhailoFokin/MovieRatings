@@ -34,13 +34,7 @@ public class RoleVoteServiceTest {
     private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
@@ -48,11 +42,7 @@ public class RoleVoteServiceTest {
     @Autowired
     private PersonRepository personRepository;
 
-    private Role role;
-
-    private PortalUser portalUser;
-
-    private RoleVote createRoleVote() {
+    private RoleVote createRoleVote(PortalUser portalUser, Role role) {
         RoleVote roleVote = new RoleVote();
         roleVote.setRoleId(role);
         roleVote.setUserId(portalUser);
@@ -60,44 +50,45 @@ public class RoleVoteServiceTest {
         return roleVoteRepository.save(roleVote);
     }
 
-    @Before
-    public void setup() {
-        if (role==null) {
-            Person person = new Person();
-            person.setSurname("Surname");
-            person.setName("Name");
-            person.setMiddleName("MiddleName");
-            person = personRepository.save(person);
+    public Role createRole() {
+        Person person = new Person();
+        person.setName("Name");
+        person = personRepository.save(person);
 
-            role = new Role();
-            role.setId(UUID.randomUUID());
-            role.setTitle("Actor");
-            role.setRoleType("Main_Role");
-            role.setDescription("Description test");
-            role.setPersonId(person);
-            role = roleRepository.save(role);
-        }
+        Role role = new Role();
+        //role.setId(UUID.randomUUID());
+        role.setTitle("Actor");
+        role.setRoleType("Main_Role");
+        role.setDescription("Description test");
+        role.setPersonId(person);
+        role = roleRepository.save(role);
 
-        if (portalUser==null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+        return role;
+    }
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+    public PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
+
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
     }
 
     @Transactional
     @Test
     public void testGetRoleVote() {
-        RoleVote roleVote = createRoleVote();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
 
         RoleVoteReadDTO readDTO = roleVoteService.getRoleVote(roleVote.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleVote);
@@ -111,6 +102,9 @@ public class RoleVoteServiceTest {
     @Transactional
     @Test
     public void testCreateRoleVote() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+
         RoleVoteCreateDTO create = new RoleVoteCreateDTO();
         create.setRoleId(role);
         create.setUserId(portalUser);
@@ -125,7 +119,9 @@ public class RoleVoteServiceTest {
     @Transactional
     @Test
     public void testPatchRoleVote() {
-        RoleVote roleVote = createRoleVote();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
         patch.setRoleId(role);
@@ -142,7 +138,9 @@ public class RoleVoteServiceTest {
     @Transactional
     @Test
     public void testPatchRoleVoteEmptyPatch() {
-        RoleVote roleVote = createRoleVote();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
         RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
@@ -162,7 +160,9 @@ public class RoleVoteServiceTest {
 
     @Test
     public void testDeleteRoleVote() {
-        RoleVote roleVote = createRoleVote();
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
 
         roleVoteService.deleteRoleVote(roleVote.getId());
         Assert.assertFalse(roleVoteRepository.existsById(roleVote.getId()));
@@ -171,5 +171,24 @@ public class RoleVoteServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteRoleVoteNotFound() {
         roleVoteService.deleteRoleVote(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutRoleVote() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
+
+        RoleVotePutDTO put = new RoleVotePutDTO();
+        put.setRoleId(role);
+        put.setUserId(portalUser);
+        put.setRating(UserVoteRatingType.R9);
+        RoleVoteReadDTO read = roleVoteService.putRoleVote(roleVote.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        roleVote = roleVoteRepository.findById(read.getId()).get();
+        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(read);
     }
 }

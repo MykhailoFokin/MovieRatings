@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.UserTypeCreateDTO;
 import solvve.course.dto.UserTypePatchDTO;
+import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.service.UserTypeService;
 
@@ -34,5 +35,10 @@ public class UserTypeController {
     @DeleteMapping("/{id}")
     public void deleteUserTypes(@PathVariable UUID id){
         userTypeService.deleteUserTypes(id);
+    }
+
+    @PutMapping("/{id}")
+    public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody UserTypePutDTO put){
+        return userTypeService.putUserTypes(id, put);
     }
 }

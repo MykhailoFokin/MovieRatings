@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.RoleReview;
 import solvve.course.dto.RoleReviewCreateDTO;
 import solvve.course.dto.RoleReviewPatchDTO;
+import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleReviewRepository;
@@ -18,55 +19,29 @@ public class RoleReviewService {
     @Autowired
     private RoleReviewRepository roleReviewRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public RoleReviewReadDTO getRoleReview(UUID id) {
         RoleReview roleReview = getRoleReviewRequired(id);
-        return toRead(roleReview);
-    }
-
-    private RoleReviewReadDTO toRead(RoleReview roleReview) {
-        RoleReviewReadDTO dto = new RoleReviewReadDTO();
-        dto.setId(roleReview.getId());
-        dto.setUserId(roleReview.getUserId());
-        dto.setRoleId(roleReview.getRoleId());
-        dto.setTextReview(roleReview.getTextReview());
-        dto.setModeratedStatus(roleReview.getModeratedStatus());
-        dto.setModeratorId(roleReview.getModeratorId());
-        return dto;
+        return translationService.toRead(roleReview);
     }
 
     public RoleReviewReadDTO createRoleReview(RoleReviewCreateDTO create) {
-        RoleReview roleReview = new RoleReview();
-        roleReview.setUserId(create.getUserId());
-        roleReview.setRoleId(create.getRoleId());
-        roleReview.setTextReview(create.getTextReview());
-        roleReview.setModeratedStatus(create.getModeratedStatus());
-        roleReview.setModeratorId(create.getModeratorId());
+        RoleReview roleReview = translationService.toEntity(create);
 
         roleReview = roleReviewRepository.save(roleReview);
-        return toRead(roleReview);
+        return translationService.toRead(roleReview);
     }
 
     public RoleReviewReadDTO patchRoleReview(UUID id, RoleReviewPatchDTO patch) {
         RoleReview roleReview = getRoleReviewRequired(id);
 
-        if (patch.getUserId()!=null) {
-            roleReview.setUserId(patch.getUserId());
-        }
-        if (patch.getRoleId()!=null) {
-            roleReview.setRoleId(patch.getRoleId());
-        }
-        if (patch.getTextReview()!=null) {
-            roleReview.setTextReview(patch.getTextReview());
-        }
-        if (patch.getModeratedStatus()!=null) {
-            roleReview.setModeratedStatus(patch.getModeratedStatus());
-        }
-        if (patch.getModeratorId()!=null) {
-            roleReview.setModeratorId(patch.getModeratorId());
-        }
+        translationService.patchEntity(patch, roleReview);
+
         roleReview = roleReviewRepository.save(roleReview);
-        return toRead(roleReview);
+        return translationService.toRead(roleReview);
     }
 
     private RoleReview getRoleReviewRequired(UUID id) {
@@ -77,5 +52,14 @@ public class RoleReviewService {
 
     public void deleteRoleReview(UUID id) {
         roleReviewRepository.delete(getRoleReviewRequired(id));
+    }
+
+    public RoleReviewReadDTO putRoleReview(UUID id, RoleReviewPutDTO put) {
+        RoleReview roleReview = getRoleReviewRequired(id);
+
+        translationService.putEntity(put, roleReview);
+
+        roleReview = roleReviewRepository.save(roleReview);
+        return translationService.toRead(roleReview);
     }
 }

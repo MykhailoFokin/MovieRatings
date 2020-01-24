@@ -6,7 +6,7 @@ import solvve.course.domain.UserPermType;
 import solvve.course.domain.UserType;
 
 @Data
-public class GrantCreateDTO {
+public class UserGrantPutDTO {
 
     private UserType userTypeId;
 

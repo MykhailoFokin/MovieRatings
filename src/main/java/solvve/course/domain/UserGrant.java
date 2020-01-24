@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-public class Grant {
+public class UserGrant {
 
     @Id
     @GeneratedValue

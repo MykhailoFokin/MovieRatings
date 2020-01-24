@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
+import solvve.course.dto.CrewTypePutDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.service.CrewTypeService;
 
@@ -34,5 +35,10 @@ public class CrewTypeController {
     @DeleteMapping("/{id}")
     public void deleteCrewType(@PathVariable UUID id){
         crewTypeService.deleteCrewType(id);
+    }
+
+    @PutMapping("/{id}")
+    public CrewTypeReadDTO putCrewType(@PathVariable UUID id, @RequestBody CrewTypePutDTO put){
+        return crewTypeService.putCrewType(id, put);
     }
 }

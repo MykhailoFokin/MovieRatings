@@ -19,9 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import solvve.course.domain.Crew;
-import solvve.course.dto.CrewCreateDTO;
-import solvve.course.dto.CrewPatchDTO;
-import solvve.course.dto.CrewReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.exception.handler.RestExceptionHandler;
@@ -46,8 +44,8 @@ public class CrewControllerTest {
     @MockBean
     private CrewService crewService;
 
-    private CrewReadDTO createCrewRead() {
-        CrewReadDTO crew = new CrewReadDTO();
+    private CrewReadExtendedDTO createCrewRead() {
+        CrewReadExtendedDTO crew = new CrewReadExtendedDTO();
         crew.setId(UUID.randomUUID());
         crew.setDescription("Description");
         return crew;
@@ -55,7 +53,7 @@ public class CrewControllerTest {
 
     @Test
     public void testGetCrew() throws Exception {
-        CrewReadDTO crew = createCrewRead();
+        CrewReadExtendedDTO crew = createCrewRead();
 
         Mockito.when(crewService.getCrew(crew.getId())).thenReturn(crew);
 
@@ -101,7 +99,7 @@ public class CrewControllerTest {
         CrewCreateDTO create = new CrewCreateDTO();
         create.setDescription("Description");
 
-        CrewReadDTO read = createCrewRead();
+        CrewReadExtendedDTO read = createCrewRead();
 
         Mockito.when(crewService.createCrew(create)).thenReturn(read);
 
@@ -121,7 +119,7 @@ public class CrewControllerTest {
         CrewPatchDTO patchDTO = new CrewPatchDTO();
         patchDTO.setDescription("Description");
 
-        CrewReadDTO read = createCrewRead();
+        CrewReadExtendedDTO read = createCrewRead();
 
         Mockito.when(crewService.patchCrew(read.getId(),patchDTO)).thenReturn(read);
 
@@ -131,7 +129,7 @@ public class CrewControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
+        CrewReadExtendedDTO actualCrew = objectMapper.readValue(resultJson, CrewReadExtendedDTO.class);
         Assert.assertEquals(read, actualCrew);
     }
 
@@ -142,5 +140,25 @@ public class CrewControllerTest {
         mvc.perform(delete("/api/v1/crew/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(crewService).deleteCrew(id);
+    }
+
+    @Test
+    public void testPutCrew() throws Exception {
+
+        CrewPutDTO putDTO = new CrewPutDTO();
+        putDTO.setDescription("Description");
+
+        CrewReadExtendedDTO read = createCrewRead();
+
+        Mockito.when(crewService.putCrew(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/crew/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CrewReadExtendedDTO actualCrew = objectMapper.readValue(resultJson, CrewReadExtendedDTO.class);
+        Assert.assertEquals(read, actualCrew);
     }
 }

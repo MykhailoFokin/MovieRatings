@@ -12,10 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
-import solvve.course.dto.VisitCreateDTO;
-import solvve.course.dto.VisitPatchDTO;
-import solvve.course.dto.VisitReadDTO;
-import solvve.course.dto.VisitReadExtendedDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
 import solvve.course.repository.PortalUserRepository;
@@ -28,7 +25,7 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from visit; delete from portal_user; delete from user_type; delete from master;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from visit","delete from portal_user","delete from user_type","delete from master"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class VisitServiceTest {
 
     @Autowired
@@ -190,5 +187,32 @@ public class VisitServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteVisitNotFound() {
         visitService.deleteVisit(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutVisit() {
+        PortalUser portalUser = createPortalUser();
+        Master master = createMaster();
+        Visit visit = createVisit(portalUser, master);
+
+        VisitPutDTO put = new VisitPutDTO();
+        put.setUserId(portalUser);
+        put.setMasterId(master);
+        put.setStartAt(Instant.now());
+        put.setFinishAt(Instant.now());
+        put.setStatus(VisitStatus.FINISHED);
+        VisitReadExtendedDTO read = visitService.putVisit(visit.getId(), put);
+
+        //Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read, "userId", "masterId");
+        Assertions.assertThat(put.getUserId()).isEqualToIgnoringGivenFields(portalUser);
+        Assertions.assertThat(put.getMasterId()).isEqualToIgnoringGivenFields(master);
+
+        visit = visitRepository.findById(read.getId()).get();
+        //Assertions.assertThat(visit).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read, "userId", "masterId");
+        Assertions.assertThat(visit.getUserId()).isEqualToIgnoringGivenFields(portalUser);
+        Assertions.assertThat(visit.getMasterId()).isEqualToIgnoringGivenFields(master);
     }
 }

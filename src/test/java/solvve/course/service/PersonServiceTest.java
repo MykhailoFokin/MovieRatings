@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Person;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
+import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonRepository;
@@ -115,5 +116,22 @@ public class PersonServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeletePersonsNotFound() {
         personService.deletePersons(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutPersons() {
+        Person person = createPersons();
+
+        PersonPutDTO put = new PersonPutDTO();
+        put.setSurname("Surname");
+        put.setName("Name");
+        put.setMiddleName("MiddleName");
+        PersonReadDTO read = personService.putPersons(person.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        person = personRepository.findById(read.getId()).get();
+        Assertions.assertThat(person).isEqualToComparingFieldByField(read);
     }
 }

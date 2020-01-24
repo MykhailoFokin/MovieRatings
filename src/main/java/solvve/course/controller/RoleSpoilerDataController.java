@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
+import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.service.RoleSpoilerDataService;
 
@@ -34,5 +35,10 @@ public class RoleSpoilerDataController {
     @DeleteMapping("/{id}")
     public void deleteRoleSpoilerData(@PathVariable UUID id){
         roleSpoilerDataService.deleteRoleSpoilerData(id);
+    }
+
+    @PutMapping("/{id}")
+    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPutDTO put){
+        return roleSpoilerDataService.putRoleSpoilerData(id, put);
     }
 }

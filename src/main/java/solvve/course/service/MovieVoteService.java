@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieVote;
 import solvve.course.dto.MovieVoteCreateDTO;
 import solvve.course.dto.MovieVotePatchDTO;
+import solvve.course.dto.MovieVotePutDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieVoteRepository;
@@ -17,45 +18,29 @@ public class MovieVoteService {
     @Autowired
     private MovieVoteRepository movieVoteRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public MovieVoteReadDTO getMovieVote(UUID id) {
         MovieVote movieVote = getMovieVoteRequired(id);
-        return toRead(movieVote);
-    }
-
-    private MovieVoteReadDTO toRead(MovieVote movieVote) {
-        MovieVoteReadDTO dto = new MovieVoteReadDTO();
-        dto.setId(movieVote.getId());
-        dto.setUserId(movieVote.getUserId());
-        dto.setMovieId(movieVote.getMovieId());
-        dto.setRating(movieVote.getRating());
-        return dto;
+        return translationService.toRead(movieVote);
     }
 
     public MovieVoteReadDTO createMovieVote(MovieVoteCreateDTO create) {
-        MovieVote movieVote = new MovieVote();
-        movieVote.setUserId(create.getUserId());
-        movieVote.setMovieId(create.getMovieId());
-        movieVote.setRating(create.getRating());
+        MovieVote movieVote = translationService.toEntity(create);
 
         movieVote = movieVoteRepository.save(movieVote);
-        return toRead(movieVote);
+        return translationService.toRead(movieVote);
     }
 
     public MovieVoteReadDTO patchMovieVote(UUID id, MovieVotePatchDTO patch) {
         MovieVote movieVote = getMovieVoteRequired(id);
 
-        if (patch.getUserId()!=null) {
-            movieVote.setUserId(patch.getUserId());
-        }
-        if (patch.getMovieId()!=null) {
-            movieVote.setMovieId(patch.getMovieId());
-        }
-        if (patch.getRating()!=null) {
-            movieVote.setRating(patch.getRating());
-        }
+        translationService.patchEntity(patch, movieVote);
+
         movieVote = movieVoteRepository.save(movieVote);
-        return toRead(movieVote);
+        return translationService.toRead(movieVote);
     }
 
     private MovieVote getMovieVoteRequired(UUID id) {
@@ -66,5 +51,14 @@ public class MovieVoteService {
 
     public void deleteMovieVote(UUID id) {
         movieVoteRepository.delete(getMovieVoteRequired(id));
+    }
+
+    public MovieVoteReadDTO putMovieVote(UUID id, MovieVotePutDTO put) {
+        MovieVote movieVote = getMovieVoteRequired(id);
+
+        translationService.putEntity(put, movieVote);
+
+        movieVote = movieVoteRepository.save(movieVote);
+        return translationService.toRead(movieVote);
     }
 }

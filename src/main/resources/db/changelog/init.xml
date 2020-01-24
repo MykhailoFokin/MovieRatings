@@ -192,17 +192,17 @@
 			</column>
 			<column name = "is_liked" type="boolean"/>
 		</createTable>
-		<createTable tableName="grant">
+		<createTable tableName="user_grant">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "user_type_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_grants_user_type" references="user_type(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_ugrant_user_type" references="user_type(id)"/>
 			</column>
 			<column name = "user_permission" type="varchar(100)"/>
 			<column name = "object_name" type="varchar(255)"/>
 			<column name = "granted_by" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_grants_puser" references="portal_user(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_ugrant_puser" references="portal_user(id)"/>
 			</column>
 		</createTable>
 		<createTable tableName="news">

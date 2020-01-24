@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.UserType;
 import solvve.course.dto.UserTypeCreateDTO;
 import solvve.course.dto.UserTypePatchDTO;
+import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.UserTypeRepository;
@@ -18,40 +19,29 @@ public class UserTypeService {
     @Autowired
     private UserTypeRepository userTypeRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public UserTypeReadDTO getUserTypes(UUID id) {
         UserType userType = getUserTypesRequired(id);
-        return toRead(userType);
-    }
-
-    private UserTypeReadDTO toRead(UserType userType) {
-        UserTypeReadDTO dto = new UserTypeReadDTO();
-        dto.setId(userType.getId());
-        dto.setUserGroup(userType.getUserGroup());
-        dto.setGrants(userType.getGrants());
-        return dto;
+        return translationService.toRead(userType);
     }
 
     public UserTypeReadDTO createUserTypes(UserTypeCreateDTO create) {
-        UserType userType = new UserType();
-        userType.setUserGroup(create.getUserGroup());
-        userType.setGrants(create.getGrants());
+        UserType userType = translationService.toEntity(create);
 
         userType = userTypeRepository.save(userType);
-        return toRead(userType);
+        return translationService.toRead(userType);
     }
 
     public UserTypeReadDTO patchUserTypes(UUID id, UserTypePatchDTO patch) {
         UserType userType = getUserTypesRequired(id);
 
-        if (patch.getUserGroup()!=null) {
-            userType.setUserGroup(patch.getUserGroup());
-        }
-        if (patch.getGrants()!=null) {
-            userType.setGrants(patch.getGrants());
-        }
+        translationService.patchEntity(patch, userType);
+
         userType = userTypeRepository.save(userType);
-        return toRead(userType);
+        return translationService.toRead(userType);
     }
 
     private UserType getUserTypesRequired(UUID id) {
@@ -62,5 +52,14 @@ public class UserTypeService {
 
     public void deleteUserTypes(UUID id) {
         userTypeRepository.delete(getUserTypesRequired(id));
+    }
+
+    public UserTypeReadDTO putUserTypes(UUID id, UserTypePutDTO put) {
+        UserType userType = getUserTypesRequired(id);
+
+        translationService.putEntity(put, userType);
+
+        userType = userTypeRepository.save(userType);
+        return translationService.toRead(userType);
     }
 }

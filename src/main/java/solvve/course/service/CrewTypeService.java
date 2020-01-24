@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
+import solvve.course.dto.CrewTypePutDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
@@ -18,35 +19,29 @@ public class CrewTypeService {
     @Autowired
     private CrewTypeRepository crewTypeRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public CrewTypeReadDTO getCrewType(UUID id) {
         CrewType crewType = getCrewTypeRequired(id);
-        return toRead(crewType);
-    }
-
-    private CrewTypeReadDTO toRead(CrewType crewType) {
-        CrewTypeReadDTO dto = new CrewTypeReadDTO();
-        dto.setId(crewType.getId());
-        dto.setName(crewType.getName());
-        return dto;
+        return translationService.toRead(crewType);
     }
 
     public CrewTypeReadDTO createCrewType(CrewTypeCreateDTO create) {
-        CrewType crewType = new CrewType();
-        crewType.setName(create.getName());
+        CrewType crewType = translationService.toEntity(create);
 
         crewType = crewTypeRepository.save(crewType);
-        return toRead(crewType);
+        return translationService.toRead(crewType);
     }
 
     public CrewTypeReadDTO patchCrewType(UUID id, CrewTypePatchDTO patch) {
         CrewType crewType = getCrewTypeRequired(id);
 
-        if (patch.getName()!=null) {
-            crewType.setName(patch.getName());
-        }
+        translationService.patchEntity(patch, crewType);
+
         crewType = crewTypeRepository.save(crewType);
-        return toRead(crewType);
+        return translationService.toRead(crewType);
     }
 
     private CrewType getCrewTypeRequired(UUID id) {
@@ -57,5 +52,14 @@ public class CrewTypeService {
 
     public void deleteCrewType(UUID id) {
         crewTypeRepository.delete(getCrewTypeRequired(id));
+    }
+
+    public CrewTypeReadDTO putCrewType(UUID id, CrewTypePutDTO put) {
+        CrewType crewType = getCrewTypeRequired(id);
+
+        translationService.putEntity(put, crewType);
+
+        crewType = crewTypeRepository.save(crewType);
+        return translationService.toRead(crewType);
     }
 }

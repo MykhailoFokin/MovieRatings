@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.CountryCreateDTO;
 import solvve.course.dto.CountryPatchDTO;
+import solvve.course.dto.CountryPutDTO;
 import solvve.course.dto.CountryReadDTO;
 import solvve.course.service.CountryService;
 
@@ -34,5 +35,10 @@ public class CountryController {
     @DeleteMapping("/{id}")
     public void deleteCountries(@PathVariable UUID id){
         countryService.deleteCountries(id);
+    }
+
+    @PutMapping("/{id}")
+    public CountryReadDTO putCountries(@PathVariable UUID id, @RequestBody CountryPutDTO put){
+        return countryService.putCountries(id, put);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
+import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.service.MovieReviewCompliantService;
 
@@ -34,5 +35,10 @@ public class MovieReviewCompliantController {
     @DeleteMapping("/{id}")
     public void deleteMovieReviewCompliant(@PathVariable UUID id){
         movieReviewCompliantService.deleteMovieReviewCompliant(id);
+    }
+
+    @PutMapping("/{id}")
+    public MovieReviewCompliantReadDTO putMovieReviewCompliant(@PathVariable UUID id, @RequestBody MovieReviewCompliantPutDTO put){
+        return movieReviewCompliantService.putMovieReviewCompliant(id, put);
     }
 }

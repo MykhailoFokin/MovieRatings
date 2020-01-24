@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.ReleaseDetailCreateDTO;
 import solvve.course.dto.ReleaseDetailPatchDTO;
+import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.service.ReleaseDetailService;
 
@@ -34,5 +35,10 @@ public class ReleaseDetailController {
     @DeleteMapping("/{id}")
     public void deleteReleaseDetails(@PathVariable UUID id){
         releaseDetailService.deleteReleaseDetails(id);
+    }
+
+    @PutMapping("/{id}")
+    public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPutDTO put){
+        return releaseDetailService.putReleaseDetails(id, put);
     }
 }

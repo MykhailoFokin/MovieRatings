@@ -15,6 +15,7 @@ import solvve.course.domain.Person;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
+import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonRepository;
@@ -136,5 +137,23 @@ public class RoleServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteRoleNotFound() {
         roleService.deleteRole(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutRole() {
+        Role role = createRole();
+
+        RolePutDTO put = new RolePutDTO();
+        put.setTitle("Actor");
+        put.setRoleType("Main_Role");
+        put.setDescription("Description test");
+        put.setPersonId(person);
+        RoleReadDTO read = roleService.putRole(role.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        role = roleRepository.findById(read.getId()).get();
+        Assertions.assertThat(role).isEqualToComparingFieldByField(read);
     }
 }

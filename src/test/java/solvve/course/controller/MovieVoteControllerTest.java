@@ -17,6 +17,7 @@ import solvve.course.domain.MovieVote;
 import solvve.course.domain.UserVoteRatingType;
 import solvve.course.dto.MovieVoteCreateDTO;
 import solvve.course.dto.MovieVotePatchDTO;
+import solvve.course.dto.MovieVotePutDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieVoteService;
@@ -135,5 +136,25 @@ public class MovieVoteControllerTest {
         mvc.perform(delete("/api/v1/movievotes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieVoteService).deleteMovieVote(id);
+    }
+
+    @Test
+    public void testPutMovieVote() throws Exception {
+
+        MovieVotePutDTO putDTO = new MovieVotePutDTO();
+        putDTO.setRating(UserVoteRatingType.R9);
+
+        MovieVoteReadDTO read = createMovieVoteRead();
+
+        Mockito.when(movieVoteService.putMovieVote(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/movievotes/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieVoteReadDTO actualMovieVote = objectMapper.readValue(resultJson, MovieVoteReadDTO.class);
+        Assert.assertEquals(read, actualMovieVote);
     }
 }

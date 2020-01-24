@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
+import solvve.course.dto.CrewTypePutDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
@@ -102,5 +103,19 @@ public class CrewTypeTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteCrewTypeNotFound() {
         crewTypeService.deleteCrewType(UUID.randomUUID());
+    }
+
+    @Test
+    public void testPutCrewType() {
+        CrewType crewType = createCrewType();
+
+        CrewTypePutDTO put = new CrewTypePutDTO();
+        put.setName("Director");
+        CrewTypeReadDTO read = crewTypeService.putCrewType(crewType.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        crewType = crewTypeRepository.findById(read.getId()).get();
+        Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
     }
 }

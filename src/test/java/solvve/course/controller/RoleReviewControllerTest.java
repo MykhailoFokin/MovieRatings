@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReview;
 import solvve.course.dto.RoleReviewCreateDTO;
 import solvve.course.dto.RoleReviewPatchDTO;
+import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
 import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
@@ -138,5 +139,26 @@ public class RoleReviewControllerTest {
         mvc.perform(delete("/api/v1/rolereviews/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleReviewService).deleteRoleReview(id);
+    }
+
+    @Test
+    public void testPutRoleReview() throws Exception {
+
+        RoleReviewPutDTO putDTO = new RoleReviewPutDTO();
+        putDTO.setTextReview("This role can be described as junk.");
+        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        RoleReviewReadDTO read = createRoleReviewRead();
+
+        Mockito.when(roleReviewService.putRoleReview(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/rolereviews/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReviewReadDTO actualRoleReview = objectMapper.readValue(resultJson, RoleReviewReadDTO.class);
+        Assert.assertEquals(read, actualRoleReview);
     }
 }

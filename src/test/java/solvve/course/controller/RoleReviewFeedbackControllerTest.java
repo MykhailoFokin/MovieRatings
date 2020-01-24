@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReviewFeedback;
 import solvve.course.dto.RoleReviewFeedbackCreateDTO;
 import solvve.course.dto.RoleReviewFeedbackPatchDTO;
+import solvve.course.dto.RoleReviewFeedbackPutDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleReviewFeedbackService;
@@ -134,5 +135,25 @@ public class RoleReviewFeedbackControllerTest {
         mvc.perform(delete("/api/v1/rolereviewfeedbacks/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleReviewFeedbackService).deleteRoleReviewFeedback(id);
+    }
+
+    @Test
+    public void testPutRoleReviewFeedback() throws Exception {
+
+        RoleReviewFeedbackPutDTO putDTO = new RoleReviewFeedbackPutDTO();
+        putDTO.setIsLiked(true);
+
+        RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead();
+
+        Mockito.when(roleReviewFeedbackService.putRoleReviewFeedback(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/rolereviewfeedbacks/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
+        Assert.assertEquals(read, actualRoleReviewFeedback);
     }
 }

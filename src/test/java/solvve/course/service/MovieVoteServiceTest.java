@@ -37,22 +37,12 @@ public class MovieVoteServiceTest {
     private MovieRepository movieRepository;
 
     @Autowired
-    private MovieService movieService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private PortalUserService portalUserService;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
 
-    private Movie movie;
-
-    private PortalUser portalUser;
-
-    private MovieVote createMovieVote() {
+    private MovieVote createMovieVote(PortalUser portalUser, Movie movie) {
         MovieVote movieVote = new MovieVote();
         movieVote.setMovieId(movie);
         movieVote.setUserId(portalUser);
@@ -60,47 +50,49 @@ public class MovieVoteServiceTest {
         return movieVoteRepository.save(movieVote);
     }
 
-    @Before
-    public void setup() {
-        if (movie==null) {
-            movie = new Movie();
-            //movie.setId(UUID.randomUUID());
-            movie.setTitle("Movie Test");
-            movie.setYear((short) 2019);
-            movie.setGenres("Comedy");
-            movie.setAspectRatio("1:10");
-            movie.setCamera("Panasonic");
-            movie.setColour("Black");
-            movie.setCompanies("Paramount");
-            movie.setCritique("123");
-            movie.setDescription("Description");
-            movie.setFilmingLocations("USA");
-            movie.setLaboratory("CaliforniaDreaming");
-            movie.setLanguages("English");
-            movie.setSoundMix("DolbySurround");
-            movie = movieRepository.save(movie);
-        }
+    private Movie createMovie() {
+        Movie movie = new Movie();
+        //movie.setId(UUID.randomUUID());
+        movie.setTitle("Movie Test");
+        movie.setYear((short) 2019);
+        movie.setGenres("Comedy");
+        movie.setAspectRatio("1:10");
+        movie.setCamera("Panasonic");
+        movie.setColour("Black");
+        movie.setCompanies("Paramount");
+        movie.setCritique("123");
+        movie.setDescription("Description");
+        movie.setFilmingLocations("USA");
+        movie.setLaboratory("CaliforniaDreaming");
+        movie.setLanguages("English");
+        movie.setSoundMix("DolbySurround");
+        movie = movieRepository.save(movie);
+        return movie;
+    }
 
-        if (portalUser == null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+    private PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
     }
 
     @Transactional
     @Test
     public void testGetMovieVote() {
-        MovieVote movieVote = createMovieVote();
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVoteReadDTO readDTO = movieVoteService.getMovieVote(movieVote.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieVote);
@@ -114,6 +106,9 @@ public class MovieVoteServiceTest {
     @Transactional
     @Test
     public void testCreateMovieVote() {
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
         create.setMovieId(movie);
         create.setUserId(portalUser);
@@ -128,7 +123,9 @@ public class MovieVoteServiceTest {
     @Transactional
     @Test
     public void testPatchMovieVote() {
-        MovieVote movieVote = createMovieVote();
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVotePatchDTO patch = new MovieVotePatchDTO();
         patch.setMovieId(movie);
@@ -145,7 +142,9 @@ public class MovieVoteServiceTest {
     @Transactional
     @Test
     public void testPatchMovieVoteEmptyPatch() {
-        MovieVote movieVote = createMovieVote();
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVotePatchDTO patch = new MovieVotePatchDTO();
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
@@ -165,7 +164,9 @@ public class MovieVoteServiceTest {
 
     @Test
     public void testDeleteMovieVote() {
-        MovieVote movieVote = createMovieVote();
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
 
         movieVoteService.deleteMovieVote(movieVote.getId());
         Assert.assertFalse(movieVoteRepository.existsById(movieVote.getId()));
@@ -174,5 +175,24 @@ public class MovieVoteServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteMovieVoteNotFound() {
         movieVoteService.deleteMovieVote(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutMovieVote() {
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
+
+        MovieVotePutDTO put = new MovieVotePutDTO();
+        put.setMovieId(movie);
+        put.setUserId(portalUser);
+        put.setRating(UserVoteRatingType.R9);
+        MovieVoteReadDTO read = movieVoteService.putMovieVote(movieVote.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        movieVote = movieVoteRepository.findById(read.getId()).get();
+        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
     }
 }

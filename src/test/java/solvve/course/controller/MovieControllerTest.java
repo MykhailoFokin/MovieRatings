@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieCreateDTO;
 import solvve.course.dto.MoviePatchDTO;
+import solvve.course.dto.MoviePutDTO;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieService;
@@ -175,5 +176,37 @@ public class MovieControllerTest {
         mvc.perform(delete("/api/v1/movies/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieService).deleteMovie(id);
+    }
+
+    @Test
+    public void testPutMovie() throws Exception {
+
+        MoviePutDTO putDTO = new MoviePutDTO();
+        putDTO.setTitle("Movie Test");
+        putDTO.setYear((short) 2019);
+        putDTO.setGenres("Comedy");
+        putDTO.setAspectRatio("1:10");
+        putDTO.setCamera("Panasonic");
+        putDTO.setColour("Black");
+        putDTO.setCompanies("Paramount");
+        putDTO.setCritique("123");
+        putDTO.setDescription("Description");
+        putDTO.setFilmingLocations("USA");
+        putDTO.setLaboratory("CaliforniaDreaming");
+        putDTO.setLanguages("English");
+        putDTO.setSoundMix("DolbySurround");
+
+        MovieReadDTO read = createMovieRead();
+
+        Mockito.when(movieService.putMovie(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/movies/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReadDTO.class);
+        Assert.assertEquals(read, actualMovie);
     }
 }

@@ -8,7 +8,7 @@ import solvve.course.domain.UserType;
 import java.util.UUID;
 
 @Data
-public class GrantReadDTO {
+public class UserGrantReadDTO {
 
     private UUID id;
 

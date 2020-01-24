@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReviewCompliant;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
+import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
@@ -139,5 +140,26 @@ public class MovieReviewCompliantControllerTest {
         mvc.perform(delete("/api/v1/moviereviewcompliants/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewCompliantService).deleteMovieReviewCompliant(id);
+    }
+
+    @Test
+    public void testPutMovieReviewCompliant() throws Exception {
+
+        MovieReviewCompliantPutDTO putDTO = new MovieReviewCompliantPutDTO();
+        putDTO.setDescription("Just punish him!");
+        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        MovieReviewCompliantReadDTO read = createMovieReviewCompliantRead();
+
+        Mockito.when(movieReviewCompliantService.putMovieReviewCompliant(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/moviereviewcompliants/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper.readValue(resultJson, MovieReviewCompliantReadDTO.class);
+        Assert.assertEquals(read, actualMovieReviewCompliant);
     }
 }

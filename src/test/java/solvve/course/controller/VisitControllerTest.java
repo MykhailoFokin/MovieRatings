@@ -14,10 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.*;
-import solvve.course.dto.VisitCreateDTO;
-import solvve.course.dto.VisitPatchDTO;
-import solvve.course.dto.VisitReadDTO;
-import solvve.course.dto.VisitReadExtendedDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.VisitService;
 
@@ -148,5 +145,29 @@ public class VisitControllerTest {
         mvc.perform(delete("/api/v1/visits/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(visitService).deleteVisit(id);
+    }
+
+    @Test
+    public void testPutVisit() throws Exception {
+
+        VisitPutDTO putDTO = new VisitPutDTO();
+        //putDTO.setUserId(portalUser);
+        //putDTO.setMasterId(master);
+        putDTO.setStartAt(Instant.now());
+        putDTO.setFinishAt(Instant.now());
+        putDTO.setStatus(VisitStatus.FINISHED);
+
+        VisitReadExtendedDTO read = createVisitRead();
+
+        Mockito.when(visitService.putVisit(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/visits/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
+        Assert.assertEquals(read, actualVisit);
     }
 }

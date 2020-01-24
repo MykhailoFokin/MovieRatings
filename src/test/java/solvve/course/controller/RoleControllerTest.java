@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Role;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
+import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleService;
@@ -140,5 +141,27 @@ public class RoleControllerTest {
         mvc.perform(delete("/api/v1/roles/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleService).deleteRole(id);
+    }
+
+    @Test
+    public void testPutRole() throws Exception {
+
+        RolePutDTO putDTO = new RolePutDTO();
+        putDTO.setTitle("Role Test");
+        putDTO.setRoleType("Main_Role");
+        putDTO.setDescription("Description test");
+
+        RoleReadDTO read = createRoleRead();
+
+        Mockito.when(roleService.putRole(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/roles/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
     }
 }

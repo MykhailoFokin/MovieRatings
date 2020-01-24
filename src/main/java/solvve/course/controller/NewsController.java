@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
+import solvve.course.dto.NewsPutDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.service.NewsService;
 
@@ -34,5 +35,10 @@ public class NewsController {
     @DeleteMapping("/{id}")
     public void deleteNews(@PathVariable UUID id){
         newsService.deleteNews(id);
+    }
+
+    @PutMapping("/{id}")
+    public NewsReadDTO putNews(@PathVariable UUID id, @RequestBody NewsPutDTO put){
+        return newsService.putNews(id, put);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieSpoilerData;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
+import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieSpoilerDataService;
@@ -139,5 +140,26 @@ public class MovieSpoilerDataControllerTest {
         mvc.perform(delete("/api/v1/moviespoilerdata/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieSpoilerDataService).deleteMovieSpoilerData(id);
+    }
+
+    @Test
+    public void testPutMovieSpoilerData() throws Exception {
+
+        MovieSpoilerDataPutDTO putDTO = new MovieSpoilerDataPutDTO();
+        putDTO.setStartIndex(100);
+        putDTO.setEndIndex(150);
+
+        MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead();
+
+        Mockito.when(movieSpoilerDataService.putMovieSpoilerData(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/moviespoilerdata/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper.readValue(resultJson, MovieSpoilerDataReadDTO.class);
+        Assert.assertEquals(read, actualMovieSpoilerData);
     }
 }

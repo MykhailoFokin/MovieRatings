@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.RoleReviewCreateDTO;
 import solvve.course.dto.RoleReviewPatchDTO;
+import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
 import solvve.course.service.RoleReviewService;
 
@@ -34,5 +35,10 @@ public class RoleReviewController {
     @DeleteMapping("/{id}")
     public void deleteRoleReview(@PathVariable UUID id){
         roleReviewService.deleteRoleReview(id);
+    }
+
+    @PutMapping("/{id}")
+    public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPutDTO put){
+        return roleReviewService.putRoleReview(id, put);
     }
 }

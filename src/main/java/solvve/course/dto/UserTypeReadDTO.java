@@ -1,7 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.Grant;
+import solvve.course.domain.UserGrant;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserGroupType;
 
@@ -15,7 +15,7 @@ public class UserTypeReadDTO {
 
     private UserGroupType userGroup;
 
-    private Set<Grant> grants;
+    private Set<UserGrant> userGrants;
 
     private PortalUser portalUser;
 }

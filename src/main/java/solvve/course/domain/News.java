@@ -3,7 +3,7 @@ package solvve.course.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -18,7 +18,7 @@ public class News {
     @JoinColumn(nullable = false, updatable = false)
     private PortalUser userId;
 
-    private Timestamp published;
+    private Instant published;
 
     private String topic;
 

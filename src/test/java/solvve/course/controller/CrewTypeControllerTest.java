@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
+import solvve.course.dto.CrewTypePutDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.CrewTypeService;
@@ -135,5 +136,25 @@ public class CrewTypeControllerTest {
         mvc.perform(delete("/api/v1/crewtypes/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(crewTypeService).deleteCrewType(id);
+    }
+
+    @Test
+    public void testPutCrewType() throws Exception {
+
+        CrewTypePutDTO putDTO = new CrewTypePutDTO();
+        putDTO.setName("Director");
+
+        CrewTypeReadDTO read = createCrewTypeRead();
+
+        Mockito.when(crewTypeService.putCrewType(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/crewtypes/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CrewTypeReadDTO actualCrewType = objectMapper.readValue(resultJson, CrewTypeReadDTO.class);
+        Assert.assertEquals(read, actualCrewType);
     }
 }

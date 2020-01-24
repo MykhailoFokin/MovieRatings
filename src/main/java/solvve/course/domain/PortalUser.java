@@ -30,7 +30,7 @@ public class PortalUser {
     private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
     @OneToMany(mappedBy = "grantedBy")
-    private  Set<Grant> grants;
+    private  Set<UserGrant> userGrants;
 
     @OneToMany(mappedBy = "userId")
     private Set<MovieReview> movieReview;

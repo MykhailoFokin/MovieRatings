@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
 import solvve.course.dto.MasterCreateDTO;
 import solvve.course.dto.MasterPatchDTO;
+import solvve.course.dto.MasterPutDTO;
 import solvve.course.dto.MasterReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
@@ -18,45 +19,29 @@ public class MasterService {
     @Autowired
     private MasterRepository masterRepository;
 
+    @Autowired
+    private TranslationService translationService;
+
     @Transactional(readOnly = true)
     public MasterReadDTO getMaster(UUID id) {
         Master master = getMasterRequired(id);
-        return toRead(master);
-    }
-
-    private MasterReadDTO toRead(Master master) {
-        MasterReadDTO dto = new MasterReadDTO();
-        dto.setId(master.getId());
-        dto.setName(master.getName());
-        dto.setPhone(master.getPhone());
-        dto.setAbout(master.getAbout());
-        return dto;
+        return translationService.toRead(master);
     }
 
     public MasterReadDTO createMaster(MasterCreateDTO create) {
-        Master master = new Master();
-        master.setName(create.getName());
-        master.setPhone(create.getPhone());
-        master.setAbout(create.getAbout());
+        Master master = translationService.toEntity(create);
 
         master = masterRepository.save(master);
-        return toRead(master);
+        return translationService.toRead(master);
     }
 
     public MasterReadDTO patchMaster(UUID id, MasterPatchDTO patch) {
         Master master = getMasterRequired(id);
 
-        if (patch.getName()!=null) {
-            master.setName(patch.getName());
-        }
-        if (patch.getPhone()!=null) {
-            master.setPhone(patch.getPhone());
-        }
-        if (patch.getAbout()!=null) {
-            master.setAbout(patch.getAbout());
-        }
+        translationService.patchEntity(patch, master);
+
         master = masterRepository.save(master);
-        return toRead(master);
+        return translationService.toRead(master);
     }
 
     private Master getMasterRequired(UUID id) {
@@ -67,5 +52,14 @@ public class MasterService {
 
     public void deleteMaster(UUID id) {
         masterRepository.delete(getMasterRequired(id));
+    }
+
+    public MasterReadDTO putMaster(UUID id, MasterPutDTO put) {
+        Master master = getMasterRequired(id);
+
+        translationService.putEntity(put, master);
+
+        master = masterRepository.save(master);
+        return translationService.toRead(master);
     }
 }

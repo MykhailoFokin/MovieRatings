@@ -9,20 +9,25 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import solvve.course.domain.Country;
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieCreateDTO;
 import solvve.course.dto.MoviePatchDTO;
+import solvve.course.dto.MoviePutDTO;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.repository.CountryRepository;
 import solvve.course.repository.MovieRepository;
 import org.assertj.core.api.Assertions;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from movie_prod_countries","delete from movie","delete from country"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieServiceTest {
 
     @Autowired
@@ -31,7 +36,10 @@ public class MovieServiceTest {
     @Autowired
     private MovieService movieService;
 
-    private Movie createMovie() {
+    @Autowired
+    private CountryRepository countryRepository;
+
+    private Movie createMovie(Set<Country> countrySet) {
         Movie movie = new Movie();
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
@@ -47,13 +55,24 @@ public class MovieServiceTest {
         movie.setLanguages("English");
         movie.setSoundMix("DolbySurround");
         movie.setIsPublished(true);
+        movie.setMovieProdCountries(countrySet);
         return movieRepository.save(movie);
+    }
+
+    private Set<Country> createCountrySet() {
+        Country c = new Country();
+        c.setName("C1");
+        c = countryRepository.save(c);
+        Set<Country> sc = new HashSet<>();
+        sc.add(c);
+        return sc;
     }
 
     @Transactional
     @Test
     public void testGetMovie() {
-        Movie movie = createMovie();
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
 
         MovieReadDTO readDTO = movieService.getMovie(movie.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movie);
@@ -67,6 +86,8 @@ public class MovieServiceTest {
     @Transactional
     @Test
     public void testCreateMovie() {
+        Set<Country> countrySet = createCountrySet();
+
         MovieCreateDTO create = new MovieCreateDTO();
         create.setTitle("Movie Test");
         create.setYear((short) 2019);
@@ -82,6 +103,7 @@ public class MovieServiceTest {
         create.setLanguages("English");
         create.setSoundMix("DolbySurround");
         create.setIsPublished(true);
+        create.setMovieProdCountries(countrySet);
         MovieReadDTO read = movieService.createMovie(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -92,7 +114,8 @@ public class MovieServiceTest {
     @Transactional
     @Test
     public void testPatchMovie() {
-        Movie movie = createMovie();
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
 
         MoviePatchDTO patch = new MoviePatchDTO();
         patch.setTitle("Movie Test");
@@ -109,6 +132,7 @@ public class MovieServiceTest {
         patch.setLanguages("English");
         patch.setSoundMix("DolbySurround");
         patch.setIsPublished(true);
+        patch.setMovieProdCountries(countrySet);
         MovieReadDTO read = movieService.patchMovie(movie.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -120,7 +144,8 @@ public class MovieServiceTest {
     @Transactional
     @Test
     public void testPatchMovieEmptyPatch() {
-        Movie movie = createMovie();
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
 
         MoviePatchDTO patch = new MoviePatchDTO();
         MovieReadDTO read = movieService.patchMovie(movie.getId(), patch);
@@ -160,9 +185,11 @@ public class MovieServiceTest {
         Assertions.assertThat(movie).isEqualToComparingFieldByField(movieAfterUpdate);
     }
 
+    @Transactional
     @Test
     public void testDeleteMovie() {
-        Movie movie = createMovie();
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
 
         movieService.deleteMovie(movie.getId());
         Assert.assertFalse(movieRepository.existsById(movie.getId()));
@@ -171,5 +198,35 @@ public class MovieServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteMovieNotFound() {
         movieService.deleteMovie(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutMovie() {
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
+
+        MoviePutDTO put = new MoviePutDTO();
+        put.setTitle("Movie Test");
+        put.setYear((short) 2019);
+        put.setGenres("Comedy");
+        put.setAspectRatio("1:10");
+        put.setCamera("Panasonic");
+        put.setColour("Black");
+        put.setCompanies("Paramount");
+        put.setCritique("123");
+        put.setDescription("Description");
+        put.setFilmingLocations("USA");
+        put.setLaboratory("CaliforniaDreaming");
+        put.setLanguages("English");
+        put.setSoundMix("DolbySurround");
+        put.setIsPublished(true);
+        put.setMovieProdCountries(countrySet);
+        MovieReadDTO read = movieService.putMovie(movie.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        movie = movieRepository.findById(read.getId()).get();
+        Assertions.assertThat(movie).isEqualToComparingFieldByField(read);
     }
 }

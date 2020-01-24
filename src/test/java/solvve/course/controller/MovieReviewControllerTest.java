@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReview;
 import solvve.course.dto.MovieReviewCreateDTO;
 import solvve.course.dto.MovieReviewPatchDTO;
+import solvve.course.dto.MovieReviewPutDTO;
 import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
@@ -139,5 +140,26 @@ public class MovieReviewControllerTest {
         mvc.perform(delete("/api/v1/moviereviews/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewService).deleteMovieReview(id);
+    }
+
+    @Test
+    public void testPutMovieReview() throws Exception {
+
+        MovieReviewPutDTO putDTO = new MovieReviewPutDTO();
+        putDTO.setTextReview("This movie can be described as junk.");
+        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        MovieReviewReadDTO read = createMovieReviewRead();
+
+        Mockito.when(movieReviewService.putMovieReview(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/moviereviews/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        MovieReviewReadDTO actualMovieReview = objectMapper.readValue(resultJson, MovieReviewReadDTO.class);
+        Assert.assertEquals(read, actualMovieReview);
     }
 }

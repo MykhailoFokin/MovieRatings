@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleSpoilerData;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
+import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.RoleSpoilerDataService;
@@ -137,5 +138,26 @@ public class RoleSpoilerDataControllerTest {
         mvc.perform(delete("/api/v1/rolespoilerdata/{id}",id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleSpoilerDataService).deleteRoleSpoilerData(id);
+    }
+
+    @Test
+    public void testPutRoleSpoilerData() throws Exception {
+
+        RoleSpoilerDataPutDTO putDTO = new RoleSpoilerDataPutDTO();
+        putDTO.setStartIndex(100);
+        putDTO.setEndIndex(150);
+
+        RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead();
+
+        Mockito.when(roleSpoilerDataService.putRoleSpoilerData(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/rolespoilerdata/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
+        Assert.assertEquals(read, actualRoleSpoilerData);
     }
 }

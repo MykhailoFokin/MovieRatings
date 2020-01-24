@@ -3,7 +3,7 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.PortalUser;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -13,7 +13,7 @@ public class NewsReadDTO {
 
     private PortalUser userId;
 
-    private Timestamp published;
+    private Instant published;
 
     private String topic;
 

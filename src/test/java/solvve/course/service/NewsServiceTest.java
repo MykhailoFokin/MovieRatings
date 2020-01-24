@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
+import solvve.course.dto.NewsPutDTO;
 import solvve.course.dto.NewsReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsRepository;
@@ -21,6 +22,8 @@ import solvve.course.repository.PortalUserRepository;
 import solvve.course.repository.UserTypeRepository;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -37,48 +40,43 @@ public class NewsServiceTest {
     private NewsService newsService;
 
     @Autowired
-    private PortalUserService portalUserService;
-
-    @Autowired
     private PortalUserRepository portalUserRepository;
 
     @Autowired
     private UserTypeRepository userTypeRepository;
 
-    private PortalUser portalUser;
-
-    private News createNews() {
+    private News createNews(PortalUser portalUser) {
         News news = new News();
         news.setId(UUID.randomUUID());
         news.setUserId(portalUser);
         news.setTopic("Main_News");
         news.setDescription("Our main news are absent today!");
-        news.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        news.setPublished(Instant.now());
         return newsRepository.save(news);
     }
 
-    @Before
-    public void setup() {
-        if (portalUser==null) {
-            UserType userType = new UserType();
-            userType.setUserGroup(UserGroupType.USER);
-            userType = userTypeRepository.save(userType);
+    private PortalUser createPortalUser() {
+        UserType userType = new UserType();
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
 
-            portalUser = new PortalUser();
-            portalUser.setLogin("Login");
-            portalUser.setSurname("Surname");
-            portalUser.setName("Name");
-            portalUser.setMiddleName("MiddleName");
-            portalUser.setUserType(userType);
-            portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-            portalUser = portalUserRepository.save(portalUser);
-        }
+        PortalUser portalUser = new PortalUser();
+        portalUser.setLogin("Login");
+        portalUser.setSurname("Surname");
+        portalUser.setName("Name");
+        portalUser.setMiddleName("MiddleName");
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
     }
 
     @Transactional
     @Test
     public void testGetNews() {
-        News news = createNews();
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
 
         NewsReadDTO readDTO = newsService.getNews(news.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(news);
@@ -92,11 +90,13 @@ public class NewsServiceTest {
     @Transactional
     @Test
     public void testCreateNews() {
+        PortalUser portalUser = createPortalUser();
+
         NewsCreateDTO create = new NewsCreateDTO();
         create.setUserId(portalUser);
         create.setTopic("Main_News");
         create.setDescription("Our main news are absent today!");
-        create.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        create.setPublished(Instant.now());
         NewsReadDTO read = newsService.createNews(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -107,13 +107,14 @@ public class NewsServiceTest {
     @Transactional
     @Test
     public void testPatchNews() {
-        News news = createNews();
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
 
         NewsPatchDTO patch = new NewsPatchDTO();
         patch.setUserId(portalUser);
         patch.setTopic("Main_News");
         patch.setDescription("Our main news are absent today!");
-        patch.setPublished(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        patch.setPublished(Instant.now());
         NewsReadDTO read = newsService.patchNews(news.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -125,7 +126,8 @@ public class NewsServiceTest {
     @Transactional
     @Test
     public void testPatchNewsEmptyPatch() {
-        News news = createNews();
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
 
         NewsPatchDTO patch = new NewsPatchDTO();
         NewsReadDTO read = newsService.patchNews(news.getId(), patch);
@@ -147,7 +149,8 @@ public class NewsServiceTest {
 
     @Test
     public void testDeleteNews() {
-        News news = createNews();
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
 
         newsService.deleteNews(news.getId());
         Assert.assertFalse(newsRepository.existsById(news.getId()));
@@ -156,5 +159,24 @@ public class NewsServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void testDeleteNewsNotFound() {
         newsService.deleteNews(UUID.randomUUID());
+    }
+
+    @Transactional
+    @Test
+    public void testPutNews() {
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
+
+        NewsPutDTO put = new NewsPutDTO();
+        put.setUserId(portalUser);
+        put.setTopic("Main_News");
+        put.setDescription("Our main news are absent today!");
+        put.setPublished(Instant.now());
+        NewsReadDTO read = newsService.putNews(news.getId(), put);
+
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+
+        news = newsRepository.findById(read.getId()).get();
+        Assertions.assertThat(news).isEqualToComparingFieldByField(read);
     }
 }

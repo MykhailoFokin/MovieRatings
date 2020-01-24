@@ -12,11 +12,11 @@ public class CrewReadDTO {
 
     private UUID id;
 
-    private Person personId;
+    private UUID personId;
 
-    private Movie movieId;
+    private UUID movieId;
 
-    private CrewType crewType;
+    private UUID crewType;
 
     private String description;
 }
