@@ -64,7 +64,8 @@ public class RoleServiceTest {
         Role role = createRole();
 
         RoleReadDTO readDTO = roleService.getRole(role.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(role);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(role,"personId");
+        Assertions.assertThat(readDTO.getPersonId()).isEqualTo(role.getPersonId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -79,12 +80,13 @@ public class RoleServiceTest {
         create.setTitle("Actor");
         create.setRoleType("Main_Role");
         create.setDescription("Description test");
-        create.setPersonId(person);
+        create.setPersonId(person.getId());
         RoleReadDTO read = roleService.createRole(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         Role role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(role);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(role,"personId");
+        Assertions.assertThat(read.getPersonId()).isEqualTo(role.getPersonId().getId());
     }
 
     @Transactional
@@ -96,13 +98,14 @@ public class RoleServiceTest {
         patch.setTitle("Actor");
         patch.setRoleType("Main_Role");
         patch.setDescription("Description test");
-        patch.setPersonId(person);
+        patch.setPersonId(person.getId());
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(role).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,"personId", "roleReviewSet","roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+        Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
 
     @Transactional
@@ -148,13 +151,14 @@ public class RoleServiceTest {
         put.setTitle("Actor");
         put.setRoleType("Main_Role");
         put.setDescription("Description test");
-        put.setPersonId(person);
+        put.setPersonId(person.getId());
         RoleReadDTO read = roleService.putRole(role.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(role).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,"personId", "roleReviewSet","roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+        Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
 
     @Transactional

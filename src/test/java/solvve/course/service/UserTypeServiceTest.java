@@ -108,7 +108,7 @@ public class UserTypeServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         userType = userTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(userType).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants");
     }
 
     @Transactional
@@ -154,7 +154,7 @@ public class UserTypeServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         userType = userTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(userType).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants");
     }
 
     @Transactional

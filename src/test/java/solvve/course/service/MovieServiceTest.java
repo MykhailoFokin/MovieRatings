@@ -85,10 +85,7 @@ public class MovieServiceTest {
 
     @Transactional
     @Test
-    public void testCreateMovie() {
-        Set<Country> countrySet = createCountrySet();
-
-        MovieCreateDTO create = new MovieCreateDTO();
+    public void testCreateMovie() {MovieCreateDTO create = new MovieCreateDTO();
         create.setTitle("Movie Test");
         create.setYear((short) 2019);
         create.setGenres("Comedy");
@@ -103,7 +100,6 @@ public class MovieServiceTest {
         create.setLanguages("English");
         create.setSoundMix("DolbySurround");
         create.setIsPublished(true);
-        create.setMovieProdCountries(countrySet);
         MovieReadDTO read = movieService.createMovie(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -132,13 +128,13 @@ public class MovieServiceTest {
         patch.setLanguages("English");
         patch.setSoundMix("DolbySurround");
         patch.setIsPublished(true);
-        patch.setMovieProdCountries(countrySet);
         MovieReadDTO read = movieService.patchMovie(movie.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movie = movieRepository.findById(read.getId()).get();
-        Assertions.assertThat(movie).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,"movieProdCountries","crews","movieReview","movieReviewCompliants"
+                ,"movieReviewFeedbacks","movieVotes","releaseDetails");
     }
 
     @Transactional
@@ -221,13 +217,13 @@ public class MovieServiceTest {
         put.setLanguages("English");
         put.setSoundMix("DolbySurround");
         put.setIsPublished(true);
-        put.setMovieProdCountries(countrySet);
         MovieReadDTO read = movieService.putMovie(movie.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movie = movieRepository.findById(read.getId()).get();
-        Assertions.assertThat(movie).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,"movieProdCountries","crews","movieReview","movieReviewCompliants"
+                        ,"movieReviewFeedbacks","movieVotes","releaseDetails");
     }
 
     @Transactional

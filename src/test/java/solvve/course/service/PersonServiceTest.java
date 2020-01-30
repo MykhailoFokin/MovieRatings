@@ -81,7 +81,7 @@ public class PersonServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         person = personRepository.findById(read.getId()).get();
-        Assertions.assertThat(person).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
     }
 
     @Transactional
@@ -132,7 +132,7 @@ public class PersonServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         person = personRepository.findById(read.getId()).get();
-        Assertions.assertThat(person).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
     }
 
     @Transactional

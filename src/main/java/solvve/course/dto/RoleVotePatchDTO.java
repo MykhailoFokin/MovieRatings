@@ -1,8 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.PortalUser;
-import solvve.course.domain.Role;
 import solvve.course.domain.UserVoteRatingType;
 
 import java.util.UUID;
@@ -10,9 +8,9 @@ import java.util.UUID;
 @Data
 public class RoleVotePatchDTO {
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Role roleId;
+    private UUID roleId;
 
     private UserVoteRatingType rating;
 }

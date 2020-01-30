@@ -35,18 +35,4 @@ public class MoviePatchDTO {
     private String critique;
 
     private Boolean isPublished;
-
-    private Set<Country> movieProdCountries;
-
-    private Set<Crew> crews;
-
-    private Set<MovieReview> movieReview;
-
-    private Set<MovieReviewCompliant> movieReviewCompliants;
-
-    private Set<MovieReviewFeedback> movieReviewFeedbacks;
-
-    private Set<MovieVote> movieVotes;
-
-    private Set<ReleaseDetail> releaseDetails;
 }

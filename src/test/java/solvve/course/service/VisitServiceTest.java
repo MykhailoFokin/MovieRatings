@@ -94,8 +94,9 @@ public class VisitServiceTest {
 
         VisitReadExtendedDTO readDTO = visitService.getVisit(visit.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(visit, "userId", "masterId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(readDTO.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId(),"userType");
+        Assertions.assertThat(readDTO.getUserId().getUserType()).isEqualTo(visit.getUserId().getUserType().getId());
+        Assertions.assertThat(readDTO.getMasterId()).isEqualToComparingFieldByField(visit.getMasterId());
     }
 
     @Test(expected = EntityNotFoundException.class)

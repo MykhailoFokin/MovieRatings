@@ -1,8 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.Country;
-import solvve.course.domain.Movie;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,9 +10,9 @@ public class ReleaseDetailReadDTO {
 
     private UUID id;
 
-    private Movie movieId;
+    private UUID movieId;
 
     private LocalDate releaseDate;
 
-    private Country countryId;
+    private UUID countryId;
 }

@@ -14,9 +14,9 @@ public class MovieVoteReadDTO {
 
     private UUID id;
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Movie movieId;
+    private UUID movieId;
 
     private UserVoteRatingType rating;
 }

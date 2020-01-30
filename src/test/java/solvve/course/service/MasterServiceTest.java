@@ -71,7 +71,7 @@ public class MasterServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         master = masterRepository.findById(read.getId()).get();
-        Assertions.assertThat(master).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(master).isEqualToIgnoringGivenFields(read,"visits");
     }
 
     @Transactional
@@ -118,7 +118,7 @@ public class MasterServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         master = masterRepository.findById(read.getId()).get();
-        Assertions.assertThat(master).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(master).isEqualToIgnoringGivenFields(read,"visits");
     }
 
     @Transactional

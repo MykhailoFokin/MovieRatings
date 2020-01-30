@@ -13,6 +13,4 @@ public class MasterCreateDTO {
     private String phone;
 
     private String about;
-
-    private Set<Visit> visits;
 }

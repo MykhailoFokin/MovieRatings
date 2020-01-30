@@ -4,12 +4,9 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Data
-public class MovieReadDTO {
-
-    private UUID id;
+public class MovieReadExtendedDTO {
 
     private String title;
 
@@ -38,4 +35,18 @@ public class MovieReadDTO {
     private String critique;
 
     private Boolean isPublished;
+
+    private Set<Country> movieProdCountries;
+
+    private Set<Crew> crews;
+
+    private Set<MovieReview> movieReview;
+
+    private Set<MovieReviewCompliant> movieReviewCompliants;
+
+    private Set<MovieReviewFeedback> movieReviewFeedbacks;
+
+    private Set<MovieVote> movieVotes;
+
+    private Set<ReleaseDetail> releaseDetails;
 }

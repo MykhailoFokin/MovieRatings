@@ -97,7 +97,10 @@ public class MovieReviewServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewReadDTO readDTO = movieReviewService.getMovieReview(movieReview.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReview);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReview,"userId","movieId","moderatorId");
+        Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieReview.getUserId().getId());
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieReview.getMovieId().getId());
+        Assertions.assertThat(readDTO.getModeratorId()).isEqualTo(movieReview.getModeratorId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -112,17 +115,20 @@ public class MovieReviewServiceTest {
         PortalUser portalUser = createPortalUser();
 
         MovieReviewCreateDTO create = new MovieReviewCreateDTO();
-        create.setUserId(portalUser);
-        create.setMovieId(movie);
+        create.setUserId(portalUser.getId());
+        create.setMovieId(movie.getId());
         create.setTextReview("This movie can be described as junk.");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setModeratorId(portalUser);
+        create.setModeratorId(portalUser.getId());
 
         MovieReviewReadDTO read = movieReviewService.createMovieReview(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieReview movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(movieReview);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReview,"userId","movieId","moderatorId");
+        Assertions.assertThat(read.getUserId()).isEqualTo(movieReview.getUserId().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualTo(movieReview.getMovieId().getId());
+        Assertions.assertThat(read.getModeratorId()).isEqualTo(movieReview.getModeratorId().getId());
     }
 
     @Test
@@ -133,17 +139,21 @@ public class MovieReviewServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
-        patch.setUserId(portalUser);
-        patch.setMovieId(movie);
+        patch.setUserId(portalUser.getId());
+        patch.setMovieId(movie.getId());
         patch.setTextReview("This movie can be described as junk.");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setModeratorId(portalUser);
+        patch.setModeratorId(portalUser.getId());
         MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReview).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read,"userId", "movieId", "moderatorId",
+                "movieReviewCompliants","movieReviewFeedbacks","movieSpoilerData");
+        Assertions.assertThat(movieReview.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(movieReview.getMovieId().getId()).isEqualTo(read.getMovieId());
+        Assertions.assertThat(movieReview.getModeratorId().getId()).isEqualTo(read.getModeratorId());
     }
 
     @Test
@@ -197,17 +207,21 @@ public class MovieReviewServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewPutDTO put = new MovieReviewPutDTO();
-        put.setUserId(portalUser);
-        put.setMovieId(movie);
+        put.setUserId(portalUser.getId());
+        put.setMovieId(movie.getId());
         put.setTextReview("This movie can be described as junk.");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setModeratorId(portalUser);
+        put.setModeratorId(portalUser.getId());
         MovieReviewReadDTO read = movieReviewService.putMovieReview(movieReview.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReview).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read, "userId", "movieId", "moderatorId",
+                "movieReviewCompliants","movieReviewFeedbacks","movieSpoilerData");
+        Assertions.assertThat(movieReview.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(movieReview.getMovieId().getId()).isEqualTo(read.getMovieId());
+        Assertions.assertThat(movieReview.getModeratorId().getId()).isEqualTo(read.getModeratorId());
     }
 
     @Test
@@ -228,10 +242,10 @@ public class MovieReviewServiceTest {
 
         MovieReview movieReviewAfterUpdate = movieReviewRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieReviewAfterUpdate.getUserId());
-        Assert.assertNull(movieReviewAfterUpdate.getMovieId());
+        Assert.assertNull(movieReviewAfterUpdate.getUserId().getId());
+        Assert.assertNull(movieReviewAfterUpdate.getMovieId().getId());
         Assert.assertNull(movieReviewAfterUpdate.getTextReview());
-        Assert.assertNull(movieReviewAfterUpdate.getModeratorId());
+        Assert.assertNull(movieReviewAfterUpdate.getModeratorId().getId());
         Assert.assertNull(movieReviewAfterUpdate.getModeratedStatus());
 
         Assertions.assertThat(movieReview).isEqualToComparingFieldByField(movieReviewAfterUpdate);

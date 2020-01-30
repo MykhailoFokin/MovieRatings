@@ -10,7 +10,7 @@ public class MovieSpoilerDataReadDTO {
 
     private UUID id;
 
-    private MovieReview movieReviewId;
+    private UUID movieReviewId;
 
     private Integer startIndex;
 

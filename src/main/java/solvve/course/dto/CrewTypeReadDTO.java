@@ -12,5 +12,5 @@ public class CrewTypeReadDTO {
 
     private String name;
 
-    private Crew crew;
+    private UUID crew;
 }

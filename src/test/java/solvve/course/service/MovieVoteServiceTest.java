@@ -95,7 +95,9 @@ public class MovieVoteServiceTest {
         MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVoteReadDTO readDTO = movieVoteService.getMovieVote(movieVote.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieVote);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieVote,"userId","movieId");
+        Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieVote.getUserId().getId());
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -110,14 +112,16 @@ public class MovieVoteServiceTest {
         Movie movie = createMovie();
 
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
-        create.setMovieId(movie);
-        create.setUserId(portalUser);
+        create.setMovieId(movie.getId());
+        create.setUserId(portalUser.getId());
         create.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.createMovieVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieVote movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(movieVote);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieVote,"userId","movieId");
+        Assertions.assertThat(read.getUserId()).isEqualTo(movieVote.getUserId().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
     }
 
     @Transactional
@@ -128,15 +132,17 @@ public class MovieVoteServiceTest {
         MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVotePatchDTO patch = new MovieVotePatchDTO();
-        patch.setMovieId(movie);
-        patch.setUserId(portalUser);
+        patch.setMovieId(movie.getId());
+        patch.setUserId(portalUser.getId());
         patch.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,"movieId","userId");
+        Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
     }
 
     @Transactional
@@ -185,15 +191,17 @@ public class MovieVoteServiceTest {
         MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVotePutDTO put = new MovieVotePutDTO();
-        put.setMovieId(movie);
-        put.setUserId(portalUser);
+        put.setMovieId(movie.getId());
+        put.setUserId(portalUser.getId());
         put.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.putMovieVote(movieVote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,"movieId","userId");
+        Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
     }
 
     @Transactional
@@ -212,8 +220,8 @@ public class MovieVoteServiceTest {
 
         MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieVoteAfterUpdate.getMovieId());
-        Assert.assertNull(movieVoteAfterUpdate.getUserId());
+        Assert.assertNull(movieVoteAfterUpdate.getMovieId().getId());
+        Assert.assertNull(movieVoteAfterUpdate.getUserId().getId());
         Assert.assertNull(movieVoteAfterUpdate.getRating());
 
         Assertions.assertThat(movieVote).isEqualToComparingFieldByField(movieVoteAfterUpdate);

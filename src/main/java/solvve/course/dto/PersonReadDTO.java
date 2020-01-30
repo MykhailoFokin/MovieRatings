@@ -17,8 +17,4 @@ public class PersonReadDTO {
     private String name;
 
     private String middleName;
-
-    private Set<Crew> crews;
-
-    private Role role;
 }

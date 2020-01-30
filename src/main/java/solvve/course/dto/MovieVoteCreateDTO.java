@@ -12,9 +12,9 @@ import java.util.UUID;
 @Data
 public class MovieVoteCreateDTO {
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Movie movieId;
+    private UUID movieId;
 
     private UserVoteRatingType rating;
 }

@@ -3,25 +3,18 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.*;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Data
 public class RoleReviewCreateDTO {
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Role roleId;
+    private UUID roleId;
 
     private String textReview;
 
     private UserModeratedStatusType moderatedStatus;
 
-    private PortalUser moderatorId;
-
-    private Set<RoleReviewCompliant> roleReviewCompliants;
-
-    private Set<RoleReviewFeedback> roleReviewFeedbacks;
-
-    private Set<RoleSpoilerData> roleSpoilerData;
+    private UUID moderatorId;
 }

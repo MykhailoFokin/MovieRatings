@@ -11,7 +11,7 @@ public class NewsReadDTO {
 
     private UUID id;
 
-    private PortalUser userId;
+    private UUID userId;
 
     private Instant published;
 

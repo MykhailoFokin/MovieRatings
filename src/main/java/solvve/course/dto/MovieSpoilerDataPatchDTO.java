@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class MovieSpoilerDataPatchDTO {
 
-    private MovieReview movieReviewId;
+    private UUID movieReviewId;
 
     private Integer startIndex;
 

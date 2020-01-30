@@ -9,19 +9,13 @@ import java.util.UUID;
 @Data
 public class MovieReviewPatchDTO {
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Movie movieId;
+    private UUID movieId;
 
     private String textReview;
 
     private UserModeratedStatusType moderatedStatus;
 
-    private PortalUser moderatorId;
-
-    private Set<MovieReviewCompliant> movieReviewCompliants;
-
-    private Set<MovieReviewFeedback> movieReviewFeedbacks;
-
-    private Set<MovieSpoilerData> movieSpoilerData;
+    private UUID moderatorId;
 }

@@ -16,6 +16,4 @@ public class MasterReadDTO {
     private String phone;
 
     private String about;
-
-    private Set<Visit> visits;
 }

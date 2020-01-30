@@ -107,7 +107,8 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleSpoilerData);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleSpoilerData,"roleReviewId");
+        Assertions.assertThat(readDTO.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -123,7 +124,7 @@ public class RoleSpoilerDataServiceTest {
         RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
-        create.setRoleReviewId(roleReview);
+        create.setRoleReviewId(roleReview.getId());
         create.setStartIndex(100);
         create.setEndIndex(150);
 
@@ -131,7 +132,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleSpoilerData roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(roleSpoilerData);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleSpoilerData,"roleReviewId");
+        Assertions.assertThat(read.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
     }
 
     @Transactional
@@ -143,7 +145,7 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
-        patch.setRoleReviewId(roleReview);
+        patch.setRoleReviewId(roleReview.getId());
         patch.setStartIndex(100);
         patch.setEndIndex(150);
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
@@ -151,7 +153,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,"roleReviewId");
+        Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 
     @Transactional
@@ -203,7 +206,7 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
-        put.setRoleReviewId(roleReview);
+        put.setRoleReviewId(roleReview.getId());
         put.setStartIndex(100);
         put.setEndIndex(150);
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);
@@ -211,7 +214,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,"roleReviewId");
+        Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 
     @Transactional
@@ -231,7 +235,7 @@ public class RoleSpoilerDataServiceTest {
 
         RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleSpoilerDataAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleSpoilerDataAfterUpdate.getRoleReviewId().getId());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getEndIndex());
 

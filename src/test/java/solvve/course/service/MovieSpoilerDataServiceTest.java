@@ -107,7 +107,8 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataReadDTO readDTO = movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieSpoilerData);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieSpoilerData,"movieReviewId");
+        Assertions.assertThat(readDTO.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReviewId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -123,7 +124,7 @@ public class MovieSpoilerDataServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
-        create.setMovieReviewId(movieReview);
+        create.setMovieReviewId(movieReview.getId());
         create.setStartIndex(100);
         create.setEndIndex(150);
 
@@ -131,7 +132,8 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieSpoilerData movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(movieSpoilerData);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieSpoilerData,"movieReviewId");
+        Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReviewId().getId());
     }
 
     @Transactional
@@ -143,7 +145,7 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
-        patch.setMovieReviewId(movieReview);
+        patch.setMovieReviewId(movieReview.getId());
         patch.setStartIndex(100);
         patch.setEndIndex(150);
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
@@ -151,7 +153,8 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(read,"movieReviewId");
+        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
     }
 
     @Transactional
@@ -203,7 +206,7 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
-        put.setMovieReviewId(movieReview);
+        put.setMovieReviewId(movieReview.getId());
         put.setStartIndex(100);
         put.setEndIndex(150);
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.putMovieSpoilerData(movieSpoilerData.getId(), put);
@@ -211,7 +214,8 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(read,"movieReviewId");
+        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
     }
 
     @Transactional
@@ -231,7 +235,7 @@ public class MovieSpoilerDataServiceTest {
 
         MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieSpoilerDataAfterUpdate.getMovieReviewId());
+        Assert.assertNull(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getEndIndex());
 

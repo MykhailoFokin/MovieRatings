@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class ReleaseDetailServiceTest {
         return  country;
     }
 
-    private ReleaseDetail createCountries(Movie movie, Country country) {
+    private ReleaseDetail createReleaseDetail(Movie movie, Country country) {
         ReleaseDetail releaseDetail = new ReleaseDetail();
         releaseDetail.setId(UUID.randomUUID());
         releaseDetail.setMovieId(movie);
@@ -70,62 +69,68 @@ public class ReleaseDetailServiceTest {
 
     @Transactional
     @Test
-    public void testGetCountries() {
+    public void testGetReleaseDetail() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailReadDTO readDTO = releaseDetailService.getReleaseDetails(releaseDetail.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(releaseDetail);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(releaseDetail, "movieId", "countryId");
+        Assertions.assertThat(readDTO.getMovieId()).isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
+        Assertions.assertThat(readDTO.getCountryId()).isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testGetCountriesWrongId() {
+    public void testGetReleaseDetailWrongId() {
         releaseDetailService.getReleaseDetails(UUID.randomUUID());
     }
 
     @Transactional
     @Test
-    public void testCreateCountries() {
+    public void testCreateReleaseDetail() {
         Movie movie = createMovie();
         Country country = createCountry();
 
         ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
-        create.setMovieId(movie);
-        create.setCountryId(country);
+        create.setMovieId(movie.getId());
+        create.setCountryId(country.getId());
         create.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.createReleaseDetails(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         ReleaseDetail releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(releaseDetail);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(releaseDetail, "movieId", "countryId");
+        Assertions.assertThat(read.getMovieId()).isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
+        Assertions.assertThat(read.getCountryId()).isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
     }
 
     @Transactional
     @Test
-    public void testPatchCountries() {
+    public void testPatchReleaseDetail() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
-        patch.setMovieId(movie);
-        patch.setCountryId(country);
+        patch.setMovieId(movie.getId());
+        patch.setCountryId(country.getId());
         patch.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.patchReleaseDetails(releaseDetail.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read, "movieId", "countryId");
+        Assertions.assertThat(releaseDetail.getMovieId().getId()).isEqualToComparingFieldByField(read.getMovieId());
+        Assertions.assertThat(releaseDetail.getCountryId().getId()).isEqualToComparingFieldByField(read.getCountryId());
     }
 
     @Transactional
     @Test
-    public void testPatchCountriesEmptyPatch() {
+    public void testPatchReleaseDetailEmptyPatch() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
         ReleaseDetailReadDTO read = releaseDetailService.patchReleaseDetails(releaseDetail.getId(), patch);
@@ -140,45 +145,47 @@ public class ReleaseDetailServiceTest {
     }
 
     @Test
-    public void testDeleteCountries() {
+    public void testDeleteReleaseDetail() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         releaseDetailService.deleteReleaseDetails(releaseDetail.getId());
         Assert.assertFalse(releaseDetailRepository.existsById(releaseDetail.getId()));
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testDeleteCountriesNotFound() {
+    public void testDeleteReleaseDetailNotFound() {
         releaseDetailService.deleteReleaseDetails(UUID.randomUUID());
     }
 
     @Transactional
     @Test
-    public void testPutCountries() {
+    public void testPutReleaseDetail() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
-        put.setMovieId(movie);
-        put.setCountryId(country);
+        put.setMovieId(movie.getId());
+        put.setCountryId(country.getId());
         put.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read, "movieId", "countryId");
+        Assertions.assertThat(releaseDetail.getMovieId().getId()).isEqualToComparingFieldByField(read.getMovieId());
+        Assertions.assertThat(releaseDetail.getCountryId().getId()).isEqualToComparingFieldByField(read.getCountryId());
     }
 
     @Transactional
     @Test
-    public void testPutCountriesEmptyPut() {
+    public void testPutReleaseDetailEmptyPut() {
         Movie movie = createMovie();
         Country country = createCountry();
-        ReleaseDetail releaseDetail = createCountries(movie, country);
+        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
         ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);

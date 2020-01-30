@@ -110,7 +110,11 @@ public class RoleReviewCompliantServiceTest {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantReadDTO readDTO = roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleReviewCompliant);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReviewCompliant,"userId", "roleId", "roleReviewId", "moderatorId");
+        Assertions.assertThat(readDTO.getUserId()).isEqualToComparingFieldByField(roleReviewCompliant.getUserId().getId());
+        Assertions.assertThat(readDTO.getRoleId()).isEqualToComparingFieldByField(roleReviewCompliant.getRoleId().getId());
+        Assertions.assertThat(readDTO.getRoleReviewId()).isEqualToComparingFieldByField(roleReviewCompliant.getRoleReviewId().getId());
+        Assertions.assertThat(readDTO.getModeratorId()).isEqualToComparingFieldByField(roleReviewCompliant.getModeratorId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -126,18 +130,22 @@ public class RoleReviewCompliantServiceTest {
         RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewCompliantCreateDTO create = new RoleReviewCompliantCreateDTO();
-        create.setUserId(portalUser);
-        create.setRoleId(role);
-        create.setRoleReviewId(roleReview);
+        create.setUserId(portalUser.getId());
+        create.setRoleId(role.getId());
+        create.setRoleReviewId(roleReview.getId());
         create.setDescription("Just punish him!");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setModeratorId(portalUser);
+        create.setModeratorId(portalUser.getId());
 
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.createRoleReviewCompliant(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleReviewCompliant roleReviewCompliant = roleReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(roleReviewCompliant);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleReviewCompliant,"userId", "roleId", "roleReviewId", "moderatorId");
+        Assertions.assertThat(read.getUserId()).isEqualToComparingFieldByField(roleReviewCompliant.getUserId().getId());
+        Assertions.assertThat(read.getRoleId()).isEqualToComparingFieldByField(roleReviewCompliant.getRoleId().getId());
+        Assertions.assertThat(read.getRoleReviewId()).isEqualToComparingFieldByField(roleReviewCompliant.getRoleReviewId().getId());
+        Assertions.assertThat(read.getModeratorId()).isEqualToComparingFieldByField(roleReviewCompliant.getModeratorId().getId());
     }
 
     @Transactional
@@ -149,18 +157,22 @@ public class RoleReviewCompliantServiceTest {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPatchDTO patch = new RoleReviewCompliantPatchDTO();
-        patch.setUserId(portalUser);
-        patch.setRoleId(role);
-        patch.setRoleReviewId(roleReview);
+        patch.setUserId(portalUser.getId());
+        patch.setRoleId(role.getId());
+        patch.setRoleReviewId(roleReview.getId());
         patch.setDescription("Just punish him!");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setModeratorId(portalUser);
+        patch.setModeratorId(portalUser.getId());
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.patchRoleReviewCompliant(roleReviewCompliant.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleReviewCompliant = roleReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleReviewCompliant).isEqualToIgnoringGivenFields(roleReviewCompliant,"userId", "roleId", "roleReviewId", "moderatorId");
+        Assertions.assertThat(roleReviewCompliant.getUserId().getId()).isEqualToComparingFieldByField(read.getUserId());
+        Assertions.assertThat(roleReviewCompliant.getRoleId().getId()).isEqualToComparingFieldByField(read.getRoleId());
+        Assertions.assertThat(roleReviewCompliant.getRoleReviewId().getId()).isEqualToComparingFieldByField(read.getRoleReviewId());
+        Assertions.assertThat(roleReviewCompliant.getModeratorId().getId()).isEqualToComparingFieldByField(read.getModeratorId());
     }
 
     @Transactional
@@ -218,18 +230,22 @@ public class RoleReviewCompliantServiceTest {
         RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
-        put.setUserId(portalUser);
-        put.setRoleId(role);
-        put.setRoleReviewId(roleReview);
+        put.setUserId(portalUser.getId());
+        put.setRoleId(role.getId());
+        put.setRoleReviewId(roleReview.getId());
         put.setDescription("Just punish him!");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setModeratorId(portalUser);
+        put.setModeratorId(portalUser.getId());
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.putRoleReviewCompliant(roleReviewCompliant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleReviewCompliant = roleReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleReviewCompliant).isEqualToIgnoringGivenFields(roleReviewCompliant,"userId", "roleId", "roleReviewId", "moderatorId");
+        Assertions.assertThat(roleReviewCompliant.getUserId().getId()).isEqualToComparingFieldByField(read.getUserId());
+        Assertions.assertThat(roleReviewCompliant.getRoleId().getId()).isEqualToComparingFieldByField(read.getRoleId());
+        Assertions.assertThat(roleReviewCompliant.getRoleReviewId().getId()).isEqualToComparingFieldByField(read.getRoleReviewId());
+        Assertions.assertThat(roleReviewCompliant.getModeratorId().getId()).isEqualToComparingFieldByField(read.getModeratorId());
     }
 
     @Transactional
@@ -252,12 +268,12 @@ public class RoleReviewCompliantServiceTest {
 
         RoleReviewCompliant roleReviewCompliantAfterUpdate = roleReviewCompliantRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getUserId());
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleId());
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getUserId().getId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleId().getId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleReviewId().getId());
         Assert.assertNull(roleReviewCompliantAfterUpdate.getDescription());
         Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratedStatus());
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratorId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratorId().getId());
 
         Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(roleReviewCompliantAfterUpdate);
     }

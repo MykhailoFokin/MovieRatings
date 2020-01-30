@@ -108,7 +108,10 @@ public class RoleReviewFeedbackServiceTest {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackReadDTO readDTO = roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(roleReviewFeedback);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReviewFeedback,"userId", "roleId", "roleReviewId");
+        Assertions.assertThat(readDTO.getUserId()).isEqualTo(roleReviewFeedback.getUserId().getId());
+        Assertions.assertThat(readDTO.getRoleId()).isEqualTo(roleReviewFeedback.getRoleId().getId());
+        Assertions.assertThat(readDTO.getRoleReviewId()).isEqualTo(roleReviewFeedback.getRoleReviewId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -124,16 +127,19 @@ public class RoleReviewFeedbackServiceTest {
         RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
-        create.setUserId(portalUser);
-        create.setRoleId(role);
-        create.setRoleReviewId(roleReview);
+        create.setUserId(portalUser.getId());
+        create.setRoleId(role.getId());
+        create.setRoleReviewId(roleReview.getId());
         create.setIsLiked(true);
 
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.createRoleReviewFeedback(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleReviewFeedback roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(roleReviewFeedback);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleReviewFeedback,"userId", "roleId", "roleReviewId");
+        Assertions.assertThat(read.getUserId()).isEqualTo(roleReviewFeedback.getUserId().getId());
+        Assertions.assertThat(read.getRoleId()).isEqualTo(roleReviewFeedback.getRoleId().getId());
+        Assertions.assertThat(read.getRoleReviewId()).isEqualTo(roleReviewFeedback.getRoleReviewId().getId());
     }
 
     @Transactional
@@ -145,16 +151,19 @@ public class RoleReviewFeedbackServiceTest {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
-        patch.setUserId(portalUser);
-        patch.setRoleId(role);
-        patch.setRoleReviewId(roleReview);
+        patch.setUserId(portalUser.getId());
+        patch.setRoleId(role.getId());
+        patch.setRoleReviewId(roleReview.getId());
         patch.setIsLiked(true);
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.patchRoleReviewFeedback(roleReviewFeedback.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleReviewFeedback).isEqualToIgnoringGivenFields(read,"userId", "roleId", "roleReviewId");
+        Assertions.assertThat(roleReviewFeedback.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(roleReviewFeedback.getRoleId().getId()).isEqualTo(read.getRoleId());
+        Assertions.assertThat(roleReviewFeedback.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 
     @Transactional
@@ -208,16 +217,19 @@ public class RoleReviewFeedbackServiceTest {
         RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
-        put.setUserId(portalUser);
-        put.setRoleId(role);
-        put.setRoleReviewId(roleReview);
+        put.setUserId(portalUser.getId());
+        put.setRoleId(role.getId());
+        put.setRoleReviewId(roleReview.getId());
         put.setIsLiked(true);
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.putRoleReviewFeedback(roleReviewFeedback.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(roleReviewFeedback).isEqualToIgnoringGivenFields(read,"userId", "roleId", "roleReviewId");
+        Assertions.assertThat(roleReviewFeedback.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(roleReviewFeedback.getRoleId().getId()).isEqualTo(read.getRoleId());
+        Assertions.assertThat(roleReviewFeedback.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 
     @Transactional
@@ -238,9 +250,9 @@ public class RoleReviewFeedbackServiceTest {
 
         RoleReviewFeedback roleReviewFeedbackAfterUpdate = roleReviewFeedbackRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleReviewFeedbackAfterUpdate.getUserId());
-        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleId());
-        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getUserId().getId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleId().getId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleReviewId().getId());
         Assert.assertNull(roleReviewFeedbackAfterUpdate.getIsLiked());
 
         Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(roleReviewFeedbackAfterUpdate);
