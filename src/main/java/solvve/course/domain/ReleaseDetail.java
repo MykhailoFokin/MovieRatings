@@ -20,6 +20,7 @@ public class ReleaseDetail {
 
     private LocalDate releaseDate;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Country countryId;
 }

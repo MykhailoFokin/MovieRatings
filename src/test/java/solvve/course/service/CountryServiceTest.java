@@ -32,13 +32,6 @@ public class CountryServiceTest {
     @Autowired
     private CountryService countryService;
 
-    private Country createCountries() {
-        Country country = new Country();
-        country.setId(UUID.randomUUID());
-        country.setName("Laplandia");
-        return countryRepository.save(country);
-    }
-
     @Test
     public void testGetCountries() {
         Country country = createCountries();
@@ -73,10 +66,10 @@ public class CountryServiceTest {
         patch.setName("Laplandia");
         CountryReadDTO read = countryService.patchCountries(country.getId(), patch);
 
-        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
 
         country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
     }
 
     @Transactional
@@ -118,9 +111,33 @@ public class CountryServiceTest {
         put.setName("Laplandia");
         CountryReadDTO read = countryService.putCountries(country.getId(), put);
 
-        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
 
         country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
+    }
+
+    @Transactional
+    @Test
+    public void testPutCountriesEmptyPut() {
+        Country country = createCountries();
+
+        CountryPutDTO put = new CountryPutDTO();
+        CountryReadDTO read = countryService.putCountries(country.getId(), put);
+
+        Assert.assertNull(read.getName());
+
+        Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
+
+        Assert.assertNull(countryAfterUpdate.getName());
+
+        Assertions.assertThat(country).isEqualToComparingFieldByField(countryAfterUpdate);
+    }
+
+    private Country createCountries() {
+        Country country = new Country();
+        country.setId(UUID.randomUUID());
+        country.setName("Laplandia");
+        return countryRepository.save(country);
     }
 }

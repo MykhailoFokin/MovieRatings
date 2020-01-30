@@ -191,4 +191,27 @@ public class RoleVoteServiceTest {
         roleVote = roleVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(roleVote).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutRoleVoteEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleVote roleVote = createRoleVote(portalUser, role);
+
+        RoleVotePutDTO put = new RoleVotePutDTO();
+        RoleVoteReadDTO read = roleVoteService.putRoleVote(roleVote.getId(), put);
+
+        Assert.assertNull(read.getRoleId());
+        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getRating());
+
+        RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
+
+        Assert.assertNull(roleVoteAfterUpdate.getRoleId());
+        Assert.assertNull(roleVoteAfterUpdate.getUserId());
+        Assert.assertNull(roleVoteAfterUpdate.getRating());
+
+        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(roleVoteAfterUpdate);
+    }
 }

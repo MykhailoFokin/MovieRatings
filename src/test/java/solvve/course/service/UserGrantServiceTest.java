@@ -179,4 +179,29 @@ public class UserGrantServiceTest {
         userGrant = userGrantRepository.findById(read.getId()).get();
         Assertions.assertThat(userGrant).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutGrantsEmptyPut() {
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
+        UserGrant userGrant = createGrants(userType, portalUser);
+
+        UserGrantPutDTO put = new UserGrantPutDTO();
+        UserGrantReadDTO read = userGrantService.putGrants(userGrant.getId(), put);
+
+        Assert.assertNull(read.getUserTypeId());
+        Assert.assertNull(read.getObjectName());
+        Assert.assertNull(read.getUserPermission());
+        Assert.assertNull(read.getGrantedBy());
+
+        UserGrant userGrantAfterUpdate = userGrantRepository.findById(read.getId()).get();
+
+        Assert.assertNull(userGrantAfterUpdate.getUserTypeId());
+        Assert.assertNull(userGrantAfterUpdate.getObjectName());
+        Assert.assertNull(userGrantAfterUpdate.getUserPermission());
+        Assert.assertNull(userGrantAfterUpdate.getGrantedBy());
+
+        Assertions.assertThat(userGrant).isEqualToComparingFieldByField(userGrantAfterUpdate);
+    }
 }

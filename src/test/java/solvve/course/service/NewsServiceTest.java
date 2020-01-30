@@ -179,4 +179,28 @@ public class NewsServiceTest {
         news = newsRepository.findById(read.getId()).get();
         Assertions.assertThat(news).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutNewsEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        News news = createNews(portalUser);
+
+        NewsPutDTO put = new NewsPutDTO();
+        NewsReadDTO read = newsService.putNews(news.getId(), put);
+
+        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getTopic());
+        Assert.assertNull(read.getDescription());
+        Assert.assertNull(read.getPublished());
+
+        News newsAfterUpdate = newsRepository.findById(read.getId()).get();
+
+        Assert.assertNull(newsAfterUpdate.getUserId());
+        Assert.assertNull(newsAfterUpdate.getTopic());
+        Assert.assertNull(newsAfterUpdate.getDescription());
+        Assert.assertNull(newsAfterUpdate.getPublished());
+
+        Assertions.assertThat(news).isEqualToComparingFieldByField(newsAfterUpdate);
+    }
 }

@@ -195,4 +195,27 @@ public class MovieVoteServiceTest {
         movieVote = movieVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(movieVote).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutMovieVoteEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieVote movieVote = createMovieVote(portalUser, movie);
+
+        MovieVotePutDTO put = new MovieVotePutDTO();
+        MovieVoteReadDTO read = movieVoteService.putMovieVote(movieVote.getId(), put);
+
+        Assert.assertNull(read.getMovieId());
+        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getRating());
+
+        MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
+
+        Assert.assertNull(movieVoteAfterUpdate.getMovieId());
+        Assert.assertNull(movieVoteAfterUpdate.getUserId());
+        Assert.assertNull(movieVoteAfterUpdate.getRating());
+
+        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(movieVoteAfterUpdate);
+    }
 }

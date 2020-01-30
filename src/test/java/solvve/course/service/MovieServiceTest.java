@@ -229,4 +229,48 @@ public class MovieServiceTest {
         movie = movieRepository.findById(read.getId()).get();
         Assertions.assertThat(movie).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutMovieEmptyPut() {
+        Set<Country> countrySet = createCountrySet();
+        Movie movie = createMovie(countrySet);
+
+        MoviePutDTO put = new MoviePutDTO();
+        MovieReadDTO read = movieService.putMovie(movie.getId(), put);
+
+        Assert.assertNull(read.getTitle());
+        Assert.assertNull(read.getYear());
+        Assert.assertNull(read.getGenres());
+        Assert.assertNull(read.getAspectRatio());
+        Assert.assertNull(read.getCamera());
+        Assert.assertNull(read.getColour());
+        Assert.assertNull(read.getCompanies());
+        Assert.assertNull(read.getCritique());
+        Assert.assertNull(read.getDescription());
+        Assert.assertNull(read.getFilmingLocations());
+        Assert.assertNull(read.getLaboratory());
+        Assert.assertNull(read.getLanguages());
+        Assert.assertNull(read.getSoundMix());
+        Assert.assertNull(read.getIsPublished());
+
+        Movie movieAfterUpdate = movieRepository.findById(read.getId()).get();
+
+        Assert.assertNull(movieAfterUpdate.getTitle());
+        Assert.assertNull(movieAfterUpdate.getYear());
+        Assert.assertNull(movieAfterUpdate.getGenres());
+        Assert.assertNull(movieAfterUpdate.getAspectRatio());
+        Assert.assertNull(movieAfterUpdate.getCamera());
+        Assert.assertNull(movieAfterUpdate.getColour());
+        Assert.assertNull(movieAfterUpdate.getCompanies());
+        Assert.assertNull(movieAfterUpdate.getCritique());
+        Assert.assertNull(movieAfterUpdate.getDescription());
+        Assert.assertNull(movieAfterUpdate.getFilmingLocations());
+        Assert.assertNull(movieAfterUpdate.getLaboratory());
+        Assert.assertNull(movieAfterUpdate.getLanguages());
+        Assert.assertNull(movieAfterUpdate.getSoundMix());
+        Assert.assertNull(movieAfterUpdate.getIsPublished());
+
+        Assertions.assertThat(movie).isEqualToComparingFieldByField(movieAfterUpdate);
+    }
 }

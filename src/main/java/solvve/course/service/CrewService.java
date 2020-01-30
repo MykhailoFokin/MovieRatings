@@ -28,20 +28,20 @@ public class CrewService {
         return translationService.toReadExtended(crew);
     }
 
-    public CrewReadExtendedDTO createCrew(CrewCreateDTO create) {
+    public CrewReadDTO createCrew(CrewCreateDTO create) {
         Crew crew = translationService.toEntity(create);
 
         crew = crewRepository.save(crew);
-        return translationService.toReadExtended(crew);
+        return translationService.toRead(crew);
     }
 
-    public CrewReadExtendedDTO patchCrew(UUID id, CrewPatchDTO patch) {
+    public CrewReadDTO patchCrew(UUID id, CrewPatchDTO patch) {
         Crew crew = getCrewRequired(id);
 
         translationService.patchEntity(patch, crew);
 
         crew = crewRepository.save(crew);
-        return translationService.toReadExtended(crew);
+        return translationService.toRead(crew);
     }
 
     private Crew getCrewRequired(UUID id) {
@@ -54,12 +54,12 @@ public class CrewService {
         crewRepository.delete(getCrewRequired(id));
     }
 
-    public CrewReadExtendedDTO putCrew(UUID id, CrewPutDTO put) {
+    public CrewReadDTO putCrew(UUID id, CrewPutDTO put) {
         Crew crew = getCrewRequired(id);
 
         translationService.putEntity(put, crew);
 
         crew = crewRepository.save(crew);
-        return translationService.toReadExtended(crew);
+        return translationService.toRead(crew);
     }
 }

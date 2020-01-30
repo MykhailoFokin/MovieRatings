@@ -21,12 +21,12 @@ public class VisitController {
     }
 
     @PostMapping
-    public VisitReadExtendedDTO createVisit(@RequestBody VisitCreateDTO createDTO){
+    public VisitReadDTO createVisit(@RequestBody VisitCreateDTO createDTO){
         return visitService.createVisit(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public VisitReadExtendedDTO patchVisit(@PathVariable UUID id, @RequestBody VisitPatchDTO patch){
+    public VisitReadDTO patchVisit(@PathVariable UUID id, @RequestBody VisitPatchDTO patch){
         return visitService.patchVisit(id, patch);
     }
 
@@ -36,7 +36,7 @@ public class VisitController {
     }
 
     @PutMapping("/{id}")
-    public VisitReadExtendedDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put){
+    public VisitReadDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put){
         return visitService.putVisit(id, put);
     }
 }

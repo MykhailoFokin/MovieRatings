@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
@@ -30,13 +31,6 @@ public class CrewTypeTest {
 
     @Autowired
     private CrewTypeService crewTypeService;
-
-    private CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setId(UUID.randomUUID());
-        crewType.setName("Director");
-        return crewTypeRepository.save(crewType);
-    }
 
     @Test
     public void testGetCrewType() {
@@ -117,5 +111,29 @@ public class CrewTypeTest {
 
         crewType = crewTypeRepository.findById(read.getId()).get();
         Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
+    }
+
+    @Transactional
+    @Test
+    public void testPutCrewTypeEmptyPut() {
+        CrewType crewType = createCrewType();
+
+        CrewTypePutDTO put = new CrewTypePutDTO();
+        CrewTypeReadDTO read = crewTypeService.putCrewType(crewType.getId(), put);
+
+        Assert.assertNull(read.getName());
+
+        CrewType crewTypeAfterUpdate = crewTypeRepository.findById(read.getId()).get();
+
+        Assert.assertNull(crewTypeAfterUpdate.getName());
+
+        Assertions.assertThat(crewType).isEqualToComparingFieldByField(crewTypeAfterUpdate);
+    }
+
+    private CrewType createCrewType() {
+        CrewType crewType = new CrewType();
+        crewType.setId(UUID.randomUUID());
+        crewType.setName("Director");
+        return crewTypeRepository.save(crewType);
     }
 }

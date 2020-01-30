@@ -5,14 +5,16 @@ import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 
+import java.util.UUID;
+
 @Data
 public class CrewCreateDTO {
 
-    private Person personId;
+    private UUID personId;
 
-    private Movie movieId;
+    private UUID movieId;
 
-    private CrewType crewType;
+    private UUID crewType;
 
     private String description;
 }

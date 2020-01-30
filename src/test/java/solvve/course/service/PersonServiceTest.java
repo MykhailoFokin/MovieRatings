@@ -134,4 +134,25 @@ public class PersonServiceTest {
         person = personRepository.findById(read.getId()).get();
         Assertions.assertThat(person).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutPersonsEmptyPut() {
+        Person person = createPersons();
+
+        PersonPutDTO put = new PersonPutDTO();
+        PersonReadDTO read = personService.putPersons(person.getId(), put);
+
+        Assert.assertNull(read.getName());
+        Assert.assertNull(read.getSurname());
+        Assert.assertNull(read.getMiddleName());
+
+        Person personAfterUpdate = personRepository.findById(read.getId()).get();
+
+        Assert.assertNull(personAfterUpdate.getName());
+        Assert.assertNull(personAfterUpdate.getSurname());
+        Assert.assertNull(personAfterUpdate.getMiddleName());
+
+        Assertions.assertThat(person).isEqualToComparingFieldByField(personAfterUpdate);
+    }
 }

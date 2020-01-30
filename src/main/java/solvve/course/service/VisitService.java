@@ -30,38 +30,38 @@ public class VisitService {
         return translationService.toReadExtended(visit);
     }
 
-    public VisitReadExtendedDTO createVisit(VisitCreateDTO create) {
+    public VisitReadDTO createVisit(VisitCreateDTO create) {
         Visit visit = translationService.toEntity(create);
 
         visit = visitRepository.save(visit);
-        return translationService.toReadExtended(visit);
+        return translationService.toRead(visit);
     }
 
-    public VisitReadExtendedDTO patchVisit(UUID id, VisitPatchDTO patch) {
+    public VisitReadDTO patchVisit(UUID id, VisitPatchDTO patch) {
         Visit visit = getVisitRequired(id);
 
         translationService.patchEntity(patch, visit);
 
         visit = visitRepository.save(visit);
-        return translationService.toReadExtended(visit);
-    }
-
-    private Visit getVisitRequired(UUID id) {
-        return visitRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Visit.class, id);
-        });
+        return translationService.toRead(visit);
     }
 
     public void deleteVisit(UUID id) {
         visitRepository.delete(getVisitRequired(id));
     }
 
-    public VisitReadExtendedDTO putVisit(UUID id, VisitPutDTO put) {
+    public VisitReadDTO putVisit(UUID id, VisitPutDTO put) {
         Visit visit = getVisitRequired(id);
 
         translationService.putEntity(put, visit);
 
         visit = visitRepository.save(visit);
-        return translationService.toReadExtended(visit);
+        return translationService.toRead(visit);
+    }
+
+    private Visit getVisitRequired(UUID id) {
+        return visitRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Visit.class, id);
+        });
     }
 }

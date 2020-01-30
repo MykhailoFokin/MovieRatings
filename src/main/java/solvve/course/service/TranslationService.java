@@ -1,11 +1,31 @@
 package solvve.course.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
+import solvve.course.repository.PortalUserRepository;
 
 @Service
 public class TranslationService {
+
+    @Autowired
+    private PortalUserService portalUserService;
+
+    @Autowired
+    private MasterService masterService;
+
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private CrewTypeService crewTypeService;
+
+    @Autowired
+    private MovieService movieService;
+
+    @Autowired
+    private PortalUserRepository portalUserRepository;
 
     public VisitReadExtendedDTO toReadExtended(Visit visit) {
         VisitReadExtendedDTO dto = new VisitReadExtendedDTO();
@@ -14,26 +34,48 @@ public class TranslationService {
         dto.setUserId(toRead(visit.getUserId()));
         dto.setStartAt(visit.getStartAt());
         dto.setFinishAt(visit.getFinishAt());
-        dto.setStatus(VisitStatus.FINISHED);
+        dto.setStatus(visit.getStatus());
+        return dto;
+    }
+
+    public VisitReadDTO toRead(Visit visit) {
+        VisitReadDTO dto = new VisitReadDTO();
+        dto.setId(visit.getId());
+        dto.setMasterId(visit.getMasterId().getId());
+        dto.setUserId(visit.getUserId().getId());
+        dto.setStartAt(visit.getStartAt());
+        dto.setFinishAt(visit.getFinishAt());
+        dto.setStatus(visit.getStatus());
         return dto;
     }
 
     public Visit toEntity(VisitCreateDTO create) {
         Visit visit = new Visit();
-        visit.setUserId(create.getUserId());
-        visit.setMasterId(create.getMasterId());
+        visit.setUserId(toEntity(portalUserService.getPortalUser(create.getUserId())));
+        visit.setMasterId(toEntity(masterService.getMaster(create.getMasterId())));
         visit.setStartAt(create.getStartAt());
         visit.setFinishAt(create.getFinishAt());
         visit.setStatus(create.getStatus());
         return visit;
     }
 
+    public Visit toEntity(VisitReadDTO dto) {
+        Visit visit = new Visit();
+        visit.setId(dto.getId());
+        visit.setUserId(toEntity(portalUserService.getPortalUser(dto.getUserId())));
+        visit.setMasterId(toEntity(masterService.getMaster(dto.getMasterId())));
+        visit.setStartAt(dto.getStartAt());
+        visit.setFinishAt(dto.getFinishAt());
+        visit.setStatus(dto.getStatus());
+        return visit;
+    }
+
     public void patchEntity(VisitPatchDTO patch, Visit visit) {
         if (patch.getUserId()!=null) {
-            visit.setUserId(patch.getUserId());
+            visit.setUserId(toEntity(portalUserService.getPortalUser(patch.getUserId())));
         }
         if (patch.getMasterId()!=null) {
-            visit.setMasterId(patch.getMasterId());
+            visit.setMasterId(toEntity(masterService.getMaster(patch.getMasterId())));
         }
         if (patch.getStartAt()!=null) {
             visit.setStartAt(patch.getStartAt());
@@ -47,8 +89,16 @@ public class TranslationService {
     }
 
     public void putEntity(VisitPutDTO put, Visit visit) {
-        visit.setUserId(put.getUserId());
-        visit.setMasterId(put.getMasterId());
+        if (put.getUserId()!=null) {
+            visit.setUserId(toEntity(portalUserService.getPortalUser(put.getUserId())));
+        } else {
+            visit.setUserId(new PortalUser());
+        }
+        if (put.getUserId()!=null) {
+            visit.setMasterId(toEntity(masterService.getMaster(put.getMasterId())));
+        } else {
+            visit.setMasterId(new Master());
+        }
         visit.setStartAt(put.getStartAt());
         visit.setFinishAt(put.getFinishAt());
         visit.setStatus(put.getStatus());
@@ -66,49 +116,74 @@ public class TranslationService {
         country.setName(create.getName());
         return country;
     }
+    public Country toEntity(CountryReadDTO dto) {
+        Country country = new Country();
+        country.setId(dto.getId());
+        country.setName(dto.getName());
+        return country;
+    }
 
     public void patchEntity(CountryPatchDTO patch, Country country) {
         if (patch.getName()!=null) {
             country.setName(patch.getName());
         }
-        if (patch.getMovies()!=null) {
-            country.setMovies(patch.getMovies());
-        }
     }
 
     public void putEntity(CountryPutDTO put, Country country) {
         country.setName(put.getName());
-        country.setMovies(put.getMovies());
     }
 
     public CrewReadExtendedDTO toReadExtended(Crew crew) {
         CrewReadExtendedDTO dto = new CrewReadExtendedDTO();
         dto.setId(crew.getId());
+        dto.setMovieId(toRead(crew.getMovieId()));
         dto.setPersonId(toRead(crew.getPersonId()));
+        /*if (crew.getCrewType()!=null) {
+            dto.setCrewType(toRead(crew.getCrewType()));
+        }*/
         dto.setCrewType(toRead(crew.getCrewType()));
         dto.setDescription(crew.getDescription());
-        dto.setMovieId(toRead(crew.getMovieId()));
+        return dto;
+    }
+
+    public CrewReadDTO toRead(Crew crew) {
+        CrewReadDTO dto = new CrewReadDTO();
+        dto.setId(crew.getId());
+        dto.setMovieId(crew.getMovieId().getId());
+        dto.setPersonId(crew.getPersonId().getId());
+        dto.setCrewType(crew.getCrewType().getId());
+        dto.setDescription(crew.getDescription());
         return dto;
     }
 
     public Crew toEntity(CrewCreateDTO create) {
         Crew crew = new Crew();
-        crew.setPersonId(create.getPersonId());
-        crew.setCrewType(create.getCrewType());
+        crew.setMovieId(toEntity(movieService.getMovie(create.getMovieId())));
+        crew.setPersonId(toEntity(personService.getPersons(create.getPersonId())));
+        crew.setCrewType(toEntity(crewTypeService.getCrewType(create.getCrewType())));
         crew.setDescription(create.getDescription());
-        crew.setMovieId(create.getMovieId());
+        return crew;
+    }
+
+    public Crew toEntity(CrewReadDTO dto) {
+        Crew crew = new Crew();
+        crew.setId(dto.getId());
+        crew.setPersonId(toEntity(personService.getPersons(dto.getPersonId())));
+        crew.setCrewType(toEntity(crewTypeService.getCrewType(dto.getCrewType())));
+        crew.setDescription(dto.getDescription());
+        crew.setMovieId(toEntity(movieService.getMovie(dto.getMovieId())));
         return crew;
     }
 
     public void patchEntity(CrewPatchDTO patch, Crew crew) {
         if (patch.getMovieId()!=null) {
-            crew.setMovieId(patch.getMovieId());
+            crew.setMovieId(toEntity(movieService.getMovie(patch.getMovieId())));
         }
         if (patch.getPersonId()!=null) {
-            crew.setPersonId(patch.getPersonId());
+            crew.setPersonId(toEntity(personService.getPersons(patch.getPersonId())));
         }
         if (patch.getCrewType()!=null) {
-            crew.setCrewType(patch.getCrewType());
+            crew.setCrewType(toEntity(crewTypeService.getCrewType(patch.getCrewType())));
         }
         if (patch.getDescription()!=null) {
             crew.setDescription(patch.getDescription());
@@ -116,9 +191,17 @@ public class TranslationService {
     }
 
     public void putEntity(CrewPutDTO put, Crew crew) {
-        crew.setMovieId(put.getMovieId());
-        crew.setPersonId(put.getPersonId());
-        crew.setCrewType(put.getCrewType());
+        if (put.getMovieId()!=null) {
+            crew.setMovieId(toEntity(movieService.getMovie(put.getMovieId())));
+        }
+        if (put.getPersonId()!=null) {
+            crew.setPersonId(toEntity(personService.getPersons(put.getPersonId())));
+        }
+        if (put.getCrewType()!=null) {
+            crew.setCrewType(toEntity(crewTypeService.getCrewType(put.getCrewType())));
+        } else {
+            crew.setCrewType(new CrewType());
+        }
         crew.setDescription(put.getDescription());
     }
 
@@ -132,6 +215,13 @@ public class TranslationService {
     public CrewType toEntity(CrewTypeCreateDTO create) {
         CrewType crewType = new CrewType();
         crewType.setName(create.getName());
+        return crewType;
+    }
+
+    public CrewType toEntity(CrewTypeReadDTO dto) {
+        CrewType crewType = new CrewType();
+        crewType.setId(dto.getId());
+        crewType.setName(dto.getName());
         return crewType;
     }
 
@@ -161,6 +251,16 @@ public class TranslationService {
         userGrant.setUserPermission(create.getUserPermission());
         userGrant.setObjectName(create.getObjectName());
         userGrant.setGrantedBy(create.getGrantedBy());
+        return userGrant;
+    }
+
+    public UserGrant toEntity(UserGrantReadDTO dto) {
+        UserGrant userGrant = new UserGrant();
+        userGrant.setId(dto.getId());
+        userGrant.setUserTypeId(dto.getUserTypeId());
+        userGrant.setUserPermission(dto.getUserPermission());
+        userGrant.setObjectName(dto.getObjectName());
+        userGrant.setGrantedBy(dto.getGrantedBy());
         return userGrant;
     }
 
@@ -203,6 +303,15 @@ public class TranslationService {
         return master;
     }
 
+    public Master toEntity(MasterReadDTO dto) {
+        Master master = new Master();
+        master.setId(dto.getId());
+        master.setName(dto.getName());
+        master.setPhone(dto.getPhone());
+        master.setAbout(dto.getAbout());
+        return master;
+    }
+
     public void patchEntity(MasterPatchDTO patch, Master master) {
         if (patch.getName()!=null) {
             master.setName(patch.getName());
@@ -241,6 +350,18 @@ public class TranslationService {
         movieReviewCompliant.setDescription(create.getDescription());
         movieReviewCompliant.setModeratedStatus(create.getModeratedStatus());
         movieReviewCompliant.setModeratorId(create.getModeratorId());
+        return movieReviewCompliant;
+    }
+
+    public MovieReviewCompliant toEntity(MovieReviewCompliantReadDTO dto) {
+        MovieReviewCompliant movieReviewCompliant = new MovieReviewCompliant();
+        movieReviewCompliant.setId(dto.getId());
+        movieReviewCompliant.setUserId(dto.getUserId());
+        movieReviewCompliant.setMovieId(dto.getMovieId());
+        movieReviewCompliant.setMovieReviewId(dto.getMovieReviewId());
+        movieReviewCompliant.setDescription(dto.getDescription());
+        movieReviewCompliant.setModeratedStatus(dto.getModeratedStatus());
+        movieReviewCompliant.setModeratorId(dto.getModeratorId());
         return movieReviewCompliant;
     }
 
@@ -293,6 +414,16 @@ public class TranslationService {
         return movieReviewFeedback;
     }
 
+    public MovieReviewFeedback toEntity(MovieReviewFeedbackReadDTO dto) {
+        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
+        movieReviewFeedback.setId(dto.getId());
+        movieReviewFeedback.setUserId(dto.getUserId());
+        movieReviewFeedback.setMovieId(dto.getMovieId());
+        movieReviewFeedback.setMovieReviewId(dto.getMovieReviewId());
+        movieReviewFeedback.setIsLiked(dto.getIsLiked());
+        return movieReviewFeedback;
+    }
+
     public void patchEntity(MovieReviewFeedbackPatchDTO patch, MovieReviewFeedback movieReviewFeedback) {
         if (patch.getMovieId()!=null) {
             movieReviewFeedback.setMovieId(patch.getMovieId());
@@ -333,6 +464,17 @@ public class TranslationService {
         movieReview.setTextReview(create.getTextReview());
         movieReview.setModeratedStatus(create.getModeratedStatus());
         movieReview.setModeratorId(create.getModeratorId());
+        return movieReview;
+    }
+
+    public MovieReview toEntity(MovieReviewReadDTO dto) {
+        MovieReview movieReview = new MovieReview();
+        movieReview.setId(dto.getId());
+        movieReview.setMovieId(dto.getMovieId());
+        movieReview.setUserId(dto.getUserId());
+        movieReview.setTextReview(dto.getTextReview());
+        movieReview.setModeratedStatus(dto.getModeratedStatus());
+        movieReview.setModeratorId(dto.getModeratorId());
         return movieReview;
     }
 
@@ -400,6 +542,27 @@ public class TranslationService {
         movie.setCritique(create.getCritique());
         movie.setIsPublished(create.getIsPublished());
         movie.setMovieProdCountries(create.getMovieProdCountries());
+        return movie;
+    }
+
+    public Movie toEntity(MovieReadDTO dto) {
+        Movie movie = new Movie();
+        movie.setId(dto.getId());
+        movie.setTitle(dto.getTitle());
+        movie.setYear(dto.getYear());
+        movie.setGenres(dto.getGenres());
+        movie.setDescription(dto.getDescription());
+        movie.setCompanies(dto.getCompanies());
+        movie.setSoundMix(dto.getSoundMix());
+        movie.setColour(dto.getColour());
+        movie.setAspectRatio(dto.getAspectRatio());
+        movie.setCamera(dto.getCamera());
+        movie.setLaboratory(dto.getLaboratory());
+        movie.setLanguages(dto.getLanguages());
+        movie.setFilmingLocations(dto.getFilmingLocations());
+        movie.setCritique(dto.getCritique());
+        movie.setIsPublished(dto.getIsPublished());
+        movie.setMovieProdCountries(dto.getMovieProdCountries());
         return movie;
     }
 
@@ -486,6 +649,15 @@ public class TranslationService {
         return movieSpoilerData;
     }
 
+    public MovieSpoilerData toEntity(MovieSpoilerDataReadDTO dto) {
+        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
+        movieSpoilerData.setId(dto.getId());
+        movieSpoilerData.setMovieReviewId(dto.getMovieReviewId());
+        movieSpoilerData.setStartIndex(dto.getStartIndex());
+        movieSpoilerData.setEndIndex(dto.getEndIndex());
+        return movieSpoilerData;
+    }
+
     public void patchEntity(MovieSpoilerDataPatchDTO patch, MovieSpoilerData movieSpoilerData) {
         if (patch.getMovieReviewId()!=null) {
             movieSpoilerData.setMovieReviewId(patch.getMovieReviewId());
@@ -518,6 +690,15 @@ public class TranslationService {
         movieVote.setUserId(create.getUserId());
         movieVote.setMovieId(create.getMovieId());
         movieVote.setRating(create.getRating());
+        return movieVote;
+    }
+
+    public MovieVote toEntity(MovieVoteReadDTO dto) {
+        MovieVote movieVote = new MovieVote();
+        movieVote.setId(dto.getId());
+        movieVote.setUserId(dto.getUserId());
+        movieVote.setMovieId(dto.getMovieId());
+        movieVote.setRating(dto.getRating());
         return movieVote;
     }
 
@@ -555,6 +736,16 @@ public class TranslationService {
         news.setPublished(create.getPublished());
         news.setTopic(create.getTopic());
         news.setDescription(create.getDescription());
+        return news;
+    }
+
+    public News toEntity(NewsReadDTO dto) {
+        News news = new News();
+        news.setId(dto.getId());
+        news.setUserId(dto.getUserId());
+        news.setPublished(dto.getPublished());
+        news.setTopic(dto.getTopic());
+        news.setDescription(dto.getDescription());
         return news;
     }
 
@@ -597,6 +788,15 @@ public class TranslationService {
         return person;
     }
 
+    public Person toEntity(PersonReadDTO dto) {
+        Person person = new Person();
+        person.setId(dto.getId());
+        person.setSurname(dto.getSurname());
+        person.setName(dto.getName());
+        person.setMiddleName(dto.getMiddleName());
+        return person;
+    }
+
     public void patchEntity(PersonPatchDTO patch, Person person) {
         if (patch.getName()!=null) {
             person.setName(patch.getName());
@@ -635,6 +835,18 @@ public class TranslationService {
         portalUser.setMiddleName(create.getMiddleName());
         portalUser.setUserType(create.getUserType());
         portalUser.setUserConfidence(create.getUserConfidence());
+        return portalUser;
+    }
+
+    public PortalUser toEntity(PortalUserReadDTO dto) {
+        PortalUser portalUser = new PortalUser();
+        portalUser.setId(dto.getId());
+        portalUser.setLogin(dto.getLogin());
+        portalUser.setSurname(dto.getSurname());
+        portalUser.setName(dto.getName());
+        portalUser.setMiddleName(dto.getMiddleName());
+        portalUser.setUserType(dto.getUserType());
+        portalUser.setUserConfidence(dto.getUserConfidence());
         return portalUser;
     }
 
@@ -685,6 +897,15 @@ public class TranslationService {
         return releaseDetail;
     }
 
+    public ReleaseDetail toEntity(ReleaseDetailReadDTO dto) {
+        ReleaseDetail releaseDetail = new ReleaseDetail();
+        releaseDetail.setId(dto.getId());
+        releaseDetail.setMovieId(dto.getMovieId());
+        releaseDetail.setReleaseDate(dto.getReleaseDate());
+        releaseDetail.setCountryId(dto.getCountryId());
+        return releaseDetail;
+    }
+
     public void patchEntity(ReleaseDetailPatchDTO patch, ReleaseDetail releaseDetail) {
         if (patch.getMovieId()!=null) {
             releaseDetail.setMovieId(patch.getMovieId());
@@ -723,6 +944,18 @@ public class TranslationService {
         roleReviewCompliant.setDescription(create.getDescription());
         roleReviewCompliant.setModeratedStatus(create.getModeratedStatus());
         roleReviewCompliant.setModeratorId(create.getModeratorId());
+        return roleReviewCompliant;
+    }
+
+    public RoleReviewCompliant toEntity(RoleReviewCompliantReadDTO dto) {
+        RoleReviewCompliant roleReviewCompliant = new RoleReviewCompliant();
+        roleReviewCompliant.setId(dto.getId());
+        roleReviewCompliant.setUserId(dto.getUserId());
+        roleReviewCompliant.setRoleId(dto.getRoleId());
+        roleReviewCompliant.setRoleReviewId(dto.getRoleReviewId());
+        roleReviewCompliant.setDescription(dto.getDescription());
+        roleReviewCompliant.setModeratedStatus(dto.getModeratedStatus());
+        roleReviewCompliant.setModeratorId(dto.getModeratorId());
         return roleReviewCompliant;
     }
 
@@ -775,6 +1008,16 @@ public class TranslationService {
         return roleReviewFeedback;
     }
 
+    public RoleReviewFeedback toEntity(RoleReviewFeedbackReadDTO dto) {
+        RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
+        roleReviewFeedback.setId(dto.getId());
+        roleReviewFeedback.setUserId(dto.getUserId());
+        roleReviewFeedback.setRoleId(dto.getRoleId());
+        roleReviewFeedback.setRoleReviewId(dto.getRoleReviewId());
+        roleReviewFeedback.setIsLiked(dto.getIsLiked());
+        return roleReviewFeedback;
+    }
+
     public void patchEntity(RoleReviewFeedbackPatchDTO patch, RoleReviewFeedback roleReviewFeedback) {
         if (patch.getUserId()!=null) {
             roleReviewFeedback.setUserId(patch.getUserId());
@@ -815,6 +1058,17 @@ public class TranslationService {
         roleReview.setTextReview(create.getTextReview());
         roleReview.setModeratedStatus(create.getModeratedStatus());
         roleReview.setModeratorId(create.getModeratorId());
+        return roleReview;
+    }
+
+    public RoleReview toEntity(RoleReviewReadDTO dto) {
+        RoleReview roleReview = new RoleReview();
+        roleReview.setId(dto.getId());
+        roleReview.setUserId(dto.getUserId());
+        roleReview.setRoleId(dto.getRoleId());
+        roleReview.setTextReview(dto.getTextReview());
+        roleReview.setModeratedStatus(dto.getModeratedStatus());
+        roleReview.setModeratorId(dto.getModeratorId());
         return roleReview;
     }
 
@@ -863,6 +1117,16 @@ public class TranslationService {
         return role;
     }
 
+    public Role toEntity(RoleReadDTO dto) {
+        Role role = new Role();
+        role.setId(dto.getId());
+        role.setTitle(dto.getTitle());
+        role.setRoleType(dto.getRoleType());
+        role.setDescription(dto.getDescription());
+        role.setPersonId(dto.getPersonId());
+        return role;
+    }
+
     public void patchEntity(RolePatchDTO patch, Role role) {
         if (patch.getTitle()!=null) {
             role.setTitle(patch.getTitle());
@@ -902,6 +1166,15 @@ public class TranslationService {
         return roleSpoilerData;
     }
 
+    public RoleSpoilerData toEntity(RoleSpoilerDataReadDTO dto) {
+        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
+        roleSpoilerData.setId(dto.getId());
+        roleSpoilerData.setRoleReviewId(dto.getRoleReviewId());
+        roleSpoilerData.setStartIndex(dto.getStartIndex());
+        roleSpoilerData.setEndIndex(dto.getEndIndex());
+        return roleSpoilerData;
+    }
+
     public void patchEntity(RoleSpoilerDataPatchDTO patch, RoleSpoilerData roleSpoilerData) {
         if (patch.getRoleReviewId()!=null) {
             roleSpoilerData.setRoleReviewId(patch.getRoleReviewId());
@@ -937,6 +1210,15 @@ public class TranslationService {
         return roleVote;
     }
 
+    public RoleVote toEntity(RoleVoteReadDTO dto) {
+        RoleVote roleVote = new RoleVote();
+        roleVote.setId(dto.getId());
+        roleVote.setUserId(dto.getUserId());
+        roleVote.setRoleId(dto.getRoleId());
+        roleVote.setRating(dto.getRating());
+        return roleVote;
+    }
+
     public void patchEntity(RoleVotePatchDTO patch, RoleVote roleVote) {
         if (patch.getUserId()!=null) {
             roleVote.setUserId(patch.getUserId());
@@ -967,6 +1249,14 @@ public class TranslationService {
         UserType userType = new UserType();
         userType.setUserGroup(create.getUserGroup());
         userType.setUserGrants(create.getUserGrants());
+        return userType;
+    }
+
+    public UserType toEntity(UserTypeReadDTO dto) {
+        UserType userType = new UserType();
+        userType.setId(dto.getId());
+        userType.setUserGroup(dto.getUserGroup());
+        userType.setUserGrants(dto.getUserGrants());
         return userType;
     }
 

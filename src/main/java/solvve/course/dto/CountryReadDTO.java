@@ -13,8 +13,4 @@ public class CountryReadDTO {
     private UUID id;
 
     private String name;
-
-    private Set<Movie> movies;
-
-    private ReleaseDetail releaseDetail;
 }

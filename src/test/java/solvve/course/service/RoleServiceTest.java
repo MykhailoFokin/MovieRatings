@@ -156,4 +156,25 @@ public class RoleServiceTest {
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutRoleEmptyPut() {
+        Role role = createRole();
+
+        RolePutDTO put = new RolePutDTO();
+        RoleReadDTO read = roleService.putRole(role.getId(), put);
+
+        Assert.assertNull(read.getTitle());
+        Assert.assertNull(read.getRoleType());
+        Assert.assertNull(read.getDescription());
+
+        Role roleAfterUpdate = roleRepository.findById(read.getId()).get();
+
+        Assert.assertNull(roleAfterUpdate.getTitle());
+        Assert.assertNull(roleAfterUpdate.getRoleType());
+        Assert.assertNull(roleAfterUpdate.getDescription());
+
+        Assertions.assertThat(role).isEqualToComparingFieldByField(roleAfterUpdate);
+    }
 }

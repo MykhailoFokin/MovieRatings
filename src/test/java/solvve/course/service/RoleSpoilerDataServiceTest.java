@@ -213,4 +213,28 @@ public class RoleSpoilerDataServiceTest {
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutRoleSpoilerDataEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+
+        RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);
+
+        Assert.assertNull(read.getRoleReviewId());
+        Assert.assertNull(read.getStartIndex());
+        Assert.assertNull(read.getEndIndex());
+
+        RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
+
+        Assert.assertNull(roleSpoilerDataAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleSpoilerDataAfterUpdate.getStartIndex());
+        Assert.assertNull(roleSpoilerDataAfterUpdate.getEndIndex());
+
+        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(roleSpoilerDataAfterUpdate);
+    }
 }

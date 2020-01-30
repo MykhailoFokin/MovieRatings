@@ -44,8 +44,8 @@ public class CrewControllerTest {
     @MockBean
     private CrewService crewService;
 
-    private CrewReadExtendedDTO createCrewRead() {
-        CrewReadExtendedDTO crew = new CrewReadExtendedDTO();
+    private CrewReadDTO createCrewRead() {
+        CrewReadDTO crew = new CrewReadDTO();
         crew.setId(UUID.randomUUID());
         crew.setDescription("Description");
         return crew;
@@ -53,7 +53,9 @@ public class CrewControllerTest {
 
     @Test
     public void testGetCrew() throws Exception {
-        CrewReadExtendedDTO crew = createCrewRead();
+        CrewReadExtendedDTO crew = new CrewReadExtendedDTO();
+        crew.setId(UUID.randomUUID());
+        crew.setDescription("Description");
 
         Mockito.when(crewService.getCrew(crew.getId())).thenReturn(crew);
 
@@ -62,7 +64,7 @@ public class CrewControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         System.out.println(resultJson);
-        CrewReadDTO actualMovie = objectMapper.readValue(resultJson, CrewReadDTO.class);
+        CrewReadExtendedDTO actualMovie = objectMapper.readValue(resultJson, CrewReadExtendedDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(crew);
 
         Mockito.verify(crewService).getCrew(crew.getId());
@@ -99,7 +101,7 @@ public class CrewControllerTest {
         CrewCreateDTO create = new CrewCreateDTO();
         create.setDescription("Description");
 
-        CrewReadExtendedDTO read = createCrewRead();
+        CrewReadDTO read = createCrewRead();
 
         Mockito.when(crewService.createCrew(create)).thenReturn(read);
 
@@ -119,7 +121,7 @@ public class CrewControllerTest {
         CrewPatchDTO patchDTO = new CrewPatchDTO();
         patchDTO.setDescription("Description");
 
-        CrewReadExtendedDTO read = createCrewRead();
+        CrewReadDTO read = createCrewRead();
 
         Mockito.when(crewService.patchCrew(read.getId(),patchDTO)).thenReturn(read);
 
@@ -129,7 +131,7 @@ public class CrewControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        CrewReadExtendedDTO actualCrew = objectMapper.readValue(resultJson, CrewReadExtendedDTO.class);
+        CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
         Assert.assertEquals(read, actualCrew);
     }
 
@@ -148,7 +150,7 @@ public class CrewControllerTest {
         CrewPutDTO putDTO = new CrewPutDTO();
         putDTO.setDescription("Description");
 
-        CrewReadExtendedDTO read = createCrewRead();
+        CrewReadDTO read = createCrewRead();
 
         Mockito.when(crewService.putCrew(read.getId(),putDTO)).thenReturn(read);
 
@@ -158,7 +160,7 @@ public class CrewControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        CrewReadExtendedDTO actualCrew = objectMapper.readValue(resultJson, CrewReadExtendedDTO.class);
+        CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
         Assert.assertEquals(read, actualCrew);
     }
 }

@@ -18,6 +18,6 @@ public class Country {
     @ManyToMany(mappedBy = "movieProdCountries")
     private Set<Movie> movies;
 
-    @OneToOne(mappedBy = "countryId")
-    private ReleaseDetail releaseDetail;
+    @OneToMany(mappedBy = "countryId")
+    private Set<ReleaseDetail> releaseDetails;
 }

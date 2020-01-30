@@ -231,4 +231,34 @@ public class RoleReviewCompliantServiceTest {
         roleReviewCompliant = roleReviewCompliantRepository.findById(read.getId()).get();
         Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutRoleReviewCompliantEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleReviewCompliant roleReviewCompliant = createRoleReviewCompliant(portalUser, role, roleReview);
+
+        RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
+        RoleReviewCompliantReadDTO read = roleReviewCompliantService.putRoleReviewCompliant(roleReviewCompliant.getId(), put);
+
+        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getRoleId());
+        Assert.assertNull(read.getRoleReviewId());
+        Assert.assertNull(read.getDescription());
+        Assert.assertNull(read.getModeratedStatus());
+        Assert.assertNull(read.getModeratorId());
+
+        RoleReviewCompliant roleReviewCompliantAfterUpdate = roleReviewCompliantRepository.findById(read.getId()).get();
+
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getUserId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getDescription());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratedStatus());
+        Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratorId());
+
+        Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(roleReviewCompliantAfterUpdate);
+    }
 }

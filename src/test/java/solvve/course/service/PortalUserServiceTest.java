@@ -175,4 +175,32 @@ public class PortalUserServiceTest {
         portalUser = portalUserRepository.findById(read.getId()).get();
         Assertions.assertThat(portalUser).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutPortalUserEmptyPut() {
+        UserType userType = createUserType();
+        PortalUser portalUser = createPortalUser(userType);
+
+        PortalUserPutDTO put = new PortalUserPutDTO();
+        PortalUserReadDTO read = portalUserService.putPortalUser(portalUser.getId(), put);
+
+        Assert.assertNull(read.getUserType());
+        Assert.assertNull(read.getSurname());
+        Assert.assertNull(read.getName());
+        Assert.assertNull(read.getMiddleName());
+        Assert.assertNull(read.getLogin());
+        Assert.assertNull(read.getUserConfidence());
+
+        PortalUser portalUserAfterUpdate = portalUserRepository.findById(read.getId()).get();
+
+        Assert.assertNull(portalUserAfterUpdate.getUserType());
+        Assert.assertNull(portalUserAfterUpdate.getSurname());
+        Assert.assertNull(portalUserAfterUpdate.getName());
+        Assert.assertNull(portalUserAfterUpdate.getMiddleName());
+        Assert.assertNull(portalUserAfterUpdate.getLogin());
+        Assert.assertNull(portalUserAfterUpdate.getUserConfidence());
+
+        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(portalUserAfterUpdate);
+    }
 }

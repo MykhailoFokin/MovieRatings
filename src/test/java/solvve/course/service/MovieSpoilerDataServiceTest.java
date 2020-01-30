@@ -213,4 +213,28 @@ public class MovieSpoilerDataServiceTest {
         movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutMovieSpoilerDataEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Movie movie = createMovie();
+        MovieReview movieReview = createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+
+        MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
+        MovieSpoilerDataReadDTO read = movieSpoilerDataService.putMovieSpoilerData(movieSpoilerData.getId(), put);
+
+        Assert.assertNull(read.getMovieReviewId());
+        Assert.assertNull(read.getStartIndex());
+        Assert.assertNull(read.getEndIndex());
+
+        MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
+
+        Assert.assertNull(movieSpoilerDataAfterUpdate.getMovieReviewId());
+        Assert.assertNull(movieSpoilerDataAfterUpdate.getStartIndex());
+        Assert.assertNull(movieSpoilerDataAfterUpdate.getEndIndex());
+
+        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(movieSpoilerDataAfterUpdate);
+    }
 }

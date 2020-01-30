@@ -6,13 +6,14 @@ import solvve.course.domain.PortalUser;
 import solvve.course.domain.VisitStatus;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
 public class VisitPatchDTO {
 
-    private PortalUser userId;
+    private UUID userId;
 
-    private Master masterId;
+    private UUID masterId;
 
     private Instant startAt;
 

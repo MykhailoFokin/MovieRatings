@@ -14,15 +14,12 @@ public class Crew {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person personId;
 
     @ManyToOne
-    @JoinColumn(name = "movie_id", referencedColumnName = "id")
     private Movie movieId;
 
     @OneToOne
-    @JoinColumn(name = "crew_type", referencedColumnName = "id")
     private CrewType crewType;
 
     private String description;

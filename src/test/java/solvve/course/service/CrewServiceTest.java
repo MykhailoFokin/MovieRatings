@@ -42,16 +42,6 @@ public class CrewServiceTest {
     @Autowired
     private MovieRepository movieRepository;
 
-    private Crew createCrew(Person person, CrewType crewType, Movie movie) {
-        Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
-        crew.setPersonId(person);
-        crew.setCrewType(crewType);
-        crew.setMovieId(movie);
-        crew.setDescription("Description");
-        return crewRepository.save(crew);
-    }
-
     private CrewType createCrewType() {
         CrewType crewType = new CrewType();
         crewType.setName("Director");
@@ -116,23 +106,18 @@ public class CrewServiceTest {
         CrewType crewType = createCrewType();
 
         CrewCreateDTO create = new CrewCreateDTO();
-        create.setPersonId(person);
-        create.setCrewType(crewType);
-        create.setMovieId(movie);
+        create.setPersonId(person.getId());
+        create.setCrewType(crewType.getId());
+        create.setMovieId(movie.getId());
         create.setDescription("Description");
-        CrewReadExtendedDTO read = crewService.createCrew(create);
-        //Assertions.assertThat(create).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "movieId", "personId","crewType");
-        Assertions.assertThat(create.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(create.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(create.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        CrewReadDTO read = crewService.createCrew(create);
+        Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         Crew crew = crewRepository.findById(read.getId()).get();
-        //Assertions.assertThat(read).isEqualToComparingFieldByField(crew);
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(crew, "movieId", "personId","crewType");
-        Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(read.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovieId().getId());
+        Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPersonId().getId());
+        Assertions.assertThat(read.getCrewType()).isEqualToIgnoringGivenFields(crew.getCrewType().getId());
     }
 
     @Transactional
@@ -144,24 +129,19 @@ public class CrewServiceTest {
         Crew crew = createCrew(person, crewType, movie);
 
         CrewPatchDTO patch = new CrewPatchDTO();
-        patch.setPersonId(person);
-        patch.setCrewType(crewType);
-        patch.setMovieId(movie);
+        patch.setPersonId(person.getId());
+        patch.setCrewType(crewType.getId());
+        patch.setMovieId(movie.getId());
         patch.setDescription("Description");
-        CrewReadExtendedDTO read = crewService.patchCrew(crew.getId(), patch);
+        CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
 
-        //Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read, "movieId", "personId","crewType");
-        Assertions.assertThat(patch.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(patch.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(patch.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         crew = crewRepository.findById(read.getId()).get();
-        //Assertions.assertThat(crew).isEqualToComparingFieldByField(read);
         Assertions.assertThat(crew).isEqualToIgnoringGivenFields(read, "movieId", "personId","crewType");
-        Assertions.assertThat(crew.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(crew.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        Assertions.assertThat(crew.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+        Assertions.assertThat(crew.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+        Assertions.assertThat(crew.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
     }
 
     @Transactional
@@ -173,7 +153,7 @@ public class CrewServiceTest {
         Crew crew = createCrew(person, crewType, movie);
 
         CrewPatchDTO patch = new CrewPatchDTO();
-        CrewReadExtendedDTO read = crewService.patchCrew(crew.getId(), patch);
+        CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
 
         Assert.assertNotNull(read.getPersonId());
         Assert.assertNotNull(read.getCrewType());
@@ -215,23 +195,54 @@ public class CrewServiceTest {
         Crew crew = createCrew(person, crewType, movie);
 
         CrewPutDTO put = new CrewPutDTO();
-        put.setPersonId(person);
-        put.setCrewType(crewType);
-        put.setMovieId(movie);
+        put.setPersonId(person.getId());
+        put.setCrewType(crewType.getId());
+        put.setMovieId(movie.getId());
         put.setDescription("Description");
-        CrewReadExtendedDTO read = crewService.putCrew(crew.getId(), put);
+        CrewReadDTO read = crewService.putCrew(crew.getId(), put);
 
-        //Assertions.assertThat(put).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read, "movieId", "personId","crewType");
-        Assertions.assertThat(put.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(put.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(put.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         crew = crewRepository.findById(read.getId()).get();
-        //Assertions.assertThat(crew).isEqualToComparingFieldByField(read);
         Assertions.assertThat(crew).isEqualToIgnoringGivenFields(read, "movieId", "personId","crewType");
-        Assertions.assertThat(crew.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(crew.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        Assertions.assertThat(crew.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+        Assertions.assertThat(crew.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+        Assertions.assertThat(crew.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
+    }
+
+    @Transactional
+    @Test
+    public void testPutCrewEmptyPut() {
+        Movie movie = createMovie();
+        Person person = createPerson();
+        CrewType crewType = createCrewType();
+        Crew crew = createCrew(person, crewType, movie);
+
+        CrewPutDTO put = new CrewPutDTO();
+        CrewReadDTO read = crewService.putCrew(crew.getId(), put);
+
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getPersonId());
+        Assert.assertNull(read.getCrewType());
+        Assert.assertNull(read.getDescription());
+
+        Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
+
+        Assert.assertNotNull(crewAfterUpdate.getMovieId());
+        Assert.assertNotNull(crewAfterUpdate.getPersonId());
+        Assert.assertNull(crewAfterUpdate.getCrewType().getId());
+        Assert.assertNull(crewAfterUpdate.getDescription());
+
+        Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
+    }
+
+    private Crew createCrew(Person person, CrewType crewType, Movie movie) {
+        Crew crew = new Crew();
+        crew.setId(UUID.randomUUID());
+        crew.setPersonId(person);
+        crew.setCrewType(crewType);
+        crew.setMovieId(movie);
+        crew.setDescription("Description");
+        return crewRepository.save(crew);
     }
 }

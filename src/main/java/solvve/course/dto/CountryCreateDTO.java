@@ -10,8 +10,4 @@ import java.util.Set;
 public class CountryCreateDTO {
 
     private String name;
-
-    private Set<Movie> movies;
-
-    private ReleaseDetail releaseDetail;
 }

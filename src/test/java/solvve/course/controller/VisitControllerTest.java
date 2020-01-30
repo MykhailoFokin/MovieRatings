@@ -38,8 +38,8 @@ public class VisitControllerTest {
     @MockBean
     private VisitService visitService;
 
-    private VisitReadExtendedDTO createVisitRead() {
-        VisitReadExtendedDTO visit = new VisitReadExtendedDTO();
+    private VisitReadDTO createVisitRead() {
+        VisitReadDTO visit = new VisitReadDTO();
         visit.setId(UUID.randomUUID());
         //visit.setUserId(portalUser);
         //visit.setMasterId(master);
@@ -51,7 +51,14 @@ public class VisitControllerTest {
 
     @Test
     public void testGetVisit() throws Exception {
-        VisitReadExtendedDTO visit = createVisitRead();
+        //VisitReadExtendedDTO visit = createVisitRead();
+        VisitReadExtendedDTO visit = new VisitReadExtendedDTO();
+        visit.setId(UUID.randomUUID());
+        //visit.setUserId(portalUser);
+        //visit.setMasterId(master);
+        visit.setStartAt(Instant.now());
+        visit.setFinishAt(Instant.now());
+        visit.setStatus(VisitStatus.FINISHED);
 
         Mockito.when(visitService.getVisit(visit.getId())).thenReturn(visit);
 
@@ -100,7 +107,7 @@ public class VisitControllerTest {
         create.setFinishAt(Instant.now());
         create.setStatus(VisitStatus.FINISHED);
 
-        VisitReadExtendedDTO read = createVisitRead();
+        VisitReadDTO read = createVisitRead();
 
         Mockito.when(visitService.createVisit(create)).thenReturn(read);
 
@@ -110,7 +117,7 @@ public class VisitControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
+        VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
         Assertions.assertThat(actualVisit).isEqualToComparingFieldByField(read);
     }
 
@@ -124,7 +131,7 @@ public class VisitControllerTest {
         patchDTO.setFinishAt(Instant.now());
         patchDTO.setStatus(VisitStatus.FINISHED);
 
-        VisitReadExtendedDTO read = createVisitRead();
+        VisitReadDTO read = createVisitRead();
 
         Mockito.when(visitService.patchVisit(read.getId(),patchDTO)).thenReturn(read);
 
@@ -134,7 +141,7 @@ public class VisitControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
+        VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
         Assert.assertEquals(read, actualVisit);
     }
 
@@ -157,7 +164,7 @@ public class VisitControllerTest {
         putDTO.setFinishAt(Instant.now());
         putDTO.setStatus(VisitStatus.FINISHED);
 
-        VisitReadExtendedDTO read = createVisitRead();
+        VisitReadDTO read = createVisitRead();
 
         Mockito.when(visitService.putVisit(read.getId(),putDTO)).thenReturn(read);
 
@@ -167,7 +174,7 @@ public class VisitControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        VisitReadExtendedDTO actualVisit = objectMapper.readValue(resultJson, VisitReadExtendedDTO.class);
+        VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
         Assert.assertEquals(read, actualVisit);
     }
 }

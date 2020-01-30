@@ -110,22 +110,22 @@ public class VisitServiceTest {
         Master master = createMaster();
 
         VisitCreateDTO create = new VisitCreateDTO();
-        create.setUserId(portalUser);
-        create.setMasterId(master);
+        create.setUserId(portalUser.getId());
+        create.setMasterId(master.getId());
         create.setStartAt(Instant.now());
         create.setFinishAt(Instant.now());
         create.setStatus(VisitStatus.FINISHED);
-        VisitReadExtendedDTO read = visitService.createVisit(create);
-        //Assertions.assertThat(create).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(master);
+        VisitReadDTO read = visitService.createVisit(create);
+        Assertions.assertThat(read).isEqualToComparingFieldByField(read);
+        //Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "userId", "masterId");
+        //Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(portalUser);
+        //Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(master);
 
         Visit visit = visitRepository.findById(read.getId()).get();
         //Assertions.assertThat(read).isEqualToComparingFieldByField(visit);
         Assertions.assertThat(create).isEqualToIgnoringGivenFields(visit, "userId", "masterId");
-        Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId().getId());
+        Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(visit.getMasterId().getId());
     }
 
     @Transactional
@@ -136,23 +136,19 @@ public class VisitServiceTest {
         Visit visit = createVisit(portalUser, master);
 
         VisitPatchDTO patch = new VisitPatchDTO();
-        patch.setUserId(portalUser);
-        patch.setMasterId(master);
+        patch.setUserId(portalUser.getId());
+        patch.setMasterId(master.getId());
         patch.setStartAt(Instant.now());
         patch.setFinishAt(Instant.now());
         patch.setStatus(VisitStatus.FINISHED);
-        VisitReadExtendedDTO read = visitService.patchVisit(visit.getId(), patch);
+        VisitReadDTO read = visitService.patchVisit(visit.getId(), patch);
 
-        //Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        Assertions.assertThat(patch.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(patch.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         visit = visitRepository.findById(read.getId()).get();
-        //Assertions.assertThat(visit).isEqualToComparingFieldByField(read);
         Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        Assertions.assertThat(visit.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(visit.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
+        Assertions.assertThat(visit.getMasterId().getId()).isEqualToIgnoringGivenFields(read.getMasterId());
     }
 
     @Transactional
@@ -163,7 +159,7 @@ public class VisitServiceTest {
         Visit visit = createVisit(portalUser, master);
 
         VisitPatchDTO patch = new VisitPatchDTO();
-        VisitReadExtendedDTO read = visitService.patchVisit(visit.getId(), patch);
+        VisitReadDTO read = visitService.patchVisit(visit.getId(), patch);
 
         Assert.assertNotNull(read.getStartAt());
 
@@ -197,22 +193,37 @@ public class VisitServiceTest {
         Visit visit = createVisit(portalUser, master);
 
         VisitPutDTO put = new VisitPutDTO();
-        put.setUserId(portalUser);
-        put.setMasterId(master);
+        put.setUserId(portalUser.getId());
+        put.setMasterId(master.getId());
         put.setStartAt(Instant.now());
         put.setFinishAt(Instant.now());
         put.setStatus(VisitStatus.FINISHED);
-        VisitReadExtendedDTO read = visitService.putVisit(visit.getId(), put);
+        VisitReadDTO read = visitService.putVisit(visit.getId(), put);
 
-        //Assertions.assertThat(put).isEqualToComparingFieldByField(read);
-        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        Assertions.assertThat(put.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(put.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         visit = visitRepository.findById(read.getId()).get();
-        //Assertions.assertThat(visit).isEqualToComparingFieldByField(read);
         Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        Assertions.assertThat(visit.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        Assertions.assertThat(visit.getMasterId()).isEqualToIgnoringGivenFields(master);
+        Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
+        Assertions.assertThat(visit.getMasterId().getId()).isEqualToIgnoringGivenFields(read.getMasterId());
+    }
+
+    @Transactional
+    @Test
+    public void testPutVisitEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Master master = createMaster();
+        Visit visit = createVisit(portalUser, master);
+
+        VisitPutDTO put = new VisitPutDTO();
+        VisitReadDTO read = visitService.putVisit(visit.getId(), put);
+
+        Assert.assertNull(read.getStartAt());
+
+        Visit visitAfterUpdate = visitRepository.findById(read.getId()).get();
+
+        Assert.assertNull(visitAfterUpdate.getStartAt());
+
+        Assertions.assertThat(visit).isEqualToComparingFieldByField(visitAfterUpdate);
     }
 }

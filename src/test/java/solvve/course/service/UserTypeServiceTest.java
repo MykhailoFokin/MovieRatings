@@ -156,4 +156,21 @@ public class UserTypeServiceTest {
         userType = userTypeRepository.findById(read.getId()).get();
         Assertions.assertThat(userType).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutUserTypesEmptyPut() {
+        UserType userType = createUserTypes();
+
+        UserTypePutDTO put = new UserTypePutDTO();
+        UserTypeReadDTO read = userTypeService.putUserTypes(userType.getId(), put);
+
+        Assert.assertNull(read.getUserGroup());
+
+        UserType userTypeAfterUpdate = userTypeRepository.findById(read.getId()).get();
+
+        Assert.assertNull(userTypeAfterUpdate.getUserGroup());
+
+        Assertions.assertThat(userType).isEqualToComparingFieldByField(userTypeAfterUpdate);
+    }
 }

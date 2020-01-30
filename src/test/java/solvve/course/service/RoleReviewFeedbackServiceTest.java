@@ -219,4 +219,30 @@ public class RoleReviewFeedbackServiceTest {
         roleReviewFeedback = roleReviewFeedbackRepository.findById(read.getId()).get();
         Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutRoleReviewFeedbackEmptyPut() {
+        PortalUser portalUser = createPortalUser();
+        Role role = createRole();
+        RoleReview roleReview = createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+
+        RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
+        RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.putRoleReviewFeedback(roleReviewFeedback.getId(), put);
+
+        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getRoleId());
+        Assert.assertNull(read.getRoleReviewId());
+        Assert.assertNull(read.getIsLiked());
+
+        RoleReviewFeedback roleReviewFeedbackAfterUpdate = roleReviewFeedbackRepository.findById(read.getId()).get();
+
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getUserId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getRoleReviewId());
+        Assert.assertNull(roleReviewFeedbackAfterUpdate.getIsLiked());
+
+        Assertions.assertThat(roleReviewFeedback).isEqualToComparingFieldByField(roleReviewFeedbackAfterUpdate);
+    }
 }

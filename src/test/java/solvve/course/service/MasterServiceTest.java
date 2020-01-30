@@ -32,15 +32,6 @@ public class MasterServiceTest {
     @Autowired
     private MasterService masterService;
 
-    private Master createMaster() {
-        Master master = new Master();
-        master.setId(UUID.randomUUID());
-        master.setName("MasterName");
-        master.setPhone("645768767");
-        master.setAbout("What about");
-        return masterRepository.save(master);
-    }
-
     @Test
     public void testGetMaster() {
         Master master = createMaster();
@@ -128,5 +119,31 @@ public class MasterServiceTest {
 
         master = masterRepository.findById(read.getId()).get();
         Assertions.assertThat(master).isEqualToComparingFieldByField(read);
+    }
+
+    @Transactional
+    @Test
+    public void testPutMasterEmptyPut() {
+        Master master = createMaster();
+
+        MasterPutDTO put = new MasterPutDTO();
+        MasterReadDTO read = masterService.putMaster(master.getId(), put);
+
+        Assert.assertNull(read.getName());
+
+        Master masterAfterUpdate = masterRepository.findById(read.getId()).get();
+
+        Assert.assertNull(masterAfterUpdate.getName());
+
+        Assertions.assertThat(master).isEqualToComparingFieldByField(masterAfterUpdate);
+    }
+
+    private Master createMaster() {
+        Master master = new Master();
+        master.setId(UUID.randomUUID());
+        master.setName("MasterName");
+        master.setPhone("645768767");
+        master.setAbout("What about");
+        return masterRepository.save(master);
     }
 }

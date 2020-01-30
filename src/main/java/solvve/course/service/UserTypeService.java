@@ -44,12 +44,6 @@ public class UserTypeService {
         return translationService.toRead(userType);
     }
 
-    private UserType getUserTypesRequired(UUID id) {
-        return userTypeRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(UserType.class, id);
-        });
-    }
-
     public void deleteUserTypes(UUID id) {
         userTypeRepository.delete(getUserTypesRequired(id));
     }
@@ -61,5 +55,11 @@ public class UserTypeService {
 
         userType = userTypeRepository.save(userType);
         return translationService.toRead(userType);
+    }
+
+    private UserType getUserTypesRequired(UUID id) {
+        return userTypeRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(UserType.class, id);
+        });
     }
 }

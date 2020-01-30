@@ -172,4 +172,23 @@ public class ReleaseDetailServiceTest {
         releaseDetail = releaseDetailRepository.findById(read.getId()).get();
         Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(read);
     }
+
+    @Transactional
+    @Test
+    public void testPutCountriesEmptyPut() {
+        Movie movie = createMovie();
+        Country country = createCountry();
+        ReleaseDetail releaseDetail = createCountries(movie, country);
+
+        ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
+        ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);
+
+        Assert.assertNull(read.getReleaseDate());
+
+        ReleaseDetail releaseDetailAfterUpdate = releaseDetailRepository.findById(read.getId()).get();
+
+        Assert.assertNull(releaseDetailAfterUpdate.getReleaseDate());
+
+        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(releaseDetailAfterUpdate);
+    }
 }

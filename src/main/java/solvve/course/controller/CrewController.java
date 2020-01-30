@@ -20,12 +20,12 @@ public class CrewController {
     }
 
     @PostMapping
-    public CrewReadExtendedDTO createCrew(@RequestBody CrewCreateDTO createDTO) {
+    public CrewReadDTO createCrew(@RequestBody CrewCreateDTO createDTO) {
         return crewService.createCrew(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public CrewReadExtendedDTO patchCrew(@PathVariable UUID id, @RequestBody CrewPatchDTO patch){
+    public CrewReadDTO patchCrew(@PathVariable UUID id, @RequestBody CrewPatchDTO patch){
         return crewService.patchCrew(id, patch);
     }
 
@@ -35,7 +35,7 @@ public class CrewController {
     }
 
     @PutMapping("/{id}")
-    public CrewReadExtendedDTO putCrew(@PathVariable UUID id, @RequestBody CrewPutDTO put){
+    public CrewReadDTO putCrew(@PathVariable UUID id, @RequestBody CrewPutDTO put){
         return crewService.putCrew(id, put);
     }
 }
