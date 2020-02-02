@@ -23,22 +23,22 @@ public class MovieReviewController {
     }
 
     @PostMapping
-    public MovieReviewReadDTO createMovieReview(@RequestBody MovieReviewCreateDTO createDTO){
+    public MovieReviewReadDTO createMovieReview(@RequestBody MovieReviewCreateDTO createDTO) {
         return movieReviewService.createMovieReview(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReviewReadDTO patchMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPatchDTO patch){
+    public MovieReviewReadDTO patchMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPatchDTO patch) {
         return movieReviewService.patchMovieReview(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieReview(@PathVariable UUID id){
+    public void deleteMovieReview(@PathVariable UUID id) {
         movieReviewService.deleteMovieReview(id);
     }
 
     @PutMapping("/{id}")
-    public MovieReviewReadDTO putMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPutDTO put){
+    public MovieReviewReadDTO putMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPutDTO put) {
         return movieReviewService.putMovieReview(id, put);
     }
 }

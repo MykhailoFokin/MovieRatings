@@ -23,22 +23,22 @@ public class RoleReviewCompliantController {
     }
 
     @PostMapping
-    public RoleReviewCompliantReadDTO createRoleReviewCompliant(@RequestBody RoleReviewCompliantCreateDTO createDTO){
+    public RoleReviewCompliantReadDTO createRoleReviewCompliant(@RequestBody RoleReviewCompliantCreateDTO createDTO) {
         return roleReviewCompliant.createRoleReviewCompliant(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPatchDTO patch){
+    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPatchDTO patch) {
         return roleReviewCompliant.patchRoleReviewCompliant(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleReviewCompliant(@PathVariable UUID id){
+    public void deleteRoleReviewCompliant(@PathVariable UUID id) {
         roleReviewCompliant.deleteRoleReviewCompliant(id);
     }
 
     @PutMapping("/{id}")
-    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPutDTO put){
+    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPutDTO put) {
         return roleReviewCompliant.putRoleReviewCompliant(id, put);
     }
 }

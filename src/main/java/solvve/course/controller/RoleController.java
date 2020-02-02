@@ -27,17 +27,17 @@ public class RoleController {
     }
 
     @PatchMapping("/{id}")
-    public RoleReadDTO patchRole(@PathVariable UUID id, @RequestBody RolePatchDTO patch){
+    public RoleReadDTO patchRole(@PathVariable UUID id, @RequestBody RolePatchDTO patch) {
         return roleService.patchRole(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRole(@PathVariable UUID id){
+    public void deleteRole(@PathVariable UUID id) {
         roleService.deleteRole(id);
     }
 
     @PutMapping("/{id}")
-    public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody RolePutDTO put){
+    public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody RolePutDTO put) {
         return roleService.putRole(id, put);
     }
 }

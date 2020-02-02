@@ -7,5 +7,5 @@ import solvve.course.domain.Country;
 import java.util.UUID;
 
 @Repository
-public interface CountryRepository extends CrudRepository<Country, UUID> {
+public interface CountryRepository extends CrudRepository<Country, UUID>, CountryRepositoryCustom {
 }

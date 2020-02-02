@@ -6,6 +6,9 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.repository.*;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class TranslationService {
 
@@ -42,6 +45,9 @@ public class TranslationService {
     @Autowired
     private RoleReviewRepository roleReviewRepository;
 
+    @Autowired
+    private VisitService visitService;
+
     public VisitReadExtendedDTO toReadExtended(Visit visit) {
         VisitReadExtendedDTO dto = new VisitReadExtendedDTO();
         dto.setId(visit.getId());
@@ -62,6 +68,18 @@ public class TranslationService {
         dto.setFinishAt(visit.getFinishAt());
         dto.setStatus(visit.getStatus());
         return dto;
+    }
+
+    public Set<VisitReadDTO> toRead(Set<Visit> visitSet) {
+        return visitSet.stream().map(visit -> {
+            VisitReadDTO visitReadDTO = new VisitReadDTO();
+            visitReadDTO.setMasterId(visit.getMasterId().getId());
+            visitReadDTO.setUserId(visit.getUserId().getId());
+            visitReadDTO.setStatus(visit.getStatus());
+            visitReadDTO.setStartAt(visit.getStartAt());
+            visitReadDTO.setFinishAt(visit.getFinishAt());
+            return visitReadDTO;
+        }).collect(Collectors.toSet());
     }
 
     public Visit toEntity(VisitCreateDTO create) {
@@ -256,6 +274,16 @@ public class TranslationService {
         } else {
             userGrant.setGrantedBy(new PortalUser());
         }
+    }
+
+    public MasterReadExtendedDTO toReadExtended(Master master) {
+        MasterReadExtendedDTO dto = new MasterReadExtendedDTO();
+        dto.setId(master.getId());
+        dto.setName(master.getName());
+        dto.setPhone(master.getPhone());
+        dto.setAbout(master.getAbout());
+        dto.setVisits(toRead(master.getVisits()));
+        return dto;
     }
 
     public MasterReadDTO toRead(Master master) {

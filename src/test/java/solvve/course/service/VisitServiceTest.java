@@ -118,12 +118,8 @@ public class VisitServiceTest {
         create.setStatus(VisitStatus.FINISHED);
         VisitReadDTO read = visitService.createVisit(create);
         Assertions.assertThat(read).isEqualToComparingFieldByField(read);
-        //Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "userId", "masterId");
-        //Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(portalUser);
-        //Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(master);
 
         Visit visit = visitRepository.findById(read.getId()).get();
-        //Assertions.assertThat(read).isEqualToComparingFieldByField(visit);
         Assertions.assertThat(create).isEqualToIgnoringGivenFields(visit, "userId", "masterId");
         Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId().getId());
         Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(visit.getMasterId().getId());

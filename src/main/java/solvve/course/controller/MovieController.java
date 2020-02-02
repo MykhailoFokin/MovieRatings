@@ -22,22 +22,22 @@ public class MovieController {
     }
 
     @PostMapping
-    public MovieReadDTO createMovie(@RequestBody MovieCreateDTO createDTO){
+    public MovieReadDTO createMovie(@RequestBody MovieCreateDTO createDTO) {
         return movieService.createMovie(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReadDTO patchMovie(@PathVariable UUID id, @RequestBody MoviePatchDTO patch){
+    public MovieReadDTO patchMovie(@PathVariable UUID id, @RequestBody MoviePatchDTO patch) {
         return movieService.patchMovie(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable UUID id){
+    public void deleteMovie(@PathVariable UUID id) {
         movieService.deleteMovie(id);
     }
 
     @PutMapping("/{id}")
-    public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody MoviePutDTO put){
+    public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody MoviePutDTO put) {
         return movieService.putMovie(id, put);
     }
 }

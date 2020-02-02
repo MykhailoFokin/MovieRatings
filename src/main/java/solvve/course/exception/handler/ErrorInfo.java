@@ -13,7 +13,13 @@ public class ErrorInfo {
         this.message = message;
     }
 
-    public HttpStatus getStatus() { return status; }
-    public Class getExceptionClass() { return exceptionClass; }
-    public String getMessage() { return message; }
+    public HttpStatus getStatus() {
+        return status;
+    }
+    public Class getExceptionClass() {
+        return exceptionClass;
+    }
+    public String getMessage() {
+        return message;
+    }
 }

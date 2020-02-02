@@ -23,22 +23,22 @@ public class RoleReviewFeedbackController {
     }
 
     @PostMapping
-    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@RequestBody RoleReviewFeedbackCreateDTO createDTO){
+    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@RequestBody RoleReviewFeedbackCreateDTO createDTO) {
         return roleReviewFeedback.createRoleReviewFeedback(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPatchDTO patch){
+    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPatchDTO patch) {
         return roleReviewFeedback.patchRoleReviewFeedback(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleReviewFeedback(@PathVariable UUID id){
+    public void deleteRoleReviewFeedback(@PathVariable UUID id) {
         roleReviewFeedback.deleteRoleReviewFeedback(id);
     }
 
     @PutMapping("/{id}")
-    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPutDTO put){
+    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPutDTO put) {
         return roleReviewFeedback.putRoleReviewFeedback(id, put);
     }
 }

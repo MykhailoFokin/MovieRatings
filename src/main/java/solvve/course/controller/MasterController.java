@@ -1,12 +1,8 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.MasterCreateDTO;
-import solvve.course.dto.MasterPatchDTO;
-import solvve.course.dto.MasterPutDTO;
-import solvve.course.dto.MasterReadDTO;
+import solvve.course.dto.*;
 import solvve.course.service.MasterService;
 
 import java.util.UUID;
@@ -19,17 +15,17 @@ public class MasterController {
     private MasterService masterService;
 
     @GetMapping("/{id}")
-    public MasterReadDTO getMaster(@PathVariable UUID id) {
+    public MasterReadExtendedDTO getMaster(@PathVariable UUID id) {
         return masterService.getMaster(id);
     }
 
     @PostMapping
-    public MasterReadDTO createMaster(@RequestBody MasterCreateDTO createDTO){
+    public MasterReadDTO createMaster(@RequestBody MasterCreateDTO createDTO) {
         return masterService.createMaster(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MasterReadDTO patchMaster(@PathVariable UUID id, @RequestBody MasterPatchDTO patch){
+    public MasterReadDTO patchMaster(@PathVariable UUID id, @RequestBody MasterPatchDTO patch) {
         return masterService.patchMaster(id, patch);
     }
 
@@ -39,7 +35,7 @@ public class MasterController {
     }
 
     @PutMapping("/{id}")
-    public MasterReadDTO putMaster(@PathVariable UUID id, @RequestBody MasterPutDTO put){
+    public MasterReadDTO putMaster(@PathVariable UUID id, @RequestBody MasterPutDTO put) {
         return masterService.putMaster(id, put);
     }
 }

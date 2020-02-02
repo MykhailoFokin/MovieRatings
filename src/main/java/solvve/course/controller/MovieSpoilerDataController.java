@@ -23,22 +23,22 @@ public class MovieSpoilerDataController {
     }
 
     @PostMapping
-    public MovieSpoilerDataReadDTO createMovieSpoilerData(@RequestBody MovieSpoilerDataCreateDTO createDTO){
+    public MovieSpoilerDataReadDTO createMovieSpoilerData(@RequestBody MovieSpoilerDataCreateDTO createDTO) {
         return movieSpoilerDataService.createMovieSpoilerData(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPatchDTO patch){
+    public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPatchDTO patch) {
         return movieSpoilerDataService.patchMovieSpoilerData(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieSpoilerData(@PathVariable UUID id){
+    public void deleteMovieSpoilerData(@PathVariable UUID id) {
         movieSpoilerDataService.deleteMovieSpoilerData(id);
     }
 
     @PutMapping("/{id}")
-    public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPutDTO put){
+    public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPutDTO put) {
         return movieSpoilerDataService.putMovieSpoilerData(id, put);
     }
 }

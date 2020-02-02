@@ -23,22 +23,22 @@ public class MovieVoteController {
     }
 
     @PostMapping
-    public MovieVoteReadDTO createMovieVote(@RequestBody MovieVoteCreateDTO createDTO){
+    public MovieVoteReadDTO createMovieVote(@RequestBody MovieVoteCreateDTO createDTO) {
         return movieVoteService.createMovieVote(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieVoteReadDTO patchMovieVote(@PathVariable UUID id, @RequestBody MovieVotePatchDTO patch){
+    public MovieVoteReadDTO patchMovieVote(@PathVariable UUID id, @RequestBody MovieVotePatchDTO patch) {
         return movieVoteService.patchMovieVote(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieVote(@PathVariable UUID id){
+    public void deleteMovieVote(@PathVariable UUID id) {
         movieVoteService.deleteMovieVote(id);
     }
 
     @PutMapping("/{id}")
-    public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody MovieVotePutDTO put){
+    public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody MovieVotePutDTO put) {
         return movieVoteService.putMovieVote(id, put);
     }
 }

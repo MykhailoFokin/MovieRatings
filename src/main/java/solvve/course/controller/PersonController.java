@@ -23,22 +23,22 @@ public class PersonController {
     }
 
     @PostMapping
-    public PersonReadDTO createPersons(@RequestBody PersonCreateDTO createDTO){
+    public PersonReadDTO createPersons(@RequestBody PersonCreateDTO createDTO) {
         return personService.createPersons(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public PersonReadDTO patchPersons(@PathVariable UUID id, @RequestBody PersonPatchDTO patch){
+    public PersonReadDTO patchPersons(@PathVariable UUID id, @RequestBody PersonPatchDTO patch) {
         return personService.patchPersons(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePersons(@PathVariable UUID id){
+    public void deletePersons(@PathVariable UUID id) {
         personService.deletePersons(id);
     }
 
     @PutMapping("/{id}")
-    public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody PersonPutDTO put){
+    public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody PersonPutDTO put) {
         return personService.putPersons(id, put);
     }
 }

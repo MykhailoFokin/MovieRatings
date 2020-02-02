@@ -23,22 +23,22 @@ public class UserTypeController {
     }
 
     @PostMapping
-    public UserTypeReadDTO createUserTypes(@RequestBody UserTypeCreateDTO createDTO){
+    public UserTypeReadDTO createUserTypes(@RequestBody UserTypeCreateDTO createDTO) {
         return userTypeService.createUserTypes(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public UserTypeReadDTO patchUserTypes(@PathVariable UUID id, @RequestBody UserTypePatchDTO patch){
+    public UserTypeReadDTO patchUserTypes(@PathVariable UUID id, @RequestBody UserTypePatchDTO patch) {
         return userTypeService.patchUserTypes(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserTypes(@PathVariable UUID id){
+    public void deleteUserTypes(@PathVariable UUID id) {
         userTypeService.deleteUserTypes(id);
     }
 
     @PutMapping("/{id}")
-    public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody UserTypePutDTO put){
+    public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody UserTypePutDTO put) {
         return userTypeService.putUserTypes(id, put);
     }
 }

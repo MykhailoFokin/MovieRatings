@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -13,14 +14,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.VisitService;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,8 +49,6 @@ public class VisitControllerTest {
     private VisitReadDTO createVisitRead() {
         VisitReadDTO visit = new VisitReadDTO();
         visit.setId(UUID.randomUUID());
-        //visit.setUserId(portalUser);
-        //visit.setMasterId(master);
         visit.setStartAt(Instant.now());
         visit.setFinishAt(Instant.now());
         visit.setStatus(VisitStatus.FINISHED);
@@ -51,11 +57,8 @@ public class VisitControllerTest {
 
     @Test
     public void testGetVisit() throws Exception {
-        //VisitReadExtendedDTO visit = createVisitRead();
         VisitReadExtendedDTO visit = new VisitReadExtendedDTO();
         visit.setId(UUID.randomUUID());
-        //visit.setUserId(portalUser);
-        //visit.setMasterId(master);
         visit.setStartAt(Instant.now());
         visit.setFinishAt(Instant.now());
         visit.setStatus(VisitStatus.FINISHED);
@@ -101,8 +104,6 @@ public class VisitControllerTest {
     public void testCreateVisit() throws Exception {
 
         VisitCreateDTO create = new VisitCreateDTO();
-        //create.setUserId(portalUser);
-        //create.setMasterId(master);
         create.setStartAt(Instant.now());
         create.setFinishAt(Instant.now());
         create.setStatus(VisitStatus.FINISHED);
@@ -125,8 +126,6 @@ public class VisitControllerTest {
     public void testPatchVisit() throws Exception {
 
         VisitPatchDTO patchDTO = new VisitPatchDTO();
-        //patchDTO.setUserId(portalUser);
-        //patchDTO.setMasterId(master);
         patchDTO.setStartAt(Instant.now());
         patchDTO.setFinishAt(Instant.now());
         patchDTO.setStatus(VisitStatus.FINISHED);
@@ -158,8 +157,6 @@ public class VisitControllerTest {
     public void testPutVisit() throws Exception {
 
         VisitPutDTO putDTO = new VisitPutDTO();
-        //putDTO.setUserId(portalUser);
-        //putDTO.setMasterId(master);
         putDTO.setStartAt(Instant.now());
         putDTO.setFinishAt(Instant.now());
         putDTO.setStatus(VisitStatus.FINISHED);
@@ -176,5 +173,37 @@ public class VisitControllerTest {
 
         VisitReadDTO actualVisit = objectMapper.readValue(resultJson, VisitReadDTO.class);
         Assert.assertEquals(read, actualVisit);
+    }
+
+    @Test
+    public void testGetVisits() throws Exception {
+        VisitFilter visitFilter = new VisitFilter();
+        visitFilter.setUserId(UUID.randomUUID());
+        visitFilter.setMasterId(UUID.randomUUID());
+        visitFilter.setStatuses(Set.of(VisitStatus.SCHEDULED, VisitStatus.FINISHED));
+        visitFilter.setStartAtFrom(Instant.now());
+        visitFilter.setStartAtTo(Instant.now());
+
+        VisitReadDTO read = new VisitReadDTO();
+        read.setUserId(visitFilter.getUserId());
+        read.setMasterId(visitFilter.getMasterId());
+        read.setStatus(VisitStatus.SCHEDULED);
+        read.setId(UUID.randomUUID());
+        read.setStartAt(Instant.now());
+        read.setFinishAt(Instant.now());
+        List<VisitReadDTO> expectedResult = List.of(read);
+        Mockito.when(visitService.getVisits(visitFilter)).thenReturn(expectedResult);
+
+        String resultJson = mvc.perform(get("/api/v1/visits")
+                .param("userId", visitFilter.getUserId().toString())
+                .param("masterId", visitFilter.getMasterId().toString())
+                .param("statuses", "SCHEDULED, FINISHED")
+                .param("startAtFrom", visitFilter.getStartAtFrom().toString())
+                .param("startAtTo", visitFilter.getStartAtTo().toString()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<VisitReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        });
+        Assert.assertEquals(expectedResult, actualResult);
     }
 }

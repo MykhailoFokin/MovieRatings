@@ -7,20 +7,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
-import solvve.course.dto.MasterCreateDTO;
-import solvve.course.dto.MasterPatchDTO;
-import solvve.course.dto.MasterPutDTO;
-import solvve.course.dto.MasterReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MasterService;
+import solvve.course.service.TranslationService;
 
 import java.util.UUID;
 
@@ -41,8 +39,8 @@ public class MasterControllerTest {
     @MockBean
     private MasterService masterService;
 
-    private MasterReadDTO createMasterRead() {
-        MasterReadDTO master = new MasterReadDTO();
+    private MasterReadExtendedDTO createMasterRead() {
+        MasterReadExtendedDTO master = new MasterReadExtendedDTO();
         master.setId(UUID.randomUUID());
         master.setName("MasterName");
         master.setPhone("645768767");
@@ -50,9 +48,18 @@ public class MasterControllerTest {
         return master;
     }
 
+    private MasterReadDTO fromExtendedToDTO(MasterReadExtendedDTO dto) {
+        MasterReadDTO masterReadDTO = new MasterReadDTO();
+        masterReadDTO.setId(dto.getId());
+        masterReadDTO.setName(dto.getName());
+        masterReadDTO.setPhone(dto.getPhone());
+        masterReadDTO.setAbout(dto.getAbout());
+        return masterReadDTO;
+    }
+
     @Test
     public void testGetMaster() throws Exception {
-        MasterReadDTO master = createMasterRead();
+        MasterReadExtendedDTO master = createMasterRead();
 
         Mockito.when(masterService.getMaster(master.getId())).thenReturn(master);
 
@@ -99,7 +106,7 @@ public class MasterControllerTest {
         create.setPhone("645768767");
         create.setAbout("What about");
 
-        MasterReadDTO read = createMasterRead();
+        MasterReadDTO read = fromExtendedToDTO(createMasterRead());
 
         Mockito.when(masterService.createMaster(create)).thenReturn(read);
 
@@ -121,7 +128,7 @@ public class MasterControllerTest {
         patchDTO.setPhone("645768767");
         patchDTO.setAbout("What about");
 
-        MasterReadDTO read = createMasterRead();
+        MasterReadDTO read = fromExtendedToDTO(createMasterRead());
 
         Mockito.when(masterService.patchMaster(read.getId(),patchDTO)).thenReturn(read);
 
@@ -152,7 +159,7 @@ public class MasterControllerTest {
         putDTO.setPhone("645768767");
         putDTO.setAbout("What about");
 
-        MasterReadDTO read = createMasterRead();
+        MasterReadDTO read = fromExtendedToDTO(createMasterRead());
 
         Mockito.when(masterService.putMaster(read.getId(),putDTO)).thenReturn(read);
 

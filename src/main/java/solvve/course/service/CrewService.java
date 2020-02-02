@@ -11,7 +11,9 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CrewService {
@@ -44,12 +46,6 @@ public class CrewService {
         return translationService.toRead(crew);
     }
 
-    private Crew getCrewRequired(UUID id) {
-        return crewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Crew.class, id);
-        });
-    }
-
     public void deleteCrew(UUID id) {
         crewRepository.delete(getCrewRequired(id));
     }
@@ -61,5 +57,16 @@ public class CrewService {
 
         crew = crewRepository.save(crew);
         return translationService.toRead(crew);
+    }
+
+    public List<CrewReadDTO> getCrews(CrewFilter filter) {
+        List<Crew> crews = crewRepository.findByFilter(filter);
+        return crews.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
+    private Crew getCrewRequired(UUID id) {
+        return crewRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Crew.class, id);
+        });
     }
 }

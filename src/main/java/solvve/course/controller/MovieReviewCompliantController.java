@@ -23,22 +23,22 @@ public class MovieReviewCompliantController {
     }
 
     @PostMapping
-    public MovieReviewCompliantReadDTO createMovieReviewCompliant(@RequestBody MovieReviewCompliantCreateDTO createDTO){
+    public MovieReviewCompliantReadDTO createMovieReviewCompliant(@RequestBody MovieReviewCompliantCreateDTO createDTO) {
         return movieReviewCompliantService.createMovieReviewCompliant(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReviewCompliantReadDTO patchMovieReviewCompliant(@PathVariable UUID id, @RequestBody MovieReviewCompliantPatchDTO patch){
+    public MovieReviewCompliantReadDTO patchMovieReviewCompliant(@PathVariable UUID id, @RequestBody MovieReviewCompliantPatchDTO patch) {
         return movieReviewCompliantService.patchMovieReviewCompliant(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieReviewCompliant(@PathVariable UUID id){
+    public void deleteMovieReviewCompliant(@PathVariable UUID id) {
         movieReviewCompliantService.deleteMovieReviewCompliant(id);
     }
 
     @PutMapping("/{id}")
-    public MovieReviewCompliantReadDTO putMovieReviewCompliant(@PathVariable UUID id, @RequestBody MovieReviewCompliantPutDTO put){
+    public MovieReviewCompliantReadDTO putMovieReviewCompliant(@PathVariable UUID id, @RequestBody MovieReviewCompliantPutDTO put) {
         return movieReviewCompliantService.putMovieReviewCompliant(id, put);
     }
 }

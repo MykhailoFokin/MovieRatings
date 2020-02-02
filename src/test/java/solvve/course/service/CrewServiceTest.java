@@ -42,41 +42,6 @@ public class CrewServiceTest {
     @Autowired
     private MovieRepository movieRepository;
 
-    private CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setName("Director");
-        crewType = crewTypeRepository.save(crewType);
-        return  crewType;
-    }
-
-    private Person createPerson() {
-        Person person = new Person();
-        person.setSurname("Surname");
-        person.setName("Name");
-        person.setMiddleName("MiddleName");
-        person = personRepository.save(person);
-        return person;
-    }
-
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCompanies("Paramount");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
     @Transactional
     @Test
     public void testGetCrew() {
@@ -234,6 +199,41 @@ public class CrewServiceTest {
         Assert.assertNull(crewAfterUpdate.getDescription());
 
         Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
+    }
+
+    private CrewType createCrewType() {
+        CrewType crewType = new CrewType();
+        crewType.setName("Director");
+        crewType = crewTypeRepository.save(crewType);
+        return  crewType;
+    }
+
+    private Person createPerson() {
+        Person person = new Person();
+        person.setSurname("Surname");
+        person.setName("Name");
+        person.setMiddleName("MiddleName");
+        person = personRepository.save(person);
+        return person;
+    }
+
+    private Movie createMovie() {
+        Movie movie = new Movie();
+        movie.setTitle("Movie Test");
+        movie.setYear((short) 2019);
+        movie.setGenres("Comedy");
+        movie.setAspectRatio("1:10");
+        movie.setCamera("Panasonic");
+        movie.setColour("Black");
+        movie.setCompanies("Paramount");
+        movie.setCritique("123");
+        movie.setDescription("Description");
+        movie.setFilmingLocations("USA");
+        movie.setLaboratory("CaliforniaDreaming");
+        movie.setLanguages("English");
+        movie.setSoundMix("DolbySurround");
+        movie = movieRepository.save(movie);
+        return movie;
     }
 
     private Crew createCrew(Person person, CrewType crewType, Movie movie) {

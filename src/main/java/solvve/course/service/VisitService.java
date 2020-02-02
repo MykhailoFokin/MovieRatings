@@ -12,8 +12,10 @@ import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
 import solvve.course.repository.VisitRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class VisitService {
@@ -57,6 +59,11 @@ public class VisitService {
 
         visit = visitRepository.save(visit);
         return translationService.toRead(visit);
+    }
+
+    public List<VisitReadDTO> getVisits(VisitFilter filter) {
+        List<Visit> visits = visitRepository.findByFilter(filter);
+        return visits.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private Visit getVisitRequired(UUID id) {

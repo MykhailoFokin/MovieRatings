@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.VisitService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,22 +22,27 @@ public class VisitController {
     }
 
     @PostMapping
-    public VisitReadDTO createVisit(@RequestBody VisitCreateDTO createDTO){
+    public VisitReadDTO createVisit(@RequestBody VisitCreateDTO createDTO) {
         return visitService.createVisit(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public VisitReadDTO patchVisit(@PathVariable UUID id, @RequestBody VisitPatchDTO patch){
+    public VisitReadDTO patchVisit(@PathVariable UUID id, @RequestBody VisitPatchDTO patch) {
         return visitService.patchVisit(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteVisit(@PathVariable UUID id){
+    public void deleteVisit(@PathVariable UUID id) {
         visitService.deleteVisit(id);
     }
 
     @PutMapping("/{id}")
-    public VisitReadDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put){
+    public VisitReadDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put) {
         return visitService.putVisit(id, put);
+    }
+
+    @GetMapping
+    public List<VisitReadDTO> getVisits(VisitFilter filter) {
+        return visitService.getVisits(filter);
     }
 }

@@ -23,22 +23,22 @@ public class ReleaseDetailController {
     }
 
     @PostMapping
-    public ReleaseDetailReadDTO createReleaseDetails(@RequestBody ReleaseDetailCreateDTO createDTO){
+    public ReleaseDetailReadDTO createReleaseDetails(@RequestBody ReleaseDetailCreateDTO createDTO) {
         return releaseDetailService.createReleaseDetails(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public ReleaseDetailReadDTO patchReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPatchDTO patch){
+    public ReleaseDetailReadDTO patchReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPatchDTO patch) {
         return releaseDetailService.patchReleaseDetails(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReleaseDetails(@PathVariable UUID id){
+    public void deleteReleaseDetails(@PathVariable UUID id) {
         releaseDetailService.deleteReleaseDetails(id);
     }
 
     @PutMapping("/{id}")
-    public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPutDTO put){
+    public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPutDTO put) {
         return releaseDetailService.putReleaseDetails(id, put);
     }
 }

@@ -23,22 +23,22 @@ public class RoleReviewController {
     }
 
     @PostMapping
-    public RoleReviewReadDTO createRoleReview(@RequestBody RoleReviewCreateDTO createDTO){
+    public RoleReviewReadDTO createRoleReview(@RequestBody RoleReviewCreateDTO createDTO) {
         return roleReviewService.createRoleReview(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewReadDTO patchRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPatchDTO patch){
+    public RoleReviewReadDTO patchRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPatchDTO patch) {
         return roleReviewService.patchRoleReview(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleReview(@PathVariable UUID id){
+    public void deleteRoleReview(@PathVariable UUID id) {
         roleReviewService.deleteRoleReview(id);
     }
 
     @PutMapping("/{id}")
-    public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPutDTO put){
+    public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPutDTO put) {
         return roleReviewService.putRoleReview(id, put);
     }
 }

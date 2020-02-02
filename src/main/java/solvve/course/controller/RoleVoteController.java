@@ -23,22 +23,22 @@ public class RoleVoteController {
     }
 
     @PostMapping
-    public RoleVoteReadDTO createRoleVote(@RequestBody RoleVoteCreateDTO createDTO){
+    public RoleVoteReadDTO createRoleVote(@RequestBody RoleVoteCreateDTO createDTO) {
         return roleVoteService.createRoleVote(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleVoteReadDTO patchRoleVote(@PathVariable UUID id, @RequestBody RoleVotePatchDTO patch){
+    public RoleVoteReadDTO patchRoleVote(@PathVariable UUID id, @RequestBody RoleVotePatchDTO patch) {
         return roleVoteService.patchRoleVote(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleVote(@PathVariable UUID id){
+    public void deleteRoleVote(@PathVariable UUID id) {
         roleVoteService.deleteRoleVote(id);
     }
 
     @PutMapping("/{id}")
-    public RoleVoteReadDTO putRoleVote(@PathVariable UUID id, @RequestBody RoleVotePutDTO put){
+    public RoleVoteReadDTO putRoleVote(@PathVariable UUID id, @RequestBody RoleVotePutDTO put) {
         return roleVoteService.putRoleVote(id, put);
     }
 }

@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
-import solvve.course.dto.MasterCreateDTO;
-import solvve.course.dto.MasterPatchDTO;
-import solvve.course.dto.MasterPutDTO;
-import solvve.course.dto.MasterReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
 
@@ -23,9 +20,9 @@ public class MasterService {
     private TranslationService translationService;
 
     @Transactional(readOnly = true)
-    public MasterReadDTO getMaster(UUID id) {
+    public MasterReadExtendedDTO getMaster(UUID id) {
         Master master = getMasterRequired(id);
-        return translationService.toRead(master);
+        return translationService.toReadExtended(master);
     }
 
     public MasterReadDTO createMaster(MasterCreateDTO create) {

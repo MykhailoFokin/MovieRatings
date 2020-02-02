@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
-import solvve.course.dto.CountryCreateDTO;
-import solvve.course.dto.CountryPatchDTO;
-import solvve.course.dto.CountryPutDTO;
-import solvve.course.dto.CountryReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CountryService {
@@ -61,5 +60,10 @@ public class CountryService {
 
         country = countryRepository.save(country);
         return translationService.toRead(country);
+    }
+
+    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
+        List<Country> countryList = countryRepository.findByFilter(countryFilter);
+        return countryList.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 }

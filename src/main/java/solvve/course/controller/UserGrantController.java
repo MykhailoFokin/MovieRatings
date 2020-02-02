@@ -23,22 +23,22 @@ public class UserGrantController {
     }
 
     @PostMapping
-    public UserGrantReadDTO createGrants(@RequestBody UserGrantCreateDTO createDTO){
+    public UserGrantReadDTO createGrants(@RequestBody UserGrantCreateDTO createDTO) {
         return userGrantService.createGrants(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public UserGrantReadDTO patchGrants(@PathVariable UUID id, @RequestBody UserGrantPatchDTO patch){
+    public UserGrantReadDTO patchGrants(@PathVariable UUID id, @RequestBody UserGrantPatchDTO patch) {
         return userGrantService.patchGrants(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGrants(@PathVariable UUID id){
+    public void deleteGrants(@PathVariable UUID id) {
         userGrantService.deleteGrants(id);
     }
 
     @PutMapping("/{id}")
-    public UserGrantReadDTO putGrants(@PathVariable UUID id, @RequestBody UserGrantPutDTO put){
+    public UserGrantReadDTO putGrants(@PathVariable UUID id, @RequestBody UserGrantPutDTO put) {
         return userGrantService.putGrants(id, put);
     }
 }

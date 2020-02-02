@@ -6,5 +6,5 @@ import solvve.course.domain.Crew;
 import java.util.UUID;
 
 @Repository
-public interface CrewRepository extends CrudRepository<Crew, UUID> {
+public interface CrewRepository extends CrudRepository<Crew, UUID>, CrewRepositoryCustom {
 }

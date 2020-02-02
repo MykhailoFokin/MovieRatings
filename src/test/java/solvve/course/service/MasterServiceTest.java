@@ -11,13 +11,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Master;
-import solvve.course.dto.MasterCreateDTO;
-import solvve.course.dto.MasterPatchDTO;
-import solvve.course.dto.MasterPutDTO;
-import solvve.course.dto.MasterReadDTO;
+import solvve.course.domain.Visit;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -33,11 +33,11 @@ public class MasterServiceTest {
     private MasterService masterService;
 
     @Test
-    public void testGetMaster() {
+    public void testGetMasterExtended() {
         Master master = createMaster();
 
-        MasterReadDTO readDTO = masterService.getMaster(master.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(master);
+        MasterReadExtendedDTO readDTO = masterService.getMaster(master.getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(master, "visits");
     }
 
     @Test(expected = EntityNotFoundException.class)

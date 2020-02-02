@@ -23,12 +23,12 @@ public class RoleSpoilerDataController {
     }
 
     @PostMapping
-    public RoleSpoilerDataReadDTO createRoleSpoilerData(@RequestBody RoleSpoilerDataCreateDTO createDTO){
+    public RoleSpoilerDataReadDTO createRoleSpoilerData(@RequestBody RoleSpoilerDataCreateDTO createDTO) {
         return roleSpoilerDataService.createRoleSpoilerData(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPatchDTO patch){
+    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPatchDTO patch) {
         return roleSpoilerDataService.patchRoleSpoilerData(id, patch);
     }
 
@@ -38,7 +38,7 @@ public class RoleSpoilerDataController {
     }
 
     @PutMapping("/{id}")
-    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPutDTO put){
+    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPutDTO put) {
         return roleSpoilerDataService.putRoleSpoilerData(id, put);
     }
 }

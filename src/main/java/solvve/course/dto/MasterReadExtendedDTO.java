@@ -17,5 +17,5 @@ public class MasterReadExtendedDTO {
 
     private String about;
 
-    private Set<Visit> visits;
+    private Set<VisitReadDTO> visits;
 }

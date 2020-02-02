@@ -23,22 +23,22 @@ public class NewsController {
     }
 
     @PostMapping
-    public NewsReadDTO createNews(@RequestBody NewsCreateDTO createDTO){
+    public NewsReadDTO createNews(@RequestBody NewsCreateDTO createDTO) {
         return newsService.createNews(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public NewsReadDTO patchNews(@PathVariable UUID id, @RequestBody NewsPatchDTO patch){
+    public NewsReadDTO patchNews(@PathVariable UUID id, @RequestBody NewsPatchDTO patch) {
         return newsService.patchNews(id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteNews(@PathVariable UUID id){
+    public void deleteNews(@PathVariable UUID id) {
         newsService.deleteNews(id);
     }
 
     @PutMapping("/{id}")
-    public NewsReadDTO putNews(@PathVariable UUID id, @RequestBody NewsPutDTO put){
+    public NewsReadDTO putNews(@PathVariable UUID id, @RequestBody NewsPutDTO put) {
         return newsService.putNews(id, put);
     }
 }

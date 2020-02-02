@@ -23,12 +23,12 @@ public class PortalUserController {
     }
 
     @PostMapping
-    public PortalUserReadDTO createPortalUser(@RequestBody PortalUserCreateDTO createDTO){
+    public PortalUserReadDTO createPortalUser(@RequestBody PortalUserCreateDTO createDTO) {
         return portalUserService.createPortalUser(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public PortalUserReadDTO patchPortalUser(@PathVariable UUID id, @RequestBody PortalUserPatchDTO patch){
+    public PortalUserReadDTO patchPortalUser(@PathVariable UUID id, @RequestBody PortalUserPatchDTO patch) {
         return portalUserService.patchPortalUser(id, patch);
     }
 
@@ -38,7 +38,7 @@ public class PortalUserController {
     }
 
     @PutMapping("/{id}")
-    public PortalUserReadDTO putPortalUser(@PathVariable UUID id, @RequestBody PortalUserPutDTO put){
+    public PortalUserReadDTO putPortalUser(@PathVariable UUID id, @RequestBody PortalUserPutDTO put) {
         return portalUserService.putPortalUser(id, put);
     }
 }
