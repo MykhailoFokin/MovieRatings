@@ -1,9 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.*;
-
-import java.util.Set;
 
 @Data
 public class MoviePutDTO {

@@ -1,9 +1,6 @@
 package solvve.course.dto;
 
-import lombok.*;
-import solvve.course.domain.*;
-
-import java.util.Set;
+import lombok.Data;
 
 @Data
 public class MovieCreateDTO {

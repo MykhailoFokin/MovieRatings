@@ -5,8 +5,6 @@ import solvve.course.domain.Movie;
 import solvve.course.domain.MovieReview;
 import solvve.course.domain.PortalUser;
 
-import java.util.UUID;
-
 @Data
 public class MovieReviewFeedbackCreateDTO {
 

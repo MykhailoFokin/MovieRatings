@@ -1,7 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.Crew;
 
 import java.util.UUID;
 

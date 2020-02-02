@@ -1,8 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.Master;
-import solvve.course.domain.PortalUser;
 import solvve.course.domain.VisitStatus;
 
 import java.time.Instant;

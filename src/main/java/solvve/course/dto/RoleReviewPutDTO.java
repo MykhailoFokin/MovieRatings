@@ -1,7 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.*;
+import solvve.course.domain.UserModeratedStatusType;
 
 import java.util.UUID;
 
