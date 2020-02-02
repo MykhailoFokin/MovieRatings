@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
-import solvve.course.dto.CrewTypeCreateDTO;
-import solvve.course.dto.CrewTypePatchDTO;
-import solvve.course.dto.CrewTypePutDTO;
-import solvve.course.dto.CrewTypeReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CrewTypeService {
@@ -44,12 +43,6 @@ public class CrewTypeService {
         return translationService.toRead(crewType);
     }
 
-    private CrewType getCrewTypeRequired(UUID id) {
-        return crewTypeRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(CrewType.class, id);
-        });
-    }
-
     public void deleteCrewType(UUID id) {
         crewTypeRepository.delete(getCrewTypeRequired(id));
     }
@@ -61,5 +54,16 @@ public class CrewTypeService {
 
         crewType = crewTypeRepository.save(crewType);
         return translationService.toRead(crewType);
+    }
+
+    public List<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter) {
+        List<CrewType> crewTypeList = crewTypeRepository.findByFilter(filter);
+        return crewTypeList.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
+    private CrewType getCrewTypeRequired(UUID id) {
+        return crewTypeRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(CrewType.class, id);
+        });
     }
 }

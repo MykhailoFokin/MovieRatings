@@ -2,12 +2,11 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.CrewTypeCreateDTO;
-import solvve.course.dto.CrewTypePatchDTO;
-import solvve.course.dto.CrewTypePutDTO;
-import solvve.course.dto.CrewTypeReadDTO;
+import solvve.course.domain.CrewType;
+import solvve.course.dto.*;
 import solvve.course.service.CrewTypeService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,5 +39,10 @@ public class CrewTypeController {
     @PutMapping("/{id}")
     public CrewTypeReadDTO putCrewType(@PathVariable UUID id, @RequestBody CrewTypePutDTO put) {
         return crewTypeService.putCrewType(id, put);
+    }
+
+    @GetMapping
+    public List<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter) {
+        return crewTypeService.getCrewTypes(filter);
     }
 }

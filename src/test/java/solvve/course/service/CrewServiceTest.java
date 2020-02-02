@@ -24,7 +24,7 @@ import solvve.course.repository.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from crew; delete from movie; delete from crew_type; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from crew","delete from movie","delete from crew_type","delete from person"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CrewServiceTest {
 
     @Autowired
@@ -51,7 +51,6 @@ public class CrewServiceTest {
         Crew crew = createCrew(person, crewType, movie);
 
         CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
-        //Assertions.assertThat(readDTO).isEqualToComparingFieldByField(crew);
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew, "movieId", "personId","crewType");
         Assertions.assertThat(readDTO.getMovieId()).isEqualToIgnoringGivenFields(movie);
         Assertions.assertThat(readDTO.getPersonId()).isEqualToIgnoringGivenFields(person);
