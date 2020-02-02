@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from user_grant; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from user_grant",
+        "delete from user_type"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class UserGrantRepositoryTest {
 

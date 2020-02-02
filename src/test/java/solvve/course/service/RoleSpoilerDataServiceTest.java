@@ -21,7 +21,13 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_spoiler_data; delete from role_review; delete from portal_user; delete from user_type; delete from role; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from role_spoiler_data",
+        " delete from role_review",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from role",
+        " delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleSpoilerDataServiceTest {
 
     @Autowired
@@ -107,7 +113,8 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleSpoilerData,"roleReviewId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleSpoilerData,
+                "roleReviewId");
         Assertions.assertThat(readDTO.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
     }
 
@@ -132,7 +139,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleSpoilerData roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleSpoilerData,"roleReviewId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleSpoilerData,
+                "roleReviewId");
         Assertions.assertThat(read.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
     }
 
@@ -153,7 +161,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,"roleReviewId");
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,
+                "roleReviewId");
         Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 
@@ -214,7 +223,8 @@ public class RoleSpoilerDataServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,"roleReviewId");
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,
+                "roleReviewId");
         Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
     }
 

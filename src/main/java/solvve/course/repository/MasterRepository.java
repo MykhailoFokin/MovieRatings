@@ -7,6 +7,6 @@ import solvve.course.domain.Master;
 import java.util.UUID;
 
 @Repository
-public interface MasterRepository  extends CrudRepository<Master, UUID> {
+public interface MasterRepository  extends CrudRepository<Master, UUID>, MasterRepositoryCustom {
 
 }

@@ -22,7 +22,10 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from user_grant","delete from portal_user","delete from user_type"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from user_grant",
+        "delete from portal_user",
+        "delete from user_type"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class UserGrantServiceTest {
 
     @Autowired
@@ -74,7 +77,8 @@ public class UserGrantServiceTest {
         UserGrant userGrant = createGrants(userType, portalUser);
 
         UserGrantReadDTO readDTO = userGrantService.getGrants(userGrant.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(userGrant,"userTypeId", "grantedBy");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(userGrant,
+                "userTypeId", "grantedBy");
         Assertions.assertThat(readDTO.getUserTypeId()).isEqualTo(userGrant.getUserTypeId().getId());
         Assertions.assertThat(readDTO.getGrantedBy()).isEqualTo(userGrant.getGrantedBy().getId());
     }
@@ -99,7 +103,8 @@ public class UserGrantServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         UserGrant userGrant = userGrantRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(userGrant,"userTypeId", "grantedBy");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(userGrant,
+                "userTypeId", "grantedBy");
         Assertions.assertThat(read.getUserTypeId()).isEqualTo(userGrant.getUserTypeId().getId());
         Assertions.assertThat(read.getGrantedBy()).isEqualTo(userGrant.getGrantedBy().getId());
     }
@@ -121,7 +126,8 @@ public class UserGrantServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         userGrant = userGrantRepository.findById(read.getId()).get();
-        Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,"userTypeId", "grantedBy");
+        Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,
+                "userTypeId", "grantedBy");
         Assertions.assertThat(userGrant.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
         Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
     }
@@ -183,7 +189,8 @@ public class UserGrantServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         userGrant = userGrantRepository.findById(read.getId()).get();
-        Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,"userTypeId", "grantedBy");
+        Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,
+                "userTypeId", "grantedBy");
         Assertions.assertThat(userGrant.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
         Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
     }

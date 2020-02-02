@@ -28,7 +28,9 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from portal_user; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from portal_user",
+        " delete from user_type"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class PortalUserServiceTest {
 
     @Autowired
@@ -112,8 +114,10 @@ public class PortalUserServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         portalUser = portalUserRepository.findById(read.getId()).get();
-        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(read,"userType", "userGrants","movieReview","movieReviewModerator",
-                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks","roleReviews","roleReviewsModerator","roleReviewCompliants",
+        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(read,
+                "userType", "userGrants","movieReview","movieReviewModerator",
+                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
+                ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserType());
     }
@@ -178,8 +182,10 @@ public class PortalUserServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         portalUser = portalUserRepository.findById(read.getId()).get();
-        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(read,"userType", "userGrants","movieReview","movieReviewModerator",
-                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks","roleReviews","roleReviewsModerator","roleReviewCompliants",
+        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(read,
+                "userType", "userGrants","movieReview","movieReviewModerator",
+                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks",
+                "roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserType());
     }

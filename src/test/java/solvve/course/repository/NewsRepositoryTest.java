@@ -16,7 +16,10 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = "delete from news; delete from portal_user; delete from user_type; ", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from news",
+        "delete from portal_user",
+        "delete from user_type"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class NewsRepositoryTest {
 

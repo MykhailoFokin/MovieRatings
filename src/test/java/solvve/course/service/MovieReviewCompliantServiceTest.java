@@ -21,7 +21,12 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie_review_compliant; delete from movie_review; delete from portal_user; delete from user_type; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from movie_review_compliant",
+        " delete from movie_review",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from movie"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieReviewCompliantServiceTest {
 
     @Autowired

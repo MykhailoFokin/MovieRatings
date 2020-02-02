@@ -30,7 +30,10 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from news; delete from portal_user; delete from user_type;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from news",
+        " delete from portal_user",
+        " delete from user_type"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class NewsServiceTest {
 
     @Autowired

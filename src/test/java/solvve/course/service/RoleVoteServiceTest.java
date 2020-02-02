@@ -21,7 +21,12 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_vote; delete from portal_user; delete from user_type; delete from role; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from role_vote",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from role",
+        " delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleVoteServiceTest {
 
     @Autowired
@@ -91,7 +96,8 @@ public class RoleVoteServiceTest {
         RoleVote roleVote = createRoleVote(portalUser, role);
 
         RoleVoteReadDTO readDTO = roleVoteService.getRoleVote(roleVote.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleVote,"userId","roleId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleVote,
+                "userId","roleId");
         Assertions.assertThat(readDTO.getUserId()).isEqualTo(roleVote.getUserId().getId());
         Assertions.assertThat(readDTO.getRoleId()).isEqualTo(roleVote.getRoleId().getId());
     }
@@ -115,7 +121,8 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleVote roleVote = roleVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,"userId","roleId");
+        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
+                "userId","roleId");
         Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }
@@ -136,7 +143,8 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleVote = roleVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,"userId","roleId");
+        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
+                "userId","roleId");
         Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }
@@ -195,7 +203,8 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleVote = roleVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,"userId","roleId");
+        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
+                "userId","roleId");
         Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }

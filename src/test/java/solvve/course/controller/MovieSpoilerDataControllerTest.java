@@ -52,7 +52,8 @@ public class MovieSpoilerDataControllerTest {
     public void testGetMovieSpoilerData() throws Exception {
         MovieSpoilerDataReadDTO movieSpoilerData = createMovieSpoilerDataRead();
 
-        Mockito.when(movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId())).thenReturn(movieSpoilerData);
+        Mockito.when(movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId()))
+                .thenReturn(movieSpoilerData);
 
         String resultJson = mvc.perform(get("/api/v1/moviespoilerdata/{id}", movieSpoilerData.getId()))
                 .andExpect(status().isOk())
@@ -108,7 +109,8 @@ public class MovieSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper.readValue(resultJson, MovieSpoilerDataReadDTO.class);
+        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper
+                .readValue(resultJson, MovieSpoilerDataReadDTO.class);
         Assertions.assertThat(actualMovieSpoilerData).isEqualToComparingFieldByField(read);
     }
 
@@ -129,7 +131,8 @@ public class MovieSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper.readValue(resultJson, MovieSpoilerDataReadDTO.class);
+        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper
+                .readValue(resultJson, MovieSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualMovieSpoilerData);
     }
 
@@ -159,7 +162,8 @@ public class MovieSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper.readValue(resultJson, MovieSpoilerDataReadDTO.class);
+        MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper
+                .readValue(resultJson, MovieSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualMovieSpoilerData);
     }
 }

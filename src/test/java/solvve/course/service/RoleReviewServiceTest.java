@@ -21,7 +21,12 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role_review; delete from portal_user; delete from user_type; delete from role; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from role_review",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from role",
+        " delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleReviewServiceTest {
 
     @Autowired
@@ -92,10 +97,14 @@ public class RoleReviewServiceTest {
         RoleReview roleReview = createRoleReview(portalUser, role);
 
         RoleReviewReadDTO readDTO = roleReviewService.getRoleReview(roleReview.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReview,"userId", "roleId", "moderatorId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualToComparingFieldByField(roleReview.getUserId().getId());
-        Assertions.assertThat(readDTO.getRoleId()).isEqualToComparingFieldByField(roleReview.getRoleId().getId());
-        Assertions.assertThat(readDTO.getModeratorId()).isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReview,
+                "userId", "roleId", "moderatorId");
+        Assertions.assertThat(readDTO.getUserId())
+                .isEqualToComparingFieldByField(roleReview.getUserId().getId());
+        Assertions.assertThat(readDTO.getRoleId())
+                .isEqualToComparingFieldByField(roleReview.getRoleId().getId());
+        Assertions.assertThat(readDTO.getModeratorId())
+                .isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -120,10 +129,14 @@ public class RoleReviewServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleReview roleReview = roleReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleReview,"userId", "roleId", "moderatorId");
-        Assertions.assertThat(read.getUserId()).isEqualToComparingFieldByField(roleReview.getUserId().getId());
-        Assertions.assertThat(read.getRoleId()).isEqualToComparingFieldByField(roleReview.getRoleId().getId());
-        Assertions.assertThat(read.getModeratorId()).isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleReview,
+                "userId", "roleId", "moderatorId");
+        Assertions.assertThat(read.getUserId())
+                .isEqualToComparingFieldByField(roleReview.getUserId().getId());
+        Assertions.assertThat(read.getRoleId())
+                .isEqualToComparingFieldByField(roleReview.getRoleId().getId());
+        Assertions.assertThat(read.getModeratorId())
+                .isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
     }
 
     @Transactional
@@ -144,7 +157,8 @@ public class RoleReviewServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         roleReview = roleReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,"userId", "roleId", "moderatorId",
+        Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,
+                "userId", "roleId", "moderatorId",
                 "roleReviewCompliants","roleReviewFeedbacks","roleSpoilerData");
         Assertions.assertThat(roleReview.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(roleReview.getRoleId().getId()).isEqualTo(read.getRoleId());
@@ -211,7 +225,8 @@ public class RoleReviewServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         roleReview = roleReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,"userId", "roleId", "moderatorId",
+        Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,
+                "userId", "roleId", "moderatorId",
                 "roleReviewCompliants","roleReviewFeedbacks","roleSpoilerData");
         Assertions.assertThat(roleReview.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(roleReview.getRoleId().getId()).isEqualTo(read.getRoleId());

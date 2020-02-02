@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.MasterService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,5 +38,10 @@ public class MasterController {
     @PutMapping("/{id}")
     public MasterReadDTO putMaster(@PathVariable UUID id, @RequestBody MasterPutDTO put) {
         return masterService.putMaster(id, put);
+    }
+
+    @GetMapping
+    public List<MasterReadDTO> getVisits(MasterFilter filter) {
+        return masterService.getMasters(filter);
     }
 }

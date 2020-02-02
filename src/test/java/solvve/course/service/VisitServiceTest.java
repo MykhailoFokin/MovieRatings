@@ -25,7 +25,11 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from visit","delete from portal_user","delete from user_type","delete from master"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from visit",
+        "delete from portal_user",
+        "delete from user_type",
+        "delete from master"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class VisitServiceTest {
 
     @Autowired
@@ -93,8 +97,10 @@ public class VisitServiceTest {
         Visit visit = createVisit(portalUser, master);
 
         VisitReadExtendedDTO readDTO = visitService.getVisit(visit.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(visit, "userId", "masterId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId(),"userType");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(visit,
+                "userId", "masterId");
+        Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId(),
+                "userType");
         Assertions.assertThat(readDTO.getUserId().getUserType()).isEqualTo(visit.getUserId().getUserType().getId());
         Assertions.assertThat(readDTO.getMasterId()).isEqualToComparingFieldByField(visit.getMasterId());
     }
@@ -120,7 +126,8 @@ public class VisitServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(read);
 
         Visit visit = visitRepository.findById(read.getId()).get();
-        Assertions.assertThat(create).isEqualToIgnoringGivenFields(visit, "userId", "masterId");
+        Assertions.assertThat(create).isEqualToIgnoringGivenFields(visit,
+                "userId", "masterId");
         Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId().getId());
         Assertions.assertThat(create.getMasterId()).isEqualToIgnoringGivenFields(visit.getMasterId().getId());
     }
@@ -143,7 +150,8 @@ public class VisitServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         visit = visitRepository.findById(read.getId()).get();
-        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read, "userId", "masterId");
+        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read,
+                "userId", "masterId");
         Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
         Assertions.assertThat(visit.getMasterId().getId()).isEqualToIgnoringGivenFields(read.getMasterId());
     }
@@ -200,7 +208,8 @@ public class VisitServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         visit = visitRepository.findById(read.getId()).get();
-        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read, "userId", "masterId");
+        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read,
+                "userId", "masterId");
         Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
         Assertions.assertThat(visit.getMasterId().getId()).isEqualToIgnoringGivenFields(read.getMasterId());
     }

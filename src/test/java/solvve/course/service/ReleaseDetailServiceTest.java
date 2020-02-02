@@ -29,7 +29,10 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from release_detail; delete from movie; delete from country;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from release_detail",
+        " delete from movie",
+        " delete from country"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class ReleaseDetailServiceTest {
 
     @Autowired
@@ -75,9 +78,12 @@ public class ReleaseDetailServiceTest {
         ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
 
         ReleaseDetailReadDTO readDTO = releaseDetailService.getReleaseDetails(releaseDetail.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(releaseDetail, "movieId", "countryId");
-        Assertions.assertThat(readDTO.getMovieId()).isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
-        Assertions.assertThat(readDTO.getCountryId()).isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(releaseDetail,
+                "movieId", "countryId");
+        Assertions.assertThat(readDTO.getMovieId())
+                .isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
+        Assertions.assertThat(readDTO.getCountryId())
+                .isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -99,9 +105,12 @@ public class ReleaseDetailServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         ReleaseDetail releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(releaseDetail, "movieId", "countryId");
-        Assertions.assertThat(read.getMovieId()).isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
-        Assertions.assertThat(read.getCountryId()).isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(releaseDetail,
+                "movieId", "countryId");
+        Assertions.assertThat(read.getMovieId())
+                .isEqualToComparingFieldByField(releaseDetail.getMovieId().getId());
+        Assertions.assertThat(read.getCountryId())
+                .isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
     }
 
     @Transactional
@@ -120,9 +129,12 @@ public class ReleaseDetailServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read, "movieId", "countryId");
-        Assertions.assertThat(releaseDetail.getMovieId().getId()).isEqualToComparingFieldByField(read.getMovieId());
-        Assertions.assertThat(releaseDetail.getCountryId().getId()).isEqualToComparingFieldByField(read.getCountryId());
+        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read,
+                "movieId", "countryId");
+        Assertions.assertThat(releaseDetail.getMovieId().getId())
+                .isEqualToComparingFieldByField(read.getMovieId());
+        Assertions.assertThat(releaseDetail.getCountryId().getId())
+                .isEqualToComparingFieldByField(read.getCountryId());
     }
 
     @Transactional
@@ -175,9 +187,12 @@ public class ReleaseDetailServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         releaseDetail = releaseDetailRepository.findById(read.getId()).get();
-        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read, "movieId", "countryId");
-        Assertions.assertThat(releaseDetail.getMovieId().getId()).isEqualToComparingFieldByField(read.getMovieId());
-        Assertions.assertThat(releaseDetail.getCountryId().getId()).isEqualToComparingFieldByField(read.getCountryId());
+        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(read,
+                "movieId", "countryId");
+        Assertions.assertThat(releaseDetail.getMovieId().getId())
+                .isEqualToComparingFieldByField(read.getMovieId());
+        Assertions.assertThat(releaseDetail.getCountryId().getId())
+                .isEqualToComparingFieldByField(read.getCountryId());
     }
 
     @Transactional

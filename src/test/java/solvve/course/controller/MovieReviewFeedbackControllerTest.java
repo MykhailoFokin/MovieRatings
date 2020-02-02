@@ -51,9 +51,11 @@ public class MovieReviewFeedbackControllerTest {
     public void testGetMovieReviewFeedback() throws Exception {
         MovieReviewFeedbackReadDTO movieReviewFeedback = createMovieReviewFeedbackRead();
 
-        Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId())).thenReturn(movieReviewFeedback);
+        Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId()))
+                .thenReturn(movieReviewFeedback);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedbacks/{id}", movieReviewFeedback.getId()))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewfeedbacks/{id}",
+                movieReviewFeedback.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -105,7 +107,8 @@ public class MovieReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
+        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper
+                .readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualMovieReviewFeedback).isEqualToComparingFieldByField(read);
     }
 
@@ -125,7 +128,8 @@ public class MovieReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
+        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper
+                .readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewFeedback);
     }
 
@@ -154,7 +158,8 @@ public class MovieReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
+        MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper
+                .readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewFeedback);
     }
 }

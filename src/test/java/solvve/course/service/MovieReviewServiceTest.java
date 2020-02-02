@@ -24,7 +24,11 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie_review; delete from portal_user; delete from user_type; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from movie_review",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from movie"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieReviewServiceTest {
 
     @Autowired
@@ -97,7 +101,8 @@ public class MovieReviewServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewReadDTO readDTO = movieReviewService.getMovieReview(movieReview.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReview,"userId","movieId","moderatorId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReview,
+                "userId","movieId","moderatorId");
         Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieReview.getUserId().getId());
         Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieReview.getMovieId().getId());
         Assertions.assertThat(readDTO.getModeratorId()).isEqualTo(movieReview.getModeratorId().getId());
@@ -125,7 +130,8 @@ public class MovieReviewServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieReview movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReview,"userId","movieId","moderatorId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReview,
+                "userId","movieId","moderatorId");
         Assertions.assertThat(read.getUserId()).isEqualTo(movieReview.getUserId().getId());
         Assertions.assertThat(read.getMovieId()).isEqualTo(movieReview.getMovieId().getId());
         Assertions.assertThat(read.getModeratorId()).isEqualTo(movieReview.getModeratorId().getId());
@@ -149,7 +155,8 @@ public class MovieReviewServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read,"userId", "movieId", "moderatorId",
+        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read,
+                "userId", "movieId", "moderatorId",
                 "movieReviewCompliants","movieReviewFeedbacks","movieSpoilerData");
         Assertions.assertThat(movieReview.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(movieReview.getMovieId().getId()).isEqualTo(read.getMovieId());
@@ -217,7 +224,8 @@ public class MovieReviewServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieReview = movieReviewRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read, "userId", "movieId", "moderatorId",
+        Assertions.assertThat(movieReview).isEqualToIgnoringGivenFields(read,
+                "userId", "movieId", "moderatorId",
                 "movieReviewCompliants","movieReviewFeedbacks","movieSpoilerData");
         Assertions.assertThat(movieReview.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(movieReview.getMovieId().getId()).isEqualTo(read.getMovieId());

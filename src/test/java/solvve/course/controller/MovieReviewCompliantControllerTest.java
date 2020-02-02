@@ -53,14 +53,17 @@ public class MovieReviewCompliantControllerTest {
     public void testGetMovieReviewCompliant() throws Exception {
         MovieReviewCompliantReadDTO movieReviewCompliant = createMovieReviewCompliantRead();
 
-        Mockito.when(movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId())).thenReturn(movieReviewCompliant);
+        Mockito.when(movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId()))
+                .thenReturn(movieReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliants/{id}", movieReviewCompliant.getId()))
+        String resultJson = mvc.perform(get("/api/v1/moviereviewcompliants/{id}",
+                movieReviewCompliant.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         System.out.println(resultJson);
-        MovieReviewCompliantReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReviewCompliantReadDTO.class);
+        MovieReviewCompliantReadDTO actualMovie = objectMapper
+                .readValue(resultJson, MovieReviewCompliantReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(movieReviewCompliant);
 
         Mockito.verify(movieReviewCompliantService).getMovieReviewCompliant(movieReviewCompliant.getId());
@@ -108,7 +111,8 @@ public class MovieReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper.readValue(resultJson, MovieReviewCompliantReadDTO.class);
+        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper
+                .readValue(resultJson, MovieReviewCompliantReadDTO.class);
         Assertions.assertThat(actualMovieReviewCompliant).isEqualToComparingFieldByField(read);
     }
 
@@ -129,7 +133,8 @@ public class MovieReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper.readValue(resultJson, MovieReviewCompliantReadDTO.class);
+        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper
+                .readValue(resultJson, MovieReviewCompliantReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewCompliant);
     }
 
@@ -159,7 +164,8 @@ public class MovieReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper.readValue(resultJson, MovieReviewCompliantReadDTO.class);
+        MovieReviewCompliantReadDTO actualMovieReviewCompliant = objectMapper
+                .readValue(resultJson, MovieReviewCompliantReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewCompliant);
     }
 }

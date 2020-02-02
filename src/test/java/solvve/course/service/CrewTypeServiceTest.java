@@ -24,7 +24,7 @@ import java.util.UUID;
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql(statements = "delete from crew_type", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class CrewTypeTest {
+public class CrewTypeServiceTest {
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;

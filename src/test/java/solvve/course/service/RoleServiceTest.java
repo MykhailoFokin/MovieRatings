@@ -26,7 +26,9 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from role; delete from person;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from role",
+        " delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleServiceTest {
 
     @Autowired
@@ -104,7 +106,9 @@ public class RoleServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,"personId", "roleReviewSet","roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
+                "personId", "roleReviewSet",
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
         Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
 
@@ -157,7 +161,9 @@ public class RoleServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,"personId", "roleReviewSet","roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+        Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
+                "personId", "roleReviewSet",
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
         Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
 

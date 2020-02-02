@@ -53,9 +53,11 @@ public class RoleReviewCompliantControllerTest {
     public void testGetRoleReviewCompliant() throws Exception {
         RoleReviewCompliantReadDTO roleReviewCompliant = createRoleReviewCompliantRead();
 
-        Mockito.when(roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId())).thenReturn(roleReviewCompliant);
+        Mockito.when(roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId()))
+                .thenReturn(roleReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliants/{id}", roleReviewCompliant.getId()))
+        String resultJson = mvc.perform(get("/api/v1/rolereviewcompliants/{id}",
+                roleReviewCompliant.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -107,7 +109,8 @@ public class RoleReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewCompliantReadDTO actualRoleReviewCompliant = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
+        RoleReviewCompliantReadDTO actualRoleReviewCompliant =
+                objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assertions.assertThat(actualRoleReviewCompliant).isEqualToComparingFieldByField(read);
     }
 
@@ -128,7 +131,8 @@ public class RoleReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewCompliantReadDTO actualRoleReviewCompliant = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
+        RoleReviewCompliantReadDTO actualRoleReviewCompliant =
+                objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewCompliant);
     }
 
@@ -158,7 +162,8 @@ public class RoleReviewCompliantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewCompliantReadDTO actualRoleReviewCompliant = objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
+        RoleReviewCompliantReadDTO actualRoleReviewCompliant =
+                objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewCompliant);
     }
 }

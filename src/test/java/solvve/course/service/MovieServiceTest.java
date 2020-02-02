@@ -27,7 +27,9 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from movie_prod_countries","delete from movie","delete from country"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from movie_prod_countries",
+        "delete from movie",
+        "delete from country"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieServiceTest {
 
     @Autowired
@@ -133,7 +135,8 @@ public class MovieServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movie = movieRepository.findById(read.getId()).get();
-        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,"movieProdCountries","crews","movieReview","movieReviewCompliants"
+        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
+                "movieProdCountries","crews","movieReview","movieReviewCompliants"
                 ,"movieReviewFeedbacks","movieVotes","releaseDetails");
     }
 
@@ -222,7 +225,8 @@ public class MovieServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movie = movieRepository.findById(read.getId()).get();
-        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,"movieProdCountries","crews","movieReview","movieReviewCompliants"
+        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
+                "movieProdCountries","crews","movieReview","movieReviewCompliants"
                         ,"movieReviewFeedbacks","movieVotes","releaseDetails");
     }
 

@@ -106,7 +106,8 @@ public class RoleSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
+        RoleSpoilerDataReadDTO actualRoleSpoilerData =
+                objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assertions.assertThat(actualRoleSpoilerData).isEqualToComparingFieldByField(read);
     }
 
@@ -127,7 +128,8 @@ public class RoleSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
+        RoleSpoilerDataReadDTO actualRoleSpoilerData =
+                objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualRoleSpoilerData);
     }
 
@@ -157,7 +159,8 @@ public class RoleSpoilerDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleSpoilerDataReadDTO actualRoleSpoilerData = objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
+        RoleSpoilerDataReadDTO actualRoleSpoilerData =
+                objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualRoleSpoilerData);
     }
 }

@@ -24,7 +24,11 @@ import solvve.course.repository.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from crew","delete from movie","delete from crew_type","delete from person"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from crew",
+        "delete from movie",
+        "delete from crew_type",
+        "delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CrewServiceTest {
 
     @Autowired

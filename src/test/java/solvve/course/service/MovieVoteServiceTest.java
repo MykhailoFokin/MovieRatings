@@ -24,7 +24,11 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = "delete from movie_vote; delete from portal_user; delete from user_type; delete from movie;", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from movie_vote",
+        " delete from portal_user",
+        " delete from user_type",
+        " delete from movie"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieVoteServiceTest {
 
     @Autowired
@@ -95,7 +99,8 @@ public class MovieVoteServiceTest {
         MovieVote movieVote = createMovieVote(portalUser, movie);
 
         MovieVoteReadDTO readDTO = movieVoteService.getMovieVote(movieVote.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieVote,"userId","movieId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieVote,
+                "userId","movieId");
         Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieVote.getUserId().getId());
         Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
     }
@@ -119,7 +124,8 @@ public class MovieVoteServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieVote movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieVote,"userId","movieId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieVote,
+                "userId","movieId");
         Assertions.assertThat(read.getUserId()).isEqualTo(movieVote.getUserId().getId());
         Assertions.assertThat(read.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
     }
@@ -140,7 +146,8 @@ public class MovieVoteServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,"movieId","userId");
+        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,
+                "movieId","userId");
         Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
     }
@@ -199,7 +206,8 @@ public class MovieVoteServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,"movieId","userId");
+        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,
+                "movieId","userId");
         Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
         Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
     }

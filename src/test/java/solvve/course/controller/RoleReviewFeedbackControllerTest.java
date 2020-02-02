@@ -51,7 +51,8 @@ public class RoleReviewFeedbackControllerTest {
     public void testGetRoleReviewFeedback() throws Exception {
         RoleReviewFeedbackReadDTO roleReviewFeedback = createRoleReviewFeedbackRead();
 
-        Mockito.when(roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId())).thenReturn(roleReviewFeedback);
+        Mockito.when(roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId()))
+                .thenReturn(roleReviewFeedback);
 
         String resultJson = mvc.perform(get("/api/v1/rolereviewfeedbacks/{id}", roleReviewFeedback.getId()))
                 .andExpect(status().isOk())
@@ -104,7 +105,8 @@ public class RoleReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
+        RoleReviewFeedbackReadDTO actualRoleReviewFeedback =
+                objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualRoleReviewFeedback).isEqualToComparingFieldByField(read);
     }
 
@@ -124,7 +126,8 @@ public class RoleReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
+        RoleReviewFeedbackReadDTO actualRoleReviewFeedback =
+                objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewFeedback);
     }
 
@@ -153,7 +156,8 @@ public class RoleReviewFeedbackControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        RoleReviewFeedbackReadDTO actualRoleReviewFeedback = objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
+        RoleReviewFeedbackReadDTO actualRoleReviewFeedback =
+                objectMapper.readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewFeedback);
     }
 }

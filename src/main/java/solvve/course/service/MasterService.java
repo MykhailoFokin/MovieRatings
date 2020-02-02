@@ -8,7 +8,9 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MasterService {
@@ -41,12 +43,6 @@ public class MasterService {
         return translationService.toRead(master);
     }
 
-    private Master getMasterRequired(UUID id) {
-        return masterRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Master.class, id);
-        });
-    }
-
     public void deleteMaster(UUID id) {
         masterRepository.delete(getMasterRequired(id));
     }
@@ -58,5 +54,16 @@ public class MasterService {
 
         master = masterRepository.save(master);
         return translationService.toRead(master);
+    }
+
+    public List<MasterReadDTO> getMasters(MasterFilter filter) {
+        List<Master> masters = masterRepository.findByFilter(filter);
+        return masters.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
+    private Master getMasterRequired(UUID id) {
+        return masterRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Master.class, id);
+        });
     }
 }
