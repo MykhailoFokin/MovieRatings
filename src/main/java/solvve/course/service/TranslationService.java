@@ -393,31 +393,31 @@ public class TranslationService {
     public MovieReviewFeedbackReadDTO toRead(MovieReviewFeedback movieReviewFeedback) {
         MovieReviewFeedbackReadDTO dto = new MovieReviewFeedbackReadDTO();
         dto.setId(movieReviewFeedback.getId());
-        dto.setUserId(movieReviewFeedback.getUserId());
-        dto.setMovieId(movieReviewFeedback.getMovieId());
-        dto.setMovieReviewId(movieReviewFeedback.getMovieReviewId());
+        dto.setUserId(movieReviewFeedback.getUserId().getId());
+        dto.setMovieId(movieReviewFeedback.getMovieId().getId());
+        dto.setMovieReviewId(movieReviewFeedback.getMovieReviewId().getId());
         dto.setIsLiked(movieReviewFeedback.getIsLiked());
         return dto;
     }
 
     public MovieReviewFeedback toEntity(MovieReviewFeedbackCreateDTO create) {
         MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setUserId(create.getUserId());
-        movieReviewFeedback.setMovieId(create.getMovieId());
-        movieReviewFeedback.setMovieReviewId(create.getMovieReviewId());
+        movieReviewFeedback.setUserId(portalUserRepository.findById(create.getUserId()).get());
+        movieReviewFeedback.setMovieId(movieRepository.findById(create.getMovieId()).get());
+        movieReviewFeedback.setMovieReviewId(movieReviewRepository.findById(create.getMovieReviewId()).get());
         movieReviewFeedback.setIsLiked(create.getIsLiked());
         return movieReviewFeedback;
     }
 
     public void patchEntity(MovieReviewFeedbackPatchDTO patch, MovieReviewFeedback movieReviewFeedback) {
         if (patch.getMovieId()!=null) {
-            movieReviewFeedback.setMovieId(patch.getMovieId());
+            movieReviewFeedback.setMovieId(movieRepository.findById(patch.getMovieId()).get());
         }
         if (patch.getMovieReviewId()!=null) {
-            movieReviewFeedback.setMovieReviewId(patch.getMovieReviewId());
+            movieReviewFeedback.setMovieReviewId(movieReviewRepository.findById(patch.getMovieReviewId()).get());
         }
         if (patch.getUserId()!=null) {
-            movieReviewFeedback.setUserId(patch.getUserId());
+            movieReviewFeedback.setUserId(portalUserRepository.findById(patch.getUserId()).get());
         }
         if (patch.getIsLiked()!=null) {
             movieReviewFeedback.setIsLiked(patch.getIsLiked());
@@ -425,9 +425,15 @@ public class TranslationService {
     }
 
     public void putEntity(MovieReviewFeedbackPutDTO put, MovieReviewFeedback movieReviewFeedback) {
-        movieReviewFeedback.setMovieId(put.getMovieId());
-        movieReviewFeedback.setMovieReviewId(put.getMovieReviewId());
-        movieReviewFeedback.setUserId(put.getUserId());
+        if (put.getMovieId()!=null) {
+            movieReviewFeedback.setMovieId(movieRepository.findById(put.getMovieId()).get());
+        }
+        if (put.getMovieReviewId()!=null) {
+            movieReviewFeedback.setMovieReviewId(movieReviewRepository.findById(put.getMovieReviewId()).get());
+        }
+        if (put.getUserId()!=null) {
+            movieReviewFeedback.setUserId(portalUserRepository.findById(put.getUserId()).get());
+        }
         movieReviewFeedback.setIsLiked(put.getIsLiked());
     }
 

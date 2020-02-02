@@ -109,7 +109,10 @@ public class MovieReviewFeedbackServiceTest {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackReadDTO readDTO = movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movieReviewFeedback);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReviewFeedback, "userId", "movieId", "movieReviewId");
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieReviewFeedback.getMovieId().getId());
+        Assertions.assertThat(readDTO.getMovieReviewId()).isEqualTo(movieReviewFeedback.getMovieReviewId().getId());
+        Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieReviewFeedback.getUserId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -125,16 +128,19 @@ public class MovieReviewFeedbackServiceTest {
         MovieReview movieReview = createMovieReview(portalUser, movie);
 
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
-        create.setUserId(portalUser);
-        create.setMovieId(movie);
-        create.setMovieReviewId(movieReview);
+        create.setUserId(portalUser.getId());
+        create.setMovieId(movie.getId());
+        create.setMovieReviewId(movieReview.getId());
         create.setIsLiked(true);
 
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.createMovieReviewFeedback(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieReviewFeedback movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(movieReviewFeedback);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReviewFeedback, "userId", "movieId", "movieReviewId");
+        Assertions.assertThat(read.getMovieId()).isEqualTo(movieReviewFeedback.getMovieId().getId());
+        Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieReviewFeedback.getMovieReviewId().getId());
+        Assertions.assertThat(read.getUserId()).isEqualTo(movieReviewFeedback.getUserId().getId());
     }
 
     @Transactional
@@ -146,16 +152,19 @@ public class MovieReviewFeedbackServiceTest {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
-        patch.setUserId(portalUser);
-        patch.setMovieId(movie);
-        patch.setMovieReviewId(movieReview);
+        patch.setUserId(portalUser.getId());
+        patch.setMovieId(movie.getId());
+        patch.setMovieReviewId(movieReview.getId());
         patch.setIsLiked(true);
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.patchMovieReviewFeedback(movieReviewFeedback.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieReviewFeedback).isEqualToIgnoringGivenFields(read, "userId", "movieId", "movieReviewId");
+        Assertions.assertThat(movieReviewFeedback.getMovieId().getId()).isEqualTo(read.getMovieId());
+        Assertions.assertThat(movieReviewFeedback.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
+        Assertions.assertThat(movieReviewFeedback.getUserId().getId()).isEqualTo(read.getUserId());
     }
 
     @Transactional
@@ -209,16 +218,19 @@ public class MovieReviewFeedbackServiceTest {
         MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
-        put.setUserId(portalUser);
-        put.setMovieId(movie);
-        put.setMovieReviewId(movieReview);
+        put.setUserId(portalUser.getId());
+        put.setMovieId(movie.getId());
+        put.setMovieReviewId(movieReview.getId());
         put.setIsLiked(true);
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.putMovieReviewFeedback(movieReviewFeedback.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieReviewFeedback = movieReviewFeedbackRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(movieReviewFeedback).isEqualToIgnoringGivenFields(read, "userId", "movieId", "movieReviewId");
+        Assertions.assertThat(movieReviewFeedback.getMovieId().getId()).isEqualTo(read.getMovieId());
+        Assertions.assertThat(movieReviewFeedback.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
+        Assertions.assertThat(movieReviewFeedback.getUserId().getId()).isEqualTo(read.getUserId());
     }
 
     @Transactional
@@ -232,16 +244,16 @@ public class MovieReviewFeedbackServiceTest {
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         MovieReviewFeedbackReadDTO read = movieReviewFeedbackService.putMovieReviewFeedback(movieReviewFeedback.getId(), put);
 
-        Assert.assertNull(read.getUserId());
-        Assert.assertNull(read.getMovieId());
-        Assert.assertNull(read.getMovieReviewId());
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getMovieReviewId());
         Assert.assertNull(read.getIsLiked());
 
         MovieReviewFeedback movieReviewFeedbackAfterUpdate = movieReviewFeedbackRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieReviewFeedbackAfterUpdate.getUserId());
-        Assert.assertNull(movieReviewFeedbackAfterUpdate.getMovieId());
-        Assert.assertNull(movieReviewFeedbackAfterUpdate.getMovieReviewId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getUserId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieId());
+        Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieReviewId());
         Assert.assertNull(movieReviewFeedbackAfterUpdate.getIsLiked());
 
         Assertions.assertThat(movieReviewFeedback).isEqualToComparingFieldByField(movieReviewFeedbackAfterUpdate);
