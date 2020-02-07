@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -14,13 +15,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.CrewType;
-import solvve.course.dto.CrewTypeCreateDTO;
-import solvve.course.dto.CrewTypePatchDTO;
-import solvve.course.dto.CrewTypePutDTO;
-import solvve.course.dto.CrewTypeReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.CrewTypeService;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -156,5 +155,23 @@ public class CrewTypeControllerTest {
 
         CrewTypeReadDTO actualCrewType = objectMapper.readValue(resultJson, CrewTypeReadDTO.class);
         Assert.assertEquals(read, actualCrewType);
+    }
+
+    @Test
+    public void testGetCrewTypes() throws Exception {
+        CrewTypeFilter crewTypeFilter = new CrewTypeFilter();
+        crewTypeFilter.setName("Director");
+
+        CrewTypeReadDTO read = createCrewTypeRead();
+        List<CrewTypeReadDTO> expectedResult = List.of(read);
+        Mockito.when(crewTypeService.getCrewTypes(crewTypeFilter)).thenReturn(expectedResult);
+
+        String resultJson = mvc.perform(get("/api/v1/crewtypes")
+                .param("name", crewTypeFilter.getName()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<CrewTypeReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        });
+        Assert.assertEquals(expectedResult, actualResult);
     }
 }

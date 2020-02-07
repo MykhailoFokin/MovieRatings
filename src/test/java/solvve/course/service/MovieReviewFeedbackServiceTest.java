@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -36,82 +36,15 @@ public class MovieReviewFeedbackServiceTest {
     private MovieReviewFeedbackService movieReviewFeedbackService;
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private MovieReviewRepository movieReviewRepository;
-
-    private MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser, Movie movie, MovieReview movieReview) {
-        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setUserId(portalUser);
-        movieReviewFeedback.setMovieId(movie);
-        movieReviewFeedback.setMovieReviewId(movieReview);
-        movieReviewFeedback.setIsLiked(true);
-        return movieReviewFeedbackRepository.save(movieReviewFeedback);
-    }
-
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        //movie.setId(UUID.randomUUID());
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCompanies("Paramount");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
-    private PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    private MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
-        MovieReview movieReview = new MovieReview();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setUserId(portalUser);
-        movieReview.setMovieId(movie);
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReview.setModeratorId(portalUser);
-        movieReview = movieReviewRepository.save(movieReview);
-        return movieReview;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetMovieReviewFeedback() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackReadDTO readDTO =
                 movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId());
@@ -130,9 +63,9 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testCreateMovieReviewFeedback() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
         create.setUserId(portalUser.getId());
@@ -154,10 +87,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewFeedback() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -180,10 +113,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewFeedbackEmptyPatch() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         MovieReviewFeedbackReadDTO read =
@@ -206,10 +139,10 @@ public class MovieReviewFeedbackServiceTest {
 
     @Test
     public void testDeleteMovieReviewFeedback() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         movieReviewFeedbackService.deleteMovieReviewFeedback(movieReviewFeedback.getId());
         Assert.assertFalse(movieReviewFeedbackRepository.existsById(movieReviewFeedback.getId()));
@@ -223,10 +156,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPutMovieReviewFeedback() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         put.setUserId(portalUser.getId());
@@ -249,10 +182,10 @@ public class MovieReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPutMovieReviewFeedbackEmptyPut() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = createMovieReviewFeedback(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         MovieReviewFeedbackReadDTO read =

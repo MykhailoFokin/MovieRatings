@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -37,80 +37,16 @@ public class RoleSpoilerDataServiceTest {
     private RoleSpoilerDataService roleSpoilerDataService;
 
     @Autowired
-    private RoleReviewRepository roleReviewRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    private RoleSpoilerData createRoleSpoilerData(RoleReview roleReview) {
-        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
-        roleSpoilerData.setRoleReviewId(roleReview);
-        roleSpoilerData.setStartIndex(100);
-        roleSpoilerData.setEndIndex(150);
-        return roleSpoilerDataRepository.save(roleSpoilerData);
-    }
-
-    public Role createRole() {
-        Person person = new Person();
-        person.setName("Name");
-        person = personRepository.save(person);
-
-        Role role = new Role();
-        //role.setId(UUID.randomUUID());
-        role.setTitle("Actor");
-        role.setRoleType("Main_Role");
-        role.setDescription("Description test");
-        role.setPersonId(person);
-        role = roleRepository.save(role);
-
-        return role;
-    }
-
-    public PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    public RoleReview createRoleReview(PortalUser portalUser, Role role) {
-        RoleReview roleReview = new RoleReview();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setUserId(portalUser);
-        roleReview.setRoleId(role);
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReview.setModeratorId(portalUser);
-        roleReview = roleReviewRepository.save(roleReview);
-        return roleReview;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetRoleSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleSpoilerData,
@@ -126,9 +62,10 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testCreateRoleSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
         create.setRoleReviewId(roleReview.getId());
@@ -147,10 +84,11 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchRoleSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
         patch.setRoleReviewId(roleReview.getId());
@@ -169,10 +107,11 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchRoleSpoilerDataEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
@@ -192,10 +131,11 @@ public class RoleSpoilerDataServiceTest {
 
     @Test
     public void testDeleteRoleSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         roleSpoilerDataService.deleteRoleSpoilerData(roleSpoilerData.getId());
         Assert.assertFalse(roleSpoilerDataRepository.existsById(roleSpoilerData.getId()));
@@ -209,10 +149,11 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPutRoleSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
         put.setRoleReviewId(roleReview.getId());
@@ -231,10 +172,11 @@ public class RoleSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPutRoleSpoilerDataEmptyPut() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleSpoilerData roleSpoilerData = createRoleSpoilerData(roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);

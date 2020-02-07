@@ -16,9 +16,9 @@ import solvve.course.dto.UserTypePatchDTO;
 import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.PortalUserRepository;
 import solvve.course.repository.UserGrantRepository;
 import solvve.course.repository.UserTypeRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,40 +43,14 @@ public class UserTypeServiceTest {
     private UserGrantRepository userGrantRepository;
 
     @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    private UserType createUserTypes() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        return userTypeRepository.save(userType);
-    }
-
-    private PortalUser createPortalUser() {
-        PortalUser portalUser = new PortalUser();
-        portalUser.setName("Name");
-        portalUser = portalUserRepository.save(portalUser);
-        return portalUser;
-    }
-
-    private Set<UserGrant> createGrantSet(PortalUser portalUser) {
-        UserGrant us = new UserGrant();
-        us.setObjectName("C1");
-        us.setGrantedBy(portalUser);
-        us = userGrantRepository.save(us);
-        Set<UserGrant> sc = new HashSet<>();
-        sc.add(us);
-        return sc;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetUserTypes() {
-        PortalUser portalUser = createPortalUser();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
         Set<UserGrant> userGrantSet = createGrantSet(portalUser);
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType.setUserGrants(userGrantSet);
-        userType = userTypeRepository.save(userType);
+        UserType userType = testObjectsFactory.createUserTypeWithGrants(userGrantSet);
 
         UserTypeReadDTO readDTO = userTypeService.getUserTypes(userType.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(userType);
@@ -102,7 +76,7 @@ public class UserTypeServiceTest {
     @Transactional
     @Test
     public void testPatchUserTypes() {
-        UserType userType = createUserTypes();
+        UserType userType = testObjectsFactory.createUserType();
 
         UserTypePatchDTO patch = new UserTypePatchDTO();
         patch.setUserGroup(UserGroupType.USER);
@@ -117,7 +91,7 @@ public class UserTypeServiceTest {
     @Transactional
     @Test
     public void testPatchUserTypesEmptyPatch() {
-        UserType userType = createUserTypes();
+        UserType userType = testObjectsFactory.createUserType();
 
         UserTypePatchDTO patch = new UserTypePatchDTO();
         UserTypeReadDTO read = userTypeService.patchUserTypes(userType.getId(), patch);
@@ -134,7 +108,7 @@ public class UserTypeServiceTest {
     @Transactional
     @Test
     public void testDeleteUserTypes() {
-        UserType userType = createUserTypes();
+        UserType userType = testObjectsFactory.createUserType();
 
         userTypeService.deleteUserTypes(userType.getId());
         Assert.assertFalse(userTypeRepository.existsById(userType.getId()));
@@ -148,7 +122,7 @@ public class UserTypeServiceTest {
     @Transactional
     @Test
     public void testPutUserTypes() {
-        UserType userType = createUserTypes();
+        UserType userType = testObjectsFactory.createUserType();
 
         UserTypePutDTO put = new UserTypePutDTO();
         put.setUserGroup(UserGroupType.USER);
@@ -163,7 +137,7 @@ public class UserTypeServiceTest {
     @Transactional
     @Test
     public void testPutUserTypesEmptyPut() {
-        UserType userType = createUserTypes();
+        UserType userType = testObjectsFactory.createUserType();
 
         UserTypePutDTO put = new UserTypePutDTO();
         UserTypeReadDTO read = userTypeService.putUserTypes(userType.getId(), put);
@@ -175,5 +149,15 @@ public class UserTypeServiceTest {
         Assert.assertNull(userTypeAfterUpdate.getUserGroup());
 
         Assertions.assertThat(userType).isEqualToComparingFieldByField(userTypeAfterUpdate);
+    }
+
+    private Set<UserGrant> createGrantSet(PortalUser portalUser) {
+        UserGrant us = new UserGrant();
+        us.setObjectName("C1");
+        us.setGrantedBy(portalUser);
+        us = userGrantRepository.save(us);
+        Set<UserGrant> sc = new HashSet<>();
+        sc.add(us);
+        return sc;
     }
 }

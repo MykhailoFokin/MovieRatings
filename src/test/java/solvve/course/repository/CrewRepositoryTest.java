@@ -20,7 +20,11 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = {"delete from crew","delete from movie","delete from crew_type","delete from person"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from crew",
+        "delete from movie",
+        "delete from crew_type",
+        "delete from person"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class CrewRepositoryTest {
 
@@ -252,16 +256,12 @@ public class CrewRepositoryTest {
         movie.setId(UUID.randomUUID());
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
         movie.setAspectRatio("1:10");
         movie.setCamera("Panasonic");
         movie.setColour("Black");
-        movie.setCompanies("Paramount");
         movie.setCritique("123");
         movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
         movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
         movie.setSoundMix("DolbySurround");
         movie = movieRepository.save(movie);
         return movie;

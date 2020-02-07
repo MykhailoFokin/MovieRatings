@@ -15,6 +15,7 @@ import solvve.course.domain.Visit;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MasterRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,9 +33,12 @@ public class MasterServiceTest {
     @Autowired
     private MasterService masterService;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testGetMasterExtended() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         MasterReadExtendedDTO readDTO = masterService.getMaster(master.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(master, "visits");
@@ -60,7 +64,7 @@ public class MasterServiceTest {
     @Transactional
     @Test
     public void testPatchMaster() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         MasterPatchDTO patch = new MasterPatchDTO();
         patch.setName("MasterName");
@@ -77,7 +81,7 @@ public class MasterServiceTest {
     @Transactional
     @Test
     public void testPatchMasterEmptyPatch() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         MasterPatchDTO patch = new MasterPatchDTO();
         MasterReadDTO read = masterService.patchMaster(master.getId(), patch);
@@ -93,7 +97,7 @@ public class MasterServiceTest {
 
     @Test
     public void testDeleteMaster() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         masterService.deleteMaster(master.getId());
         Assert.assertFalse(masterRepository.existsById(master.getId()));
@@ -107,7 +111,7 @@ public class MasterServiceTest {
     @Transactional
     @Test
     public void testPutMaster() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         MasterPutDTO put = new MasterPutDTO();
         put.setName("MasterName");
@@ -124,7 +128,7 @@ public class MasterServiceTest {
     @Transactional
     @Test
     public void testPutMasterEmptyPut() {
-        Master master = createMaster();
+        Master master = testObjectsFactory.createMaster();
 
         MasterPutDTO put = new MasterPutDTO();
         MasterReadDTO read = masterService.putMaster(master.getId(), put);
@@ -136,14 +140,5 @@ public class MasterServiceTest {
         Assert.assertNull(masterAfterUpdate.getName());
 
         Assertions.assertThat(master).isEqualToComparingFieldByField(masterAfterUpdate);
-    }
-
-    private Master createMaster() {
-        Master master = new Master();
-        master.setId(UUID.randomUUID());
-        master.setName("MasterName");
-        master.setPhone("645768767");
-        master.setAbout("What about");
-        return masterRepository.save(master);
     }
 }

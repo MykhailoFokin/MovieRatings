@@ -18,9 +18,8 @@ import solvve.course.dto.ReleaseDetailPatchDTO;
 import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.CountryRepository;
-import solvve.course.repository.MovieRepository;
 import solvve.course.repository.ReleaseDetailRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -42,40 +41,14 @@ public class ReleaseDetailServiceTest {
     private ReleaseDetailService releaseDetailService;
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private CountryRepository countryRepository;
-
-    public Movie createMovie() {
-        Movie movie = new Movie();
-        movie.setTitle("Movie");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
-    public Country createCountry() {
-        Country country = new Country();
-        country.setName("Germany");
-        country = countryRepository.save(country);
-        return  country;
-    }
-
-    private ReleaseDetail createReleaseDetail(Movie movie, Country country) {
-        ReleaseDetail releaseDetail = new ReleaseDetail();
-        releaseDetail.setId(UUID.randomUUID());
-        releaseDetail.setMovieId(movie);
-        releaseDetail.setCountryId(country);
-        releaseDetail.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
-        return releaseDetailRepository.save(releaseDetail);
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetReleaseDetail() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailReadDTO readDTO = releaseDetailService.getReleaseDetails(releaseDetail.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(releaseDetail,
@@ -94,8 +67,8 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testCreateReleaseDetail() {
-        Movie movie = createMovie();
-        Country country = createCountry();
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
 
         ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
         create.setMovieId(movie.getId());
@@ -116,9 +89,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPatchReleaseDetail() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
         patch.setMovieId(movie.getId());
@@ -140,9 +113,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPatchReleaseDetailEmptyPatch() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
         ReleaseDetailReadDTO read = releaseDetailService.patchReleaseDetails(releaseDetail.getId(), patch);
@@ -158,9 +131,9 @@ public class ReleaseDetailServiceTest {
 
     @Test
     public void testDeleteReleaseDetail() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         releaseDetailService.deleteReleaseDetails(releaseDetail.getId());
         Assert.assertFalse(releaseDetailRepository.existsById(releaseDetail.getId()));
@@ -174,9 +147,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPutReleaseDetail() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
         put.setMovieId(movie.getId());
@@ -198,9 +171,9 @@ public class ReleaseDetailServiceTest {
     @Transactional
     @Test
     public void testPutReleaseDetailEmptyPut() {
-        Movie movie = createMovie();
-        Country country = createCountry();
-        ReleaseDetail releaseDetail = createReleaseDetail(movie, country);
+        Movie movie = testObjectsFactory.createMovie();
+        Country country = testObjectsFactory.createCountry();
+        ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
         ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);

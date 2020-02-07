@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -14,14 +15,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Country;
-import solvve.course.dto.CountryCreateDTO;
-import solvve.course.dto.CountryPatchDTO;
-import solvve.course.dto.CountryPutDTO;
-import solvve.course.dto.CountryReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 
 import solvve.course.service.CountryService;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,13 +40,6 @@ public class CountryControllerTest {
 
     @MockBean
     private CountryService countryService;
-
-    private CountryReadDTO createCountriesRead() {
-        CountryReadDTO countries = new CountryReadDTO();
-        countries.setId(UUID.randomUUID());
-        countries.setName("Laplandia");
-        return countries;
-    }
 
     @Test
     public void testGetCountries() throws Exception {
@@ -156,5 +149,31 @@ public class CountryControllerTest {
 
         CountryReadDTO actualCountries = objectMapper.readValue(resultJson, CountryReadDTO.class);
         Assert.assertEquals(read, actualCountries);
+    }
+
+    @Test
+    public void testGetCountriesFilter() throws Exception {
+        CountryFilter countryFilter = new CountryFilter();
+        countryFilter.setNames(Set.of("Ukraine"));
+
+        CountryReadDTO read = new CountryReadDTO();
+        read.setName("Ukraine");
+        List<CountryReadDTO> expectedResult = List.of(read);
+        Mockito.when(countryService.getCountries(countryFilter)).thenReturn(expectedResult);
+
+        String resultJson = mvc.perform(get("/api/v1/countries")
+                .param("names", "Ukraine"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<CountryReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        });
+        Assert.assertEquals(expectedResult, actualResult);
+    }
+
+    private CountryReadDTO createCountriesRead() {
+        CountryReadDTO countries = new CountryReadDTO();
+        countries.setId(UUID.randomUUID());
+        countries.setName("Laplandia");
+        return countries;
     }
 }

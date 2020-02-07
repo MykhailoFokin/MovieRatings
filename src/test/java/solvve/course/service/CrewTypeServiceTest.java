@@ -17,6 +17,7 @@ import solvve.course.dto.CrewTypePutDTO;
 import solvve.course.dto.CrewTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -32,9 +33,12 @@ public class CrewTypeServiceTest {
     @Autowired
     private CrewTypeService crewTypeService;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testGetCrewType() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypeReadDTO readDTO = crewTypeService.getCrewType(crewType.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(crewType);
@@ -58,7 +62,7 @@ public class CrewTypeServiceTest {
 
     @Test
     public void testPatchCrewType() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePatchDTO patch = new CrewTypePatchDTO();
         patch.setName("Director");
@@ -72,7 +76,7 @@ public class CrewTypeServiceTest {
 
     @Test
     public void testPatchCrewTypeEmptyPatch() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePatchDTO patch = new CrewTypePatchDTO();
         CrewTypeReadDTO read = crewTypeService.patchCrewType(crewType.getId(), patch);
@@ -88,7 +92,7 @@ public class CrewTypeServiceTest {
 
     @Test
     public void testDeleteCrewType() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         crewTypeService.deleteCrewType(crewType.getId());
         Assert.assertFalse(crewTypeRepository.existsById(crewType.getId()));
@@ -101,7 +105,7 @@ public class CrewTypeServiceTest {
 
     @Test
     public void testPutCrewType() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePutDTO put = new CrewTypePutDTO();
         put.setName("Director");
@@ -116,7 +120,7 @@ public class CrewTypeServiceTest {
     @Transactional
     @Test
     public void testPutCrewTypeEmptyPut() {
-        CrewType crewType = createCrewType();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePutDTO put = new CrewTypePutDTO();
         CrewTypeReadDTO read = crewTypeService.putCrewType(crewType.getId(), put);
@@ -128,12 +132,5 @@ public class CrewTypeServiceTest {
         Assert.assertNull(crewTypeAfterUpdate.getName());
 
         Assertions.assertThat(crewType).isEqualToComparingFieldByField(crewTypeAfterUpdate);
-    }
-
-    private CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setId(UUID.randomUUID());
-        crewType.setName("Director");
-        return crewTypeRepository.save(crewType);
     }
 }

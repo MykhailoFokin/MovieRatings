@@ -45,16 +45,12 @@ public class MovieReviewFeedbackRepositoryTest {
         Movie movie = new Movie();
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
         movie.setAspectRatio("1:10");
         movie.setCamera("Panasonic");
         movie.setColour("Black");
-        movie.setCompanies("Paramount");
         movie.setCritique("123");
         movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
         movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
         movie.setSoundMix("DolbySurround");
         movie.setIsPublished(true);
         movie = movieRepository.save(movie);

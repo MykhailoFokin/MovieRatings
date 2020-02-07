@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -37,81 +37,16 @@ public class RoleReviewFeedbackServiceTest {
     private RoleReviewFeedbackService roleReviewFeedbackService;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private RoleReviewRepository roleReviewRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    private RoleReviewFeedback createRoleReviewFeedback(PortalUser portalUser, Role role, RoleReview roleReview) {
-        RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
-        roleReviewFeedback.setUserId(portalUser);
-        roleReviewFeedback.setRoleId(role);
-        roleReviewFeedback.setRoleReviewId(roleReview);
-        roleReviewFeedback.setIsLiked(true);
-        return roleReviewFeedbackRepository.save(roleReviewFeedback);
-    }
-
-    public Role createRole() {
-        Person person = new Person();
-        person.setName("Name");
-        person = personRepository.save(person);
-
-        Role role = new Role();
-        //role.setId(UUID.randomUUID());
-        role.setTitle("Actor");
-        role.setRoleType("Main_Role");
-        role.setDescription("Description test");
-        role.setPersonId(person);
-        role = roleRepository.save(role);
-
-        return role;
-    }
-
-    public PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    public RoleReview createRoleReview(PortalUser portalUser, Role role) {
-        RoleReview roleReview = new RoleReview();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setUserId(portalUser);
-        roleReview.setRoleId(role);
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReview.setModeratorId(portalUser);
-        roleReview = roleReviewRepository.save(roleReview);
-        return roleReview;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetRoleReviewFeedback() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackReadDTO readDTO =
                 roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId());
@@ -130,9 +65,10 @@ public class RoleReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testCreateRoleReviewFeedback() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
         create.setUserId(portalUser.getId());
@@ -154,10 +90,11 @@ public class RoleReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReviewFeedback() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -180,10 +117,11 @@ public class RoleReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReviewFeedbackEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
         RoleReviewFeedbackReadDTO read =
@@ -207,10 +145,11 @@ public class RoleReviewFeedbackServiceTest {
 
     @Test
     public void testDeleteRoleReviewFeedback() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         roleReviewFeedbackService.deleteRoleReviewFeedback(roleReviewFeedback.getId());
         Assert.assertFalse(roleReviewFeedbackRepository.existsById(roleReviewFeedback.getId()));
@@ -224,10 +163,11 @@ public class RoleReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPutRoleReviewFeedback() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
         put.setUserId(portalUser.getId());
@@ -250,10 +190,11 @@ public class RoleReviewFeedbackServiceTest {
     @Transactional
     @Test
     public void testPutRoleReviewFeedbackEmptyPut() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = createRoleReviewFeedback(portalUser, role, roleReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
         RoleReviewFeedbackReadDTO read =

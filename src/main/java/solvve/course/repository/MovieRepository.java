@@ -6,6 +6,6 @@ import solvve.course.domain.Movie;
 import java.util.UUID;
 
 @Repository
-public interface MovieRepository extends CrudRepository<Movie, UUID> {
+public interface MovieRepository extends CrudRepository<Movie, UUID>, MovieRepositoryCustom {
 
 }

@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -36,65 +36,15 @@ public class RoleReviewServiceTest {
     private RoleReviewService roleReviewService;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-    private RoleReview createRoleReview(PortalUser portalUser, Role role) {
-        RoleReview roleReview = new RoleReview();
-        roleReview.setUserId(portalUser);
-        roleReview.setRoleId(role);
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReview.setModeratorId(portalUser);
-        return roleReviewRepository.save(roleReview);
-    }
-
-    public Role createRole() {
-        Person person = new Person();
-        person.setName("Name");
-        person = personRepository.save(person);
-
-        Role role = new Role();
-        //role.setId(UUID.randomUUID());
-        role.setTitle("Actor");
-        role.setRoleType("Main_Role");
-        role.setDescription("Description test");
-        role.setPersonId(person);
-        role = roleRepository.save(role);
-
-        return role;
-    }
-
-    public PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetRoleReview() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewReadDTO readDTO = roleReviewService.getRoleReview(roleReview.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReview,
@@ -115,8 +65,9 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testCreateRoleReview() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RoleReviewCreateDTO create = new RoleReviewCreateDTO();
         create.setUserId(portalUser.getId());
@@ -142,9 +93,10 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReview() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -168,9 +120,10 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPatchRoleReviewEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
         RoleReviewReadDTO read = roleReviewService.patchRoleReview(roleReview.getId(), patch);
@@ -194,9 +147,10 @@ public class RoleReviewServiceTest {
 
     @Test
     public void testDeleteRoleReview() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         roleReviewService.deleteRoleReview(roleReview.getId());
         Assert.assertFalse(roleReviewRepository.existsById(roleReview.getId()));
@@ -210,9 +164,10 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPutRoleReview() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPutDTO put = new RoleReviewPutDTO();
         put.setUserId(portalUser.getId());
@@ -236,9 +191,10 @@ public class RoleReviewServiceTest {
     @Transactional
     @Test
     public void testPutRoleReviewEmptyPut() {
-        PortalUser portalUser = createPortalUser();
-        Role role = createRole();
-        RoleReview roleReview = createRoleReview(portalUser, role);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPutDTO put = new RoleReviewPutDTO();
         RoleReviewReadDTO read = roleReviewService.putRoleReview(roleReview.getId(), put);

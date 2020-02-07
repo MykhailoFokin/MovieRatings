@@ -17,6 +17,7 @@ import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -32,17 +33,12 @@ public class PersonServiceTest {
     @Autowired
     private PersonService personService;
 
-    private Person createPersons() {
-        Person person = new Person();
-        person.setSurname("Surname");
-        person.setName("Name");
-        person.setMiddleName("MiddleName");
-        return personRepository.save(person);
-    }
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetPersons() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         PersonReadDTO readDTO = personService.getPersons(person.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(person);
@@ -70,7 +66,7 @@ public class PersonServiceTest {
     @Transactional
     @Test
     public void testPatchPersons() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         PersonPatchDTO patch = new PersonPatchDTO();
         patch.setSurname("Surname");
@@ -87,7 +83,7 @@ public class PersonServiceTest {
     @Transactional
     @Test
     public void testPatchPersonsEmptyPatch() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         PersonPatchDTO patch = new PersonPatchDTO();
         PersonReadDTO read = personService.patchPersons(person.getId(), patch);
@@ -107,7 +103,7 @@ public class PersonServiceTest {
 
     @Test
     public void testDeletePersons() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         personService.deletePersons(person.getId());
         Assert.assertFalse(personRepository.existsById(person.getId()));
@@ -121,7 +117,7 @@ public class PersonServiceTest {
     @Transactional
     @Test
     public void testPutPersons() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         PersonPutDTO put = new PersonPutDTO();
         put.setSurname("Surname");
@@ -138,7 +134,7 @@ public class PersonServiceTest {
     @Transactional
     @Test
     public void testPutPersonsEmptyPut() {
-        Person person = createPersons();
+        Person person = testObjectsFactory.createPerson();
 
         PersonPutDTO put = new PersonPutDTO();
         PersonReadDTO read = personService.putPersons(person.getId(), put);

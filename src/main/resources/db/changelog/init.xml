@@ -2,7 +2,8 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 	
 	<changeSet id="create tables" author="mykhailo">
@@ -12,7 +13,6 @@
 			</column>
 			<column name = "title" type="varchar(255)"/>
 			<column name = "year" type="smallint"/>
-			<column name = "genres" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
 			<column name = "companies" type="varchar(255)"/>
 			<column name = "sound_mix" type="varchar(255)"/>
@@ -21,7 +21,6 @@
 			<column name = "camera" type="varchar(255)"/>
 			<column name = "laboratory" type="varchar(255)"/>
 			<column name = "languages" type="varchar(255)"/>
-			<column name = "filming_locations" type="varchar(255)"/>
 			<column name = "critique" type="varchar(255)"/>
 			<column name = "is_published" type="int(1)"/>
 		</createTable>
@@ -32,6 +31,15 @@
 			<column name = "surname" type="varchar(255)"/>
 			<column name = "name" type="varchar(255)"/>
 			<column name = "middle_name" type="varchar(255)"/>
+		</createTable>
+		<createTable tableName="genre">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_genre_movie" references="movie(id)"/>
+			</column>
+			<column name = "name" type="varchar(255)"/>
 		</createTable>
 		<createTable tableName="role">
 			<column name="id" type="uuid">
@@ -79,6 +87,25 @@
 			</column>
 			<column name = "crew_type" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
+		</createTable>
+		<createTable tableName="company_details">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "name" type="varchar(255)"/>
+			<column name = "overview" type="varchar(1000)"/>
+			<column name = "year_of_foundation" type="date"/>
+		</createTable>
+		<createTable tableName="movie_company">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "movie_production_type" type="varchar(255)"/>
+			<column name = "description" type="varchar(1000)"/>
+			<column name = "company_id" type="uuid">
+				<constraints nullable="false"
+							 foreignKeyName="fk_mcompany_companydetails" references="company_details(id)"/>
+			</column>
 		</createTable>
 		<createTable tableName="movie_vote">
 			<column name="id" type="uuid">
@@ -216,6 +243,12 @@
 			<column name = "topic" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
 		</createTable>
+		<createTable tableName="laguage">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name = "name" type="varchar(255)"/>
+		</createTable>
 		<createTable tableName="release_detail">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
@@ -271,10 +304,12 @@
 				<constraints primaryKey="true" />
 			</column>
 			<column name="user_id" type="uuid">
-				<constraints referencedTableName="portal_user" referencedColumnNames="id" foreignKeyName="visit_portaluser_fk" nullable="false"/>
+				<constraints referencedTableName="portal_user"
+							 referencedColumnNames="id" foreignKeyName="visit_portaluser_fk" nullable="false"/>
 			</column>
 			<column name="master_id" type="uuid">
-				<constraints referencedTableName="master" referencedColumnNames="id" foreignKeyName="visit_master_fk" nullable="false"/>
+				<constraints referencedTableName="master"
+							 referencedColumnNames="id" foreignKeyName="visit_master_fk" nullable="false"/>
 			</column>
 			<column name = "start_at" type="datetime"/>
 			<column name = "finish_at" type="datetime"/>

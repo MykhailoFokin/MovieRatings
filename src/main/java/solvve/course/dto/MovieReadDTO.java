@@ -13,11 +13,7 @@ public class MovieReadDTO {
 
     private Short year;
 
-    private String genres;
-
     private String description;
-
-    private String companies;
 
     private String soundMix;
 
@@ -28,10 +24,6 @@ public class MovieReadDTO {
     private String camera;
 
     private String laboratory;
-
-    private String languages;
-
-    private String filmingLocations;
 
     private String critique;
 

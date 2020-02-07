@@ -43,12 +43,6 @@ public class CountryService {
         return translationService.toRead(country);
     }
 
-    private Country getCountriesRequired(UUID id) {
-        return countryRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Country.class, id);
-        });
-    }
-
     public void deleteCountries(UUID id) {
         countryRepository.delete(getCountriesRequired(id));
     }
@@ -65,5 +59,11 @@ public class CountryService {
     public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
         List<Country> countryList = countryRepository.findByFilter(countryFilter);
         return countryList.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
+    private Country getCountriesRequired(UUID id) {
+        return countryRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Country.class, id);
+        });
     }
 }

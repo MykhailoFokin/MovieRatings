@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -36,80 +36,15 @@ public class MovieSpoilerDataServiceTest {
     private MovieSpoilerDataService movieSpoilerDataService;
 
     @Autowired
-    private MovieReviewRepository movieReviewRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    private MovieSpoilerData createMovieSpoilerData(MovieReview movieReview) {
-        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
-        movieSpoilerData.setMovieReviewId(movieReview);
-        movieSpoilerData.setStartIndex(100);
-        movieSpoilerData.setEndIndex(150);
-        return movieSpoilerDataRepository.save(movieSpoilerData);
-    }
-
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        //movie.setId(UUID.randomUUID());
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCompanies("Paramount");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
-    private PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    public MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
-        MovieReview movieReview = new MovieReview();
-        movieReview.setUserId(portalUser);
-        movieReview.setMovieId(movie);
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReview = movieReviewRepository.save(movieReview);
-
-        return movieReview;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetMovieSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataReadDTO readDTO = movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieSpoilerData,
@@ -125,9 +60,9 @@ public class MovieSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testCreateMovieSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
         MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
         create.setMovieReviewId(movieReview.getId());
@@ -146,10 +81,10 @@ public class MovieSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchMovieSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
         patch.setMovieReviewId(movieReview.getId());
@@ -168,10 +103,10 @@ public class MovieSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPatchMovieSpoilerDataEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
@@ -191,10 +126,10 @@ public class MovieSpoilerDataServiceTest {
 
     @Test
     public void testDeleteMovieSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         movieSpoilerDataService.deleteMovieSpoilerData(movieSpoilerData.getId());
         Assert.assertFalse(movieSpoilerDataRepository.existsById(movieSpoilerData.getId()));
@@ -208,10 +143,10 @@ public class MovieSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPutMovieSpoilerData() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
         put.setMovieReviewId(movieReview.getId());
@@ -230,10 +165,10 @@ public class MovieSpoilerDataServiceTest {
     @Transactional
     @Test
     public void testPutMovieSpoilerDataEmptyPut() {
-        PortalUser portalUser = createPortalUser();
-        Movie movie = createMovie();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieSpoilerData movieSpoilerData = createMovieSpoilerData(movieReview);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.putMovieSpoilerData(movieSpoilerData.getId(), put);

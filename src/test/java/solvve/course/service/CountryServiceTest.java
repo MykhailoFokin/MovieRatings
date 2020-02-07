@@ -17,6 +17,7 @@ import solvve.course.dto.CountryPutDTO;
 import solvve.course.dto.CountryReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -32,9 +33,12 @@ public class CountryServiceTest {
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testGetCountries() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         CountryReadDTO readDTO = countryService.getCountries(country.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(country);
@@ -49,7 +53,7 @@ public class CountryServiceTest {
     @Test
     public void testCreateCountries() {
         CountryCreateDTO create = new CountryCreateDTO();
-        create.setName("Laplandia");
+        create.setName("Ukraine");
         CountryReadDTO read = countryService.createCountries(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -60,22 +64,24 @@ public class CountryServiceTest {
     @Transactional
     @Test
     public void testPatchCountries() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         CountryPatchDTO patch = new CountryPatchDTO();
-        patch.setName("Laplandia");
+        patch.setName("Ukraine");
         CountryReadDTO read = countryService.patchCountries(country.getId(), patch);
 
-        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
+        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movies",
+                "releaseDetails","countryLanguages");
 
         country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
+        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies",
+                "releaseDetails","countryLanguages");
     }
 
     @Transactional
     @Test
     public void testPatchCountriesEmptyPatch() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         CountryPatchDTO patch = new CountryPatchDTO();
         CountryReadDTO read = countryService.patchCountries(country.getId(), patch);
@@ -91,7 +97,7 @@ public class CountryServiceTest {
 
     @Test
     public void testDeleteCountries() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         countryService.deleteCountries(country.getId());
         Assert.assertFalse(countryRepository.existsById(country.getId()));
@@ -105,22 +111,24 @@ public class CountryServiceTest {
     @Transactional
     @Test
     public void testPutCountries() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         CountryPutDTO put = new CountryPutDTO();
-        put.setName("Laplandia");
+        put.setName("Ukraine");
         CountryReadDTO read = countryService.putCountries(country.getId(), put);
 
-        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
+        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies",
+                "releaseDetails","countryLanguages");
 
         country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies","releaseDetails");
+        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies",
+                "releaseDetails","countryLanguages");
     }
 
     @Transactional
     @Test
     public void testPutCountriesEmptyPut() {
-        Country country = createCountries();
+        Country country = testObjectsFactory.createCountry();
 
         CountryPutDTO put = new CountryPutDTO();
         CountryReadDTO read = countryService.putCountries(country.getId(), put);
@@ -132,12 +140,5 @@ public class CountryServiceTest {
         Assert.assertNull(countryAfterUpdate.getName());
 
         Assertions.assertThat(country).isEqualToComparingFieldByField(countryAfterUpdate);
-    }
-
-    private Country createCountries() {
-        Country country = new Country();
-        country.setId(UUID.randomUUID());
-        country.setName("Laplandia");
-        return countryRepository.save(country);
     }
 }

@@ -1,0 +1,14 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+	<changeSet id="preload data" author="mykhailo" runOnChange="true">
+		<loadUpdateData tableName="country" file="db/data/countries.csv" separator=";" primaryKey="Id">
+			<column name="id" type="uuid"/>
+			<column name = "name" type="string"/>
+		</loadUpdateData>
+	</changeSet>
+	
+</databaseChangeLog>

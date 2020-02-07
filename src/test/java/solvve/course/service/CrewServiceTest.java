@@ -1,7 +1,6 @@
 package solvve.course.service;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,8 @@ import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.*;
+import solvve.course.repository.CrewRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,21 +38,15 @@ public class CrewServiceTest {
     private CrewService crewService;
 
     @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private CrewTypeRepository crewTypeRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetCrew() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew, "movieId", "personId","crewType");
@@ -69,9 +63,9 @@ public class CrewServiceTest {
     @Transactional
     @Test
     public void testCreateCrew() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewCreateDTO create = new CrewCreateDTO();
         create.setPersonId(person.getId());
@@ -91,10 +85,10 @@ public class CrewServiceTest {
     @Transactional
     @Test
     public void testPatchCrew() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPatchDTO patch = new CrewPatchDTO();
         patch.setPersonId(person.getId());
@@ -115,10 +109,10 @@ public class CrewServiceTest {
     @Transactional
     @Test
     public void testPatchCrewEmptyPatch() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPatchDTO patch = new CrewPatchDTO();
         CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
@@ -140,10 +134,10 @@ public class CrewServiceTest {
 
     @Test
     public void testDeleteCrew() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         crewService.deleteCrew(crew.getId());
         Assert.assertFalse(crewRepository.existsById(crew.getId()));
@@ -157,10 +151,10 @@ public class CrewServiceTest {
     @Transactional
     @Test
     public void testPutCrew() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPutDTO put = new CrewPutDTO();
         put.setPersonId(person.getId());
@@ -181,10 +175,10 @@ public class CrewServiceTest {
     @Transactional
     @Test
     public void testPutCrewEmptyPut() {
-        Movie movie = createMovie();
-        Person person = createPerson();
-        CrewType crewType = createCrewType();
-        Crew crew = createCrew(person, crewType, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        Person person = testObjectsFactory.createPerson();
+        CrewType crewType = testObjectsFactory.createCrewType();
+        Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPutDTO put = new CrewPutDTO();
         CrewReadDTO read = crewService.putCrew(crew.getId(), put);
@@ -202,50 +196,5 @@ public class CrewServiceTest {
         Assert.assertNull(crewAfterUpdate.getDescription());
 
         Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
-    }
-
-    private CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setName("Director");
-        crewType = crewTypeRepository.save(crewType);
-        return  crewType;
-    }
-
-    private Person createPerson() {
-        Person person = new Person();
-        person.setSurname("Surname");
-        person.setName("Name");
-        person.setMiddleName("MiddleName");
-        person = personRepository.save(person);
-        return person;
-    }
-
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCompanies("Paramount");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
-    private Crew createCrew(Person person, CrewType crewType, Movie movie) {
-        Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
-        crew.setPersonId(person);
-        crew.setCrewType(crewType);
-        crew.setMovieId(movie);
-        crew.setDescription("Description");
-        return crewRepository.save(crew);
     }
 }

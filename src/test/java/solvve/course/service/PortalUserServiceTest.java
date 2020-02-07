@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
-import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
@@ -21,7 +19,7 @@ import solvve.course.dto.PortalUserPutDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypeRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -40,31 +38,13 @@ public class PortalUserServiceTest {
     private PortalUserService portalUserService;
 
     @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    private PortalUser createPortalUser(UserType userType) {
-        PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        return portalUserRepository.save(portalUser);
-    }
-
-    private UserType createUserType() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-        return userType;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetPortalUsers() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userType");
@@ -79,7 +59,7 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testCreatePortalUsers() {
-        UserType userType = createUserType();
+        UserType userType = testObjectsFactory.createUserType();
 
         PortalUserCreateDTO create = new PortalUserCreateDTO();
         create.setUserType(userType.getId());
@@ -99,8 +79,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPatchPortalUser() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
         patch.setUserType(userType.getId());
@@ -125,8 +105,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPatchPortalUserEmptyPatch() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
         PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
@@ -152,8 +132,8 @@ public class PortalUserServiceTest {
 
     @Test
     public void testDeletePortalUser() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         portalUserService.deletePortalUser(portalUser.getId());
         Assert.assertFalse(portalUserRepository.existsById(portalUser.getId()));
@@ -167,8 +147,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPutPortalUser() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPutDTO put = new PortalUserPutDTO();
         put.setUserType(userType.getId());
@@ -193,8 +173,8 @@ public class PortalUserServiceTest {
     @Transactional
     @Test
     public void testPutPortalUserEmptyPut() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPutDTO put = new PortalUserPutDTO();
         PortalUserReadDTO read = portalUserService.putPortalUser(portalUser.getId(), put);

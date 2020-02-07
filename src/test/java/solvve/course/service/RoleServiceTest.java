@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.PersonRepository;
 import solvve.course.repository.RoleRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -38,32 +37,13 @@ public class RoleServiceTest {
     private RoleService roleService;
 
     @Autowired
-    private PersonRepository personRepository;
-
-    private Person person;
-
-    @Before
-    public void setup() {
-        if (person == null) {
-            person = new Person();
-            person.setName("Name");
-            person = personRepository.save(person);
-        }
-    }
-
-    private Role createRole() {
-        Role role = new Role();
-        role.setTitle("Actor");
-        role.setRoleType("Main_Role");
-        role.setDescription("Description test");
-        role.setPersonId(person);
-        return roleRepository.save(role);
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetRole() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RoleReadDTO readDTO = roleService.getRole(role.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(role,"personId");
@@ -78,6 +58,8 @@ public class RoleServiceTest {
     @Transactional
     @Test
     public void testCreateRole() {
+        Person person = testObjectsFactory.createPerson();
+
         RoleCreateDTO create = new RoleCreateDTO();
         create.setTitle("Actor");
         create.setRoleType("Main_Role");
@@ -94,7 +76,8 @@ public class RoleServiceTest {
     @Transactional
     @Test
     public void testPatchRole() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RolePatchDTO patch = new RolePatchDTO();
         patch.setTitle("Actor");
@@ -115,7 +98,8 @@ public class RoleServiceTest {
     @Transactional
     @Test
     public void testPatchRoleEmptyPatch() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RolePatchDTO patch = new RolePatchDTO();
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
@@ -135,7 +119,8 @@ public class RoleServiceTest {
 
     @Test
     public void testDeleteRole() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         roleService.deleteRole(role.getId());
         Assert.assertFalse(roleRepository.existsById(role.getId()));
@@ -149,7 +134,8 @@ public class RoleServiceTest {
     @Transactional
     @Test
     public void testPutRole() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RolePutDTO put = new RolePutDTO();
         put.setTitle("Actor");
@@ -170,7 +156,8 @@ public class RoleServiceTest {
     @Transactional
     @Test
     public void testPutRoleEmptyPut() {
-        Role role = createRole();
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
 
         RolePutDTO put = new RolePutDTO();
         RoleReadDTO read = roleService.putRole(role.getId(), put);

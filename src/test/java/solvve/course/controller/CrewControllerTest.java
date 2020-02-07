@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -25,6 +26,7 @@ import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.exception.handler.RestExceptionHandler;
 import solvve.course.service.CrewService;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -162,5 +164,23 @@ public class CrewControllerTest {
 
         CrewReadDTO actualCrew = objectMapper.readValue(resultJson, CrewReadDTO.class);
         Assert.assertEquals(read, actualCrew);
+    }
+
+    @Test
+    public void testGetCrews() throws Exception {
+        CrewFilter crewFilter = new CrewFilter();
+        crewFilter.setDescription("Description");
+
+        CrewReadDTO read = createCrewRead();
+        List<CrewReadDTO> expectedResult = List.of(read);
+        Mockito.when(crewService.getCrews(crewFilter)).thenReturn(expectedResult);
+
+        String resultJson = mvc.perform(get("/api/v1/crew")
+                .param("description", crewFilter.getDescription().toString()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<CrewReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        });
+        Assert.assertEquals(expectedResult, actualResult);
     }
 }

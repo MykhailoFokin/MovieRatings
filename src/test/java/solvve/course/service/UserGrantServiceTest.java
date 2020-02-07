@@ -14,8 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.UserGrantRepository;
-import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypeRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -35,46 +34,14 @@ public class UserGrantServiceTest {
     private UserGrantService userGrantService;
 
     @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    private UserGrant createGrants(UserType userType, PortalUser portalUser) {
-        UserGrant userGrant = new UserGrant();
-        userGrant.setId(UUID.randomUUID());
-        userGrant.setUserTypeId(userType);
-        userGrant.setObjectName("Movie");
-        userGrant.setUserPermission(UserPermType.READ);
-        userGrant.setGrantedBy(portalUser);
-        return userGrantRepository.save(userGrant);
-    }
-
-    private UserType createUserType() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-        return userType;
-    }
-
-    private PortalUser createPortalUser(UserType userType) {
-        PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-        return portalUser;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetGrants() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantReadDTO readDTO = userGrantService.getGrants(userGrant.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(userGrant,
@@ -91,8 +58,8 @@ public class UserGrantServiceTest {
     @Transactional
     @Test
     public void testCreateGrants() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         UserGrantCreateDTO create = new UserGrantCreateDTO();
         create.setUserTypeId(userType.getId());
@@ -112,9 +79,9 @@ public class UserGrantServiceTest {
     @Transactional
     @Test
     public void testPatchGrants() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantPatchDTO patch = new UserGrantPatchDTO();
         patch.setUserTypeId(userType.getId());
@@ -135,9 +102,9 @@ public class UserGrantServiceTest {
     @Transactional
     @Test
     public void testPatchGrantsEmptyPatch() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantPatchDTO patch = new UserGrantPatchDTO();
         UserGrantReadDTO read = userGrantService.patchGrants(userGrant.getId(), patch);
@@ -159,9 +126,9 @@ public class UserGrantServiceTest {
 
     @Test
     public void testDeleteGrants() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         userGrantService.deleteGrants(userGrant.getId());
         Assert.assertFalse(userGrantRepository.existsById(userGrant.getId()));
@@ -175,9 +142,9 @@ public class UserGrantServiceTest {
     @Transactional
     @Test
     public void testPutGrants() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantPutDTO put = new UserGrantPutDTO();
         put.setUserTypeId(userType.getId());
@@ -198,9 +165,9 @@ public class UserGrantServiceTest {
     @Transactional
     @Test
     public void testPutGrantsEmptyPut() {
-        UserType userType = createUserType();
-        PortalUser portalUser = createPortalUser(userType);
-        UserGrant userGrant = createGrants(userType, portalUser);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantPutDTO put = new UserGrantPutDTO();
         UserGrantReadDTO read = userGrantService.putGrants(userGrant.getId(), put);

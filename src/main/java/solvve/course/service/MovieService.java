@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Movie;
-import solvve.course.dto.MovieCreateDTO;
-import solvve.course.dto.MoviePatchDTO;
-import solvve.course.dto.MoviePutDTO;
-import solvve.course.dto.MovieReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieRepository;
+
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -43,12 +43,6 @@ public class MovieService {
         return translationService.toRead(movie);
     }
 
-    private Movie getMovieRequired(UUID id) {
-        return movieRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Movie.class, id);
-        });
-    }
-
     public void deleteMovie(UUID id) {
         movieRepository.delete(getMovieRequired(id));
     }
@@ -60,5 +54,16 @@ public class MovieService {
 
         movie = movieRepository.save(movie);
         return translationService.toRead(movie);
+    }
+
+    public List<MovieReadExtendedDTO> getMovies(MovieFilter filter) {
+        List<Movie> movieList = movieRepository.findByFilter(filter);
+        return movieList.stream().map(translationService::toReadExtended).collect(Collectors.toList());
+    }
+
+    private Movie getMovieRequired(UUID id) {
+        return movieRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Movie.class, id);
+        });
     }
 }

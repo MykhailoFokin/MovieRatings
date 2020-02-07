@@ -48,6 +48,9 @@ public class TranslationService {
     @Autowired
     private VisitService visitService;
 
+    @Autowired
+    private CompanyDetailsRepository companyDetailsRepository;
+
     public VisitReadExtendedDTO toReadExtended(Visit visit) {
         VisitReadExtendedDTO dto = new VisitReadExtendedDTO();
         dto.setId(visit.getId());
@@ -120,6 +123,41 @@ public class TranslationService {
         visit.setStartAt(put.getStartAt());
         visit.setFinishAt(put.getFinishAt());
         visit.setStatus(put.getStatus());
+    }
+
+    public CompanyDetailsReadDTO toRead(CompanyDetails companyDetails) {
+        CompanyDetailsReadDTO dto = new CompanyDetailsReadDTO();
+        dto.setId(companyDetails.getId());
+        dto.setName(companyDetails.getName());
+        dto.setOverview(companyDetails.getOverview());
+        dto.setYearOfFoundation(companyDetails.getYearOfFoundation());
+        return dto;
+    }
+
+    public CompanyDetails toEntity(CompanyDetailsCreateDTO create) {
+        CompanyDetails companyDetails = new CompanyDetails();
+        companyDetails.setName(create.getName());
+        companyDetails.setOverview(create.getOverview());
+        companyDetails.setYearOfFoundation(create.getYearOfFoundation());
+        return companyDetails;
+    }
+
+    public void patchEntity(CompanyDetailsPatchDTO patch, CompanyDetails companyDetails) {
+        if (patch.getName()!=null) {
+            companyDetails.setName(patch.getName());
+        }
+        if (patch.getOverview()!=null) {
+            companyDetails.setOverview(patch.getOverview());
+        }
+        if (patch.getYearOfFoundation()!=null) {
+            companyDetails.setYearOfFoundation(patch.getYearOfFoundation());
+        }
+    }
+
+    public void putEntity(CompanyDetailsPutDTO put, CompanyDetails companyDetails) {
+        companyDetails.setName(put.getName());
+        companyDetails.setOverview(put.getOverview());
+        companyDetails.setYearOfFoundation(put.getYearOfFoundation());
     }
 
     public CountryReadDTO toRead(Country country) {
@@ -227,6 +265,39 @@ public class TranslationService {
         crewType.setName(put.getName());
     }
 
+    public GenreReadDTO toRead(Genre genre) {
+        GenreReadDTO dto = new GenreReadDTO();
+        dto.setId(genre.getId());
+        dto.setMovieId(genre.getMovieId().getId());
+        dto.setName(genre.getName());
+        return dto;
+    }
+
+    public Genre toEntity(GenreCreateDTO create) {
+        Genre genre = new Genre();
+        genre.setMovieId(movieRepository.findById(create.getMovieId()).get());
+        genre.setName(create.getName());
+        return genre;
+    }
+
+    public void patchEntity(GenrePatchDTO patch, Genre genre) {
+        if (patch.getMovieId()!=null) {
+            genre.setMovieId(movieRepository.findById(patch.getMovieId()).get());
+        }
+        if (patch.getName()!=null) {
+            genre.setName(patch.getName());
+        }
+    }
+
+    public void putEntity(GenrePutDTO put, Genre Genre) {
+        if (put.getMovieId()!=null) {
+            Genre.setMovieId(movieRepository.findById(put.getMovieId()).get());
+        } else {
+            Genre.setMovieId(new Movie());
+        }
+        Genre.setName(put.getName());
+    }
+
     public UserGrantReadDTO toRead(UserGrant userGrant) {
         UserGrantReadDTO dto = new UserGrantReadDTO();
         dto.setId(userGrant.getId());
@@ -276,6 +347,29 @@ public class TranslationService {
         }
     }
 
+    public LanguageReadDTO toRead(Language language) {
+        LanguageReadDTO dto = new LanguageReadDTO();
+        dto.setId(language.getId());
+        dto.setName(language.getName());
+        return dto;
+    }
+
+    public Language toEntity(LanguageCreateDTO create) {
+        Language language = new Language();
+        language.setName(create.getName());
+        return language;
+    }
+
+    public void patchEntity(LanguagePatchDTO patch, Language language) {
+        if (patch.getName()!=null) {
+            language.setName(patch.getName());
+        }
+    }
+
+    public void putEntity(LanguagePutDTO put, Language language) {
+        language.setName(put.getName());
+    }
+
     public MasterReadExtendedDTO toReadExtended(Master master) {
         MasterReadExtendedDTO dto = new MasterReadExtendedDTO();
         dto.setId(master.getId());
@@ -319,6 +413,43 @@ public class TranslationService {
         master.setName(put.getName());
         master.setPhone(put.getPhone());
         master.setAbout(put.getAbout());
+    }
+
+    public MovieCompanyReadDTO toRead(MovieCompany movieCompany) {
+        MovieCompanyReadDTO dto = new MovieCompanyReadDTO();
+        dto.setId(movieCompany.getId());
+        dto.setCompanyId(movieCompany.getCompanyId().getId());
+        dto.setMovieProductionType(movieCompany.getMovieProductionType());
+        dto.setDescription(movieCompany.getDescription());
+        return dto;
+    }
+
+    public MovieCompany toEntity(MovieCompanyCreateDTO create) {
+        MovieCompany movieCompany = new MovieCompany();
+        movieCompany.setCompanyId(companyDetailsRepository.findById(create.getCompanyId()).get());
+        movieCompany.setMovieProductionType(create.getMovieProductionType());
+        movieCompany.setDescription(create.getDescription());
+        return movieCompany;
+    }
+
+    public void patchEntity(MovieCompanyPatchDTO patch, MovieCompany movieCompany) {
+        if (patch.getCompanyId()!=null) {
+            movieCompany.setCompanyId(companyDetailsRepository.findById(patch.getCompanyId()).get());
+        }
+        if (patch.getMovieProductionType()!=null) {
+            movieCompany.setMovieProductionType(patch.getMovieProductionType());
+        }
+        if (patch.getDescription()!=null) {
+            movieCompany.setDescription(patch.getDescription());
+        }
+    }
+
+    public void putEntity(MovieCompanyPutDTO put, MovieCompany movieCompany) {
+        if (put.getCompanyId()!=null) {
+            movieCompany.setCompanyId(companyDetailsRepository.findById(put.getCompanyId()).get());
+        }
+        movieCompany.setMovieProductionType(put.getMovieProductionType());
+        movieCompany.setDescription(put.getDescription());
     }
 
     public MovieReviewCompliantReadDTO toRead(MovieReviewCompliant movieReviewCompliant) {
@@ -501,18 +632,39 @@ public class TranslationService {
         dto.setId(movie.getId());
         dto.setTitle(movie.getTitle());
         dto.setYear(movie.getYear());
-        dto.setGenres(movie.getGenres());
         dto.setDescription(movie.getDescription());
-        dto.setCompanies(movie.getCompanies());
         dto.setSoundMix(movie.getSoundMix());
         dto.setColour(movie.getColour());
         dto.setAspectRatio(movie.getAspectRatio());
         dto.setCamera(movie.getCamera());
         dto.setLaboratory(movie.getLaboratory());
-        dto.setLanguages(movie.getLanguages());
-        dto.setFilmingLocations(movie.getFilmingLocations());
         dto.setCritique(movie.getCritique());
         dto.setIsPublished(movie.getIsPublished());
+        return dto;
+    }
+
+    public MovieReadExtendedDTO toReadExtended(Movie movie) {
+        MovieReadExtendedDTO dto = new MovieReadExtendedDTO();
+        dto.setId(movie.getId());
+        dto.setTitle(movie.getTitle());
+        dto.setYear(movie.getYear());
+        dto.setDescription(movie.getDescription());
+        dto.setSoundMix(movie.getSoundMix());
+        dto.setColour(movie.getColour());
+        dto.setAspectRatio(movie.getAspectRatio());
+        dto.setCamera(movie.getCamera());
+        dto.setLaboratory(movie.getLaboratory());
+        dto.setCritique(movie.getCritique());
+        dto.setIsPublished(movie.getIsPublished());
+        dto.setMovieCompanies(movie.getMovieProdCompanies());
+        dto.setLanguages(movie.getMovieProdLanguages());
+        dto.setMovieProdCountries(movie.getMovieProdCountries());
+        dto.setMovieReview(movie.getMovieReview());
+        dto.setMovieReviewCompliants(movie.getMovieReviewCompliants());
+        dto.setMovieReviewFeedbacks(movie.getMovieReviewFeedbacks());
+        dto.setCrews(movie.getCrews());
+        dto.setReleaseDetails(movie.getReleaseDetails());
+        dto.setMovieVotes(movie.getMovieVotes());
         return dto;
     }
 
@@ -520,16 +672,12 @@ public class TranslationService {
         Movie movie = new Movie();
         movie.setTitle(create.getTitle());
         movie.setYear(create.getYear());
-        movie.setGenres(create.getGenres());
         movie.setDescription(create.getDescription());
-        movie.setCompanies(create.getCompanies());
         movie.setSoundMix(create.getSoundMix());
         movie.setColour(create.getColour());
         movie.setAspectRatio(create.getAspectRatio());
         movie.setCamera(create.getCamera());
         movie.setLaboratory(create.getLaboratory());
-        movie.setLanguages(create.getLanguages());
-        movie.setFilmingLocations(create.getFilmingLocations());
         movie.setCritique(create.getCritique());
         movie.setIsPublished(create.getIsPublished());
         return movie;
@@ -542,14 +690,8 @@ public class TranslationService {
         if (patch.getYear()!=null) {
             movie.setYear(patch.getYear());
         }
-        if (patch.getGenres()!=null) {
-            movie.setGenres(patch.getGenres());
-        }
         if (patch.getDescription()!=null) {
             movie.setDescription(patch.getDescription());
-        }
-        if (patch.getCompanies()!=null) {
-            movie.setCompanies(patch.getCompanies());
         }
         if (patch.getSoundMix()!=null) {
             movie.setSoundMix(patch.getSoundMix());
@@ -566,12 +708,6 @@ public class TranslationService {
         if (patch.getLaboratory()!=null) {
             movie.setLaboratory(patch.getLaboratory());
         }
-        if (patch.getLanguages()!=null) {
-            movie.setLanguages(patch.getLanguages());
-        }
-        if (patch.getFilmingLocations()!=null) {
-            movie.setFilmingLocations(patch.getFilmingLocations());
-        }
         if (patch.getCritique()!=null) {
             movie.setCritique(patch.getCritique());
         }
@@ -583,16 +719,12 @@ public class TranslationService {
     public void putEntity(MoviePutDTO put, Movie movie) {
         movie.setTitle(put.getTitle());
         movie.setYear(put.getYear());
-        movie.setGenres(put.getGenres());
         movie.setDescription(put.getDescription());
-        movie.setCompanies(put.getCompanies());
         movie.setSoundMix(put.getSoundMix());
         movie.setColour(put.getColour());
         movie.setAspectRatio(put.getAspectRatio());
         movie.setCamera(put.getCamera());
         movie.setLaboratory(put.getLaboratory());
-        movie.setLanguages(put.getLanguages());
-        movie.setFilmingLocations(put.getFilmingLocations());
         movie.setCritique(put.getCritique());
         movie.setIsPublished(put.getIsPublished());
     }

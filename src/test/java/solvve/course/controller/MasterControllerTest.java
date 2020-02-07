@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -20,6 +21,7 @@ import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MasterService;
 import solvve.course.service.TranslationService;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,15 +40,6 @@ public class MasterControllerTest {
 
     @MockBean
     private MasterService masterService;
-
-    private MasterReadExtendedDTO createMasterRead() {
-        MasterReadExtendedDTO master = new MasterReadExtendedDTO();
-        master.setId(UUID.randomUUID());
-        master.setName("MasterName");
-        master.setPhone("645768767");
-        master.setAbout("What about");
-        return master;
-    }
 
     private MasterReadDTO fromExtendedToDTO(MasterReadExtendedDTO dto) {
         MasterReadDTO masterReadDTO = new MasterReadDTO();
@@ -171,5 +164,33 @@ public class MasterControllerTest {
 
         MasterReadDTO actualMaster = objectMapper.readValue(resultJson, MasterReadDTO.class);
         Assert.assertEquals(read, actualMaster);
+    }
+
+    @Test
+    public void testGetMasters() throws Exception {
+        MasterFilter masterFilter = new MasterFilter();
+        masterFilter.setName("MasterName");
+
+        MasterReadDTO read = new MasterReadDTO();
+        read.setName("MasterName");
+        List<MasterReadDTO> expectedResult = List.of(read);
+        Mockito.when(masterService.getMasters(masterFilter)).thenReturn(expectedResult);
+
+        String resultJson = mvc.perform(get("/api/v1/masters")
+                .param("name", masterFilter.getName()))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<MasterReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        });
+        Assert.assertEquals(expectedResult, actualResult);
+    }
+
+    private MasterReadExtendedDTO createMasterRead() {
+        MasterReadExtendedDTO master = new MasterReadExtendedDTO();
+        master.setId(UUID.randomUUID());
+        master.setName("MasterName");
+        master.setPhone("645768767");
+        master.setAbout("What about");
+        return master;
     }
 }

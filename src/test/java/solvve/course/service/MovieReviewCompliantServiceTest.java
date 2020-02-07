@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
@@ -36,84 +36,15 @@ public class MovieReviewCompliantServiceTest {
     private MovieReviewCompliantService movieReviewCompliantService;
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private MovieReviewRepository movieReviewRepository;
-
-    private MovieReviewCompliant createMovieReviewCompliant(PortalUser portalUser, Movie movie, MovieReview movieReview) {
-        MovieReviewCompliant movieReviewCompliant = new MovieReviewCompliant();
-        movieReviewCompliant.setUserId(portalUser);
-        movieReviewCompliant.setMovieId(movie);
-        movieReviewCompliant.setMovieReviewId(movieReview);
-        movieReviewCompliant.setDescription("Just punish him!");
-        movieReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReviewCompliant.setModeratorId(portalUser);
-        return movieReviewCompliantRepository.save(movieReviewCompliant);
-    }
-
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        //movie.setId(UUID.randomUUID());
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCompanies("Paramount");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
-
-    private PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    private MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
-        MovieReview movieReview = new MovieReview();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setUserId(portalUser);
-        movieReview.setMovieId(movie);
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        movieReview.setModeratorId(portalUser);
-        movieReview = movieReviewRepository.save(movieReview);
-        return movieReview;
-    }
+    private TestObjectsFactory testObjectsFactory;
 
     @Transactional
     @Test
     public void testGetMovieReviewCompliant() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantReadDTO readDTO = movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReviewCompliant, "userId", "movieId", "movieReviewId", "moderatorId");
@@ -131,9 +62,9 @@ public class MovieReviewCompliantServiceTest {
     @Transactional
     @Test
     public void testCreateMovieReviewCompliant() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
         MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
         create.setUserId(portalUser.getId());
@@ -157,10 +88,10 @@ public class MovieReviewCompliantServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewCompliant() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -184,10 +115,10 @@ public class MovieReviewCompliantServiceTest {
     @Transactional
     @Test
     public void testPatchMovieReviewCompliantEmptyPatch() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
         MovieReviewCompliantReadDTO read = movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
@@ -213,10 +144,10 @@ public class MovieReviewCompliantServiceTest {
 
     @Test
     public void testDeleteMovieReviewCompliant() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         movieReviewCompliantService.deleteMovieReviewCompliant(movieReviewCompliant.getId());
         Assert.assertFalse(movieReviewCompliantRepository.existsById(movieReviewCompliant.getId()));
@@ -230,10 +161,10 @@ public class MovieReviewCompliantServiceTest {
     @Transactional
     @Test
     public void testPutMovieReviewCompliant() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
         put.setUserId(portalUser.getId());
@@ -257,10 +188,10 @@ public class MovieReviewCompliantServiceTest {
     @Transactional
     @Test
     public void testPutMovieReviewCompliantEmptyPut() {
-        Movie movie = createMovie();
-        PortalUser portalUser = createPortalUser();
-        MovieReview movieReview = createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = createMovieReviewCompliant(portalUser, movie, movieReview);
+        Movie movie = testObjectsFactory.createMovie();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
         MovieReviewCompliantReadDTO read = movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);

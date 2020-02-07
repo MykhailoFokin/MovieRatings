@@ -48,16 +48,12 @@ public class MovieControllerTest {
         movie.setId(UUID.randomUUID());
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
-        movie.setGenres("Comedy");
         movie.setAspectRatio("1:10");
         movie.setCamera("Panasonic");
         movie.setColour("Black");
-        movie.setCompanies("Paramount");
         movie.setCritique("123");
         movie.setDescription("Description");
-        movie.setFilmingLocations("USA");
         movie.setLaboratory("CaliforniaDreaming");
-        movie.setLanguages("English");
         movie.setSoundMix("DolbySurround");
         return movie;
     }
@@ -111,16 +107,12 @@ public class MovieControllerTest {
         MovieCreateDTO create = new MovieCreateDTO();
         create.setTitle("Movie Test");
         create.setYear((short) 2019);
-        create.setGenres("Comedy");
         create.setAspectRatio("1:10");
         create.setCamera("Panasonic");
         create.setColour("Black");
-        create.setCompanies("Paramount");
         create.setCritique("123");
         create.setDescription("Description");
-        create.setFilmingLocations("USA");
         create.setLaboratory("CaliforniaDreaming");
-        create.setLanguages("English");
         create.setSoundMix("DolbySurround");
 
         MovieReadDTO read = createMovieRead();
@@ -143,16 +135,12 @@ public class MovieControllerTest {
         MoviePatchDTO patchDTO = new MoviePatchDTO();
         patchDTO.setTitle("Movie Test");
         patchDTO.setYear((short) 2019);
-        patchDTO.setGenres("Comedy");
         patchDTO.setAspectRatio("1:10");
         patchDTO.setCamera("Panasonic");
         patchDTO.setColour("Black");
-        patchDTO.setCompanies("Paramount");
         patchDTO.setCritique("123");
         patchDTO.setDescription("Description");
-        patchDTO.setFilmingLocations("USA");
         patchDTO.setLaboratory("CaliforniaDreaming");
-        patchDTO.setLanguages("English");
         patchDTO.setSoundMix("DolbySurround");
 
         MovieReadDTO read = createMovieRead();
@@ -184,16 +172,12 @@ public class MovieControllerTest {
         MoviePutDTO putDTO = new MoviePutDTO();
         putDTO.setTitle("Movie Test");
         putDTO.setYear((short) 2019);
-        putDTO.setGenres("Comedy");
         putDTO.setAspectRatio("1:10");
         putDTO.setCamera("Panasonic");
         putDTO.setColour("Black");
-        putDTO.setCompanies("Paramount");
         putDTO.setCritique("123");
         putDTO.setDescription("Description");
-        putDTO.setFilmingLocations("USA");
         putDTO.setLaboratory("CaliforniaDreaming");
-        putDTO.setLanguages("English");
         putDTO.setSoundMix("DolbySurround");
 
         MovieReadDTO read = createMovieRead();

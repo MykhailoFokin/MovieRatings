@@ -2,7 +2,6 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.MasterRepository;
-import solvve.course.repository.PortalUserRepository;
-import solvve.course.repository.UserTypeRepository;
 import solvve.course.repository.VisitRepository;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -33,68 +30,20 @@ import java.util.UUID;
 public class VisitServiceTest {
 
     @Autowired
-    private VisitRepository visitRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Autowired
     private VisitService visitService;
 
     @Autowired
-    private UserTypeService userTypeService;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private MasterRepository masterRepository;
-
-    private PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        return portalUser;
-    }
-
-    private Master createMaster() {
-        Master master = new Master();
-        master. setId(UUID.randomUUID());
-        master.setName("MasterName");
-        master.setPhone("645768767");
-        master.setAbout("What about");
-        master = masterRepository.save(master);
-
-        return master;
-    }
-
-    private Visit createVisit(PortalUser portalUser, Master master) {
-        Visit visit = new Visit();
-        visit.setId(UUID.randomUUID());
-        visit.setUserId(portalUser);
-        visit.setMasterId(master);
-        visit.setStartAt(Instant.now());
-        visit.setFinishAt(Instant.now());
-        visit.setStatus(VisitStatus.FINISHED);
-        return visitRepository.save(visit);
-    }
+    private VisitRepository visitRepository;
 
     @Transactional
     @Test
     public void testGetVisitExtended() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         VisitReadExtendedDTO readDTO = visitService.getVisit(visit.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(visit,
@@ -113,15 +62,10 @@ public class VisitServiceTest {
     @Transactional
     @Test
     public void testCreateVisit() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
 
-        VisitCreateDTO create = new VisitCreateDTO();
-        create.setUserId(portalUser.getId());
-        create.setMasterId(master.getId());
-        create.setStartAt(Instant.now());
-        create.setFinishAt(Instant.now());
-        create.setStatus(VisitStatus.FINISHED);
+        VisitCreateDTO create = testObjectsFactory.createVisitCreateDTO(portalUser, master);
         VisitReadDTO read = visitService.createVisit(create);
         Assertions.assertThat(read).isEqualToComparingFieldByField(read);
 
@@ -135,16 +79,11 @@ public class VisitServiceTest {
     @Transactional
     @Test
     public void testPatchVisit() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
-        VisitPatchDTO patch = new VisitPatchDTO();
-        patch.setUserId(portalUser.getId());
-        patch.setMasterId(master.getId());
-        patch.setStartAt(Instant.now());
-        patch.setFinishAt(Instant.now());
-        patch.setStatus(VisitStatus.FINISHED);
+        VisitPatchDTO patch = testObjectsFactory.createVisitPatchDTO(portalUser, master);
         VisitReadDTO read = visitService.patchVisit(visit.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -159,9 +98,9 @@ public class VisitServiceTest {
     @Transactional
     @Test
     public void testPatchVisitEmptyPatch() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         VisitPatchDTO patch = new VisitPatchDTO();
         VisitReadDTO read = visitService.patchVisit(visit.getId(), patch);
@@ -177,9 +116,9 @@ public class VisitServiceTest {
 
     @Test
     public void testDeleteVisit() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         visitService.deleteVisit(visit.getId());
         Assert.assertFalse(visitRepository.existsById(visit.getId()));
@@ -193,16 +132,11 @@ public class VisitServiceTest {
     @Transactional
     @Test
     public void testPutVisit() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
-        VisitPutDTO put = new VisitPutDTO();
-        put.setUserId(portalUser.getId());
-        put.setMasterId(master.getId());
-        put.setStartAt(Instant.now());
-        put.setFinishAt(Instant.now());
-        put.setStatus(VisitStatus.FINISHED);
+        VisitPutDTO put = testObjectsFactory.createVisitPutDTO(portalUser, master);
         VisitReadDTO read = visitService.putVisit(visit.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
@@ -217,9 +151,9 @@ public class VisitServiceTest {
     @Transactional
     @Test
     public void testPutVisitEmptyPut() {
-        PortalUser portalUser = createPortalUser();
-        Master master = createMaster();
-        Visit visit = createVisit(portalUser, master);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Master master = testObjectsFactory.createMaster();
+        Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         VisitPutDTO put = new VisitPutDTO();
         VisitReadDTO read = visitService.putVisit(visit.getId(), put);

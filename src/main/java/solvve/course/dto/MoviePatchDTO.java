@@ -9,11 +9,7 @@ public class MoviePatchDTO {
 
     private Short year;
 
-    private String genres;
-
     private String description;
-
-    private String companies;
 
     private String soundMix;
 
@@ -24,10 +20,6 @@ public class MoviePatchDTO {
     private String camera;
 
     private String laboratory;
-
-    private String languages;
-
-    private String filmingLocations;
 
     private String critique;
 

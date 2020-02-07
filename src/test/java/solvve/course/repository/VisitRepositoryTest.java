@@ -67,11 +67,21 @@ public class VisitRepositoryTest {
         Master m1 = createMaster();
         Master m2 = createMaster();
         ZoneOffset utc = ZoneOffset.UTC;
-        Visit v1 = createVisit(p, m1, VisitStatus.SCHEDULED, LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
-        createVisit(p, m1, VisitStatus.CANCELLED, LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
-        Visit v2 = createVisit(p, m1, VisitStatus.SCHEDULED, LocalDateTime.of(2019, 12, 4, 15, 30, 0).toInstant(utc));
-        createVisit(p, m1, VisitStatus.SCHEDULED, LocalDateTime.of(2019, 12, 4, 17, 30, 0).toInstant(utc));
-        createVisit(p, m2, VisitStatus.SCHEDULED, LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
+        Visit v1 = createVisit(p, m1,
+                VisitStatus.SCHEDULED,
+                LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
+        createVisit(p, m1,
+                VisitStatus.CANCELLED,
+                LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
+        Visit v2 = createVisit(p, m1,
+                VisitStatus.SCHEDULED,
+                LocalDateTime.of(2019, 12, 4, 15, 30, 0).toInstant(utc));
+        createVisit(p, m1,
+                VisitStatus.SCHEDULED,
+                LocalDateTime.of(2019, 12, 4, 17, 30, 0).toInstant(utc));
+        createVisit(p, m2,
+                VisitStatus.SCHEDULED,
+                LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc));
 
         List<Visit> res = visitRepository.findVisitsForMasterInGivenInterval(m1.getId(),VisitStatus.SCHEDULED,
                 LocalDateTime.of(2019, 12, 4, 15, 0, 0).toInstant(utc),
