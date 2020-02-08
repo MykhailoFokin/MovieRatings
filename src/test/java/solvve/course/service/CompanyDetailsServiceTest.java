@@ -71,7 +71,8 @@ public class CompanyDetailsServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         companyDetails = companyDetailsRepository.findById(read.getId()).get();
-        Assertions.assertThat(companyDetails).isEqualToIgnoringGivenFields(read, "movieProdTypeCompanies");
+        Assertions.assertThat(companyDetails).isEqualToIgnoringGivenFields(read,
+                "movieProdTypeCompanies");
     }
 
     @Transactional
@@ -119,7 +120,8 @@ public class CompanyDetailsServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         companyDetails = companyDetailsRepository.findById(read.getId()).get();
-        Assertions.assertThat(companyDetails).isEqualToIgnoringGivenFields(read, "movieProdTypeCompanies");
+        Assertions.assertThat(companyDetails).isEqualToIgnoringGivenFields(read,
+                "movieProdTypeCompanies");
     }
 
     @Transactional

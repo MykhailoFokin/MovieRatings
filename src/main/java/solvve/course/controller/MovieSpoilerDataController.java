@@ -28,7 +28,8 @@ public class MovieSpoilerDataController {
     }
 
     @PatchMapping("/{id}")
-    public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPatchDTO patch) {
+    public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id,
+                                                         @RequestBody MovieSpoilerDataPatchDTO patch) {
         return movieSpoilerDataService.patchMovieSpoilerData(id, patch);
     }
 

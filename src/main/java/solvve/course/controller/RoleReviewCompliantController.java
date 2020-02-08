@@ -28,7 +28,8 @@ public class RoleReviewCompliantController {
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPatchDTO patch) {
+    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(@PathVariable UUID id,
+                                                               @RequestBody RoleReviewCompliantPatchDTO patch) {
         return roleReviewCompliant.patchRoleReviewCompliant(id, patch);
     }
 
@@ -38,7 +39,8 @@ public class RoleReviewCompliantController {
     }
 
     @PutMapping("/{id}")
-    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID id, @RequestBody RoleReviewCompliantPutDTO put) {
+    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID id,
+                                                             @RequestBody RoleReviewCompliantPutDTO put) {
         return roleReviewCompliant.putRoleReviewCompliant(id, put);
     }
 }

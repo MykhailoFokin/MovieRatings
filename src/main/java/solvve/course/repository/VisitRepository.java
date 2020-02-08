@@ -19,5 +19,8 @@ public interface VisitRepository extends CrudRepository<Visit, UUID>, VisitRepos
 
     @Query("select v from Visit v where v.masterId.id = :masterId and v.status = :visitStatus"
             + " and v.startAt >= :startFrom and v.startAt < :startTo order by v.startAt asc")
-    List<Visit> findVisitsForMasterInGivenInterval(UUID masterId, VisitStatus visitStatus, Instant startFrom, Instant startTo);
+    List<Visit> findVisitsForMasterInGivenInterval(UUID masterId,
+                                                   VisitStatus visitStatus,
+                                                   Instant startFrom,
+                                                   Instant startTo);
 }

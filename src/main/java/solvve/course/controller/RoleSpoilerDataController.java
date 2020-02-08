@@ -28,7 +28,8 @@ public class RoleSpoilerDataController {
     }
 
     @PatchMapping("/{id}")
-    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPatchDTO patch) {
+    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID id,
+                                                       @RequestBody RoleSpoilerDataPatchDTO patch) {
         return roleSpoilerDataService.patchRoleSpoilerData(id, patch);
     }
 
@@ -38,7 +39,8 @@ public class RoleSpoilerDataController {
     }
 
     @PutMapping("/{id}")
-    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id, @RequestBody RoleSpoilerDataPutDTO put) {
+    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id,
+                                                     @RequestBody RoleSpoilerDataPutDTO put) {
         return roleSpoilerDataService.putRoleSpoilerData(id, put);
     }
 }

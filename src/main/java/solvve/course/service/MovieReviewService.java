@@ -11,6 +11,7 @@ import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -46,12 +47,6 @@ public class MovieReviewService {
         return translationService.toRead(movieReview);
     }
 
-    private MovieReview getMovieReviewRequired(UUID id) {
-        return movieReviewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieReview.class, id);
-        });
-    }
-
     public void deleteMovieReview(UUID id) {
         movieReviewRepository.delete(getMovieReviewRequired(id));
     }
@@ -63,5 +58,11 @@ public class MovieReviewService {
 
         movieReview = movieReviewRepository.save(movieReview);
         return translationService.toRead(movieReview);
+    }
+
+    private MovieReview getMovieReviewRequired(UUID id) {
+        return movieReviewRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(MovieReview.class, id);
+        });
     }
 }

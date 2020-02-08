@@ -46,7 +46,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackReadDTO readDTO =
                 roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId());
@@ -94,7 +95,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -121,7 +123,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
         RoleReviewFeedbackReadDTO read =
@@ -149,7 +152,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         roleReviewFeedbackService.deleteRoleReviewFeedback(roleReviewFeedback.getId());
         Assert.assertFalse(roleReviewFeedbackRepository.existsById(roleReviewFeedback.getId()));
@@ -167,7 +171,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
         put.setUserId(portalUser.getId());
@@ -194,7 +199,8 @@ public class RoleReviewFeedbackServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewFeedback roleReviewFeedback = testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
+        RoleReviewFeedback roleReviewFeedback =
+                testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
         RoleReviewFeedbackReadDTO read =

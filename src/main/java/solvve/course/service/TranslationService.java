@@ -589,6 +589,16 @@ public class TranslationService {
         return movieReview;
     }
 
+    public MovieReview ReadDTOtoEntity(MovieReviewReadDTO dto) {
+        MovieReview movieReview = new MovieReview();
+        movieReview.setMovieId(movieRepository.findById(dto.getMovieId()).get());
+        movieReview.setUserId(portalUserRepository.findById(dto.getUserId()).get());
+        movieReview.setTextReview(dto.getTextReview());
+        movieReview.setModeratedStatus(dto.getModeratedStatus());
+        movieReview.setModeratorId(portalUserRepository.findById(dto.getModeratorId()).get());
+        return movieReview;
+    }
+
     public void patchEntity(MovieReviewPatchDTO patch, MovieReview movieReview) {
         if (patch.getUserId()!=null) {
             movieReview.setUserId(portalUserRepository.findById(patch.getUserId()).get());
@@ -1131,6 +1141,16 @@ public class TranslationService {
         roleReview.setTextReview(create.getTextReview());
         roleReview.setModeratedStatus(create.getModeratedStatus());
         roleReview.setModeratorId(portalUserRepository.findById(create.getModeratorId()).get());
+        return roleReview;
+    }
+
+    public RoleReview ReadDTOtoEntity(RoleReviewReadDTO read) {
+        RoleReview roleReview = new RoleReview();
+        roleReview.setUserId(portalUserRepository.findById(read.getUserId()).get());
+        roleReview.setRoleId(roleRepository.findById(read.getRoleId()).get());
+        roleReview.setTextReview(read.getTextReview());
+        roleReview.setModeratedStatus(read.getModeratedStatus());
+        roleReview.setModeratorId(portalUserRepository.findById(read.getModeratorId()).get());
         return roleReview;
     }
 

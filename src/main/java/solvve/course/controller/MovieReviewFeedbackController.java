@@ -28,7 +28,8 @@ public class MovieReviewFeedbackController {
     }
 
     @PatchMapping("/{id}")
-    public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(@PathVariable UUID id, @RequestBody MovieReviewFeedbackPatchDTO patch) {
+    public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(@PathVariable UUID id,
+                                                               @RequestBody MovieReviewFeedbackPatchDTO patch) {
         return movieReviewFeedbackService.patchMovieReviewFeedback(id, patch);
     }
 
@@ -38,7 +39,8 @@ public class MovieReviewFeedbackController {
     }
 
     @PutMapping("/{id}")
-    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable UUID id, @RequestBody MovieReviewFeedbackPutDTO put) {
+    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable UUID id,
+                                                             @RequestBody MovieReviewFeedbackPutDTO put) {
         return movieReviewFeedbackService.putMovieReviewFeedback(id, put);
     }
 }

@@ -312,7 +312,8 @@ public class TestObjectsFactory {
         return movieCompanyRepository.save(movieCompany);
     }
 
-    public MovieCompanyCreateDTO createMovieCompanyCreateDTO(UUID companyDetailId, MovieProductionType movieProductionType) {
+    public MovieCompanyCreateDTO createMovieCompanyCreateDTO(UUID companyDetailId,
+                                                             MovieProductionType movieProductionType) {
         MovieCompanyCreateDTO dto = new MovieCompanyCreateDTO();
         dto.setCompanyId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
@@ -320,7 +321,8 @@ public class TestObjectsFactory {
         return dto;
     }
 
-    public MovieCompanyPatchDTO createMovieCompanyPatchDTO(UUID companyDetailId, MovieProductionType movieProductionType) {
+    public MovieCompanyPatchDTO createMovieCompanyPatchDTO(UUID companyDetailId,
+                                                           MovieProductionType movieProductionType) {
         MovieCompanyPatchDTO dto = new MovieCompanyPatchDTO();
         dto.setCompanyId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
@@ -328,7 +330,8 @@ public class TestObjectsFactory {
         return dto;
     }
 
-    public MovieCompanyPutDTO createMovieCompanyPutDTO(UUID companyDetailId, MovieProductionType movieProductionType) {
+    public MovieCompanyPutDTO createMovieCompanyPutDTO(UUID companyDetailId,
+                                                       MovieProductionType movieProductionType) {
         MovieCompanyPutDTO dto = new MovieCompanyPutDTO();
         dto.setCompanyId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
@@ -474,7 +477,9 @@ public class TestObjectsFactory {
         return crewRepository.save(crew);
     }
 
-    public MovieReviewCompliant createMovieReviewCompliant(PortalUser portalUser, Movie movie, MovieReview movieReview) {
+    public MovieReviewCompliant createMovieReviewCompliant(PortalUser portalUser,
+                                                           Movie movie,
+                                                           MovieReview movieReview) {
         MovieReviewCompliant movieReviewCompliant = new MovieReviewCompliant();
         movieReviewCompliant.setUserId(portalUser);
         movieReviewCompliant.setMovieId(movie);
@@ -497,7 +502,9 @@ public class TestObjectsFactory {
         return movieReview;
     }
 
-    public MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser, Movie movie, MovieReview movieReview) {
+    public MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser,
+                                                         Movie movie,
+                                                         MovieReview movieReview) {
         MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
         movieReviewFeedback.setUserId(portalUser);
         movieReviewFeedback.setMovieId(movie);

@@ -43,7 +43,8 @@ public class MovieCompanyServiceTest {
     @Test
     public void testGetMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyReadDTO readDTO = movieCompanyService.getMovieCompany(movieCompany.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieCompany, "companyId");
@@ -59,7 +60,8 @@ public class MovieCompanyServiceTest {
     @Test
     public void testCreateMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompanyCreateDTO create = testObjectsFactory.createMovieCompanyCreateDTO(companyDetails.getId(), MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompanyCreateDTO create = testObjectsFactory.createMovieCompanyCreateDTO(companyDetails.getId(),
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyReadDTO read = movieCompanyService.createMovieCompany(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -73,16 +75,19 @@ public class MovieCompanyServiceTest {
     @Test
     public void testPatchMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
-        MovieCompanyPatchDTO patch = testObjectsFactory.createMovieCompanyPatchDTO(companyDetails.getId(), MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompanyPatchDTO patch = testObjectsFactory.createMovieCompanyPatchDTO(companyDetails.getId(),
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyReadDTO read = movieCompanyService.patchMovieCompany(movieCompany.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieCompany = movieCompanyRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(read, "movies","companyId");
+        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(read,
+                "movies","companyId");
         Assertions.assertThat(movieCompany.getCompanyId().getId()).isEqualTo(read.getCompanyId());
     }
 
@@ -90,7 +95,8 @@ public class MovieCompanyServiceTest {
     @Test
     public void testPatchMovieCompanyEmptyPatch() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyPatchDTO patch = new MovieCompanyPatchDTO();
         MovieCompanyReadDTO read = movieCompanyService.patchMovieCompany(movieCompany.getId(), patch);
@@ -111,7 +117,8 @@ public class MovieCompanyServiceTest {
     @Test
     public void testDeleteMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         movieCompanyService.deleteMovieCompany(movieCompany.getId());
         Assert.assertFalse(movieCompanyRepository.existsById(movieCompany.getId()));
@@ -126,16 +133,19 @@ public class MovieCompanyServiceTest {
     @Test
     public void testPutMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
-        MovieCompanyPutDTO put = testObjectsFactory.createMovieCompanyPutDTO(companyDetails.getId(), MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompanyPutDTO put = testObjectsFactory.createMovieCompanyPutDTO(companyDetails.getId(),
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyReadDTO read = movieCompanyService.putMovieCompany(movieCompany.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieCompany = movieCompanyRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(read, "movies","companyId");
+        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(read,
+                "movies","companyId");
         Assertions.assertThat(movieCompany.getCompanyId().getId()).isEqualTo(read.getCompanyId());
     }
 
@@ -143,7 +153,8 @@ public class MovieCompanyServiceTest {
     @Test
     public void testPutMovieCompanyEmptyPut() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
-        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails, MovieProductionType.PRODUCTION_COMPANIES);
+        MovieCompany movieCompany = testObjectsFactory.createMovieCompany(companyDetails,
+                MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyPutDTO put = new MovieCompanyPutDTO();
         MovieCompanyReadDTO read = movieCompanyService.putMovieCompany(movieCompany.getId(), put);
@@ -158,7 +169,9 @@ public class MovieCompanyServiceTest {
         Assert.assertNull(movieCompanyAfterUpdate.getDescription());
         Assert.assertNull(movieCompanyAfterUpdate.getMovieProductionType());
 
-        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(movieCompanyAfterUpdate,"movies","companyId");
-        Assertions.assertThat(movieCompany.getCompanyId().getId()).isEqualTo(movieCompanyAfterUpdate.getCompanyId().getId());
+        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(movieCompanyAfterUpdate,
+                "movies","companyId");
+        Assertions.assertThat(movieCompany.getCompanyId().getId())
+                .isEqualTo(movieCompanyAfterUpdate.getCompanyId().getId());
     }
 }

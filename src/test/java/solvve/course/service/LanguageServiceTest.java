@@ -69,7 +69,8 @@ public class LanguageServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         language = languageRepository.findById(read.getId()).get();
-        Assertions.assertThat(language).isEqualToIgnoringGivenFields(read, "movies", "countries");
+        Assertions.assertThat(language).isEqualToIgnoringGivenFields(read,
+                "movies", "countries");
     }
 
     @Test
@@ -85,7 +86,8 @@ public class LanguageServiceTest {
 
         Assert.assertNotNull(languageAfterUpdate.getName());
 
-        Assertions.assertThat(language).isEqualToIgnoringGivenFields(languageAfterUpdate, "movies", "countries");
+        Assertions.assertThat(language).isEqualToIgnoringGivenFields(languageAfterUpdate,
+                "movies", "countries");
     }
 
     @Test
@@ -111,7 +113,8 @@ public class LanguageServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         language = languageRepository.findById(read.getId()).get();
-        Assertions.assertThat(language).isEqualToIgnoringGivenFields(read, "movies", "countries");
+        Assertions.assertThat(language).isEqualToIgnoringGivenFields(read,
+                "movies", "countries");
     }
 
     @Test
@@ -127,6 +130,7 @@ public class LanguageServiceTest {
 
         Assert.assertNull(languageAfterUpdate.getName());
 
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(languageAfterUpdate, "movies", "countries");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(languageAfterUpdate,
+                "movies", "countries");
     }
 }

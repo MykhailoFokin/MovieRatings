@@ -44,10 +44,13 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
-        MovieReviewCompliantReadDTO readDTO = movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReviewCompliant, "userId", "movieId", "movieReviewId", "moderatorId");
+        MovieReviewCompliantReadDTO readDTO =
+                movieReviewCompliantService.getMovieReviewCompliant(movieReviewCompliant.getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieReviewCompliant,
+                "userId", "movieId", "movieReviewId", "moderatorId");
         Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieReviewCompliant.getUserId().getId());
         Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieReviewCompliant.getMovieId().getId());
         Assertions.assertThat(readDTO.getMovieReviewId()).isEqualTo(movieReviewCompliant.getMovieReviewId().getId());
@@ -78,7 +81,8 @@ public class MovieReviewCompliantServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieReviewCompliant movieReviewCompliant = movieReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReviewCompliant, "userId", "movieId", "movieReviewId", "moderatorId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieReviewCompliant,
+                "userId", "movieId", "movieReviewId", "moderatorId");
         Assertions.assertThat(read.getUserId()).isEqualTo(movieReviewCompliant.getUserId().getId());
         Assertions.assertThat(read.getMovieId()).isEqualTo(movieReviewCompliant.getMovieId().getId());
         Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieReviewCompliant.getMovieReviewId().getId());
@@ -91,7 +95,8 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -105,8 +110,10 @@ public class MovieReviewCompliantServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         movieReviewCompliant = movieReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReviewCompliant).isEqualToIgnoringGivenFields(read, "userId", "movieId", "movieReviewId", "moderatorId");
-        Assertions.assertThat(movieReviewCompliant.getUserId().getId()).isEqualToComparingFieldByField(read.getUserId());
+        Assertions.assertThat(movieReviewCompliant).isEqualToIgnoringGivenFields(read,
+                "userId", "movieId", "movieReviewId", "moderatorId");
+        Assertions.assertThat(movieReviewCompliant.getUserId().getId())
+                .isEqualToComparingFieldByField(read.getUserId());
         Assertions.assertThat(movieReviewCompliant.getMovieId().getId()).isEqualTo(read.getMovieId());
         Assertions.assertThat(movieReviewCompliant.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
         Assertions.assertThat(movieReviewCompliant.getModeratorId().getId()).isEqualTo(read.getModeratorId());
@@ -118,10 +125,12 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
-        MovieReviewCompliantReadDTO read = movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
+        MovieReviewCompliantReadDTO read =
+                movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
 
         Assert.assertNotNull(read.getUserId());
         Assert.assertNotNull(read.getMovieId());
@@ -130,7 +139,8 @@ public class MovieReviewCompliantServiceTest {
         Assert.assertNotNull(read.getModeratedStatus());
         Assert.assertNotNull(read.getModeratorId());
 
-        MovieReviewCompliant movieReviewCompliantAfterUpdate = movieReviewCompliantRepository.findById(read.getId()).get();
+        MovieReviewCompliant movieReviewCompliantAfterUpdate =
+                movieReviewCompliantRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(movieReviewCompliantAfterUpdate.getUserId());
         Assert.assertNotNull(movieReviewCompliantAfterUpdate.getMovieId());
@@ -147,7 +157,8 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         movieReviewCompliantService.deleteMovieReviewCompliant(movieReviewCompliant.getId());
         Assert.assertFalse(movieReviewCompliantRepository.existsById(movieReviewCompliant.getId()));
@@ -164,7 +175,8 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
         put.setUserId(portalUser.getId());
@@ -173,13 +185,16 @@ public class MovieReviewCompliantServiceTest {
         put.setDescription("Just punish him!");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
-        MovieReviewCompliantReadDTO read = movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
+        MovieReviewCompliantReadDTO read =
+                movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         movieReviewCompliant = movieReviewCompliantRepository.findById(read.getId()).get();
-        Assertions.assertThat(movieReviewCompliant).isEqualToIgnoringGivenFields(read, "userId", "movieId", "movieReviewId", "moderatorId");
-        Assertions.assertThat(movieReviewCompliant.getUserId().getId()).isEqualToComparingFieldByField(read.getUserId());
+        Assertions.assertThat(movieReviewCompliant).isEqualToIgnoringGivenFields(read,
+                "userId", "movieId", "movieReviewId", "moderatorId");
+        Assertions.assertThat(movieReviewCompliant.getUserId().getId())
+                .isEqualToComparingFieldByField(read.getUserId());
         Assertions.assertThat(movieReviewCompliant.getMovieId().getId()).isEqualTo(read.getMovieId());
         Assertions.assertThat(movieReviewCompliant.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
         Assertions.assertThat(movieReviewCompliant.getModeratorId().getId()).isEqualTo(read.getModeratorId());
@@ -191,10 +206,12 @@ public class MovieReviewCompliantServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewCompliant movieReviewCompliant = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+        MovieReviewCompliant movieReviewCompliant =
+                testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
         MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
-        MovieReviewCompliantReadDTO read = movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
+        MovieReviewCompliantReadDTO read =
+                movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getMovieId());
@@ -203,7 +220,8 @@ public class MovieReviewCompliantServiceTest {
         Assert.assertNull(read.getModeratedStatus());
         Assert.assertNull(read.getModeratorId());
 
-        MovieReviewCompliant movieReviewCompliantAfterUpdate = movieReviewCompliantRepository.findById(read.getId()).get();
+        MovieReviewCompliant movieReviewCompliantAfterUpdate =
+                movieReviewCompliantRepository.findById(read.getId()).get();
 
         Assert.assertNull(movieReviewCompliantAfterUpdate.getUserId().getId());
         Assert.assertNull(movieReviewCompliantAfterUpdate.getMovieId().getId());

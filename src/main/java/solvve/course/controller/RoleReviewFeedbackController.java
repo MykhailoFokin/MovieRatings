@@ -28,7 +28,8 @@ public class RoleReviewFeedbackController {
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPatchDTO patch) {
+    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID id,
+                                                             @RequestBody RoleReviewFeedbackPatchDTO patch) {
         return roleReviewFeedback.patchRoleReviewFeedback(id, patch);
     }
 
@@ -38,7 +39,8 @@ public class RoleReviewFeedbackController {
     }
 
     @PutMapping("/{id}")
-    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id, @RequestBody RoleReviewFeedbackPutDTO put) {
+    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id,
+                                                           @RequestBody RoleReviewFeedbackPutDTO put) {
         return roleReviewFeedback.putRoleReviewFeedback(id, put);
     }
 }

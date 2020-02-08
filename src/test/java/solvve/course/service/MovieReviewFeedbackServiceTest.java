@@ -44,7 +44,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackReadDTO readDTO =
                 movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId());
@@ -90,7 +91,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -116,7 +118,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
         MovieReviewFeedbackReadDTO read =
@@ -142,7 +145,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         movieReviewFeedbackService.deleteMovieReviewFeedback(movieReviewFeedback.getId());
         Assert.assertFalse(movieReviewFeedbackRepository.existsById(movieReviewFeedback.getId()));
@@ -159,7 +163,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         put.setUserId(portalUser.getId());
@@ -185,7 +190,8 @@ public class MovieReviewFeedbackServiceTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
-        MovieReviewFeedback movieReviewFeedback = testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
+        MovieReviewFeedback movieReviewFeedback =
+                testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         MovieReviewFeedbackReadDTO read =

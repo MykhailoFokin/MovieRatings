@@ -46,7 +46,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantReadDTO readDTO =
                 roleReviewCompliantService.getRoleReviewCompliant(roleReviewCompliant.getId());
@@ -106,7 +107,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPatchDTO patch = new RoleReviewCompliantPatchDTO();
         patch.setUserId(portalUser.getId());
@@ -115,7 +117,8 @@ public class RoleReviewCompliantServiceTest {
         patch.setDescription("Just punish him!");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
-        RoleReviewCompliantReadDTO read = roleReviewCompliantService.patchRoleReviewCompliant(roleReviewCompliant.getId(), patch);
+        RoleReviewCompliantReadDTO read =
+                roleReviewCompliantService.patchRoleReviewCompliant(roleReviewCompliant.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
@@ -139,7 +142,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPatchDTO patch = new RoleReviewCompliantPatchDTO();
         RoleReviewCompliantReadDTO read =
@@ -171,7 +175,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         roleReviewCompliantService.deleteRoleReviewCompliant(roleReviewCompliant.getId());
         Assert.assertFalse(roleReviewCompliantRepository.existsById(roleReviewCompliant.getId()));
@@ -189,7 +194,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
         put.setUserId(portalUser.getId());
@@ -223,7 +229,8 @@ public class RoleReviewCompliantServiceTest {
         Person person = testObjectsFactory.createPerson();
         Role role = testObjectsFactory.createRole(person);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
-        RoleReviewCompliant roleReviewCompliant = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+        RoleReviewCompliant roleReviewCompliant =
+                testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
         RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
         RoleReviewCompliantReadDTO read =
