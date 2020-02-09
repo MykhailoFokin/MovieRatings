@@ -1,6 +1,7 @@
 package solvve.course.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import solvve.course.domain.*;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Component
 @Service
 public class TestObjectsFactory {
 
@@ -103,6 +105,7 @@ public class TestObjectsFactory {
 
     public Movie createMovie() {
         Movie movie = new Movie();
+        movie.setId(UUID.randomUUID());
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
         movie.setAspectRatio("1:10");
@@ -121,6 +124,7 @@ public class TestObjectsFactory {
                              String laboratory, String soundMix, Boolean isPublished,
                              Set<MovieCompany> movieCompanySet, Set<Language> languageSet) {
         Movie movie = new Movie();
+        movie.setId(UUID.randomUUID());
         movie.setTitle(title);
         movie.setYear(year);
         movie.setAspectRatio(aspectRatio);
@@ -347,6 +351,7 @@ public class TestObjectsFactory {
 
     public Language createLanguage(LanguageType languageType) {
         Language language = new Language();
+        language.setId(UUID.randomUUID());
         language.setName(languageType);
         return languageRepository.save(language);
     }
@@ -387,7 +392,7 @@ public class TestObjectsFactory {
         userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");
@@ -549,7 +554,7 @@ public class TestObjectsFactory {
 
     public PortalUser createPortalUser(UserType userType) {
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");

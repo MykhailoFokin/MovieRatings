@@ -23,7 +23,7 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql(statements = {"delete from genre",
-        "delete from movie",},
+        "delete from movie"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class GenreRepositoryTest {
 

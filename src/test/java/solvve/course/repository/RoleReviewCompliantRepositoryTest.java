@@ -67,7 +67,7 @@ public class RoleReviewCompliantRepositoryTest {
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser.setUserConfidence(UserConfidenceType.NORMAL);
         portalUser = portalUserRepository.save(portalUser);
 

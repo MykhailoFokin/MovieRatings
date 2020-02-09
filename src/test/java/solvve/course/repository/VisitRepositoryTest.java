@@ -201,7 +201,7 @@ public class VisitRepositoryTest {
         userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser.setSurname("Surname");
         portalUser.setName("Name");
         portalUser.setMiddleName("MiddleName");

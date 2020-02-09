@@ -17,7 +17,7 @@ public class Movie {
 
     private Short year; // year of production
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.REMOVE)
     private Set<Genre> genres; // type of genres
 
     private String description; // short movie description
@@ -49,13 +49,13 @@ public class Movie {
             inverseJoinColumns = {@JoinColumn(name = "company_id")})
     private Set<MovieCompany> movieProdCompanies;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany
     @JoinTable(name = "movie_prod_languages",
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "language_id")})
     private Set<Language> movieProdLanguages;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.REMOVE)
     private Set<Crew> crews;
 
     @OneToMany(mappedBy = "movieId")

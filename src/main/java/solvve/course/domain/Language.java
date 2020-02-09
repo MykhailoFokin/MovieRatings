@@ -17,7 +17,7 @@ public class Language {
     @Enumerated(EnumType.STRING)
     private LanguageType name;
 
-    @ManyToMany(mappedBy = "movieProdLanguages", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "movieProdLanguages")
     private Set<Movie> movies;
 
     @ManyToMany(mappedBy = "countryLanguages")

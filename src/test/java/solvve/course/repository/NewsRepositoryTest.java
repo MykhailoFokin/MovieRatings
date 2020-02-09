@@ -38,7 +38,7 @@ public class NewsRepositoryTest {
         userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         News r = new News();

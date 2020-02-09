@@ -6,9 +6,189 @@
 
 	<changeSet id="preload data" author="mykhailo" runOnChange="true">
 		<loadUpdateData tableName="country" file="db/data/countries.csv" separator=";" primaryKey="Id">
-			<column name="id" type="uuid"/>
+			<column name = "id" type="uuid"/>
 			<column name = "name" type="string"/>
 		</loadUpdateData>
+		<loadUpdateData tableName="movie" file="db/data/movie.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "title" type="string"/>
+			<column name = "year" type="numeric"/>
+			<column name = "description" type="string"/>
+			<column name = "soundMix" type="string"/>
+			<column name = "colour" type="string"/>
+			<column name = "aspectRatio" type="string"/>
+			<column name = "camera" type="string"/>
+			<column name = "laboratory" type="string"/>
+			<column name = "critique" type="string"/>
+			<column name = "isPublished" type="bit"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="person" file="db/data/person.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "surname" type="string"/>
+			<column name = "name" type="string"/>
+			<column name = "middleName" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="user_type" file="db/data/usertype.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "name" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="portal_user" file="db/data/portaluser.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "login" type="string"/>
+			<column name = "surname" type="string"/>
+			<column name = "name" type="string"/>
+			<column name = "middleName" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="language" file="db/data/language.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "name" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="master" file="db/data/master.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "name" type="string"/>
+			<column name = "phone" type="string"/>
+			<column name = "about" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role" file="db/data/role.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "title" type="string"/>
+			<column name = "roleType" type="string"/>
+			<column name = "description" type="string"/>
+			<column name = "personId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role_review" file="db/data/rolereview.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "roleId" type="uuid"/>
+			<column name = "textReview" type="string"/>
+			<column name = "moderatedStatus" type="string"/>
+			<column name = "moderatorId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="visit" file="db/data/visit.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "masterId" type="uuid"/>
+			<column name = "startAt" type="datetime"/>
+			<column name = "finishAt" type="datetime"/>
+			<column name = "status" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="company_details" file="db/data/companydetails.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "name" type="string"/>
+			<column name = "overview" type="string"/>
+			<column name = "yearOfFoundation" type="date"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="crew_type" file="db/data/crewtype.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "name" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="crew" file="db/data/crew.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "personId" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "crewType" type="uuid"/>
+			<column name = "description" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="genre" file="db/data/genre.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "name" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_company" file="db/data/moviecompany.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "movieProductionType" type="string"/>
+			<column name = "description" type="string"/>
+			<column name = "companyId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_review" file="db/data/moviereview.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "textReview" type="string"/>
+			<column name = "moderatedStatus" type="string"/>
+			<column name = "moderatorId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="news" file="db/data/news.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "published" type="datetime"/>
+			<column name = "topic" type="string"/>
+			<column name = "description" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="release_detail" file="db/data/releasedetail.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "releaseDate" type="date"/>
+			<column name = "countryId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_review_compliant" file="db/data/moviereviewcompliant.csv" separator=";"
+						primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "movieReviewId" type="uuid"/>
+			<column name = "description" type="string"/>
+			<column name = "moderatedStatus" type="string"/>
+			<column name = "moderatorId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_review_feedback" file="db/data/moviereviewfeedback.csv" separator=";"
+						primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "movieReviewId" type="uuid"/>
+			<column name = "isLiked" type="bit"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_spoiler_data" file="db/data/moviespoilerdata.csv" separator=";"
+						primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "movieReviewId" type="uuid"/>
+			<column name = "startIndex" type="int"/>
+			<column name = "endIndex" type="int"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="movie_vote" file="db/data/movievote.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "movieId" type="uuid"/>
+			<column name = "rating" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role_review_compliant" file="db/data/rolereviewcompliant.csv" separator=";"
+						primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "roleId" type="uuid"/>
+			<column name = "rolereviewid" type="uuid"/>
+			<column name = "description" type="string"/>
+			<column name = "moderatedStatus" type="string"/>
+			<column name = "moderatorId" type="uuid"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role_review_feedback" file="db/data/rolereviewfeedback.csv" separator=";"
+						primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "roleId" type="uuid"/>
+			<column name = "rolereviewid" type="uuid"/>
+			<column name = "isLiked" type="bit"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role_spoiler_data" file="db/data/rolespoilerdata.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "rolereviewid" type="uuid"/>
+			<column name = "startIndex" type="int"/>
+			<column name = "endIndex" type="int"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="role_vote" file="db/data/rolevote.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userId" type="uuid"/>
+			<column name = "roleId" type="uuid"/>
+			<column name = "rating" type="string"/>
+		</loadUpdateData>
+		<loadUpdateData tableName="user_grant" file="db/data/usergrant.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "userTypeId" type="uuid"/>
+			<column name = "userPermission" type="string"/>
+			<column name = "objectName" type="string"/>
+			<column name = "grantedBy" type="uuid"/>
+		</loadUpdateData>
 	</changeSet>
-	
+
 </databaseChangeLog>

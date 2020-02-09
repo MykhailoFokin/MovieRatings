@@ -24,7 +24,7 @@ public class PortalUser {
 
     @OneToOne
     @JoinColumn(nullable = false)
-    private UserType userType;
+    private UserType userTypeId;
 
     @Enumerated(EnumType.STRING)
     private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)

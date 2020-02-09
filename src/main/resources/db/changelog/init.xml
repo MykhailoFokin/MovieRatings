@@ -20,7 +20,6 @@
 			<column name = "aspect_ratio" type="varchar(255)"/>
 			<column name = "camera" type="varchar(255)"/>
 			<column name = "laboratory" type="varchar(255)"/>
-			<column name = "languages" type="varchar(255)"/>
 			<column name = "critique" type="varchar(255)"/>
 			<column name = "is_published" type="int(1)"/>
 		</createTable>
@@ -70,7 +69,7 @@
 			<column name = "surname" type="varchar(255)"/>
 			<column name = "name" type="varchar(255)"/>
 			<column name = "middle_name" type="varchar(255)"/>
-			<column name = "user_type" type="uuid">
+			<column name = "user_type_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_pusers_user_type" references="user_type(id)"/>
 			</column>
 			<column name = "user_confidence" type="varchar(50)"/>
@@ -127,13 +126,19 @@
 				<constraints nullable="false" foreignKeyName="fk_rvote_pusers" references="portal_user(id)"/>
 			</column>
 			<column name = "role_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_rvote_movie" references="movie(id)"/>
+				<constraints nullable="false" foreignKeyName="fk_rvote_role" references="role(id)"/>
 			</column>
 			<column name = "rating" type="int(2)"/>
 		</createTable>
 		<createTable tableName="movie_review">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_moviereview_pusers" references="portal_user(id)"/>
+			</column>
+			<column name = "movie_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_moviereview_movie" references="movie(id)"/>
 			</column>
 			<column name = "text" type="varchar(1000)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
@@ -144,6 +149,12 @@
 		<createTable tableName="role_review">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
+			</column>
+			<column name = "user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rolereview_pusers" references="portal_user(id)"/>
+			</column>
+			<column name = "role_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_rolereview_role" references="role(id)"/>
 			</column>
 			<column name = "text" type="varchar(1000)"/>
 			<column name = "moderated_status" type="varchar(20)"/>
@@ -239,11 +250,11 @@
 			<column name = "user_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_news_pusers" references="portal_user(id)"/>
 			</column>
-			<column name = "published" type="date"/>
+			<column name = "published" type="datetime"/>
 			<column name = "topic" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
 		</createTable>
-		<createTable tableName="laguage">
+		<createTable tableName="language">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>

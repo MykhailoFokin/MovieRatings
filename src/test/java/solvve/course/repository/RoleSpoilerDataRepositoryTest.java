@@ -57,7 +57,7 @@ public class RoleSpoilerDataRepositoryTest {
         userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         RoleReview roleReview = new RoleReview();

@@ -61,7 +61,7 @@ public class MovieReviewFeedbackRepositoryTest {
 
         PortalUser portalUser = new PortalUser();
         portalUser.setName("Name");
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         MovieReview movieReview = new MovieReview();

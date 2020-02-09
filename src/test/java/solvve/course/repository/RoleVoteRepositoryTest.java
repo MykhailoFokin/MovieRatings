@@ -52,7 +52,7 @@ public class RoleVoteRepositoryTest {
         userType = userTypeRepository.save(userType);
 
         PortalUser portalUser = new PortalUser();
-        portalUser.setUserType(userType);
+        portalUser.setUserTypeId(userType);
         portalUser = portalUserRepository.save(portalUser);
 
         RoleVote r = new RoleVote();

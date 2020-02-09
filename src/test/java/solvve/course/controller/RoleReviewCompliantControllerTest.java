@@ -41,14 +41,6 @@ public class RoleReviewCompliantControllerTest {
     @MockBean
     private RoleReviewCompliantService roleReviewCompliantService;
 
-    private RoleReviewCompliantReadDTO createRoleReviewCompliantRead() {
-        RoleReviewCompliantReadDTO roleReviewCompliant = new RoleReviewCompliantReadDTO();
-        roleReviewCompliant.setId(UUID.randomUUID());
-        roleReviewCompliant.setDescription("Just punish him!");
-        roleReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        return  roleReviewCompliant;
-    }
-
     @Test
     public void testGetRoleReviewCompliant() throws Exception {
         RoleReviewCompliantReadDTO roleReviewCompliant = createRoleReviewCompliantRead();
@@ -165,5 +157,13 @@ public class RoleReviewCompliantControllerTest {
         RoleReviewCompliantReadDTO actualRoleReviewCompliant =
                 objectMapper.readValue(resultJson, RoleReviewCompliantReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewCompliant);
+    }
+
+    private RoleReviewCompliantReadDTO createRoleReviewCompliantRead() {
+        RoleReviewCompliantReadDTO roleReviewCompliant = new RoleReviewCompliantReadDTO();
+        roleReviewCompliant.setId(UUID.randomUUID());
+        roleReviewCompliant.setDescription("Just punish him!");
+        roleReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        return  roleReviewCompliant;
     }
 }

@@ -39,21 +39,6 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
     @MockBean
     private MovieReviewFeedbackService movieReviewFeedbackService;
 
-    private MovieReviewFeedbackReadDTO createMovieReviewFeedbackRead(UUID movieReviewId) {
-        MovieReviewFeedbackReadDTO movieReviewFeedback = new MovieReviewFeedbackReadDTO();
-        movieReviewFeedback.setId(UUID.randomUUID());
-        movieReviewFeedback.setIsLiked(true);
-        movieReviewFeedback.setMovieReviewId(movieReviewId);
-        return movieReviewFeedback;
-    }
-
-    private MovieReviewReadDTO createMovieReview() {
-        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setTextReview("Review");
-        return movieReview;
-    }
-
     @Test
     public void testGetMovieReviewMovieReviewFeedback() throws Exception {
         MovieReviewReadDTO movieReview = createMovieReview();
@@ -186,5 +171,20 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
         MovieReviewFeedbackReadDTO actualMovieReviewMovieReviewFeedback = objectMapper
                 .readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewMovieReviewFeedback);
+    }
+
+    private MovieReviewFeedbackReadDTO createMovieReviewFeedbackRead(UUID movieReviewId) {
+        MovieReviewFeedbackReadDTO movieReviewFeedback = new MovieReviewFeedbackReadDTO();
+        movieReviewFeedback.setId(UUID.randomUUID());
+        movieReviewFeedback.setIsLiked(true);
+        movieReviewFeedback.setMovieReviewId(movieReviewId);
+        return movieReviewFeedback;
+    }
+
+    private MovieReviewReadDTO createMovieReview() {
+        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
+        movieReview.setId(UUID.randomUUID());
+        movieReview.setTextReview("Review");
+        return movieReview;
     }
 }

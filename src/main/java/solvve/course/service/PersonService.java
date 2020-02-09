@@ -44,12 +44,6 @@ public class PersonService {
         return translationService.toRead(person);
     }
 
-    private Person getPersonsRequired(UUID id) {
-        return personRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Person.class, id);
-        });
-    }
-
     public void deletePersons(UUID id) {
         personRepository.delete(getPersonsRequired(id));
     }
@@ -61,5 +55,11 @@ public class PersonService {
 
         person = personRepository.save(person);
         return translationService.toRead(person);
+    }
+
+    private Person getPersonsRequired(UUID id) {
+        return personRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(Person.class, id);
+        });
     }
 }

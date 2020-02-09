@@ -1,0 +1,6 @@
+id;user_id;role_id;text;moderated_status;moderator_id
+9d35b5df-863a-4ba8-99ea-8bd222218ae3;2c80168d-8159-431b-99e9-e721620349ca;88f76ac1-662d-492f-b907-33e5a861e696;Test review;SUCCESS;2c80168d-8159-431b-99e9-e721620349ca
+ed184022-d8e1-4dd9-8862-4baca347e097;2fb20a92-ef08-471f-8cc4-e33e0ece788d;eaed6088-e41d-4ac5-885d-ad75159aede6;Test review;SUCCESS;2fb20a92-ef08-471f-8cc4-e33e0ece788d
+685dbbcf-20d9-410b-957e-72efe6ede67c;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41;39052bac-afd5-4e76-b58d-93ab44e487bb;Test review;SUCCESS;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41
+5b32447a-f0e7-4e50-a48c-04dfa0dfaed3;8b1a3fca-6805-4762-bf33-b2591fd71af2;103ace04-4c72-4eda-a424-e91d7db95662;Test review;SUCCESS;8b1a3fca-6805-4762-bf33-b2591fd71af2
+fc7b55fa-8b76-4d0a-b262-28fe19ba111a;5090503f-486c-4659-9822-c261aea6d159;134faed7-86eb-417b-b587-0b2f8a8c5539;Test review;SUCCESS;5090503f-486c-4659-9822-c261aea6d159

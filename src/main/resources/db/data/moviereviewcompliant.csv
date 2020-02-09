@@ -1,0 +1,6 @@
+id;user_Id;movie_Id;movie_Review_Id;description;moderated_Status;moderator_Id
+85b8701b-2e0e-4ff6-b7db-5f03139f59e5;2c80168d-8159-431b-99e9-e721620349ca;a107f8d4-7578-4ce9-a219-63cd5e021a20;6f0e973d-2753-43a9-ad74-d9a2281e5758;Needlework the way, never you betray;CREATED;2c80168d-8159-431b-99e9-e721620349ca
+1594956e-0193-49cb-bae4-606da9577456;2fb20a92-ef08-471f-8cc4-e33e0ece788d;3397320c-5658-4e6a-83f6-e8affe0ae20d;02cd30d1-ec3f-4774-aacc-768bfe2f11ff;Life of death becoming clearer;CREATED;2fb20a92-ef08-471f-8cc4-e33e0ece788d
+4c3a6f3d-22f4-467a-b124-98a16039ae1e;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41;d06832a7-1528-495f-91f9-1cb465b06722;f782f5b8-e326-436f-be86-3cc354ddce32;Pain monopoly, ritual misery;INREVIEW;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41
+293c117d-de22-4f99-982b-5b768db4c375;8b1a3fca-6805-4762-bf33-b2591fd71af2;23f20eb2-9adb-44d1-8bc1-276ec3aaf7e9;dead420f-837b-47d6-9b4c-e6b971ca2b9b;Chop your breakfast on a mirror;CREATED;8b1a3fca-6805-4762-bf33-b2591fd71af2
+fb153aed-c62c-4ac6-8f00-648480fa0c2d;5090503f-486c-4659-9822-c261aea6d159;4beabcf3-add4-47f8-b160-2e95ca2cdb28;7953405c-aec9-45b2-a295-2728d347c525;Taste me you will see;INREVIEW;5090503f-486c-4659-9822-c261aea6d159

@@ -50,7 +50,7 @@ public class VisitServiceTest {
                 "userId", "masterId");
         Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId(),
                 "userType");
-        Assertions.assertThat(readDTO.getUserId().getUserType()).isEqualTo(visit.getUserId().getUserType().getId());
+        Assertions.assertThat(readDTO.getUserId().getUserType()).isEqualTo(visit.getUserId().getUserTypeId().getId());
         Assertions.assertThat(readDTO.getMasterId()).isEqualToComparingFieldByField(visit.getMasterId());
     }
 

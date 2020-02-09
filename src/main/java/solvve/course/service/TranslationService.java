@@ -46,9 +46,6 @@ public class TranslationService {
     private RoleReviewRepository roleReviewRepository;
 
     @Autowired
-    private VisitService visitService;
-
-    @Autowired
     private CompanyDetailsRepository companyDetailsRepository;
 
     public VisitReadExtendedDTO toReadExtended(Visit visit) {
@@ -908,7 +905,7 @@ public class TranslationService {
         dto.setSurname(portalUser.getSurname());
         dto.setName(portalUser.getName());
         dto.setMiddleName(portalUser.getMiddleName());
-        dto.setUserType(portalUser.getUserType().getId());
+        dto.setUserType(portalUser.getUserTypeId().getId());
         dto.setUserConfidence(portalUser.getUserConfidence());
         return dto;
     }
@@ -919,7 +916,7 @@ public class TranslationService {
         portalUser.setSurname(create.getSurname());
         portalUser.setName(create.getName());
         portalUser.setMiddleName(create.getMiddleName());
-        portalUser.setUserType(userTypeRepository.findById(create.getUserType()).get());
+        portalUser.setUserTypeId(userTypeRepository.findById(create.getUserType()).get());
         portalUser.setUserConfidence(create.getUserConfidence());
         return portalUser;
     }
@@ -938,7 +935,7 @@ public class TranslationService {
             portalUser.setMiddleName(patch.getMiddleName());
         }
         if (patch.getUserType()!=null) {
-            portalUser.setUserType(userTypeRepository.findById(patch.getUserType()).get());
+            portalUser.setUserTypeId(userTypeRepository.findById(patch.getUserType()).get());
         }
         if (patch.getUserConfidence()!=null) {
             portalUser.setUserConfidence(patch.getUserConfidence());
@@ -951,9 +948,9 @@ public class TranslationService {
         portalUser.setName(put.getName());
         portalUser.setMiddleName(put.getMiddleName());
         if (put.getUserType()!=null) {
-            portalUser.setUserType(userTypeRepository.findById(put.getUserType()).get());
+            portalUser.setUserTypeId(userTypeRepository.findById(put.getUserType()).get());
         } else {
-            portalUser.setUserType(new UserType());
+            portalUser.setUserTypeId(new UserType());
         }
         portalUser.setUserConfidence(put.getUserConfidence());
     }

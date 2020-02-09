@@ -20,6 +20,6 @@ public class UserType {
     @OneToMany(mappedBy="userTypeId")
     private Set<UserGrant> userGrants;
 
-    @OneToOne(mappedBy = "userType")
+    @OneToOne(mappedBy = "userTypeId")
     private PortalUser portalUser;
 }

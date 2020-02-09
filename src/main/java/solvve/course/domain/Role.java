@@ -21,18 +21,18 @@ public class Role {
     private String description;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn
     private Person personId;
 
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = "roleId", cascade = CascadeType.REMOVE)
     private Set<RoleReview> roleReviewSet;
 
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = "roleId", cascade = CascadeType.REMOVE)
     private Set<RoleReviewCompliant> roleReviewCompliants;
 
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = "roleId", cascade = CascadeType.REMOVE)
     private Set<RoleReviewFeedback> roleReviewFeedbacks;
 
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = "roleId", cascade = CascadeType.REMOVE)
     private Set<RoleVote> roleVotes;
 }
