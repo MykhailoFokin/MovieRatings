@@ -41,6 +41,6 @@ public class RoleReviewCompliantController {
     @PutMapping("/{id}")
     public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID id,
                                                              @RequestBody RoleReviewCompliantPutDTO put) {
-        return roleReviewCompliant.putRoleReviewCompliant(id, put);
+        return roleReviewCompliant.updateRoleReviewCompliant(id, put);
     }
 }

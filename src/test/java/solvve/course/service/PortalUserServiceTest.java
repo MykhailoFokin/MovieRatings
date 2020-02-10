@@ -48,7 +48,8 @@ public class PortalUserServiceTest {
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userType");
-        Assertions.assertThat(readDTO.getUserType()).isEqualToComparingFieldByField(portalUser.getUserTypeId().getId());
+        Assertions.assertThat(readDTO.getUserType())
+                .isEqualToComparingFieldByField(portalUser.getUserTypeId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -157,7 +158,7 @@ public class PortalUserServiceTest {
         put.setMiddleName("MiddleName");
         put.setLogin("Login");
         put.setUserConfidence(UserConfidenceType.NORMAL);
-        PortalUserReadDTO read = portalUserService.putPortalUser(portalUser.getId(), put);
+        PortalUserReadDTO read = portalUserService.updatePortalUser(portalUser.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -177,7 +178,7 @@ public class PortalUserServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPutDTO put = new PortalUserPutDTO();
-        PortalUserReadDTO read = portalUserService.putPortalUser(portalUser.getId(), put);
+        PortalUserReadDTO read = portalUserService.updatePortalUser(portalUser.getId(), put);
 
         Assert.assertNull(read.getUserType());
         Assert.assertNull(read.getSurname());

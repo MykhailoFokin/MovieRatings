@@ -163,7 +163,7 @@ public class MovieReviewSpoilerDataControllerTest {
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead(movieReviewReadDTO.getId());
 
-        Mockito.when(movieSpoilerDataService.putMovieReviewSpoilerData(movieReviewReadDTO.getId(),
+        Mockito.when(movieSpoilerDataService.updateMovieReviewSpoilerData(movieReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas/{id}",

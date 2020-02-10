@@ -149,7 +149,7 @@ public class LanguageControllerTest {
 
         LanguageReadDTO read = createLanguageRead();
 
-        Mockito.when(languageService.putLanguage(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(languageService.updateLanguage(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/languages/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

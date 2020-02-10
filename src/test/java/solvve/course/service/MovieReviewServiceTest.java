@@ -163,7 +163,7 @@ public class MovieReviewServiceTest {
         put.setTextReview("This movie can be described as junk.");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
-        MovieReviewReadDTO read = movieReviewService.putMovieReview(movieReview.getId(), put);
+        MovieReviewReadDTO read = movieReviewService.updateMovieReview(movieReview.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -184,7 +184,7 @@ public class MovieReviewServiceTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
         MovieReviewPutDTO put = new MovieReviewPutDTO();
-        MovieReviewReadDTO read = movieReviewService.putMovieReview(movieReview.getId(), put);
+        MovieReviewReadDTO read = movieReviewService.updateMovieReview(movieReview.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getMovieId());

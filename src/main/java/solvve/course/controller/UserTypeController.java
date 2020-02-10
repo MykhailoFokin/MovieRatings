@@ -39,6 +39,6 @@ public class UserTypeController {
 
     @PutMapping("/{id}")
     public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody UserTypePutDTO put) {
-        return userTypeService.putUserTypes(id, put);
+        return userTypeService.updateUserTypes(id, put);
     }
 }

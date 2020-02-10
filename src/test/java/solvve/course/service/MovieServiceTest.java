@@ -142,7 +142,7 @@ public class MovieServiceTest {
         Movie movie = testObjectsFactory.createMovie(countrySet);
 
         MoviePutDTO put = testObjectsFactory.createMoviePutDTO();
-        MovieReadDTO read = movieService.putMovie(movie.getId(), put);
+        MovieReadDTO read = movieService.updateMovie(movie.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -160,7 +160,7 @@ public class MovieServiceTest {
         Movie movie = testObjectsFactory.createMovie(countrySet);
 
         MoviePutDTO put = new MoviePutDTO();
-        MovieReadDTO read = movieService.putMovie(movie.getId(), put);
+        MovieReadDTO read = movieService.updateMovie(movie.getId(), put);
 
         Assert.assertNull(read.getTitle());
         Assert.assertNull(read.getYear());

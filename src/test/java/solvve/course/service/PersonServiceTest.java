@@ -123,7 +123,7 @@ public class PersonServiceTest {
         put.setSurname("Surname");
         put.setName("Name");
         put.setMiddleName("MiddleName");
-        PersonReadDTO read = personService.putPersons(person.getId(), put);
+        PersonReadDTO read = personService.updatePersons(person.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -137,7 +137,7 @@ public class PersonServiceTest {
         Person person = testObjectsFactory.createPerson();
 
         PersonPutDTO put = new PersonPutDTO();
-        PersonReadDTO read = personService.putPersons(person.getId(), put);
+        PersonReadDTO read = personService.updatePersons(person.getId(), put);
 
         Assert.assertNull(read.getName());
         Assert.assertNull(read.getSurname());

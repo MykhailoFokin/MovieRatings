@@ -25,15 +25,17 @@ public class RoleReviewRoleReviewCompliantController {
     }
 
     @PostMapping
-    public RoleReviewCompliantReadDTO createRoleReviewCompliant(@PathVariable (value = "rolereviewid") UUID roleReviewId,
-                                                                @RequestBody RoleReviewCompliantCreateDTO createDTO) {
+    public RoleReviewCompliantReadDTO createRoleReviewCompliant(
+            @PathVariable (value = "rolereviewid") UUID roleReviewId,
+            @RequestBody RoleReviewCompliantCreateDTO createDTO) {
         return roleReviewCompliantService.createRoleReviewRoleReviewCompliant(roleReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(@PathVariable (value = "rolereviewid") UUID roleReviewId,
-                                                               @PathVariable (value = "id") UUID id,
-                                                               @RequestBody RoleReviewCompliantPatchDTO patch) {
+    public RoleReviewCompliantReadDTO patchRoleReviewCompliant(
+            @PathVariable (value = "rolereviewid") UUID roleReviewId,
+            @PathVariable (value = "id") UUID id,
+            @RequestBody RoleReviewCompliantPatchDTO patch) {
         return roleReviewCompliantService.patchRoleReviewRoleReviewCompliant(roleReviewId, id, patch);
     }
 
@@ -47,6 +49,6 @@ public class RoleReviewRoleReviewCompliantController {
     public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable (value = "rolereviewid") UUID roleReviewId,
                                                              @PathVariable (value = "id") UUID id,
                                                              @RequestBody RoleReviewCompliantPutDTO put) {
-        return roleReviewCompliantService.putRoleReviewRoleReviewCompliant(roleReviewId, id, put);
+        return roleReviewCompliantService.updateRoleReviewRoleReviewCompliant(roleReviewId, id, put);
     }
 }

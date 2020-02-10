@@ -39,6 +39,6 @@ public class PersonController {
 
     @PutMapping("/{id}")
     public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody PersonPutDTO put) {
-        return personService.putPersons(id, put);
+        return personService.updatePersons(id, put);
     }
 }

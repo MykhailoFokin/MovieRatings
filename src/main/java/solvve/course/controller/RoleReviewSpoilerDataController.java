@@ -47,6 +47,6 @@ public class RoleReviewSpoilerDataController {
     public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable (value = "rolereviewid") UUID roleReviewId,
                                                      @PathVariable (value = "id") UUID id,
                                                      @RequestBody RoleSpoilerDataPutDTO put) {
-        return roleSpoilerDataService.putRoleReviewSpoilerData(roleReviewId, id, put);
+        return roleSpoilerDataService.updateRoleReviewSpoilerData(roleReviewId, id, put);
     }
 }

@@ -39,6 +39,6 @@ public class ReleaseDetailController {
 
     @PutMapping("/{id}")
     public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPutDTO put) {
-        return releaseDetailService.putReleaseDetails(id, put);
+        return releaseDetailService.updateReleaseDetails(id, put);
     }
 }

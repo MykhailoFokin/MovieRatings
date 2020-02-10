@@ -47,10 +47,10 @@ public class MovieService {
         movieRepository.delete(getMovieRequired(id));
     }
 
-    public MovieReadDTO putMovie(UUID id, MoviePutDTO put) {
+    public MovieReadDTO updateMovie(UUID id, MoviePutDTO put) {
         Movie movie = getMovieRequired(id);
 
-        translationService.putEntity(put, movie);
+        translationService.updateEntity(put, movie);
 
         movie = movieRepository.save(movie);
         return translationService.toRead(movie);

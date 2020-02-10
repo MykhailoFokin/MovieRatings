@@ -163,7 +163,7 @@ public class RoleReviewSpoilerDataControllerTest {
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead(roleReviewReadDTO.getId());
 
-        Mockito.when(roleSpoilerDataService.putRoleReviewSpoilerData(roleReviewReadDTO.getId(),
+        Mockito.when(roleSpoilerDataService.updateRoleReviewSpoilerData(roleReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas/{id}",

@@ -47,10 +47,10 @@ public class CompanyDetailsService {
         companyDetailsRepository.delete(getCompanyDetailsRequired(id));
     }
 
-    public CompanyDetailsReadDTO putCompanyDetails(UUID id, CompanyDetailsPutDTO put) {
+    public CompanyDetailsReadDTO updateCompanyDetails(UUID id, CompanyDetailsPutDTO put) {
         CompanyDetails companyDetails = getCompanyDetailsRequired(id);
 
-        translationService.putEntity(put, companyDetails);
+        translationService.updateEntity(put, companyDetails);
 
         companyDetails = companyDetailsRepository.save(companyDetails);
         return translationService.toRead(companyDetails);

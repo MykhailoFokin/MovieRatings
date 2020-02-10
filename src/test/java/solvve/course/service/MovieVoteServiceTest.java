@@ -147,7 +147,7 @@ public class MovieVoteServiceTest {
         put.setMovieId(movie.getId());
         put.setUserId(portalUser.getId());
         put.setRating(UserVoteRatingType.R9);
-        MovieVoteReadDTO read = movieVoteService.putMovieVote(movieVote.getId(), put);
+        MovieVoteReadDTO read = movieVoteService.updateMovieVote(movieVote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -166,7 +166,7 @@ public class MovieVoteServiceTest {
         MovieVote movieVote = testObjectsFactory.createMovieVote(portalUser, movie);
 
         MovieVotePutDTO put = new MovieVotePutDTO();
-        MovieVoteReadDTO read = movieVoteService.putMovieVote(movieVote.getId(), put);
+        MovieVoteReadDTO read = movieVoteService.updateMovieVote(movieVote.getId(), put);
 
         Assert.assertNull(read.getMovieId());
         Assert.assertNull(read.getUserId());

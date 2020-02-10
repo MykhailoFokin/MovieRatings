@@ -37,7 +37,7 @@ public class CrewController {
 
     @PutMapping("/{id}")
     public CrewReadDTO putCrew(@PathVariable UUID id, @RequestBody CrewPutDTO put) {
-        return crewService.putCrew(id, put);
+        return crewService.updateCrew(id, put);
     }
 
     @GetMapping

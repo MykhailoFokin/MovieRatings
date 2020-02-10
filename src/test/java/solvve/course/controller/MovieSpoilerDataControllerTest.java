@@ -153,7 +153,7 @@ public class MovieSpoilerDataControllerTest {
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead();
 
-        Mockito.when(movieSpoilerDataService.putMovieSpoilerData(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(movieSpoilerDataService.updateMovieSpoilerData(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/moviespoilerdata/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

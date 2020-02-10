@@ -138,7 +138,7 @@ public class GenreControllerTest {
 
         GenreReadDTO read = createGenresRead();
 
-        Mockito.when(genreService.putGenre(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(genreService.updateGenre(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/genres/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

@@ -205,7 +205,7 @@ public class RoleReviewCompliantServiceTest {
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         RoleReviewCompliantReadDTO read =
-                roleReviewCompliantService.putRoleReviewCompliant(roleReviewCompliant.getId(), put);
+                roleReviewCompliantService.updateRoleReviewCompliant(roleReviewCompliant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -234,7 +234,7 @@ public class RoleReviewCompliantServiceTest {
 
         RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
         RoleReviewCompliantReadDTO read =
-                roleReviewCompliantService.putRoleReviewCompliant(roleReviewCompliant.getId(), put);
+                roleReviewCompliantService.updateRoleReviewCompliant(roleReviewCompliant.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getRoleId());

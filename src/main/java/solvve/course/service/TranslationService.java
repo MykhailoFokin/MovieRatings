@@ -110,7 +110,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(VisitPutDTO put, Visit visit) {
+    public void updateEntity(VisitPutDTO put, Visit visit) {
         if (put.getUserId()!=null) {
             visit.setUserId(portalUserRepository.findById(put.getUserId()).get());
         }
@@ -151,7 +151,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(CompanyDetailsPutDTO put, CompanyDetails companyDetails) {
+    public void updateEntity(CompanyDetailsPutDTO put, CompanyDetails companyDetails) {
         companyDetails.setName(put.getName());
         companyDetails.setOverview(put.getOverview());
         companyDetails.setYearOfFoundation(put.getYearOfFoundation());
@@ -176,7 +176,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(CountryPutDTO put, Country country) {
+    public void updateEntity(CountryPutDTO put, Country country) {
         country.setName(put.getName());
     }
 
@@ -224,7 +224,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(CrewPutDTO put, Crew crew) {
+    public void updateEntity(CrewPutDTO put, Crew crew) {
         if (put.getMovieId()!=null) {
             crew.setMovieId(movieRepository.findById(put.getMovieId()).get());
         }
@@ -258,7 +258,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(CrewTypePutDTO put, CrewType crewType) {
+    public void updateEntity(CrewTypePutDTO put, CrewType crewType) {
         crewType.setName(put.getName());
     }
 
@@ -286,7 +286,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(GenrePutDTO put, Genre Genre) {
+    public void updateEntity(GenrePutDTO put, Genre Genre) {
         if (put.getMovieId()!=null) {
             Genre.setMovieId(movieRepository.findById(put.getMovieId()).get());
         } else {
@@ -329,7 +329,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(UserGrantPutDTO put, UserGrant userGrant) {
+    public void updateEntity(UserGrantPutDTO put, UserGrant userGrant) {
         if (put.getUserTypeId()!=null) {
             userGrant.setUserTypeId(userTypeRepository.findById(put.getUserTypeId()).get());
         } else {
@@ -363,7 +363,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(LanguagePutDTO put, Language language) {
+    public void updateEntity(LanguagePutDTO put, Language language) {
         language.setName(put.getName());
     }
 
@@ -406,7 +406,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MasterPutDTO put, Master master) {
+    public void updateEntity(MasterPutDTO put, Master master) {
         master.setName(put.getName());
         master.setPhone(put.getPhone());
         master.setAbout(put.getAbout());
@@ -441,7 +441,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieCompanyPutDTO put, MovieCompany movieCompany) {
+    public void updateEntity(MovieCompanyPutDTO put, MovieCompany movieCompany) {
         if (put.getCompanyId()!=null) {
             movieCompany.setCompanyId(companyDetailsRepository.findById(put.getCompanyId()).get());
         }
@@ -493,7 +493,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieReviewCompliantPutDTO put, MovieReviewCompliant movieReviewCompliant) {
+    public void updateEntity(MovieReviewCompliantPutDTO put, MovieReviewCompliant movieReviewCompliant) {
         if (put.getUserId()!=null) {
             movieReviewCompliant.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -552,7 +552,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieReviewFeedbackPutDTO put, MovieReviewFeedback movieReviewFeedback) {
+    public void updateEntity(MovieReviewFeedbackPutDTO put, MovieReviewFeedback movieReviewFeedback) {
         if (put.getMovieId()!=null) {
             movieReviewFeedback.setMovieId(movieRepository.findById(put.getMovieId()).get());
         }
@@ -614,7 +614,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieReviewPutDTO put, MovieReview movieReview) {
+    public void updateEntity(MovieReviewPutDTO put, MovieReview movieReview) {
         if (put.getUserId()!=null) {
             movieReview.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -723,7 +723,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MoviePutDTO put, Movie movie) {
+    public void updateEntity(MoviePutDTO put, Movie movie) {
         movie.setTitle(put.getTitle());
         movie.setYear(put.getYear());
         movie.setDescription(put.getDescription());
@@ -765,7 +765,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieSpoilerDataPutDTO put, MovieSpoilerData movieSpoilerData) {
+    public void updateEntity(MovieSpoilerDataPutDTO put, MovieSpoilerData movieSpoilerData) {
         if (put.getMovieReviewId()!=null) {
             movieSpoilerData.setMovieReviewId(movieReviewRepository.findById(put.getMovieReviewId()).get());
         } else {
@@ -804,7 +804,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(MovieVotePutDTO put, MovieVote movieVote) {
+    public void updateEntity(MovieVotePutDTO put, MovieVote movieVote) {
         if (put.getUserId()!=null) {
             movieVote.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -852,7 +852,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(NewsPutDTO put, News news) {
+    public void updateEntity(NewsPutDTO put, News news) {
         if (put.getUserId()!=null) {
             news.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -892,7 +892,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(PersonPutDTO put, Person person) {
+    public void updateEntity(PersonPutDTO put, Person person) {
         person.setName(put.getName());
         person.setMiddleName(put.getMiddleName());
         person.setSurname(put.getSurname());
@@ -942,7 +942,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(PortalUserPutDTO put, PortalUser portalUser) {
+    public void updateEntity(PortalUserPutDTO put, PortalUser portalUser) {
         portalUser.setLogin(put.getLogin());
         portalUser.setSurname(put.getSurname());
         portalUser.setName(put.getName());
@@ -984,7 +984,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(ReleaseDetailPutDTO put, ReleaseDetail releaseDetail) {
+    public void updateEntity(ReleaseDetailPutDTO put, ReleaseDetail releaseDetail) {
         if (put.getMovieId()!=null) {
             releaseDetail.setMovieId(movieRepository.findById(put.getMovieId()).get());
         } else {
@@ -1042,7 +1042,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RoleReviewCompliantPutDTO put, RoleReviewCompliant roleReviewCompliant) {
+    public void updateEntity(RoleReviewCompliantPutDTO put, RoleReviewCompliant roleReviewCompliant) {
         if (put.getUserId()!=null) {
             roleReviewCompliant.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -1101,7 +1101,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RoleReviewFeedbackPutDTO put, RoleReviewFeedback roleReviewFeedback) {
+    public void updateEntity(RoleReviewFeedbackPutDTO put, RoleReviewFeedback roleReviewFeedback) {
         if (put.getUserId()!=null) {
             roleReviewFeedback.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -1169,7 +1169,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RoleReviewPutDTO put, RoleReview roleReview) {
+    public void updateEntity(RoleReviewPutDTO put, RoleReview roleReview) {
         if (put.getUserId()!=null) {
             roleReview.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -1223,7 +1223,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RolePutDTO put, Role role) {
+    public void updateEntity(RolePutDTO put, Role role) {
         role.setTitle(put.getTitle());
         role.setRoleType(put.getRoleType());
         role.setDescription(put.getDescription());
@@ -1263,7 +1263,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RoleSpoilerDataPutDTO put, RoleSpoilerData roleSpoilerData) {
+    public void updateEntity(RoleSpoilerDataPutDTO put, RoleSpoilerData roleSpoilerData) {
         if (put.getRoleReviewId()!=null) {
             roleSpoilerData.setRoleReviewId(roleReviewRepository.findById(put.getRoleReviewId()).get());
         } else {
@@ -1302,7 +1302,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(RoleVotePutDTO put, RoleVote roleVote) {
+    public void updateEntity(RoleVotePutDTO put, RoleVote roleVote) {
         if (put.getUserId()!=null) {
             roleVote.setUserId(portalUserRepository.findById(put.getUserId()).get());
         } else {
@@ -1335,7 +1335,7 @@ public class TranslationService {
         }
     }
 
-    public void putEntity(UserTypePutDTO put, UserType userType) {
+    public void updateEntity(UserTypePutDTO put, UserType userType) {
         userType.setUserGroup(put.getUserGroup());
     }
 }

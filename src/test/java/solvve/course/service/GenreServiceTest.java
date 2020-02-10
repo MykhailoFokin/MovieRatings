@@ -133,7 +133,7 @@ public class GenreServiceTest {
 
         GenrePutDTO put = new GenrePutDTO();
         put.setName(MovieGenreType.ACTION);
-        GenreReadDTO read = genreService.putGenre(genre.getId(), put);
+        GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
         Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movieId");
         Assertions.assertThat(put.getMovieId()).isEqualTo(read.getMovieId());
@@ -150,7 +150,7 @@ public class GenreServiceTest {
         Genre genre = testObjectsFactory.createGenre(movie);
 
         GenrePutDTO put = new GenrePutDTO();
-        GenreReadDTO read = genreService.putGenre(genre.getId(), put);
+        GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
         Assert.assertNull(read.getName());
 

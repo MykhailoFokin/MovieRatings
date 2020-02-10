@@ -51,10 +51,10 @@ public class MovieReviewService {
         movieReviewRepository.delete(getMovieReviewRequired(id));
     }
 
-    public MovieReviewReadDTO putMovieReview(UUID id, MovieReviewPutDTO put) {
+    public MovieReviewReadDTO updateMovieReview(UUID id, MovieReviewPutDTO put) {
         MovieReview movieReview = getMovieReviewRequired(id);
 
-        translationService.putEntity(put, movieReview);
+        translationService.updateEntity(put, movieReview);
 
         movieReview = movieReviewRepository.save(movieReview);
         return translationService.toRead(movieReview);

@@ -152,7 +152,7 @@ public class MovieSpoilerDataServiceTest {
         put.setMovieReviewId(movieReview.getId());
         put.setStartIndex(100);
         put.setEndIndex(150);
-        MovieSpoilerDataReadDTO read = movieSpoilerDataService.putMovieSpoilerData(movieSpoilerData.getId(), put);
+        MovieSpoilerDataReadDTO read = movieSpoilerDataService.updateMovieSpoilerData(movieSpoilerData.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -171,7 +171,7 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
         MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
-        MovieSpoilerDataReadDTO read = movieSpoilerDataService.putMovieSpoilerData(movieSpoilerData.getId(), put);
+        MovieSpoilerDataReadDTO read = movieSpoilerDataService.updateMovieSpoilerData(movieSpoilerData.getId(), put);
 
         Assert.assertNull(read.getMovieReviewId());
         Assert.assertNull(read.getStartIndex());

@@ -47,10 +47,10 @@ public class MasterService {
         masterRepository.delete(getMasterRequired(id));
     }
 
-    public MasterReadDTO putMaster(UUID id, MasterPutDTO put) {
+    public MasterReadDTO updateMaster(UUID id, MasterPutDTO put) {
         Master master = getMasterRequired(id);
 
-        translationService.putEntity(put, master);
+        translationService.updateEntity(put, master);
 
         master = masterRepository.save(master);
         return translationService.toRead(master);

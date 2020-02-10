@@ -47,10 +47,10 @@ public class CountryService {
         countryRepository.delete(getCountriesRequired(id));
     }
 
-    public CountryReadDTO putCountries(UUID id, CountryPutDTO put) {
+    public CountryReadDTO updateCountries(UUID id, CountryPutDTO put) {
         Country country = getCountriesRequired(id);
 
-        translationService.putEntity(put, country);
+        translationService.updateEntity(put, country);
 
         country = countryRepository.save(country);
         return translationService.toRead(country);

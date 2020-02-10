@@ -47,10 +47,10 @@ public class GenreService {
         genreRepository.delete(getGenreRequired(id));
     }
 
-    public GenreReadDTO putGenre(UUID id, GenrePutDTO put) {
+    public GenreReadDTO updateGenre(UUID id, GenrePutDTO put) {
         Genre genre = getGenreRequired(id);
 
-        translationService.putEntity(put, genre);
+        translationService.updateEntity(put, genre);
 
         genre = genreRepository.save(genre);
         return translationService.toRead(genre);

@@ -126,7 +126,7 @@ public class UserTypeServiceTest {
 
         UserTypePutDTO put = new UserTypePutDTO();
         put.setUserGroup(UserGroupType.USER);
-        UserTypeReadDTO read = userTypeService.putUserTypes(userType.getId(), put);
+        UserTypeReadDTO read = userTypeService.updateUserTypes(userType.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -140,7 +140,7 @@ public class UserTypeServiceTest {
         UserType userType = testObjectsFactory.createUserType();
 
         UserTypePutDTO put = new UserTypePutDTO();
-        UserTypeReadDTO read = userTypeService.putUserTypes(userType.getId(), put);
+        UserTypeReadDTO read = userTypeService.updateUserTypes(userType.getId(), put);
 
         Assert.assertNull(read.getUserGroup());
 

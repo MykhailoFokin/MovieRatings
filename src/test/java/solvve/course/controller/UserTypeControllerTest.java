@@ -146,7 +146,7 @@ public class UserTypeControllerTest {
 
         UserTypeReadDTO read =createUserTypesRead();
 
-        Mockito.when(userTypeService.putUserTypes(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(userTypeService.updateUserTypes(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/usertypes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

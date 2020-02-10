@@ -173,7 +173,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
 
-        Mockito.when(roleReviewFeedbackService.putRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
+        Mockito.when(roleReviewFeedbackService.updateRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks/{id}",

@@ -48,10 +48,10 @@ public class UserTypeService {
         userTypeRepository.delete(getUserTypesRequired(id));
     }
 
-    public UserTypeReadDTO putUserTypes(UUID id, UserTypePutDTO put) {
+    public UserTypeReadDTO updateUserTypes(UUID id, UserTypePutDTO put) {
         UserType userType = getUserTypesRequired(id);
 
-        translationService.putEntity(put, userType);
+        translationService.updateEntity(put, userType);
 
         userType = userTypeRepository.save(userType);
         return translationService.toRead(userType);

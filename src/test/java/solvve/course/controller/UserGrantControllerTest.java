@@ -151,7 +151,7 @@ public class UserGrantControllerTest {
 
         UserGrantReadDTO read = createGrantsRead();
 
-        Mockito.when(userGrantService.putGrants(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(userGrantService.updateGrants(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/usergrants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

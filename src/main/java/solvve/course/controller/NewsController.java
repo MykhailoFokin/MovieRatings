@@ -39,6 +39,6 @@ public class NewsController {
 
     @PutMapping("/{id}")
     public NewsReadDTO putNews(@PathVariable UUID id, @RequestBody NewsPutDTO put) {
-        return newsService.putNews(id, put);
+        return newsService.updateNews(id, put);
     }
 }

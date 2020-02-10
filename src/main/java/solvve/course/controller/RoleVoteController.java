@@ -39,6 +39,6 @@ public class RoleVoteController {
 
     @PutMapping("/{id}")
     public RoleVoteReadDTO putRoleVote(@PathVariable UUID id, @RequestBody RoleVotePutDTO put) {
-        return roleVoteService.putRoleVote(id, put);
+        return roleVoteService.updateRoleVote(id, put);
     }
 }

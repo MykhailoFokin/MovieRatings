@@ -146,7 +146,7 @@ public class RoleReviewCompliantControllerTest {
 
         RoleReviewCompliantReadDTO read = createRoleReviewCompliantRead();
 
-        Mockito.when(roleReviewCompliantService.putRoleReviewCompliant(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(roleReviewCompliantService.updateRoleReviewCompliant(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/rolereviewcompliants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

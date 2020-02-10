@@ -54,10 +54,10 @@ public class RoleSpoilerDataService {
         roleSpoilerDataRepository.delete(getRoleSpoilerDataRequired(id));
     }
 
-    public RoleSpoilerDataReadDTO putRoleSpoilerData(UUID id, RoleSpoilerDataPutDTO put) {
+    public RoleSpoilerDataReadDTO updateRoleSpoilerData(UUID id, RoleSpoilerDataPutDTO put) {
         RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
 
-        translationService.putEntity(put, roleSpoilerData);
+        translationService.updateEntity(put, roleSpoilerData);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
         return translationService.toRead(roleSpoilerData);
@@ -96,10 +96,10 @@ public class RoleSpoilerDataService {
         roleSpoilerDataRepository.delete(getRoleReviewSpoilerDataRequired(roleReviewId, id));
     }
 
-    public RoleSpoilerDataReadDTO putRoleReviewSpoilerData(UUID roleReviewId, UUID id, RoleSpoilerDataPutDTO put) {
+    public RoleSpoilerDataReadDTO updateRoleReviewSpoilerData(UUID roleReviewId, UUID id, RoleSpoilerDataPutDTO put) {
         RoleSpoilerData roleSpoilerData = getRoleReviewSpoilerDataRequired(roleReviewId, id);
 
-        translationService.putEntity(put, roleSpoilerData);
+        translationService.updateEntity(put, roleSpoilerData);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
         return translationService.toRead(roleSpoilerData);

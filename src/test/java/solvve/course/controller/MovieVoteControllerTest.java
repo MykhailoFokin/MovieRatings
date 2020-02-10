@@ -146,7 +146,7 @@ public class MovieVoteControllerTest {
 
         MovieVoteReadDTO read = createMovieVoteRead();
 
-        Mockito.when(movieVoteService.putMovieVote(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(movieVoteService.updateMovieVote(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/movievotes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

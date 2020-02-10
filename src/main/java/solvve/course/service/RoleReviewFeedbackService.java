@@ -54,10 +54,10 @@ public class RoleReviewFeedbackService {
         roleReviewFeedbackRepository.delete(getRoleReviewFeedbackRequired(id));
     }
 
-    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(UUID id, RoleReviewFeedbackPutDTO put) {
+    public RoleReviewFeedbackReadDTO updateRoleReviewFeedback(UUID id, RoleReviewFeedbackPutDTO put) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewFeedbackRequired(id);
 
-        translationService.putEntity(put, roleReviewFeedback);
+        translationService.updateEntity(put, roleReviewFeedback);
 
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
         return translationService.toRead(roleReviewFeedback);
@@ -94,11 +94,11 @@ public class RoleReviewFeedbackService {
         roleReviewFeedbackRepository.delete(getRoleReviewRoleReviewFeedbackRequired(roleReviewId, id));
     }
 
-    public RoleReviewFeedbackReadDTO putRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id,
+    public RoleReviewFeedbackReadDTO updateRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id,
                                                                      RoleReviewFeedbackPutDTO put) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewRoleReviewFeedbackRequired(roleReviewId, id);
 
-        translationService.putEntity(put, roleReviewFeedback);
+        translationService.updateEntity(put, roleReviewFeedback);
 
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
         return translationService.toRead(roleReviewFeedback);

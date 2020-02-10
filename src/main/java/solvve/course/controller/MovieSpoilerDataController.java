@@ -39,7 +39,8 @@ public class MovieSpoilerDataController {
     }
 
     @PutMapping("/{id}")
-    public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id, @RequestBody MovieSpoilerDataPutDTO put) {
-        return movieSpoilerDataService.putMovieSpoilerData(id, put);
+    public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id,
+                                                       @RequestBody MovieSpoilerDataPutDTO put) {
+        return movieSpoilerDataService.updateMovieSpoilerData(id, put);
     }
 }

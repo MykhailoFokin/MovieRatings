@@ -143,7 +143,7 @@ public class NewsServiceTest {
         put.setTopic("Main_News");
         put.setDescription("Our main news are absent today!");
         put.setPublished(Instant.now());
-        NewsReadDTO read = newsService.putNews(news.getId(), put);
+        NewsReadDTO read = newsService.updateNews(news.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -159,7 +159,7 @@ public class NewsServiceTest {
         News news = testObjectsFactory.createNews(portalUser);
 
         NewsPutDTO put = new NewsPutDTO();
-        NewsReadDTO read = newsService.putNews(news.getId(), put);
+        NewsReadDTO read = newsService.updateNews(news.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getTopic());

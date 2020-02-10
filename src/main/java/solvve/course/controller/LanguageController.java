@@ -40,6 +40,6 @@ public class LanguageController {
 
     @PutMapping("/{id}")
     public LanguageReadDTO putLanguage(@PathVariable UUID id, @RequestBody LanguagePutDTO put) {
-        return languageService.putLanguage(id, put);
+        return languageService.updateLanguage(id, put);
     }
 }

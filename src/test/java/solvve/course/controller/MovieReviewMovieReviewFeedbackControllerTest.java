@@ -158,7 +158,7 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead(movieReviewReadDTO.getId());
 
-        Mockito.when(movieReviewFeedbackService.putMovieReviewMovieReviewFeedback(movieReviewReadDTO.getId(),
+        Mockito.when(movieReviewFeedbackService.updateMovieReviewMovieReviewFeedback(movieReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/moviereviews/{moviereviewid}/moviereviewfeedbacks/{id}",

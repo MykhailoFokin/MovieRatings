@@ -54,10 +54,10 @@ public class RoleReviewCompliantService {
         roleReviewCompliantRepository.delete(getRoleReviewCompliantRequired(id));
     }
 
-    public RoleReviewCompliantReadDTO putRoleReviewCompliant(UUID id, RoleReviewCompliantPutDTO put) {
+    public RoleReviewCompliantReadDTO updateRoleReviewCompliant(UUID id, RoleReviewCompliantPutDTO put) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
 
-        translationService.putEntity(put, roleReviewCompliant);
+        translationService.updateEntity(put, roleReviewCompliant);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
         return translationService.toRead(roleReviewCompliant);
@@ -94,11 +94,11 @@ public class RoleReviewCompliantService {
         roleReviewCompliantRepository.delete(getRoleReviewRoleReviewCompliantRequired(roleReviewId, id));
     }
 
-    public RoleReviewCompliantReadDTO putRoleReviewRoleReviewCompliant(UUID roleReviewId, UUID id,
+    public RoleReviewCompliantReadDTO updateRoleReviewRoleReviewCompliant(UUID roleReviewId, UUID id,
                                                                        RoleReviewCompliantPutDTO put) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewRoleReviewCompliantRequired(roleReviewId, id);
 
-        translationService.putEntity(put, roleReviewCompliant);
+        translationService.updateEntity(put, roleReviewCompliant);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
         return translationService.toRead(roleReviewCompliant);

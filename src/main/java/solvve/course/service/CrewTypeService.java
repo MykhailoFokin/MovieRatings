@@ -47,10 +47,10 @@ public class CrewTypeService {
         crewTypeRepository.delete(getCrewTypeRequired(id));
     }
 
-    public CrewTypeReadDTO putCrewType(UUID id, CrewTypePutDTO put) {
+    public CrewTypeReadDTO updateCrewType(UUID id, CrewTypePutDTO put) {
         CrewType crewType = getCrewTypeRequired(id);
 
-        translationService.putEntity(put, crewType);
+        translationService.updateEntity(put, crewType);
 
         crewType = crewTypeRepository.save(crewType);
         return translationService.toRead(crewType);

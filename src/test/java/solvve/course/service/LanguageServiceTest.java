@@ -108,7 +108,7 @@ public class LanguageServiceTest {
         Language language = testObjectsFactory.createLanguage();
 
         LanguagePutDTO put = testObjectsFactory.createLanguagePutDTO();
-        LanguageReadDTO read = languageService.putLanguage(language.getId(), put);
+        LanguageReadDTO read = languageService.updateLanguage(language.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -122,7 +122,7 @@ public class LanguageServiceTest {
         Language language = testObjectsFactory.createLanguage();
 
         LanguagePutDTO put = new LanguagePutDTO();
-        LanguageReadDTO read = languageService.putLanguage(language.getId(), put);
+        LanguageReadDTO read = languageService.updateLanguage(language.getId(), put);
 
         Assert.assertNull(read.getName());
 

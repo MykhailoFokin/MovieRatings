@@ -39,6 +39,6 @@ public class MovieVoteController {
 
     @PutMapping("/{id}")
     public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody MovieVotePutDTO put) {
-        return movieVoteService.putMovieVote(id, put);
+        return movieVoteService.updateMovieVote(id, put);
     }
 }

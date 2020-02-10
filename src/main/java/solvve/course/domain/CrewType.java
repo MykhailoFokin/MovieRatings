@@ -1,6 +1,7 @@
 package solvve.course.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class CrewType {
 

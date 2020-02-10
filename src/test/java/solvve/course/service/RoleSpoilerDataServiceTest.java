@@ -159,7 +159,7 @@ public class RoleSpoilerDataServiceTest {
         put.setRoleReviewId(roleReview.getId());
         put.setStartIndex(100);
         put.setEndIndex(150);
-        RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.updateRoleSpoilerData(roleSpoilerData.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -179,7 +179,7 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
-        RoleSpoilerDataReadDTO read = roleSpoilerDataService.putRoleSpoilerData(roleSpoilerData.getId(), put);
+        RoleSpoilerDataReadDTO read = roleSpoilerDataService.updateRoleSpoilerData(roleSpoilerData.getId(), put);
 
         Assert.assertNull(read.getRoleReviewId());
         Assert.assertNull(read.getStartIndex());

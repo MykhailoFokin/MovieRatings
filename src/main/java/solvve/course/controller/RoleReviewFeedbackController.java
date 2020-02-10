@@ -41,6 +41,6 @@ public class RoleReviewFeedbackController {
     @PutMapping("/{id}")
     public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id,
                                                            @RequestBody RoleReviewFeedbackPutDTO put) {
-        return roleReviewFeedback.putRoleReviewFeedback(id, put);
+        return roleReviewFeedback.updateRoleReviewFeedback(id, put);
     }
 }

@@ -7,5 +7,6 @@ import solvve.course.domain.CompanyDetails;
 import java.util.UUID;
 
 @Repository
-public interface CompanyDetailsRepository extends CrudRepository<CompanyDetails, UUID>, CompanyDetailsRepositoryCustom {
+public interface CompanyDetailsRepository
+        extends CrudRepository<CompanyDetails, UUID>, CompanyDetailsRepositoryCustom {
 }

@@ -115,7 +115,7 @@ public class CompanyDetailsServiceTest {
 
         CompanyDetailsPutDTO put = testObjectsFactory.createCompanyDetailsPutDTO();
 
-        CompanyDetailsReadDTO read = companyDetailsService.putCompanyDetails(companyDetails.getId(), put);
+        CompanyDetailsReadDTO read = companyDetailsService.updateCompanyDetails(companyDetails.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -130,7 +130,7 @@ public class CompanyDetailsServiceTest {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
 
         CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
-        CompanyDetailsReadDTO read = companyDetailsService.putCompanyDetails(companyDetails.getId(), put);
+        CompanyDetailsReadDTO read = companyDetailsService.updateCompanyDetails(companyDetails.getId(), put);
 
         Assert.assertNull(read.getName());
         Assert.assertNull(read.getOverview());

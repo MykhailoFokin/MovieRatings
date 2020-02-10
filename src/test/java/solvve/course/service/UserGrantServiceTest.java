@@ -151,7 +151,7 @@ public class UserGrantServiceTest {
         put.setObjectName("Movie");
         put.setUserPermission(UserPermType.READ);
         put.setGrantedBy(portalUser.getId());
-        UserGrantReadDTO read = userGrantService.putGrants(userGrant.getId(), put);
+        UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -170,7 +170,7 @@ public class UserGrantServiceTest {
         UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
         UserGrantPutDTO put = new UserGrantPutDTO();
-        UserGrantReadDTO read = userGrantService.putGrants(userGrant.getId(), put);
+        UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 
         Assert.assertNull(read.getUserTypeId());
         Assert.assertNull(read.getObjectName());

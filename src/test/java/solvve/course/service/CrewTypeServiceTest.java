@@ -109,7 +109,7 @@ public class CrewTypeServiceTest {
 
         CrewTypePutDTO put = new CrewTypePutDTO();
         put.setName("Director");
-        CrewTypeReadDTO read = crewTypeService.putCrewType(crewType.getId(), put);
+        CrewTypeReadDTO read = crewTypeService.updateCrewType(crewType.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -123,7 +123,7 @@ public class CrewTypeServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePutDTO put = new CrewTypePutDTO();
-        CrewTypeReadDTO read = crewTypeService.putCrewType(crewType.getId(), put);
+        CrewTypeReadDTO read = crewTypeService.updateCrewType(crewType.getId(), put);
 
         Assert.assertNull(read.getName());
 

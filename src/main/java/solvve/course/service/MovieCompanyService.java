@@ -47,10 +47,10 @@ public class MovieCompanyService {
         movieCompanyRepository.delete(getMovieCompanyRequired(id));
     }
 
-    public MovieCompanyReadDTO putMovieCompany(UUID id, MovieCompanyPutDTO put) {
+    public MovieCompanyReadDTO updateMovieCompany(UUID id, MovieCompanyPutDTO put) {
         MovieCompany movieCompany = getMovieCompanyRequired(id);
 
-        translationService.putEntity(put, movieCompany);
+        translationService.updateEntity(put, movieCompany);
 
         movieCompany = movieCompanyRepository.save(movieCompany);
         return translationService.toRead(movieCompany);

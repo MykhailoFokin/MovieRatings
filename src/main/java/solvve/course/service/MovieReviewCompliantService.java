@@ -54,10 +54,10 @@ public class MovieReviewCompliantService {
         movieReviewCompliantRepository.delete(getMovieReviewCompliantRequired(id));
     }
 
-    public MovieReviewCompliantReadDTO putMovieReviewCompliant(UUID id, MovieReviewCompliantPutDTO put) {
+    public MovieReviewCompliantReadDTO updateMovieReviewCompliant(UUID id, MovieReviewCompliantPutDTO put) {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewCompliantRequired(id);
 
-        translationService.putEntity(put, movieReviewCompliant);
+        translationService.updateEntity(put, movieReviewCompliant);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
         return translationService.toRead(movieReviewCompliant);
@@ -65,7 +65,8 @@ public class MovieReviewCompliantService {
 
     @Transactional(readOnly = true)
     public List<MovieReviewCompliantReadDTO> getMovieReviewMovieReviewCompliant(UUID movieReviewId) {
-        List<MovieReviewCompliant> movieReviewCompliantList = getMovieReviewMovieReviewCompliantsRequired(movieReviewId);
+        List<MovieReviewCompliant> movieReviewCompliantList =
+                getMovieReviewMovieReviewCompliantsRequired(movieReviewId);
         return movieReviewCompliantList.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
@@ -94,11 +95,11 @@ public class MovieReviewCompliantService {
         movieReviewCompliantRepository.delete(getMovieReviewMovieReviewCompliantRequired(movieReviewId, id));
     }
 
-    public MovieReviewCompliantReadDTO putMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id,
+    public MovieReviewCompliantReadDTO updateMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id,
                                                                           MovieReviewCompliantPutDTO put) {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewMovieReviewCompliantRequired(movieReviewId, id);
 
-        translationService.putEntity(put, movieReviewCompliant);
+        translationService.updateEntity(put, movieReviewCompliant);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
         return translationService.toRead(movieReviewCompliant);

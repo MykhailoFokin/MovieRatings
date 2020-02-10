@@ -37,7 +37,7 @@ public class MasterController {
 
     @PutMapping("/{id}")
     public MasterReadDTO putMaster(@PathVariable UUID id, @RequestBody MasterPutDTO put) {
-        return masterService.putMaster(id, put);
+        return masterService.updateMaster(id, put);
     }
 
     @GetMapping

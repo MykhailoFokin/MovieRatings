@@ -175,7 +175,7 @@ public class RoleReviewServiceTest {
         put.setTextReview("This role can be described as junk.");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
-        RoleReviewReadDTO read = roleReviewService.putRoleReview(roleReview.getId(), put);
+        RoleReviewReadDTO read = roleReviewService.updateRoleReview(roleReview.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -197,7 +197,7 @@ public class RoleReviewServiceTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPutDTO put = new RoleReviewPutDTO();
-        RoleReviewReadDTO read = roleReviewService.putRoleReview(roleReview.getId(), put);
+        RoleReviewReadDTO read = roleReviewService.updateRoleReview(roleReview.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getRoleId());

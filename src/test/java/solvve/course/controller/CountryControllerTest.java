@@ -139,7 +139,7 @@ public class CountryControllerTest {
 
         CountryReadDTO read = createCountriesRead();
 
-        Mockito.when(countryService.putCountries(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(countryService.updateCountries(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/countries/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

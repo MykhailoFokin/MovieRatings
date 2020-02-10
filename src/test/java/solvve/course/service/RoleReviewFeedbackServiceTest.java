@@ -180,7 +180,7 @@ public class RoleReviewFeedbackServiceTest {
         put.setRoleReviewId(roleReview.getId());
         put.setIsLiked(true);
         RoleReviewFeedbackReadDTO read =
-                roleReviewFeedbackService.putRoleReviewFeedback(roleReviewFeedback.getId(), put);
+                roleReviewFeedbackService.updateRoleReviewFeedback(roleReviewFeedback.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -204,7 +204,7 @@ public class RoleReviewFeedbackServiceTest {
 
         RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
         RoleReviewFeedbackReadDTO read =
-                roleReviewFeedbackService.putRoleReviewFeedback(roleReviewFeedback.getId(), put);
+                roleReviewFeedbackService.updateRoleReviewFeedback(roleReviewFeedback.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getRoleId());

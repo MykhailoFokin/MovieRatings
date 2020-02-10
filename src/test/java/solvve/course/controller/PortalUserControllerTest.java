@@ -162,7 +162,7 @@ public class PortalUserControllerTest {
 
         PortalUserReadDTO read = createPortalUserRead();
 
-        Mockito.when(portalUserService.putPortalUser(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(portalUserService.updatePortalUser(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/portalusers/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

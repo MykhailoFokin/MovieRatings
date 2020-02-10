@@ -47,6 +47,6 @@ public class RoleReviewRoleReviewFeedbackController {
     public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable (value = "rolereviewid") UUID roleReviewId,
                                                            @PathVariable (value = "id") UUID id,
                                                            @RequestBody RoleReviewFeedbackPutDTO put) {
-        return roleReviewFeedbackService.putRoleReviewRoleReviewFeedback(roleReviewId, id, put);
+        return roleReviewFeedbackService.updateRoleReviewRoleReviewFeedback(roleReviewId, id, put);
     }
 }

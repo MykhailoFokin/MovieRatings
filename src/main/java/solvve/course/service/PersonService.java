@@ -48,10 +48,10 @@ public class PersonService {
         personRepository.delete(getPersonsRequired(id));
     }
 
-    public PersonReadDTO putPersons(UUID id, PersonPutDTO put) {
+    public PersonReadDTO updatePersons(UUID id, PersonPutDTO put) {
         Person person = getPersonsRequired(id);
 
-        translationService.putEntity(put, person);
+        translationService.updateEntity(put, person);
 
         person = personRepository.save(person);
         return translationService.toRead(person);

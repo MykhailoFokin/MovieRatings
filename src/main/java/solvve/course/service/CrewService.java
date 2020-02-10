@@ -50,10 +50,10 @@ public class CrewService {
         crewRepository.delete(getCrewRequired(id));
     }
 
-    public CrewReadDTO putCrew(UUID id, CrewPutDTO put) {
+    public CrewReadDTO updateCrew(UUID id, CrewPutDTO put) {
         Crew crew = getCrewRequired(id);
 
-        translationService.putEntity(put, crew);
+        translationService.updateEntity(put, crew);
 
         crew = crewRepository.save(crew);
         return translationService.toRead(crew);

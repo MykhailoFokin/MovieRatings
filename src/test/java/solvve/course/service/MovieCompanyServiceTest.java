@@ -139,7 +139,7 @@ public class MovieCompanyServiceTest {
         MovieCompanyPutDTO put = testObjectsFactory.createMovieCompanyPutDTO(companyDetails.getId(),
                 MovieProductionType.PRODUCTION_COMPANIES);
 
-        MovieCompanyReadDTO read = movieCompanyService.putMovieCompany(movieCompany.getId(), put);
+        MovieCompanyReadDTO read = movieCompanyService.updateMovieCompany(movieCompany.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -157,7 +157,7 @@ public class MovieCompanyServiceTest {
                 MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyPutDTO put = new MovieCompanyPutDTO();
-        MovieCompanyReadDTO read = movieCompanyService.putMovieCompany(movieCompany.getId(), put);
+        MovieCompanyReadDTO read = movieCompanyService.updateMovieCompany(movieCompany.getId(), put);
 
         Assert.assertNotNull(read.getCompanyId());
         Assert.assertNull(read.getDescription());

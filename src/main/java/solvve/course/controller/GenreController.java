@@ -37,7 +37,7 @@ public class GenreController {
 
     @PutMapping("/{id}")
     public GenreReadDTO putGenre(@PathVariable UUID id, @RequestBody GenrePutDTO put) {
-        return genreService.putGenre(id, put);
+        return genreService.updateGenre(id, put);
     }
 
     @GetMapping

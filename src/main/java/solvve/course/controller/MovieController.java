@@ -38,6 +38,6 @@ public class MovieController {
 
     @PutMapping("/{id}")
     public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody MoviePutDTO put) {
-        return movieService.putMovie(id, put);
+        return movieService.updateMovie(id, put);
     }
 }

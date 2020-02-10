@@ -52,10 +52,10 @@ public class VisitService {
         visitRepository.delete(getVisitRequired(id));
     }
 
-    public VisitReadDTO putVisit(UUID id, VisitPutDTO put) {
+    public VisitReadDTO updateVisit(UUID id, VisitPutDTO put) {
         Visit visit = getVisitRequired(id);
 
-        translationService.putEntity(put, visit);
+        translationService.updateEntity(put, visit);
 
         visit = visitRepository.save(visit);
         return translationService.toRead(visit);

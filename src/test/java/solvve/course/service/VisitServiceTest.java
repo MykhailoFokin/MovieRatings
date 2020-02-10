@@ -137,7 +137,7 @@ public class VisitServiceTest {
         Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         VisitPutDTO put = testObjectsFactory.createVisitPutDTO(portalUser, master);
-        VisitReadDTO read = visitService.putVisit(visit.getId(), put);
+        VisitReadDTO read = visitService.updateVisit(visit.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -156,7 +156,7 @@ public class VisitServiceTest {
         Visit visit = testObjectsFactory.createVisit(portalUser, master);
 
         VisitPutDTO put = new VisitPutDTO();
-        VisitReadDTO read = visitService.putVisit(visit.getId(), put);
+        VisitReadDTO read = visitService.updateVisit(visit.getId(), put);
 
         Assert.assertNull(read.getStartAt());
 

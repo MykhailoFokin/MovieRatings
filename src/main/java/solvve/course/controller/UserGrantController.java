@@ -39,6 +39,6 @@ public class UserGrantController {
 
     @PutMapping("/{id}")
     public UserGrantReadDTO putGrants(@PathVariable UUID id, @RequestBody UserGrantPutDTO put) {
-        return userGrantService.putGrants(id, put);
+        return userGrantService.updateGrants(id, put);
     }
 }

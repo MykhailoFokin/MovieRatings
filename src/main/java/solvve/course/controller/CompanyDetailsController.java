@@ -26,7 +26,8 @@ public class CompanyDetailsController {
     }
 
     @PatchMapping("/{id}")
-    public CompanyDetailsReadDTO patchCompanyDetails(@PathVariable UUID id, @RequestBody CompanyDetailsPatchDTO patch) {
+    public CompanyDetailsReadDTO patchCompanyDetails(@PathVariable UUID id,
+                                                     @RequestBody CompanyDetailsPatchDTO patch) {
         return companyDetailsService.patchCompanyDetails(id, patch);
     }
 
@@ -37,7 +38,7 @@ public class CompanyDetailsController {
 
     @PutMapping("/{id}")
     public CompanyDetailsReadDTO putCompanyDetails(@PathVariable UUID id, @RequestBody CompanyDetailsPutDTO put) {
-        return companyDetailsService.putCompanyDetails(id, put);
+        return companyDetailsService.updateCompanyDetails(id, put);
     }
 
     @GetMapping

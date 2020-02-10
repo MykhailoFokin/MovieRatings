@@ -105,7 +105,8 @@ public class MovieReviewCompliantServiceTest {
         patch.setDescription("Just punish him!");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
-        MovieReviewCompliantReadDTO read = movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
+        MovieReviewCompliantReadDTO read =
+                movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
@@ -186,7 +187,7 @@ public class MovieReviewCompliantServiceTest {
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         MovieReviewCompliantReadDTO read =
-                movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
+                movieReviewCompliantService.updateMovieReviewCompliant(movieReviewCompliant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -211,7 +212,7 @@ public class MovieReviewCompliantServiceTest {
 
         MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
         MovieReviewCompliantReadDTO read =
-                movieReviewCompliantService.putMovieReviewCompliant(movieReviewCompliant.getId(), put);
+                movieReviewCompliantService.updateMovieReviewCompliant(movieReviewCompliant.getId(), put);
 
         Assert.assertNull(read.getUserId());
         Assert.assertNull(read.getMovieId());

@@ -54,10 +54,10 @@ public class NewsService {
         newsRepository.delete(getNewsRequired(id));
     }
 
-    public NewsReadDTO putNews(UUID id, NewsPutDTO put) {
+    public NewsReadDTO updateNews(UUID id, NewsPutDTO put) {
         News news = getNewsRequired(id);
 
-        translationService.putEntity(put, news);
+        translationService.updateEntity(put, news);
 
         news = newsRepository.save(news);
         return translationService.toRead(news);

@@ -153,7 +153,7 @@ public class PersonControllerTest {
 
         PersonReadDTO read = createPersonsRead();
 
-        Mockito.when(personService.putPersons(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(personService.updatePersons(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/persons/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

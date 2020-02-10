@@ -155,7 +155,7 @@ public class ReleaseDetailServiceTest {
         put.setMovieId(movie.getId());
         put.setCountryId(country.getId());
         put.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
-        ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);
+        ReleaseDetailReadDTO read = releaseDetailService.updateReleaseDetails(releaseDetail.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -176,7 +176,7 @@ public class ReleaseDetailServiceTest {
         ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
         ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
-        ReleaseDetailReadDTO read = releaseDetailService.putReleaseDetails(releaseDetail.getId(), put);
+        ReleaseDetailReadDTO read = releaseDetailService.updateReleaseDetails(releaseDetail.getId(), put);
 
         Assert.assertNull(read.getReleaseDate());
 

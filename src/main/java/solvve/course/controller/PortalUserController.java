@@ -39,6 +39,6 @@ public class PortalUserController {
 
     @PutMapping("/{id}")
     public PortalUserReadDTO putPortalUser(@PathVariable UUID id, @RequestBody PortalUserPutDTO put) {
-        return portalUserService.putPortalUser(id, put);
+        return portalUserService.updatePortalUser(id, put);
     }
 }

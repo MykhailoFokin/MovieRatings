@@ -54,10 +54,10 @@ public class RoleReviewService {
         roleReviewRepository.delete(getRoleReviewRequired(id));
     }
 
-    public RoleReviewReadDTO putRoleReview(UUID id, RoleReviewPutDTO put) {
+    public RoleReviewReadDTO updateRoleReview(UUID id, RoleReviewPutDTO put) {
         RoleReview roleReview = getRoleReviewRequired(id);
 
-        translationService.putEntity(put, roleReview);
+        translationService.updateEntity(put, roleReview);
 
         roleReview = roleReviewRepository.save(roleReview);
         return translationService.toRead(roleReview);

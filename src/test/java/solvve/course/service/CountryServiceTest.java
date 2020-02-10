@@ -115,7 +115,7 @@ public class CountryServiceTest {
 
         CountryPutDTO put = new CountryPutDTO();
         put.setName("Ukraine");
-        CountryReadDTO read = countryService.putCountries(country.getId(), put);
+        CountryReadDTO read = countryService.updateCountries(country.getId(), put);
 
         Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies",
                 "releaseDetails","countryLanguages");
@@ -131,7 +131,7 @@ public class CountryServiceTest {
         Country country = testObjectsFactory.createCountry();
 
         CountryPutDTO put = new CountryPutDTO();
-        CountryReadDTO read = countryService.putCountries(country.getId(), put);
+        CountryReadDTO read = countryService.updateCountries(country.getId(), put);
 
         Assert.assertNull(read.getName());
 

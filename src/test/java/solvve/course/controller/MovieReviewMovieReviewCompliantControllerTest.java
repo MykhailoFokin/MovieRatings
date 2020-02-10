@@ -130,7 +130,8 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         Mockito.when(movieReviewCompliantService.patchMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId(),
                 read.getId(), patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}"
+        String resultJson = mvc.perform(patch(
+                "/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}"
                 ,movieReviewReadDTO.getId() ,read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -165,7 +166,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         MovieReviewCompliantReadDTO read =
                 createMovieReviewCompliantRead(movieReviewReadDTO.getId());
 
-        Mockito.when(movieReviewCompliantService.putMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId(),
+        Mockito.when(movieReviewCompliantService.updateMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId(),
                 read.getId(), putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}"

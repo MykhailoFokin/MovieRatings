@@ -142,7 +142,7 @@ public class RoleServiceTest {
         put.setRoleType("Main_Role");
         put.setDescription("Description test");
         put.setPersonId(person.getId());
-        RoleReadDTO read = roleService.putRole(role.getId(), put);
+        RoleReadDTO read = roleService.updateRole(role.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -160,7 +160,7 @@ public class RoleServiceTest {
         Role role = testObjectsFactory.createRole(person);
 
         RolePutDTO put = new RolePutDTO();
-        RoleReadDTO read = roleService.putRole(role.getId(), put);
+        RoleReadDTO read = roleService.updateRole(role.getId(), put);
 
         Assert.assertNull(read.getTitle());
         Assert.assertNull(read.getRoleType());

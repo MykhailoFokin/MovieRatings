@@ -42,6 +42,6 @@ public class MovieReviewCompliantController {
     @PutMapping("/{id}")
     public MovieReviewCompliantReadDTO putMovieReviewCompliant(@PathVariable UUID id,
                                                                @RequestBody MovieReviewCompliantPutDTO put) {
-        return movieReviewCompliantService.putMovieReviewCompliant(id, put);
+        return movieReviewCompliantService.updateMovieReviewCompliant(id, put);
     }
 }

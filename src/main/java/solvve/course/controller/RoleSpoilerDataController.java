@@ -41,6 +41,6 @@ public class RoleSpoilerDataController {
     @PutMapping("/{id}")
     public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id,
                                                      @RequestBody RoleSpoilerDataPutDTO put) {
-        return roleSpoilerDataService.putRoleSpoilerData(id, put);
+        return roleSpoilerDataService.updateRoleSpoilerData(id, put);
     }
 }

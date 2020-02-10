@@ -28,4 +28,3 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
-

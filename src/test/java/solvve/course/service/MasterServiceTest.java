@@ -117,7 +117,7 @@ public class MasterServiceTest {
         put.setName("MasterName");
         put.setPhone("645768767");
         put.setAbout("What about");
-        MasterReadDTO read = masterService.putMaster(master.getId(), put);
+        MasterReadDTO read = masterService.updateMaster(master.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -131,7 +131,7 @@ public class MasterServiceTest {
         Master master = testObjectsFactory.createMaster();
 
         MasterPutDTO put = new MasterPutDTO();
-        MasterReadDTO read = masterService.putMaster(master.getId(), put);
+        MasterReadDTO read = masterService.updateMaster(master.getId(), put);
 
         Assert.assertNull(read.getName());
 

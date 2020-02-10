@@ -130,7 +130,8 @@ public class MovieReviewFeedbackServiceTest {
         Assert.assertNotNull(read.getMovieReviewId());
         Assert.assertNotNull(read.getIsLiked());
 
-        MovieReviewFeedback movieReviewFeedbackAfterUpdate = movieReviewFeedbackRepository.findById(read.getId()).get();
+        MovieReviewFeedback movieReviewFeedbackAfterUpdate =
+                movieReviewFeedbackRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getUserId());
         Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieId());
@@ -172,7 +173,7 @@ public class MovieReviewFeedbackServiceTest {
         put.setMovieReviewId(movieReview.getId());
         put.setIsLiked(true);
         MovieReviewFeedbackReadDTO read =
-                movieReviewFeedbackService.putMovieReviewFeedback(movieReviewFeedback.getId(), put);
+                movieReviewFeedbackService.updateMovieReviewFeedback(movieReviewFeedback.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -195,14 +196,15 @@ public class MovieReviewFeedbackServiceTest {
 
         MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
         MovieReviewFeedbackReadDTO read =
-                movieReviewFeedbackService.putMovieReviewFeedback(movieReviewFeedback.getId(), put);
+                movieReviewFeedbackService.updateMovieReviewFeedback(movieReviewFeedback.getId(), put);
 
         Assert.assertNotNull(read.getUserId());
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getMovieReviewId());
         Assert.assertNull(read.getIsLiked());
 
-        MovieReviewFeedback movieReviewFeedbackAfterUpdate = movieReviewFeedbackRepository.findById(read.getId()).get();
+        MovieReviewFeedback movieReviewFeedbackAfterUpdate =
+                movieReviewFeedbackRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getUserId());
         Assert.assertNotNull(movieReviewFeedbackAfterUpdate.getMovieId());

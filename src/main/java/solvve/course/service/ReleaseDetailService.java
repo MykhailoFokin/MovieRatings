@@ -54,10 +54,10 @@ public class ReleaseDetailService {
         releaseDetailRepository.delete(getReleaseDetailsRequired(id));
     }
 
-    public ReleaseDetailReadDTO putReleaseDetails(UUID id, ReleaseDetailPutDTO put) {
+    public ReleaseDetailReadDTO updateReleaseDetails(UUID id, ReleaseDetailPutDTO put) {
         ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
 
-        translationService.putEntity(put, releaseDetail);
+        translationService.updateEntity(put, releaseDetail);
 
         releaseDetail = releaseDetailRepository.save(releaseDetail);
         return translationService.toRead(releaseDetail);

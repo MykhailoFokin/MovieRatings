@@ -147,7 +147,7 @@ public class CompanyDetailsControllerTest {
 
         CompanyDetailsReadDTO read = createCompanyDetailsRead();
 
-        Mockito.when(companyDetailsService.putCompanyDetails(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(companyDetailsService.updateCompanyDetails(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/companydetails/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

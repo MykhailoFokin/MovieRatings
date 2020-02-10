@@ -37,7 +37,7 @@ public class CountryController {
 
     @PutMapping("/{id}")
     public CountryReadDTO putCountries(@PathVariable UUID id, @RequestBody CountryPutDTO put) {
-        return countryService.putCountries(id, put);
+        return countryService.updateCountries(id, put);
     }
 
     @GetMapping

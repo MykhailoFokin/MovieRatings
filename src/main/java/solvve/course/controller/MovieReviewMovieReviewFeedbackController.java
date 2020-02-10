@@ -49,6 +49,6 @@ public class MovieReviewMovieReviewFeedbackController {
     public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable (value = "moviereviewid") UUID movieReviewId,
                                                              @PathVariable (value = "id") UUID id,
                                                              @RequestBody MovieReviewFeedbackPutDTO put) {
-        return movieReviewFeedbackService.putMovieReviewMovieReviewFeedback(movieReviewId, id, put);
+        return movieReviewFeedbackService.updateMovieReviewMovieReviewFeedback(movieReviewId, id, put);
     }
 }

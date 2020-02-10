@@ -47,6 +47,6 @@ public class MovieReviewSpoilerDataController {
     public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable (value = "moviereviewid") UUID movieReviewId,
                                                        @PathVariable (value = "id") UUID id,
                                                        @RequestBody MovieSpoilerDataPutDTO put) {
-        return movieSpoilerDataService.putMovieReviewSpoilerData(movieReviewId, id, put);
+        return movieSpoilerDataService.updateMovieReviewSpoilerData(movieReviewId, id, put);
     }
 }

@@ -164,7 +164,7 @@ public class CrewServiceTest {
         put.setCrewType(crewType.getId());
         put.setMovieId(movie.getId());
         put.setDescription("Description");
-        CrewReadDTO read = crewService.putCrew(crew.getId(), put);
+        CrewReadDTO read = crewService.updateCrew(crew.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -185,7 +185,7 @@ public class CrewServiceTest {
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPutDTO put = new CrewPutDTO();
-        CrewReadDTO read = crewService.putCrew(crew.getId(), put);
+        CrewReadDTO read = crewService.updateCrew(crew.getId(), put);
 
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getPersonId());

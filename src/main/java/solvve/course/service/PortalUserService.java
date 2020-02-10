@@ -54,10 +54,10 @@ public class PortalUserService {
         portalUserRepository.delete(getPortalUserRequired(id));
     }
 
-    public PortalUserReadDTO putPortalUser(UUID id, PortalUserPutDTO put) {
+    public PortalUserReadDTO updatePortalUser(UUID id, PortalUserPutDTO put) {
         PortalUser portalUser = getPortalUserRequired(id);
 
-        translationService.putEntity(put, portalUser);
+        translationService.updateEntity(put, portalUser);
 
         portalUser = portalUserRepository.save(portalUser);
         return translationService.toRead(portalUser);

@@ -182,7 +182,7 @@ public class MovieControllerTest {
 
         MovieReadDTO read = createMovieRead();
 
-        Mockito.when(movieService.putMovie(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(movieService.updateMovie(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/movies/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

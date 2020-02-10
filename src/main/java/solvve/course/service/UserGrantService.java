@@ -54,10 +54,10 @@ public class UserGrantService {
         userGrantRepository.delete(getGrantsRequired(id));
     }
 
-    public UserGrantReadDTO putGrants(UUID id, UserGrantPutDTO put) {
+    public UserGrantReadDTO updateGrants(UUID id, UserGrantPutDTO put) {
         UserGrant userGrant = getGrantsRequired(id);
 
-        translationService.putEntity(put, userGrant);
+        translationService.updateEntity(put, userGrant);
 
         userGrant = userGrantRepository.save(userGrant);
         return translationService.toRead(userGrant);

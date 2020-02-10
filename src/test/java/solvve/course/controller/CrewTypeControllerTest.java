@@ -145,7 +145,7 @@ public class CrewTypeControllerTest {
 
         CrewTypeReadDTO read = createCrewTypeRead();
 
-        Mockito.when(crewTypeService.putCrewType(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(crewTypeService.updateCrewType(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/crewtypes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

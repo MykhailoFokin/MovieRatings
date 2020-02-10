@@ -53,10 +53,10 @@ public class MovieVoteService {
         movieVoteRepository.delete(getMovieVoteRequired(id));
     }
 
-    public MovieVoteReadDTO putMovieVote(UUID id, MovieVotePutDTO put) {
+    public MovieVoteReadDTO updateMovieVote(UUID id, MovieVotePutDTO put) {
         MovieVote movieVote = getMovieVoteRequired(id);
 
-        translationService.putEntity(put, movieVote);
+        translationService.updateEntity(put, movieVote);
 
         movieVote = movieVoteRepository.save(movieVote);
         return translationService.toRead(movieVote);

@@ -48,10 +48,10 @@ public class LanguageService {
         languageRepository.delete(getLanguageRequired(id));
     }
 
-    public LanguageReadDTO putLanguage(UUID id, LanguagePutDTO put) {
+    public LanguageReadDTO updateLanguage(UUID id, LanguagePutDTO put) {
         Language language = getLanguageRequired(id);
 
-        translationService.putEntity(put, language);
+        translationService.updateEntity(put, language);
 
         language = languageRepository.save(language);
         return translationService.toRead(language);

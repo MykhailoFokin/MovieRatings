@@ -54,10 +54,10 @@ public class MovieReviewFeedbackService {
         movieReviewFeedbackRepository.delete(getMovieReviewFeedbackRequired(id));
     }
 
-    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(UUID id, MovieReviewFeedbackPutDTO put) {
+    public MovieReviewFeedbackReadDTO updateMovieReviewFeedback(UUID id, MovieReviewFeedbackPutDTO put) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
 
-        translationService.putEntity(put, movieReviewFeedback);
+        translationService.updateEntity(put, movieReviewFeedback);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
         return translationService.toRead(movieReviewFeedback);
@@ -94,11 +94,11 @@ public class MovieReviewFeedbackService {
         movieReviewFeedbackRepository.delete(getMovieReviewMovieReviewFeedbackRequired(movieReviewId, id));
     }
 
-    public MovieReviewFeedbackReadDTO putMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id,
+    public MovieReviewFeedbackReadDTO updateMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id,
                                                                         MovieReviewFeedbackPutDTO put) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewMovieReviewFeedbackRequired(movieReviewId, id);
 
-        translationService.putEntity(put, movieReviewFeedback);
+        translationService.updateEntity(put, movieReviewFeedback);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
         return translationService.toRead(movieReviewFeedback);

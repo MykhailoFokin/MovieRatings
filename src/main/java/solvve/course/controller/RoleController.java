@@ -38,6 +38,6 @@ public class RoleController {
 
     @PutMapping("/{id}")
     public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody RolePutDTO put) {
-        return roleService.putRole(id, put);
+        return roleService.updateRole(id, put);
     }
 }

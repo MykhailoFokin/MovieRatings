@@ -154,7 +154,7 @@ public class RoleVoteServiceTest {
         put.setRoleId(role.getId());
         put.setUserId(portalUser.getId());
         put.setRating(UserVoteRatingType.R9);
-        RoleVoteReadDTO read = roleVoteService.putRoleVote(roleVote.getId(), put);
+        RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -174,7 +174,7 @@ public class RoleVoteServiceTest {
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVotePutDTO put = new RoleVotePutDTO();
-        RoleVoteReadDTO read = roleVoteService.putRoleVote(roleVote.getId(), put);
+        RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
         Assert.assertNull(read.getRoleId());
         Assert.assertNull(read.getUserId());

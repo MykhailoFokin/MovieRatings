@@ -37,7 +37,7 @@ public class VisitController {
 
     @PutMapping("/{id}")
     public VisitReadDTO putVisit(@PathVariable UUID id, @RequestBody VisitPutDTO put) {
-        return visitService.putVisit(id, put);
+        return visitService.updateVisit(id, put);
     }
 
     @GetMapping

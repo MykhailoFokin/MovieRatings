@@ -54,10 +54,10 @@ public class RoleVoteService {
         roleVoteRepository.delete(getRoleVoteRequired(id));
     }
 
-    public RoleVoteReadDTO putRoleVote(UUID id, RoleVotePutDTO put) {
+    public RoleVoteReadDTO updateRoleVote(UUID id, RoleVotePutDTO put) {
         RoleVote roleVote = getRoleVoteRequired(id);
 
-        translationService.putEntity(put, roleVote);
+        translationService.updateEntity(put, roleVote);
 
         roleVote = roleVoteRepository.save(roleVote);
         return translationService.toRead(roleVote);

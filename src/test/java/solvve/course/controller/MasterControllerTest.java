@@ -154,7 +154,7 @@ public class MasterControllerTest {
 
         MasterReadDTO read = fromExtendedToDTO(createMasterRead());
 
-        Mockito.when(masterService.putMaster(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(masterService.updateMaster(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/masters/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

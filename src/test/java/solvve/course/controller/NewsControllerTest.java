@@ -157,7 +157,7 @@ public class NewsControllerTest {
 
         NewsReadDTO read = createNewsRead();
 
-        Mockito.when(newsService.putNews(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(newsService.updateNews(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/news/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

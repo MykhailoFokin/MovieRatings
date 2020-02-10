@@ -1,6 +1,5 @@
 package solvve.course.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
@@ -38,7 +37,7 @@ public class MovieCompanyController {
 
     @PutMapping("/{id}")
     public MovieCompanyReadDTO putMovieCompany(@PathVariable UUID id, @RequestBody MovieCompanyPutDTO put) {
-        return movieCompanyService.putMovieCompany(id, put);
+        return movieCompanyService.updateMovieCompany(id, put);
     }
 
     @GetMapping

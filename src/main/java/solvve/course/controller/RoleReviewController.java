@@ -39,6 +39,6 @@ public class RoleReviewController {
 
     @PutMapping("/{id}")
     public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPutDTO put) {
-        return roleReviewService.putRoleReview(id, put);
+        return roleReviewService.updateRoleReview(id, put);
     }
 }

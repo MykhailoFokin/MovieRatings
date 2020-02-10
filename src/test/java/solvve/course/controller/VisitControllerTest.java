@@ -163,7 +163,7 @@ public class VisitControllerTest {
 
         VisitReadDTO read = createVisitRead();
 
-        Mockito.when(visitService.putVisit(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(visitService.updateVisit(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/visits/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

@@ -54,10 +54,10 @@ public class MovieSpoilerDataService {
         movieSpoilerDataRepository.delete(getMovieSpoilerDataRequired(id));
     }
 
-    public MovieSpoilerDataReadDTO putMovieSpoilerData(UUID id, MovieSpoilerDataPutDTO put) {
+    public MovieSpoilerDataReadDTO updateMovieSpoilerData(UUID id, MovieSpoilerDataPutDTO put) {
         MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
 
-        translationService.putEntity(put, movieSpoilerData);
+        translationService.updateEntity(put, movieSpoilerData);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
         return translationService.toRead(movieSpoilerData);
@@ -97,11 +97,11 @@ public class MovieSpoilerDataService {
         movieSpoilerDataRepository.delete(getMovieReviewSpoilerDataRequired(movieReviewId, id));
     }
 
-    public MovieSpoilerDataReadDTO putMovieReviewSpoilerData(UUID movieReviewId, UUID id, MovieSpoilerDataPutDTO put) {
+    public MovieSpoilerDataReadDTO updateMovieReviewSpoilerData(UUID movieReviewId, UUID id, MovieSpoilerDataPutDTO put) {
 
         MovieSpoilerData movieSpoilerData = getMovieReviewSpoilerDataRequired(movieReviewId, id);
 
-        translationService.putEntity(put, movieSpoilerData);
+        translationService.updateEntity(put, movieSpoilerData);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
         return translationService.toRead(movieSpoilerData);

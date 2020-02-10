@@ -41,6 +41,6 @@ public class MovieReviewFeedbackController {
     @PutMapping("/{id}")
     public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable UUID id,
                                                              @RequestBody MovieReviewFeedbackPutDTO put) {
-        return movieReviewFeedbackService.putMovieReviewFeedback(id, put);
+        return movieReviewFeedbackService.updateMovieReviewFeedback(id, put);
     }
 }

@@ -146,7 +146,7 @@ public class RoleVoteControllerTest {
 
         RoleVoteReadDTO read = createRoleVoteRead();
 
-        Mockito.when(roleVoteService.putRoleVote(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(roleVoteService.updateRoleVote(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/rolevotes/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

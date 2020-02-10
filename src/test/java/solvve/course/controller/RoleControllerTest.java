@@ -153,7 +153,7 @@ public class RoleControllerTest {
 
         RoleReadDTO read = createRoleRead();
 
-        Mockito.when(roleService.putRole(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(roleService.updateRole(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/roles/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))

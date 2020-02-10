@@ -147,7 +147,7 @@ public class ReleaseDetailControllerTest {
 
         ReleaseDetailReadDTO read = createReleaseDetailRead();
 
-        Mockito.when(releaseDetailService.putReleaseDetails(read.getId(),putDTO)).thenReturn(read);
+        Mockito.when(releaseDetailService.updateReleaseDetails(read.getId(),putDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(put("/api/v1/releasedetails/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
