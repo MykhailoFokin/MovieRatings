@@ -3,6 +3,7 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.*;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,4 +53,8 @@ public class PortalUserReadExtendedDTO {
     private Set<RoleVote> roleVotes;
 
     private Set<Visit> visits;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

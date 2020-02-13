@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions;
 import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
@@ -40,7 +41,9 @@ public class CrewServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Test
     public void testGetCrew() {
         Movie movie = testObjectsFactory.createMovie();
@@ -48,12 +51,14 @@ public class CrewServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew,
-                "movieId", "personId","crewType");
-        Assertions.assertThat(readDTO.getMovieId()).isEqualToIgnoringGivenFields(movie);
-        Assertions.assertThat(readDTO.getPersonId()).isEqualToIgnoringGivenFields(person);
-        Assertions.assertThat(readDTO.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        testObjectsFactory.inTransaction(() -> {
+            CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
+            Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew,
+                    "movieId", "personId", "crewType");
+            Assertions.assertThat(readDTO.getMovieId()).isEqualToIgnoringGivenFields(movie);
+            Assertions.assertThat(readDTO.getPersonId()).isEqualToIgnoringGivenFields(person);
+            Assertions.assertThat(readDTO.getCrewType()).isEqualToIgnoringGivenFields(crewType);
+        });
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -61,7 +66,6 @@ public class CrewServiceTest {
         crewService.getCrew(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateCrew() {
         Movie movie = testObjectsFactory.createMovie();
@@ -78,13 +82,12 @@ public class CrewServiceTest {
 
         Crew crew = crewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(crew,
-                "movieId", "personId","crewType");
+                "movieId", "personId", "crewType");
         Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovieId().getId());
         Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPersonId().getId());
         Assertions.assertThat(read.getCrewType()).isEqualToIgnoringGivenFields(crew.getCrewType().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchCrew() {
         Movie movie = testObjectsFactory.createMovie();
@@ -101,15 +104,16 @@ public class CrewServiceTest {
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
-        crew = crewRepository.findById(read.getId()).get();
-        Assertions.assertThat(crew).isEqualToIgnoringGivenFields(read,
-                "movieId", "personId","crewType");
-        Assertions.assertThat(crew.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
-        Assertions.assertThat(crew.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
-        Assertions.assertThat(crew.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
+        testObjectsFactory.inTransaction(() -> {
+            Crew crew1 = crewRepository.findById(read.getId()).get();
+            Assertions.assertThat(crew1).isEqualToIgnoringGivenFields(read,
+                    "movieId", "personId", "crewType");
+            Assertions.assertThat(crew1.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+            Assertions.assertThat(crew1.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+            Assertions.assertThat(crew1.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
+        });
     }
 
-    @Transactional
     @Test
     public void testPatchCrewEmptyPatch() {
         Movie movie = testObjectsFactory.createMovie();
@@ -125,14 +129,24 @@ public class CrewServiceTest {
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getDescription());
 
-        Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(crewAfterUpdate.getPersonId());
-        Assert.assertNotNull(crewAfterUpdate.getCrewType());
-        Assert.assertNotNull(crewAfterUpdate.getMovieId());
-        Assert.assertNotNull(crewAfterUpdate.getDescription());
+            Assert.assertNotNull(crewAfterUpdate.getPersonId());
+            Assert.assertNotNull(crewAfterUpdate.getCrewType());
+            Assert.assertNotNull(crewAfterUpdate.getMovieId());
+            Assert.assertNotNull(crewAfterUpdate.getDescription());
 
-        Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
+            Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate,
+                    "personId", "movieId", "crewType");
+            Assertions.assertThat(crew.getMovieId()).isEqualToIgnoringGivenFields(crewAfterUpdate.getMovieId(),
+                    "genres","movieProdCountries","movieProdCompanies","movieProdLanguages",
+                    "crews","movieReview","movieReviewCompliants","movieReviewFeedbacks","movieVotes","releaseDetails");
+            Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewAfterUpdate.getCrewType(),
+                    "crew");
+            Assertions.assertThat(crew.getPersonId()).isEqualToIgnoringGivenFields(crewAfterUpdate.getPersonId(),
+                    "crews");
+        });
     }
 
     @Test
@@ -142,8 +156,10 @@ public class CrewServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        crewService.deleteCrew(crew.getId());
-        Assert.assertFalse(crewRepository.existsById(crew.getId()));
+        testObjectsFactory.inTransaction(() -> {
+            crewService.deleteCrew(crew.getId());
+            Assert.assertFalse(crewRepository.existsById(crew.getId()));
+        });
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -151,7 +167,6 @@ public class CrewServiceTest {
         crewService.deleteCrew(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutCrew() {
         Movie movie = testObjectsFactory.createMovie();
@@ -168,12 +183,14 @@ public class CrewServiceTest {
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
-        crew = crewRepository.findById(read.getId()).get();
-        Assertions.assertThat(crew).isEqualToIgnoringGivenFields(read,
-                "movieId", "personId","crewType");
-        Assertions.assertThat(crew.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
-        Assertions.assertThat(crew.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
-        Assertions.assertThat(crew.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
+        testObjectsFactory.inTransaction(() -> {
+            Crew crew1 = crewRepository.findById(read.getId()).get();
+            Assertions.assertThat(crew1).isEqualToIgnoringGivenFields(read,
+                    "movieId", "personId", "crewType");
+            Assertions.assertThat(crew1.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+            Assertions.assertThat(crew1.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+            Assertions.assertThat(crew1.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewType());
+        });
     }
 
     @Transactional
@@ -192,13 +209,15 @@ public class CrewServiceTest {
         Assert.assertNull(read.getCrewType());
         Assert.assertNull(read.getDescription());
 
-        Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Crew crewAfterUpdate = crewRepository.findById(crew.getId()).get();
 
-        Assert.assertNotNull(crewAfterUpdate.getMovieId());
-        Assert.assertNotNull(crewAfterUpdate.getPersonId());
-        Assert.assertNull(crewAfterUpdate.getCrewType().getId());
-        Assert.assertNull(crewAfterUpdate.getDescription());
+            Assert.assertNotNull(crewAfterUpdate.getMovieId());
+            Assert.assertNotNull(crewAfterUpdate.getPersonId());
+            Assert.assertNull(crewAfterUpdate.getCrewType().getId());
+            Assert.assertNull(crewAfterUpdate.getDescription());
 
-        Assertions.assertThat(crew).isEqualToComparingFieldByField(crewAfterUpdate);
+            Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate, "crewType","description");
+        });
     }
 }

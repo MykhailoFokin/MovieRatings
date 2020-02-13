@@ -1,5 +1,6 @@
 package solvve.course.repository;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.*;
+import solvve.course.utils.TestObjectsFactory;
 
-import java.util.UUID;
+import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,55 +32,15 @@ public class RoleReviewCompliantRepositoryTest {
     private RoleReviewCompliantRepository roleReviewCompliantRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private RoleReviewRepository roleReviewRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
-        Person person = new Person();
-        person.setName("Name");
-        person = personRepository.save(person);
-
-        Role role = new Role();
-        role.setId(UUID.randomUUID());
-        role.setTitle("Actor");
-        role.setRoleType("Main_Role");
-        role.setDescription("Description test");
-        role.setPersonId(person);
-        role = roleRepository.save(role);
-
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setLogin("Login");
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setUserTypeId(userType);
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        portalUser = portalUserRepository.save(portalUser);
-
-        RoleReview roleReview = new RoleReview();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setUserId(portalUser);
-        roleReview.setRoleId(role);
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        roleReview.setModeratorId(portalUser);
-        roleReview = roleReviewRepository.save(roleReview);
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewCompliant r = new RoleReviewCompliant();
         r.setUserId(portalUser);
@@ -90,5 +52,62 @@ public class RoleReviewCompliantRepositoryTest {
         r = roleReviewCompliantRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleReviewCompliantRepository.findById(r.getId()).isPresent());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewCompliant entity = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = roleReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewCompliant entity = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = roleReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Person person = testObjectsFactory.createPerson();
+        Role role = testObjectsFactory.createRole(person);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
+        RoleReviewCompliant entity = testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setDescription("NewNameTest");
+        roleReviewCompliantRepository.save(entity);
+        entity = roleReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

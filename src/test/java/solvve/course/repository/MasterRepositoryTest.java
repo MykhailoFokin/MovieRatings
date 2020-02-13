@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Master;
 import solvve.course.dto.MasterFilter;
 import solvve.course.service.MasterService;
+import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,12 +30,15 @@ public class MasterRepositoryTest {
     @Autowired
     private MasterService masterService;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testGetMasterWithEmptyFilter() {
-        Master m1 = createMaster("MasterName1", "555-555-551", "Test about1");
-        Master m2 = createMaster("MasterName2", "555-555-551", "Test about2");
-        Master m3 = createMaster("MasterName2", "555-555-552", "Test about2");
-        Master m4 = createMaster("MasterName3", "555-555-552", "Test about3");
+        Master m1 = testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        Master m2 = testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        Master m3 = testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        Master m4 = testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         Assertions.assertThat(masterService.getMasters(filter)).extracting("Id")
@@ -41,10 +47,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMasterByName() {
-        createMaster("MasterName1", "555-555-551", "Test about1");
-        Master m2 = createMaster("MasterName2", "555-555-551", "Test about2");
-        Master m3 = createMaster("MasterName2", "555-555-552", "Test about2");
-        createMaster("MasterName3", "555-555-552", "Test about3");
+        testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        Master m2 = testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        Master m3 = testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setName("MasterName2");
@@ -54,10 +60,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMasterByPhone() {
-        Master m1 = createMaster("MasterName1", "555-555-551", "Test about1");
-        Master m2 = createMaster("MasterName2", "555-555-551", "Test about2");
-        createMaster("MasterName2", "555-555-552", "Test about2");
-        createMaster("MasterName3", "555-555-552", "Test about3");
+        Master m1 = testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        Master m2 = testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setPhone("555-555-551");
@@ -67,10 +73,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMasterByAbout() {
-        createMaster("MasterName1", "555-555-551", "Test about1");
-        createMaster("MasterName2", "555-555-551", "Test about2");
-        createMaster("MasterName2", "555-555-552", "Test about2");
-        Master m4 = createMaster("MasterName3", "555-555-552", "Test about3");
+        testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        Master m4 = testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setAbout("Test about3");
@@ -80,10 +86,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMastersByNames() {
-        Master m1 = createMaster("MasterName1", "555-555-551", "Test about1");
-        createMaster("MasterName2", "555-555-551", "Test about2");
-        createMaster("MasterName2", "555-555-552", "Test about2");
-        Master m4 = createMaster("MasterName3", "555-555-552", "Test about3");
+        Master m1 = testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        Master m4 = testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setNames(List.of("MasterName1", "MasterName3"));
@@ -93,10 +99,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMastersByPhones() {
-        createMaster("MasterName1", "555-555-551", "Test about1");
-        createMaster("MasterName2", "555-555-551", "Test about2");
-        Master m3 = createMaster("MasterName2", "555-555-552", "Test about2");
-        Master m4 = createMaster("MasterName3", "555-555-553", "Test about3");
+        testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        Master m3 = testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        Master m4 = testObjectsFactory.createMaster("MasterName3", "555-555-553", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setPhones(List.of("555-555-552", "555-555-553"));
@@ -106,10 +112,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMastersByAbouts() {
-        Master m1 = createMaster("MasterName1", "555-555-551", "Test about1");
-        createMaster("MasterName2", "555-555-551", "Test about2");
-        createMaster("MasterName2", "555-555-552", "Test about2");
-        Master m4 = createMaster("MasterName3", "555-555-552", "Test about3");
+        Master m1 = testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        Master m4 = testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setAbouts(List.of("Test about1", "Test about3"));
@@ -119,10 +125,10 @@ public class MasterRepositoryTest {
 
     @Test
     public void testGetMastersWithAllFilters() {
-        createMaster("MasterName1", "555-555-551", "Test about1");
-        createMaster("MasterName2", "555-555-551", "Test about2");
-        Master m3 = createMaster("MasterName2", "555-555-552", "Test about2");
-        createMaster("MasterName3", "555-555-552", "Test about3");
+        testObjectsFactory.createMaster("MasterName1", "555-555-551", "Test about1");
+        testObjectsFactory.createMaster("MasterName2", "555-555-551", "Test about2");
+        Master m3 = testObjectsFactory.createMaster("MasterName2", "555-555-552", "Test about2");
+        testObjectsFactory.createMaster("MasterName3", "555-555-552", "Test about3");
 
         MasterFilter filter = new MasterFilter();
         filter.setName("MasterName2");
@@ -135,12 +141,45 @@ public class MasterRepositoryTest {
                 .containsExactlyInAnyOrder(m3.getId());
     }
 
-    private Master createMaster(String masterName, String phone, String about) {
-        Master master = new Master();
-        master.setId(UUID.randomUUID());
-        master.setName(masterName);
-        master.setPhone(phone);
-        master.setAbout(about);
-        return masterRepository.save(master);
+    @Test
+    public void testCteatedAtIsSet() {
+        Master entity = testObjectsFactory.createMaster();
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = masterRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Master entity = testObjectsFactory.createMaster();
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = masterRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Master entity = testObjectsFactory.createMaster();
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setName("NewNameTest");
+        masterRepository.save(entity);
+        entity = masterRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

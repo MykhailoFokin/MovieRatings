@@ -6,7 +6,7 @@ import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
 import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
-import solvve.course.service.RoleSpoilerDataService;
+import solvve.course.service.RoleReviewSpoilerDataService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class RoleReviewSpoilerDataController {
 
     @Autowired
-    private RoleSpoilerDataService roleSpoilerDataService;
+    private RoleReviewSpoilerDataService roleSpoilerDataService;
 
     @GetMapping
     public List<RoleSpoilerDataReadDTO> getRoleReviewSpoilerData(

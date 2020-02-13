@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.support.TransactionTemplate;
 import solvve.course.domain.CompanyDetails;
 import solvve.course.domain.MovieCompany;
 import solvve.course.domain.MovieProductionType;
@@ -15,11 +17,12 @@ import solvve.course.dto.MovieCompanyFilter;
 import solvve.course.service.MovieCompanyService;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = {"delete from movie_company"},
+@Sql(statements = {"delete from movie_company","delete from company_details"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class MovieCompanyRepositoryTest {
@@ -29,6 +32,9 @@ public class MovieCompanyRepositoryTest {
 
     @Autowired
     private MovieCompanyService movieCompanyService;
+
+    @Autowired
+    private MovieCompanyRepository movieCompanyRepository;
 
     @Test
     public void testGetMovieCompanyByEmptyFilter() {
@@ -94,5 +100,50 @@ public class MovieCompanyRepositoryTest {
         filter.setCompanyId(c1.getId());
         Assertions.assertThat(movieCompanyService.getMovieCompanies(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        CompanyDetails c = testObjectsFactory.createCompanyDetails();
+        MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = movieCompanyRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        CompanyDetails c = testObjectsFactory.createCompanyDetails();
+        MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = movieCompanyRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        CompanyDetails c = testObjectsFactory.createCompanyDetails();
+        MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setDescription("NewNameTest");
+        movieCompanyRepository.save(entity);
+        entity = movieCompanyRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

@@ -1,5 +1,6 @@
 package solvve.course.repository;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.*;
+import solvve.course.utils.TestObjectsFactory;
+
+import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -15,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Sql(statements = {"delete from movie_review_compliant",
-        "delete from movie",
         "delete from movie_review",
+        "delete from movie",
         "delete from portal_user",
         "delete from user_type"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -27,41 +31,74 @@ public class MovieReviewCompliantRepositoryTest {
     private MovieReviewCompliantRepository movieReviewCompliantRepository;
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
     private MovieReviewRepository movieReviewRepository;
 
     @Autowired
-    private UserTypeRepository userTypeRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
-        Movie movie = new Movie();
-        movie = movieRepository.save(movie);
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        UserType userType = new UserType();
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setUserTypeId(userType);
-        portalUser = portalUserRepository.save(portalUser);
-
-        MovieReview movieReview = new MovieReview();
-        movieReview.setUserId(portalUser);
-        movieReview.setModeratorId(portalUser);
-        movieReview = movieReviewRepository.save(movieReview);
-
-        MovieReviewCompliant r = new MovieReviewCompliant();
-        r.setMovieId(movie);
-        r.setMovieReviewId(movieReview);
-        r.setUserId(portalUser);
-        r.setModeratorId(portalUser);
-        r = movieReviewCompliantRepository.save(r);
+        MovieReviewCompliant r = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
         assertNotNull(r.getId());
         assertTrue(movieReviewCompliantRepository.findById(r.getId()).isPresent());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant entity = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = movieReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant entity = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = movieReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
+        MovieReviewCompliant entity = testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setDescription("NewNameTest");
+        movieReviewCompliantRepository.save(entity);
+        entity = movieReviewCompliantRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

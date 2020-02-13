@@ -20,4 +20,8 @@ public class VisitReadDTO {
     private Instant finishAt;
 
     private VisitStatus status;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

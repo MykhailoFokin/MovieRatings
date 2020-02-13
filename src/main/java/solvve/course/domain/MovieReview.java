@@ -2,14 +2,19 @@ package solvve.course.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class MovieReview {
 
     @Id
@@ -33,12 +38,18 @@ public class MovieReview {
     @JoinColumn(name = "moderator_id", referencedColumnName = "id")
     private PortalUser moderatorId;
 
-    @OneToMany(mappedBy = "movieReviewId")
+    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
     private Set<MovieReviewCompliant> movieReviewCompliants;
 
-    @OneToMany(mappedBy = "movieReviewId")
+    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
     private Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    @OneToMany(mappedBy = "movieReviewId")
+    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
     private Set<MovieSpoilerData> movieSpoilerData;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant modifiedAt;
 }

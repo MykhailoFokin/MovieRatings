@@ -18,7 +18,7 @@ import solvve.course.domain.MovieReviewCompliant;
 import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.MovieReviewCompliantService;
+import solvve.course.service.MovieReviewMovieReviewCompliantService;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MovieReviewCompliantService movieReviewCompliantService;
+    private MovieReviewMovieReviewCompliantService movieReviewCompliantService;
 
     @Test
     public void testGetMovieReviewCompliant() throws Exception {

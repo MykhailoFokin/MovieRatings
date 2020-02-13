@@ -1,5 +1,6 @@
 package solvve.course.repository;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,13 @@ import solvve.course.domain.Movie;
 import solvve.course.domain.MovieVote;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserType;
+import solvve.course.utils.TestObjectsFactory;
+
+import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static solvve.course.domain.UserVoteRatingType.R2;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,25 +34,13 @@ public class MovieVoteRepositoryTest {
     private MovieVoteRepository movieVoteRepository;
 
     @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private UserTypeRepository userTypeRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
-        Movie movie = new Movie();
-        movie = movieRepository.save(movie);
-
-        UserType userType = new UserType();
-        userType = userTypeRepository.save(userType);
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setUserTypeId(userType);
-        portalUser = portalUserRepository.save(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         MovieVote r = new MovieVote();
         r.setMovieId(movie);
@@ -55,5 +48,56 @@ public class MovieVoteRepositoryTest {
         r = movieVoteRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieVoteRepository.findById(r.getId()).isPresent());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieVote entity = testObjectsFactory.createMovieVote(portalUser, movie);
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = movieVoteRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieVote entity = testObjectsFactory.createMovieVote(portalUser, movie);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = movieVoteRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        MovieVote entity = testObjectsFactory.createMovieVote(portalUser, movie);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setRating(R2);
+        movieVoteRepository.save(entity);
+        entity = movieVoteRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

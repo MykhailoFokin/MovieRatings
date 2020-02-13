@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
 import solvve.course.dto.CountryCreateDTO;
 import solvve.course.dto.CountryPatchDTO;
@@ -49,7 +48,6 @@ public class CountryServiceTest {
         countryService.getCountries(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateCountries() {
         CountryCreateDTO create = new CountryCreateDTO();
@@ -57,11 +55,12 @@ public class CountryServiceTest {
         CountryReadDTO read = countryService.createCountries(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
-        Country country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(country);
+        testObjectsFactory.inTransaction(() -> {
+            Country country = countryRepository.findById(read.getId()).get();
+            Assertions.assertThat(read).isEqualToComparingFieldByField(country);
+        });
     }
 
-    @Transactional
     @Test
     public void testPatchCountries() {
         Country country = testObjectsFactory.createCountry();
@@ -73,12 +72,13 @@ public class CountryServiceTest {
         Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movies",
                 "releaseDetails","countryLanguages");
 
-        country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies",
-                "releaseDetails","countryLanguages");
+        testObjectsFactory.inTransaction(() -> {
+            Country country1 = countryRepository.findById(read.getId()).get();
+            Assertions.assertThat(country1).isEqualToIgnoringGivenFields(read, "movies",
+                    "releaseDetails", "countryLanguages");
+        });
     }
 
-    @Transactional
     @Test
     public void testPatchCountriesEmptyPatch() {
         Country country = testObjectsFactory.createCountry();
@@ -88,11 +88,13 @@ public class CountryServiceTest {
 
         Assert.assertNotNull(read.getName());
 
-        Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(countryAfterUpdate.getName());
+            Assert.assertNotNull(countryAfterUpdate.getName());
 
-        Assertions.assertThat(country).isEqualToComparingFieldByField(countryAfterUpdate);
+            Assertions.assertThat(country).isEqualToComparingFieldByField(countryAfterUpdate);
+        });
     }
 
     @Test
@@ -108,7 +110,6 @@ public class CountryServiceTest {
         countryService.deleteCountries(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutCountries() {
         Country country = testObjectsFactory.createCountry();
@@ -120,12 +121,13 @@ public class CountryServiceTest {
         Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies",
                 "releaseDetails","countryLanguages");
 
-        country = countryRepository.findById(read.getId()).get();
-        Assertions.assertThat(country).isEqualToIgnoringGivenFields(read,"movies",
-                "releaseDetails","countryLanguages");
+        testObjectsFactory.inTransaction(() -> {
+            Country country1 = countryRepository.findById(read.getId()).get();
+            Assertions.assertThat(country1).isEqualToIgnoringGivenFields(read, "movies",
+                    "releaseDetails", "countryLanguages");
+        });
     }
 
-    @Transactional
     @Test
     public void testPutCountriesEmptyPut() {
         Country country = testObjectsFactory.createCountry();
@@ -135,10 +137,10 @@ public class CountryServiceTest {
 
         Assert.assertNull(read.getName());
 
-        Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
 
-        Assert.assertNull(countryAfterUpdate.getName());
-
-        Assertions.assertThat(country).isEqualToComparingFieldByField(countryAfterUpdate);
+            Assert.assertNull(countryAfterUpdate.getName());
+        });
     }
 }

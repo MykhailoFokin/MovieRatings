@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieSpoilerData;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.MovieSpoilerDataService;
+import solvve.course.service.MovieReviewSpoilerDataService;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class MovieReviewSpoilerDataControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MovieSpoilerDataService movieSpoilerDataService;
+    private MovieReviewSpoilerDataService movieSpoilerDataService;
 
     private MovieSpoilerDataReadDTO createMovieSpoilerDataRead(UUID movieReviewId) {
         MovieSpoilerDataReadDTO movieSpoilerData = new MovieSpoilerDataReadDTO();

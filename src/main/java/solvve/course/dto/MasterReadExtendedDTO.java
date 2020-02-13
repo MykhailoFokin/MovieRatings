@@ -2,6 +2,7 @@ package solvve.course.dto;
 
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,4 +18,8 @@ public class MasterReadExtendedDTO {
     private String about;
 
     private Set<VisitReadDTO> visits;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

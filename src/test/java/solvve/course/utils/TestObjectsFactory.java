@@ -10,6 +10,7 @@ import solvve.course.repository.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
@@ -232,6 +233,13 @@ public class TestObjectsFactory {
         return genreRepository.save(genre);
     }
 
+    public Genre createGenre() {
+        Genre genre = new Genre();
+        genre.setId(UUID.randomUUID());
+        genre.setName(MovieGenreType.ACTION);
+        return genreRepository.save(genre);
+    }
+
     public Genre createGenre(Movie movie, MovieGenreType movieGenreType) {
         Genre genre = new Genre();
         genre.setId(UUID.randomUUID());
@@ -405,13 +413,22 @@ public class TestObjectsFactory {
 
     public Master createMaster() {
         Master master = new Master();
-        master. setId(UUID.randomUUID());
+        master.setId(UUID.randomUUID());
         master.setName("MasterName");
         master.setPhone("645768767");
         master.setAbout("What about");
         master = masterRepository.save(master);
 
         return master;
+    }
+
+    public Master createMaster(String masterName, String phone, String about) {
+        Master master = new Master();
+        master.setId(UUID.randomUUID());
+        master.setName(masterName);
+        master.setPhone(phone);
+        master.setAbout(about);
+        return masterRepository.save(master);
     }
 
     public Visit createVisit(PortalUser portalUser, Master master) {
@@ -422,6 +439,28 @@ public class TestObjectsFactory {
         visit.setStartAt(Instant.now());
         visit.setFinishAt(Instant.now());
         visit.setStatus(VisitStatus.FINISHED);
+        return visitRepository.save(visit);
+    }
+
+    public Visit createVisit(PortalUser portalUser, Master master, VisitStatus visitStatus) {
+        Visit visit = new Visit();
+        visit.setId(UUID.randomUUID());
+        visit.setUserId(portalUser);
+        visit.setMasterId(master);
+        visit.setStartAt(Instant.now());
+        visit.setFinishAt(Instant.now());
+        visit.setStatus(visitStatus);
+        return visitRepository.save(visit);
+    }
+
+    public Visit createVisit(PortalUser portalUser, Master master, VisitStatus visitStatus, Instant startAt) {
+        Visit visit = new Visit();
+        visit.setId(UUID.randomUUID());
+        visit.setUserId(portalUser);
+        visit.setMasterId(master);
+        visit.setStartAt(startAt);
+        visit.setFinishAt(Instant.now());
+        visit.setStatus(visitStatus);
         return visitRepository.save(visit);
     }
 
@@ -649,5 +688,40 @@ public class TestObjectsFactory {
         userType.setUserGroup(UserGroupType.USER);
         userType.setUserGrants(userGrantSet);
         return userTypeRepository.save(userType);
+    }
+
+    public Crew createCrew(Person person, CrewType crewType, Movie movie, String description) {
+        Crew crew = new Crew();
+        crew.setId(UUID.randomUUID());
+        crew.setPersonId(person);
+        crew.setCrewType(crewType);
+        crew.setMovieId(movie);
+        crew.setDescription(description);
+        return crewRepository.save(crew);
+    }
+
+    public CrewType createCrewType(String typeName) {
+        CrewType crewType = new CrewType();
+        crewType.setId(UUID.randomUUID());
+        crewType.setName(typeName);
+        crewType = crewTypeRepository.save(crewType);
+        return crewType;
+    }
+
+    public UserGrant createUserGrant(UserType userType) {
+        UserGrant userGrant = new UserGrant();
+        userGrant.setUserTypeId(userType);
+        userGrant.setObjectName("ObjectName");
+        return userGrantRepository.save(userGrant);
+    }
+
+    public Instant createInstant(int hour) {
+        return LocalDateTime.of(2019, 12, 23, hour, 0).toInstant(ZoneOffset.UTC);
+    }
+
+    public void inTranaction(Runnable runnable) {
+        transactionTemplate.executeWithoutResult(status -> {
+            runnable.run();
+        });
     }
 }

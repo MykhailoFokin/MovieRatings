@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import solvve.course.dto.MovieFilter;
 import solvve.course.service.MovieService;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -35,9 +37,6 @@ public class MovieRepositoryTest {
 
     @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
-    private CountryRepository countryRepository;
 
     @Autowired
     private TestObjectsFactory testObjectsFactory;
@@ -659,5 +658,47 @@ public class MovieRepositoryTest {
         filter.setGenres(List.of(g3.getName()));
         Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(m3.getId());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        Movie entity = testObjectsFactory.createMovie();
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = movieRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Movie entity = testObjectsFactory.createMovie();
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = movieRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Movie entity = testObjectsFactory.createMovie();
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setDescription("NewNameTest");
+        movieRepository.save(entity);
+        entity = movieRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

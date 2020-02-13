@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import solvve.course.domain.Country;
 import solvve.course.domain.Movie;
 import solvve.course.dto.CountryFilter;
 import solvve.course.service.CountryService;
+import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -38,6 +41,9 @@ public class CountryRepositoryTest {
     @Autowired
     private CountryService countryService;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testSave() {
         Movie m = new Movie();
@@ -46,7 +52,7 @@ public class CountryRepositoryTest {
         Set<Movie> ms = new HashSet<>();
         ms.add(m);
 
-        Country c = createCountry("Ukraine");
+        Country c = testObjectsFactory.createCountry("Ukraine");
         c.setMovies(new HashSet<Movie>(ms));
         c = countryRepository.save(c);
         assertNotNull(c.getId());
@@ -55,9 +61,9 @@ public class CountryRepositoryTest {
 
     @Test
     public void testGetCountriesByEmptyFilter() {
-        Country c1 = createCountry("Ukraine");
-        Country c2 = createCountry("Germany");
-        Country c3 = createCountry("Poland");
+        Country c1 = testObjectsFactory.createCountry("Ukraine");
+        Country c2 = testObjectsFactory.createCountry("Germany");
+        Country c3 = testObjectsFactory.createCountry("Poland");
 
         CountryFilter filter = new CountryFilter();
         Assertions.assertThat(countryService.getCountries(filter)).extracting("Id")
@@ -66,9 +72,9 @@ public class CountryRepositoryTest {
 
     @Test
     public void testGetCountriesByNames() {
-        Country c1 = createCountry("Ukraine");
-        Country c2 = createCountry("Germany");
-        createCountry("Poland");
+        Country c1 = testObjectsFactory.createCountry("Ukraine");
+        Country c2 = testObjectsFactory.createCountry("Germany");
+        testObjectsFactory.createCountry("Poland");
 
         CountryFilter filter = new CountryFilter();
         filter.setNames(Set.of(c1.getName(), c2.getName()));
@@ -76,11 +82,45 @@ public class CountryRepositoryTest {
                 .containsExactlyInAnyOrder(c1.getName(),c2.getName());
     }
 
-    private Country createCountry(String countryName) {
-        Country country = new Country();
-        country.setId(UUID.randomUUID());
-        country.setName(countryName);
-        country = countryRepository.save(country);
-        return country;
+    @Test
+    public void testCteatedAtIsSet() {
+        Country country = testObjectsFactory.createCountry();
+
+        Instant createdAtBeforeReload = country.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        country = countryRepository.findById(country.getId()).get();
+
+        Instant createdAtAfterReload = country.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Country country = testObjectsFactory.createCountry();
+
+        Instant modifiedAtBeforeReload = country.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        country = countryRepository.findById(country.getId()).get();
+
+        Instant modifiedAtAfterReload = country.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Country country = testObjectsFactory.createCountry();
+
+        Instant modifiedAtBeforeReload = country.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        country.setName("NewNameTest");
+        countryRepository.save(country);
+        country = countryRepository.findById(country.getId()).get();
+
+        Instant modifiedAtAfterReload = country.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

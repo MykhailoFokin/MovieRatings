@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleSpoilerData;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.RoleSpoilerDataService;
+import solvve.course.service.RoleReviewSpoilerDataService;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class RoleReviewSpoilerDataControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private RoleSpoilerDataService roleSpoilerDataService;
+    private RoleReviewSpoilerDataService roleSpoilerDataService;
 
     private RoleSpoilerDataReadDTO createRoleSpoilerDataRead(UUID roleReviewId) {
         RoleSpoilerDataReadDTO roleSpoilerData = new RoleSpoilerDataReadDTO();

@@ -17,4 +17,8 @@ public class NewsReadDTO {
     private String topic;
 
     private String description;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

@@ -1,7 +1,6 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.LanguageCreateDTO;
 import solvve.course.dto.LanguagePatchDTO;

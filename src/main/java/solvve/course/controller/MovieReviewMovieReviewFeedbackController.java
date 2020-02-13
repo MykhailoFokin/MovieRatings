@@ -6,7 +6,7 @@ import solvve.course.dto.MovieReviewFeedbackCreateDTO;
 import solvve.course.dto.MovieReviewFeedbackPatchDTO;
 import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
-import solvve.course.service.MovieReviewFeedbackService;
+import solvve.course.service.MovieReviewMovieReviewFeedbackService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MovieReviewMovieReviewFeedbackController {
 
     @Autowired
-    private MovieReviewFeedbackService movieReviewFeedbackService;
+    private MovieReviewMovieReviewFeedbackService movieReviewFeedbackService;
 
     @GetMapping
     public List<MovieReviewFeedbackReadDTO> getMovieReviewSpoilerData(

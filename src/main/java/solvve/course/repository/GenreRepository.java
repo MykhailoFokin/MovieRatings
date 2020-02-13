@@ -7,7 +7,6 @@ import solvve.course.domain.Genre;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieGenreType;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 

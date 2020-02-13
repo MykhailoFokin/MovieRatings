@@ -6,7 +6,7 @@ import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
 import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
-import solvve.course.service.MovieReviewCompliantService;
+import solvve.course.service.MovieReviewMovieReviewCompliantService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MovieReviewMovieReviewCompliantController {
 
     @Autowired
-    private MovieReviewCompliantService movieReviewCompliantService;
+    private MovieReviewMovieReviewCompliantService movieReviewCompliantService;
 
     @GetMapping
     public List<MovieReviewCompliantReadDTO> getMovieReviewSpoilerData(

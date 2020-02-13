@@ -18,7 +18,7 @@ import solvve.course.domain.RoleReviewCompliant;
 import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.RoleReviewCompliantService;
+import solvve.course.service.RoleReviewRoleReviewCompliantService;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private RoleReviewCompliantService roleReviewCompliantService;
+    private RoleReviewRoleReviewCompliantService roleReviewCompliantService;
 
     @Test
     public void testGetRoleReviewCompliant() throws Exception {

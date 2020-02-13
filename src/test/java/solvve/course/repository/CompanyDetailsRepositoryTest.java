@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import solvve.course.dto.CompanyDetailsFilter;
 import solvve.course.service.CompanyDetailsService;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,6 +29,9 @@ public class CompanyDetailsRepositoryTest {
 
     @Autowired
     private CompanyDetailsService companyDetailsService;
+
+    @Autowired
+    private CompanyDetailsRepository companyDetailsRepository;
 
     @Test
     public void testGetCompanyDetailByEmptyFilter() {
@@ -95,5 +99,47 @@ public class CompanyDetailsRepositoryTest {
         filter.setYearOfFoundation(LocalDate.of(2002, 12, 31));
         Assertions.assertThat(companyDetailsService.getCompanyDetails(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(c2.getId());
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        CompanyDetails company = testObjectsFactory.createCompanyDetails();
+
+        Instant createdAtBeforeReload = company.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        company = companyDetailsRepository.findById(company.getId()).get();
+
+        Instant createdAtAfterReload = company.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        CompanyDetails company = testObjectsFactory.createCompanyDetails();
+
+        Instant modifiedAtBeforeReload = company.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        company = companyDetailsRepository.findById(company.getId()).get();
+
+        Instant modifiedAtAfterReload = company.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        CompanyDetails company = testObjectsFactory.createCompanyDetails();
+
+        Instant modifiedAtBeforeReload = company.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        company.setName("NewNameTest");
+        companyDetailsRepository.save(company);
+        company = companyDetailsRepository.findById(company.getId()).get();
+
+        Instant modifiedAtAfterReload = company.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

@@ -3,6 +3,7 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.UserGroupType;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -13,4 +14,8 @@ public class UserTypeReadDTO {
     private UserGroupType userGroup;
 
     private UUID portalUser;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

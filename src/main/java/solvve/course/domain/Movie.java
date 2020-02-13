@@ -2,13 +2,18 @@ package solvve.course.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.*;
 
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Movie {
 
     @Id
@@ -19,8 +24,8 @@ public class Movie {
 
     private Short year; // year of production
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.REMOVE)
-    private Set<Genre> genres; // type of genres
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    private Set<Genre> genres = new HashSet<Genre>(); // type of genres
 
     private String description; // short movie description
 
@@ -57,21 +62,27 @@ public class Movie {
             inverseJoinColumns = {@JoinColumn(name = "language_id")})
     private Set<Language> movieProdLanguages;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<Crew> crews;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<MovieReview> movieReview;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<MovieReviewCompliant> movieReviewCompliants;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<MovieVote> movieVotes;
 
-    @OneToMany(mappedBy = "movieId")
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<ReleaseDetail> releaseDetails;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant modifiedAt;
 }

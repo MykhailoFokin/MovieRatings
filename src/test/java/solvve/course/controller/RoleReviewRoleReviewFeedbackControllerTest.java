@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReviewFeedback;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.RoleReviewFeedbackService;
+import solvve.course.service.RoleReviewRoleReviewFeedbackService;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private RoleReviewFeedbackService roleReviewFeedbackService;
+    private RoleReviewRoleReviewFeedbackService roleReviewFeedbackService;
 
     private RoleReviewFeedbackReadDTO createRoleReviewFeedbackRead(UUID roleReviewId) {
         RoleReviewFeedbackReadDTO roleReviewFeedback = new RoleReviewFeedbackReadDTO();

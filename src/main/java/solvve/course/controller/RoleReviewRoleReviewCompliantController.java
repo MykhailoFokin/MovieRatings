@@ -6,7 +6,7 @@ import solvve.course.dto.RoleReviewCompliantCreateDTO;
 import solvve.course.dto.RoleReviewCompliantPatchDTO;
 import solvve.course.dto.RoleReviewCompliantPutDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
-import solvve.course.service.RoleReviewCompliantService;
+import solvve.course.service.RoleReviewRoleReviewCompliantService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class RoleReviewRoleReviewCompliantController {
 
     @Autowired
-    private RoleReviewCompliantService roleReviewCompliantService;
+    private RoleReviewRoleReviewCompliantService roleReviewCompliantService;
 
     @GetMapping
     public List<RoleReviewCompliantReadDTO> getRoleReviewSpoilerData(

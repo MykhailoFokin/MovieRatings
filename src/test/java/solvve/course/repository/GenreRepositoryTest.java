@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.Genre;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieGenreType;
-import solvve.course.domain.Visit;
 import solvve.course.dto.GenreFilter;
 import solvve.course.service.GenreService;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -126,5 +127,50 @@ public class GenreRepositoryTest {
 
         List<Genre> res = genreRepository.findGenreForMovieAndGenreName(m3.getId(), MovieGenreType.DRAMA);
         Assertions.assertThat(res).extracting(Genre::getId).isEqualTo(Arrays.asList(g3.getId(), g4.getId()));
+    }
+
+    @Test
+    public void testCteatedAtIsSet() {
+        Movie m = testObjectsFactory.createMovie();
+        Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
+
+        Instant createdAtBeforeReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        entity = genreRepository.findById(entity.getId()).get();
+
+        Instant createdAtAfterReload = entity.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsSet() {
+        Movie m = testObjectsFactory.createMovie();
+        Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        entity = genreRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+    }
+
+    @Test
+    public void testModifiedAtIsModified() {
+        Movie m = testObjectsFactory.createMovie();
+        Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
+
+        Instant modifiedAtBeforeReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        entity.setName(MovieGenreType.SAGA);
+        genreRepository.save(entity);
+        entity = genreRepository.findById(entity.getId()).get();
+
+        Instant modifiedAtAfterReload = entity.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

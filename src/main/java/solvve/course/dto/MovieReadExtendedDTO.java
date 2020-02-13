@@ -3,6 +3,7 @@ package solvve.course.dto;
 import lombok.Data;
 import solvve.course.domain.*;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -49,4 +50,8 @@ public class MovieReadExtendedDTO {
     private Set<Language> languages = new HashSet<Language>();
 
     private Set<MovieCompany> movieCompanies = new HashSet<MovieCompany>();
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

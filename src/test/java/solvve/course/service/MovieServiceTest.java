@@ -177,7 +177,6 @@ public class MovieServiceTest {
 
         Assert.assertNull(movieAfterUpdate.getTitle());
         Assert.assertNull(movieAfterUpdate.getYear());
-        Assert.assertNull(movieAfterUpdate.getGenres());
         Assert.assertNull(movieAfterUpdate.getAspectRatio());
         Assert.assertNull(movieAfterUpdate.getCamera());
         Assert.assertNull(movieAfterUpdate.getColour());

@@ -1,6 +1,7 @@
 package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import solvve.course.domain.*;
 import solvve.course.dto.CrewFilter;
 import solvve.course.service.CrewService;
+import solvve.course.utils.TestObjectsFactory;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -35,34 +37,28 @@ public class CrewRepositoryTest {
     private CrewService crewService;
 
     @Autowired
-    private CrewTypeRepository crewTypeRepository;
-
-    @Autowired
-    private MovieRepository movieRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
+    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
-        CrewType ct = createCrewType();
-        Person p = createPerson();
-        Movie m = createMovie();
-        Crew r = createCrew(p, ct, m, "Description Test");
+        CrewType ct = testObjectsFactory.createCrewType();
+        Person p = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew r = testObjectsFactory.createCrew(p, ct, m, "Description Test");
         assertNotNull(r.getId());
         assertTrue(crewRepository.findById(r.getId()).isPresent());
     }
 
     @Test
     public void testGetCrewsByEmptyFilter() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p = createPerson();
-        Movie m = createMovie();
-        Crew c1 = createCrew(p, ct1, m, "Description Test");
-        Crew c2 = createCrew(p, ct2, m, "Description Test");
-        Crew c3 = createCrew(p, ct3, m, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew c1 = testObjectsFactory.createCrew(p, ct1, m, "Description Test");
+        Crew c2 = testObjectsFactory.createCrew(p, ct2, m, "Description Test");
+        Crew c3 = testObjectsFactory.createCrew(p, ct3, m, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         Assertions.assertThat(crewService.getCrews(filter)).extracting("Id")
@@ -71,15 +67,15 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByPerson() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Movie m = createMovie();
-        Crew c1 = createCrew(p1, ct1, m, "Description Test");
-        createCrew(p2, ct2, m, "Description Test");
-        createCrew(p2, ct3, m, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew c1 = testObjectsFactory.createCrew(p1, ct1, m, "Description Test");
+        testObjectsFactory.createCrew(p2, ct2, m, "Description Test");
+        testObjectsFactory.createCrew(p2, ct3, m, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setPersonId(p1.getId());
@@ -89,16 +85,16 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByMovie() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        createCrew(p1, ct1, m2, "Description Test");
-        Crew c2 = createCrew(p2, ct2, m1, "Description Test");
-        createCrew(p2, ct3, m2, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        testObjectsFactory.createCrew(p1, ct1, m2, "Description Test");
+        Crew c2 = testObjectsFactory.createCrew(p2, ct2, m1, "Description Test");
+        testObjectsFactory.createCrew(p2, ct3, m2, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setMovieId(m1.getId());
@@ -108,16 +104,16 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByCrewType() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        createCrew(p1, ct1, m2, "Description Test");
-        createCrew(p2, ct2, m1, "Description Test");
-        Crew c3 = createCrew(p2, ct3, m2, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        testObjectsFactory.createCrew(p1, ct1, m2, "Description Test");
+        testObjectsFactory.createCrew(p2, ct2, m1, "Description Test");
+        Crew c3 = testObjectsFactory.createCrew(p2, ct3, m2, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setCrewType(ct3.getId());
@@ -128,16 +124,16 @@ public class CrewRepositoryTest {
     @Test
     public void testGetCrewByDescription() {
         String desc = "Description Test3";
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        createCrew(p1, ct1, m2, "Description Test1");
-        createCrew(p2, ct2, m1, "Description Test2");
-        Crew c3 = createCrew(p2, ct3, m2, desc);
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        testObjectsFactory.createCrew(p1, ct1, m2, "Description Test1");
+        testObjectsFactory.createCrew(p2, ct2, m1, "Description Test2");
+        Crew c3 = testObjectsFactory.createCrew(p2, ct3, m2, desc);
 
         CrewFilter filter = new CrewFilter();
         filter.setDescription(desc);
@@ -147,17 +143,17 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByPersons() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Person p3 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        Crew c1 = createCrew(p1, ct1, m2, "Description Test");
-        createCrew(p2, ct2, m1, "Description Test");
-        Crew c3 = createCrew(p3, ct3, m2, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Person p3 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        Crew c1 = testObjectsFactory.createCrew(p1, ct1, m2, "Description Test");
+        testObjectsFactory.createCrew(p2, ct2, m1, "Description Test");
+        Crew c3 = testObjectsFactory.createCrew(p3, ct3, m2, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setPersonIds(List.of(p1.getId(), p3.getId()));
@@ -167,18 +163,18 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByMovies() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Person p3 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        Movie m3 = createMovie();
-        createCrew(p1, ct1, m2, "Description Test");
-        Crew c2 = createCrew(p2, ct2, m1, "Description Test");
-        Crew c3 = createCrew(p3, ct3, m3, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Person p3 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        Movie m3 = testObjectsFactory.createMovie();
+        testObjectsFactory.createCrew(p1, ct1, m2, "Description Test");
+        Crew c2 = testObjectsFactory.createCrew(p2, ct2, m1, "Description Test");
+        Crew c3 = testObjectsFactory.createCrew(p3, ct3, m3, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setMovieIds(List.of(m1.getId(), m3.getId()));
@@ -188,18 +184,18 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByCrewTypes() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Person p3 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        Movie m3 = createMovie();
-        Crew c1 = createCrew(p1, ct1, m2, "Description Test");
-        Crew c2 = createCrew(p2, ct2, m1, "Description Test");
-        createCrew(p3, ct3, m3, "Description Test");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Person p3 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        Movie m3 = testObjectsFactory.createMovie();
+        Crew c1 = testObjectsFactory.createCrew(p1, ct1, m2, "Description Test");
+        Crew c2 = testObjectsFactory.createCrew(p2, ct2, m1, "Description Test");
+        testObjectsFactory.createCrew(p3, ct3, m3, "Description Test");
 
         CrewFilter filter = new CrewFilter();
         filter.setCrewTypesIds(List.of(ct1.getId(), ct2.getId()));
@@ -209,18 +205,18 @@ public class CrewRepositoryTest {
 
     @Test
     public void testGetCrewByAllFilters() {
-        CrewType ct1 = createCrewType();
-        CrewType ct2 = createCrewType();
-        CrewType ct3 = createCrewType();
-        Person p1 = createPerson();
-        Person p2 = createPerson();
-        Person p3 = createPerson();
-        Movie m1 = createMovie();
-        Movie m2 = createMovie();
-        Movie m3 = createMovie();
-        Crew c1 = createCrew(p1, ct1, m2, "Description Test1");
-        createCrew(p2, ct2, m1, "Description Test2");
-        createCrew(p3, ct3, m3, "Description Test3");
+        CrewType ct1 = testObjectsFactory.createCrewType();
+        CrewType ct2 = testObjectsFactory.createCrewType();
+        CrewType ct3 = testObjectsFactory.createCrewType();
+        Person p1 = testObjectsFactory.createPerson();
+        Person p2 = testObjectsFactory.createPerson();
+        Person p3 = testObjectsFactory.createPerson();
+        Movie m1 = testObjectsFactory.createMovie();
+        Movie m2 = testObjectsFactory.createMovie();
+        Movie m3 = testObjectsFactory.createMovie();
+        Crew c1 = testObjectsFactory.createCrew(p1, ct1, m2, "Description Test1");
+        testObjectsFactory.createCrew(p2, ct2, m1, "Description Test2");
+        testObjectsFactory.createCrew(p3, ct3, m3, "Description Test3");
 
         CrewFilter filter = new CrewFilter();
         filter.setMovieId(m2.getId());
@@ -234,46 +230,54 @@ public class CrewRepositoryTest {
                 .containsExactlyInAnyOrder(c1.getId());
     }
 
-    private CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setName("Director");
-        crewType = crewTypeRepository.save(crewType);
-        return  crewType;
+    @Test
+    public void testCteatedAtIsSet() {
+        CrewType ct = testObjectsFactory.createCrewType();
+        Person p = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew crew = testObjectsFactory.createCrew(p, ct, m, "Desc");
+
+        Instant createdAtBeforeReload = crew.getCreatedAt();
+        Assert.assertNotNull(createdAtBeforeReload);
+        crew = crewRepository.findById(crew.getId()).get();
+
+        Instant createdAtAfterReload = crew.getCreatedAt();
+        Assert.assertNotNull(createdAtAfterReload);
+        Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
     }
 
-    private Person createPerson() {
-        Person person = new Person();
-        person.setId(UUID.randomUUID());
-        person.setSurname("Surname");
-        person.setName("Name");
-        person.setMiddleName("MiddleName");
-        person = personRepository.save(person);
-        return person;
+    @Test
+    public void testModifiedAtIsSet() {
+        CrewType ct = testObjectsFactory.createCrewType();
+        Person p = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew crew = testObjectsFactory.createCrew(p, ct, m, "Desc");
+
+        Instant modifiedAtBeforeReload = crew.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+        crew = crewRepository.findById(crew.getId()).get();
+
+        Instant modifiedAtAfterReload = crew.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
     }
 
-    private Movie createMovie() {
-        Movie movie = new Movie();
-        movie.setId(UUID.randomUUID());
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setSoundMix("DolbySurround");
-        movie = movieRepository.save(movie);
-        return movie;
-    }
+    @Test
+    public void testModifiedAtIsModified() {
+        CrewType ct = testObjectsFactory.createCrewType();
+        Person p = testObjectsFactory.createPerson();
+        Movie m = testObjectsFactory.createMovie();
+        Crew crew = testObjectsFactory.createCrew(p, ct, m, "Desc");
 
-    private Crew createCrew(Person person, CrewType crewType, Movie movie, String description) {
-        Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
-        crew.setPersonId(person);
-        crew.setCrewType(crewType);
-        crew.setMovieId(movie);
-        crew.setDescription(description);
-        return crewRepository.save(crew);
+        Instant modifiedAtBeforeReload = crew.getModifiedAt();
+        Assert.assertNotNull(modifiedAtBeforeReload);
+
+        crew.setDescription("NewTest");
+        crewRepository.save(crew);
+        crew = crewRepository.findById(crew.getId()).get();
+
+        Instant modifiedAtAfterReload = crew.getModifiedAt();
+        Assert.assertNotNull(modifiedAtAfterReload);
+        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
     }
 }

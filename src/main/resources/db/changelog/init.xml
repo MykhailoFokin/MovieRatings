@@ -14,7 +14,6 @@
 			<column name = "title" type="varchar(255)"/>
 			<column name = "year" type="smallint"/>
 			<column name = "description" type="varchar(1000)"/>
-			<column name = "companies" type="varchar(255)"/>
 			<column name = "sound_mix" type="varchar(255)"/>
 			<column name = "colour" type="varchar(255)"/>
 			<column name = "aspect_ratio" type="varchar(255)"/>
@@ -22,6 +21,8 @@
 			<column name = "laboratory" type="varchar(255)"/>
 			<column name = "critique" type="varchar(255)"/>
 			<column name = "is_published" type="int(1)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="person">
 			<column name="id" type="uuid">
@@ -30,6 +31,8 @@
 			<column name = "surname" type="varchar(255)"/>
 			<column name = "name" type="varchar(255)"/>
 			<column name = "middle_name" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="genre">
 			<column name="id" type="uuid">
@@ -39,6 +42,8 @@
 				<constraints nullable="false" foreignKeyName="fk_genre_movie" references="movie(id)"/>
 			</column>
 			<column name = "name" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role">
 			<column name="id" type="uuid">
@@ -54,12 +59,16 @@
 			<column name="movie_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_role_movie" references="movie(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="user_type">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "user_group" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="portal_user">
 			<column name="id" type="uuid">
@@ -73,6 +82,8 @@
 				<constraints nullable="false" foreignKeyName="fk_pusers_user_type" references="user_type(id)"/>
 			</column>
 			<column name = "user_confidence" type="varchar(50)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="crew">
 			<column name="id" type="uuid">
@@ -86,6 +97,8 @@
 			</column>
 			<column name = "crew_type" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="company_details">
 			<column name="id" type="uuid">
@@ -94,6 +107,8 @@
 			<column name = "name" type="varchar(255)"/>
 			<column name = "overview" type="varchar(1000)"/>
 			<column name = "year_of_foundation" type="date"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_company">
 			<column name="id" type="uuid">
@@ -105,6 +120,8 @@
 				<constraints nullable="false"
 							 foreignKeyName="fk_mcompany_companydetails" references="company_details(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_vote">
 			<column name="id" type="uuid">
@@ -117,6 +134,8 @@
 				<constraints nullable="false" foreignKeyName="fk_mvote_movie" references="movie(id)"/>
 			</column>
 			<column name = "rating" type="int(2)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role_vote">
 			<column name="id" type="uuid">
@@ -129,6 +148,8 @@
 				<constraints nullable="false" foreignKeyName="fk_rvote_role" references="role(id)"/>
 			</column>
 			<column name = "rating" type="int(2)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_review">
 			<column name="id" type="uuid">
@@ -145,6 +166,8 @@
 			<column name = "moderator_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_moreview_pusers" references="portal_user(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role_review">
 			<column name="id" type="uuid">
@@ -161,6 +184,8 @@
 			<column name = "moderator_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_rreview_pusers" references="portal_user(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_review_compliant">
 			<column name="id" type="uuid">
@@ -180,6 +205,8 @@
 			<column name = "moderator_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_mrc_pusers" references="portal_user(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role_review_compliant">
 			<column name="id" type="uuid">
@@ -199,6 +226,8 @@
 			<column name = "moderator_id" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_rrc_pusers" references="portal_user(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_review_feedback">
 			<column name="id" type="uuid">
@@ -214,6 +243,8 @@
 				<constraints nullable="false" foreignKeyName="fk_mrfeedback_mreview" references="movie_review(id)"/>
 			</column>
 			<column name = "is_liked" type="boolean"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role_review_feedback">
 			<column name="id" type="uuid">
@@ -229,6 +260,8 @@
 				<constraints nullable="false" foreignKeyName="fk_rrfeedback_rreview" references="role_review(id)"/>
 			</column>
 			<column name = "is_liked" type="boolean"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="user_grant">
 			<column name="id" type="uuid">
@@ -242,6 +275,8 @@
 			<column name = "granted_by" type="uuid">
 				<constraints nullable="false" foreignKeyName="fk_ugrant_puser" references="portal_user(id)"/>
 			</column>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="news">
 			<column name="id" type="uuid">
@@ -253,12 +288,16 @@
 			<column name = "published" type="datetime"/>
 			<column name = "topic" type="varchar(255)"/>
 			<column name = "description" type="varchar(1000)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="language">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "name" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="release_detail">
 			<column name="id" type="uuid">
@@ -269,18 +308,24 @@
 			</column>
 			<column name = "release_date" type="date"/>
 			<column name = "country_id" type="uuid"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="country">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "name" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="crew_type">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" />
 			</column>
 			<column name = "name" type="varchar(255)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="role_spoiler_data">
 			<column name="id" type="uuid">
@@ -291,6 +336,8 @@
 			</column>
 			<column name = "start_index" type="int(10)"/>
 			<column name = "end_index" type="int(10)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="movie_spoiler_data">
 			<column name="id" type="uuid">
@@ -301,6 +348,8 @@
 			</column>
 			<column name = "start_index" type="int(10)"/>
 			<column name = "end_index" type="int(10)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="master">
 			<column name="id" type="uuid">
@@ -309,6 +358,8 @@
 			<column name = "name" type="varchar(50)"/>
 			<column name = "phone" type="varchar(30)"/>
 			<column name = "about" type="varchar(2000)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 		<createTable tableName="visit">
 			<column name="id" type="uuid">
@@ -325,6 +376,8 @@
 			<column name = "start_at" type="datetime"/>
 			<column name = "finish_at" type="datetime"/>
 			<column name = "status" type="varchar(20)"/>
+			<column name = "created_at" type="datetime"/>
+			<column name = "modified_at" type="datetime"/>
 		</createTable>
 	</changeSet>
 	

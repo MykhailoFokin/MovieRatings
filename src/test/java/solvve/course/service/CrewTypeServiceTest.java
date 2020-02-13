@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
@@ -117,7 +116,6 @@ public class CrewTypeServiceTest {
         Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
     }
 
-    @Transactional
     @Test
     public void testPutCrewTypeEmptyPut() {
         CrewType crewType = testObjectsFactory.createCrewType();
@@ -130,7 +128,5 @@ public class CrewTypeServiceTest {
         CrewType crewTypeAfterUpdate = crewTypeRepository.findById(read.getId()).get();
 
         Assert.assertNull(crewTypeAfterUpdate.getName());
-
-        Assertions.assertThat(crewType).isEqualToComparingFieldByField(crewTypeAfterUpdate);
     }
 }

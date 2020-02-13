@@ -75,7 +75,6 @@ public class CompanyDetailsServiceTest {
                 "movieProdTypeCompanies");
     }
 
-    @Transactional
     @Test
     public void testPatchCompanyDetailsEmptyPatch() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -87,13 +86,15 @@ public class CompanyDetailsServiceTest {
         Assert.assertNotNull(read.getOverview());
         Assert.assertNotNull(read.getYearOfFoundation());
 
-        CompanyDetails companyDetailsAfterUpdate = companyDetailsRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            CompanyDetails companyDetailsAfterUpdate = companyDetailsRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(companyDetailsAfterUpdate.getName());
-        Assert.assertNotNull(companyDetailsAfterUpdate.getOverview());
-        Assert.assertNotNull(companyDetailsAfterUpdate.getYearOfFoundation());
+            Assert.assertNotNull(companyDetailsAfterUpdate.getName());
+            Assert.assertNotNull(companyDetailsAfterUpdate.getOverview());
+            Assert.assertNotNull(companyDetailsAfterUpdate.getYearOfFoundation());
 
-        Assertions.assertThat(companyDetails).isEqualToComparingFieldByField(companyDetailsAfterUpdate);
+            Assertions.assertThat(companyDetails).isEqualToComparingFieldByField(companyDetailsAfterUpdate);
+        });
     }
 
     @Test
@@ -124,7 +125,6 @@ public class CompanyDetailsServiceTest {
                 "movieProdTypeCompanies");
     }
 
-    @Transactional
     @Test
     public void testPutCompanyDetailsEmptyPut() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -136,12 +136,12 @@ public class CompanyDetailsServiceTest {
         Assert.assertNull(read.getOverview());
         Assert.assertNull(read.getYearOfFoundation());
 
-        CompanyDetails companyDetailsAfterUpdate = companyDetailsRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            CompanyDetails companyDetailsAfterUpdate = companyDetailsRepository.findById(read.getId()).get();
 
-        Assert.assertNull(companyDetailsAfterUpdate.getName());
-        Assert.assertNull(companyDetailsAfterUpdate.getOverview());
-        Assert.assertNull(companyDetailsAfterUpdate.getYearOfFoundation());
-
-        Assertions.assertThat(companyDetails).isEqualToComparingFieldByField(companyDetailsAfterUpdate);
+            Assert.assertNull(companyDetailsAfterUpdate.getName());
+            Assert.assertNull(companyDetailsAfterUpdate.getOverview());
+            Assert.assertNull(companyDetailsAfterUpdate.getYearOfFoundation());
+        });
     }
 }

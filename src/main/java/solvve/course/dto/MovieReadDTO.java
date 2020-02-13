@@ -2,6 +2,7 @@ package solvve.course.dto;
 
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -28,4 +29,8 @@ public class MovieReadDTO {
     private String critique;
 
     private Boolean isPublished;
+
+    private Instant createdAt;
+
+    private Instant modifiedAt;
 }

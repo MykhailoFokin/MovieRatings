@@ -6,7 +6,7 @@ import solvve.course.dto.RoleReviewFeedbackCreateDTO;
 import solvve.course.dto.RoleReviewFeedbackPatchDTO;
 import solvve.course.dto.RoleReviewFeedbackPutDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
-import solvve.course.service.RoleReviewFeedbackService;
+import solvve.course.service.RoleReviewRoleReviewFeedbackService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class RoleReviewRoleReviewFeedbackController {
 
     @Autowired
-    private RoleReviewFeedbackService roleReviewFeedbackService;
+    private RoleReviewRoleReviewFeedbackService roleReviewFeedbackService;
 
     @GetMapping
     public List<RoleReviewFeedbackReadDTO> getRoleReviewSpoilerData(

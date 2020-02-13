@@ -6,7 +6,7 @@ import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
 import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
-import solvve.course.service.MovieSpoilerDataService;
+import solvve.course.service.MovieReviewSpoilerDataService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MovieReviewSpoilerDataController {
 
     @Autowired
-    private MovieSpoilerDataService movieSpoilerDataService;
+    private MovieReviewSpoilerDataService movieSpoilerDataService;
 
     @GetMapping
     public List<MovieSpoilerDataReadDTO> getMovieReviewSpoilerData(

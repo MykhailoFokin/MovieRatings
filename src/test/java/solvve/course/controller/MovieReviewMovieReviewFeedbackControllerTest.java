@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.service.MovieReviewFeedbackService;
+import solvve.course.service.MovieReviewMovieReviewFeedbackService;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private MovieReviewFeedbackService movieReviewFeedbackService;
+    private MovieReviewMovieReviewFeedbackService movieReviewFeedbackService;
 
     @Test
     public void testGetMovieReviewMovieReviewFeedback() throws Exception {

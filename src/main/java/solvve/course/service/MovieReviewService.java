@@ -11,7 +11,6 @@ import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service

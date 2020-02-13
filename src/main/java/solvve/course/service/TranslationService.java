@@ -28,9 +28,6 @@ public class TranslationService {
     private CrewTypeRepository crewTypeRepository;
 
     @Autowired
-    private CrewRepository crewRepository;
-
-    @Autowired
     private MovieReviewRepository movieReviewRepository;
 
     @Autowired
@@ -56,6 +53,8 @@ public class TranslationService {
         dto.setStartAt(visit.getStartAt());
         dto.setFinishAt(visit.getFinishAt());
         dto.setStatus(visit.getStatus());
+        dto.setCreatedAt(visit.getCreatedAt());
+        dto.setModifiedAt(visit.getModifiedAt());
         return dto;
     }
 
@@ -67,6 +66,8 @@ public class TranslationService {
         dto.setStartAt(visit.getStartAt());
         dto.setFinishAt(visit.getFinishAt());
         dto.setStatus(visit.getStatus());
+        dto.setCreatedAt(visit.getCreatedAt());
+        dto.setModifiedAt(visit.getModifiedAt());
         return dto;
     }
 
@@ -78,6 +79,8 @@ public class TranslationService {
             visitReadDTO.setStatus(visit.getStatus());
             visitReadDTO.setStartAt(visit.getStartAt());
             visitReadDTO.setFinishAt(visit.getFinishAt());
+            visitReadDTO.setCreatedAt(visit.getCreatedAt());
+            visitReadDTO.setModifiedAt(visit.getModifiedAt());
             return visitReadDTO;
         }).collect(Collectors.toSet());
     }
@@ -128,6 +131,8 @@ public class TranslationService {
         dto.setName(companyDetails.getName());
         dto.setOverview(companyDetails.getOverview());
         dto.setYearOfFoundation(companyDetails.getYearOfFoundation());
+        dto.setCreatedAt(companyDetails.getCreatedAt());
+        dto.setModifiedAt(companyDetails.getModifiedAt());
         return dto;
     }
 
@@ -161,6 +166,8 @@ public class TranslationService {
         CountryReadDTO dto = new CountryReadDTO();
         dto.setId(country.getId());
         dto.setName(country.getName());
+        dto.setCreatedAt(country.getCreatedAt());
+        dto.setModifiedAt(country.getModifiedAt());
         return dto;
     }
 
@@ -187,6 +194,8 @@ public class TranslationService {
         dto.setPersonId(toRead(crew.getPersonId()));
         dto.setCrewType(toRead(crew.getCrewType()));
         dto.setDescription(crew.getDescription());
+        dto.setCreatedAt(crew.getCreatedAt());
+        dto.setModifiedAt(crew.getModifiedAt());
         return dto;
     }
 
@@ -195,8 +204,12 @@ public class TranslationService {
         dto.setId(crew.getId());
         dto.setMovieId(crew.getMovieId().getId());
         dto.setPersonId(crew.getPersonId().getId());
-        dto.setCrewType(crew.getCrewType().getId());
+        if (crew.getCrewType() != null) {
+            dto.setCrewType(crew.getCrewType().getId());
+        }
         dto.setDescription(crew.getDescription());
+        dto.setCreatedAt(crew.getCreatedAt());
+        dto.setModifiedAt(crew.getModifiedAt());
         return dto;
     }
 
@@ -243,6 +256,8 @@ public class TranslationService {
         CrewTypeReadDTO dto = new CrewTypeReadDTO();
         dto.setId(crewType.getId());
         dto.setName(crewType.getName());
+        dto.setCreatedAt(crewType.getCreatedAt());
+        dto.setModifiedAt(crewType.getModifiedAt());
         return dto;
     }
 
@@ -267,6 +282,8 @@ public class TranslationService {
         dto.setId(genre.getId());
         dto.setMovieId(genre.getMovieId().getId());
         dto.setName(genre.getName());
+        dto.setCreatedAt(genre.getCreatedAt());
+        dto.setModifiedAt(genre.getModifiedAt());
         return dto;
     }
 
@@ -302,6 +319,8 @@ public class TranslationService {
         dto.setUserPermission(userGrant.getUserPermission());
         dto.setObjectName(userGrant.getObjectName());
         dto.setGrantedBy(userGrant.getGrantedBy().getId());
+        dto.setCreatedAt(userGrant.getCreatedAt());
+        dto.setModifiedAt(userGrant.getModifiedAt());
         return dto;
     }
 
@@ -348,6 +367,8 @@ public class TranslationService {
         LanguageReadDTO dto = new LanguageReadDTO();
         dto.setId(language.getId());
         dto.setName(language.getName());
+        dto.setCreatedAt(language.getCreatedAt());
+        dto.setModifiedAt(language.getModifiedAt());
         return dto;
     }
 
@@ -374,6 +395,8 @@ public class TranslationService {
         dto.setPhone(master.getPhone());
         dto.setAbout(master.getAbout());
         dto.setVisits(toRead(master.getVisits()));
+        dto.setCreatedAt(master.getCreatedAt());
+        dto.setModifiedAt(master.getModifiedAt());
         return dto;
     }
 
@@ -383,6 +406,8 @@ public class TranslationService {
         dto.setName(master.getName());
         dto.setPhone(master.getPhone());
         dto.setAbout(master.getAbout());
+        dto.setCreatedAt(master.getCreatedAt());
+        dto.setModifiedAt(master.getModifiedAt());
         return dto;
     }
 
@@ -418,6 +443,8 @@ public class TranslationService {
         dto.setCompanyId(movieCompany.getCompanyId().getId());
         dto.setMovieProductionType(movieCompany.getMovieProductionType());
         dto.setDescription(movieCompany.getDescription());
+        dto.setCreatedAt(movieCompany.getCreatedAt());
+        dto.setModifiedAt(movieCompany.getModifiedAt());
         return dto;
     }
 
@@ -458,6 +485,8 @@ public class TranslationService {
         dto.setDescription(movieReviewCompliant.getDescription());
         dto.setModeratedStatus(movieReviewCompliant.getModeratedStatus());
         dto.setModeratorId(movieReviewCompliant.getModeratorId().getId());
+        dto.setCreatedAt(movieReviewCompliant.getCreatedAt());
+        dto.setModifiedAt(movieReviewCompliant.getModifiedAt());
         return dto;
     }
 
@@ -525,6 +554,8 @@ public class TranslationService {
         dto.setMovieId(movieReviewFeedback.getMovieId().getId());
         dto.setMovieReviewId(movieReviewFeedback.getMovieReviewId().getId());
         dto.setIsLiked(movieReviewFeedback.getIsLiked());
+        dto.setCreatedAt(movieReviewFeedback.getCreatedAt());
+        dto.setModifiedAt(movieReviewFeedback.getModifiedAt());
         return dto;
     }
 
@@ -573,6 +604,8 @@ public class TranslationService {
         dto.setTextReview(movieReview.getTextReview());
         dto.setModeratedStatus(movieReview.getModeratedStatus());
         dto.setModeratorId(movieReview.getModeratorId().getId());
+        dto.setCreatedAt(movieReview.getCreatedAt());
+        dto.setModifiedAt(movieReview.getModifiedAt());
         return dto;
     }
 
@@ -647,32 +680,36 @@ public class TranslationService {
         dto.setLaboratory(movie.getLaboratory());
         dto.setCritique(movie.getCritique());
         dto.setIsPublished(movie.getIsPublished());
+        dto.setCreatedAt(movie.getCreatedAt());
+        dto.setModifiedAt(movie.getModifiedAt());
         return dto;
     }
 
     public MovieReadExtendedDTO toReadExtended(Movie movie) {
-        MovieReadExtendedDTO dto = new MovieReadExtendedDTO();
-        dto.setId(movie.getId());
-        dto.setTitle(movie.getTitle());
-        dto.setYear(movie.getYear());
-        dto.setDescription(movie.getDescription());
-        dto.setSoundMix(movie.getSoundMix());
-        dto.setColour(movie.getColour());
-        dto.setAspectRatio(movie.getAspectRatio());
-        dto.setCamera(movie.getCamera());
-        dto.setLaboratory(movie.getLaboratory());
-        dto.setCritique(movie.getCritique());
-        dto.setIsPublished(movie.getIsPublished());
-        dto.setMovieCompanies(movie.getMovieProdCompanies());
-        dto.setLanguages(movie.getMovieProdLanguages());
-        dto.setMovieProdCountries(movie.getMovieProdCountries());
-        dto.setMovieReview(movie.getMovieReview());
-        dto.setMovieReviewCompliants(movie.getMovieReviewCompliants());
-        dto.setMovieReviewFeedbacks(movie.getMovieReviewFeedbacks());
-        dto.setCrews(movie.getCrews());
-        dto.setReleaseDetails(movie.getReleaseDetails());
-        dto.setMovieVotes(movie.getMovieVotes());
-        return dto;
+        MovieReadExtendedDTO extendedDto = new MovieReadExtendedDTO();
+        extendedDto.setId(movie.getId());
+        extendedDto.setTitle(movie.getTitle());
+        extendedDto.setYear(movie.getYear());
+        extendedDto.setDescription(movie.getDescription());
+        extendedDto.setSoundMix(movie.getSoundMix());
+        extendedDto.setColour(movie.getColour());
+        extendedDto.setAspectRatio(movie.getAspectRatio());
+        extendedDto.setCamera(movie.getCamera());
+        extendedDto.setLaboratory(movie.getLaboratory());
+        extendedDto.setCritique(movie.getCritique());
+        extendedDto.setIsPublished(movie.getIsPublished());
+        extendedDto.setMovieCompanies(movie.getMovieProdCompanies());
+        extendedDto.setLanguages(movie.getMovieProdLanguages());
+        extendedDto.setMovieProdCountries(movie.getMovieProdCountries());
+        extendedDto.setMovieReview(movie.getMovieReview());
+        extendedDto.setMovieReviewCompliants(movie.getMovieReviewCompliants());
+        extendedDto.setMovieReviewFeedbacks(movie.getMovieReviewFeedbacks());
+        extendedDto.setCrews(movie.getCrews());
+        extendedDto.setReleaseDetails(movie.getReleaseDetails());
+        extendedDto.setMovieVotes(movie.getMovieVotes());
+        extendedDto.setCreatedAt(movie.getCreatedAt());
+        extendedDto.setModifiedAt(movie.getModifiedAt());
+        return extendedDto;
     }
 
     public Movie toEntity(MovieCreateDTO create) {
@@ -742,6 +779,8 @@ public class TranslationService {
         dto.setMovieReviewId(movieSpoilerData.getMovieReviewId().getId());
         dto.setStartIndex(movieSpoilerData.getStartIndex());
         dto.setEndIndex(movieSpoilerData.getEndIndex());
+        dto.setCreatedAt(movieSpoilerData.getCreatedAt());
+        dto.setModifiedAt(movieSpoilerData.getModifiedAt());
         return dto;
     }
 
@@ -781,6 +820,8 @@ public class TranslationService {
         dto.setUserId(movieVote.getUserId().getId());
         dto.setMovieId(movieVote.getMovieId().getId());
         dto.setRating(movieVote.getRating());
+        dto.setCreatedAt(movieVote.getCreatedAt());
+        dto.setModifiedAt(movieVote.getModifiedAt());
         return dto;
     }
 
@@ -825,6 +866,8 @@ public class TranslationService {
         dto.setPublished(news.getPublished());
         dto.setTopic(news.getTopic());
         dto.setDescription(news.getDescription());
+        dto.setCreatedAt(news.getCreatedAt());
+        dto.setModifiedAt(news.getModifiedAt());
         return dto;
     }
 
@@ -869,6 +912,8 @@ public class TranslationService {
         dto.setSurname(person.getSurname());
         dto.setName(person.getName());
         dto.setMiddleName(person.getMiddleName());
+        dto.setCreatedAt(person.getCreatedAt());
+        dto.setModifiedAt(person.getModifiedAt());
         return dto;
     }
 
@@ -907,6 +952,8 @@ public class TranslationService {
         dto.setMiddleName(portalUser.getMiddleName());
         dto.setUserType(portalUser.getUserTypeId().getId());
         dto.setUserConfidence(portalUser.getUserConfidence());
+        dto.setCreatedAt(portalUser.getCreatedAt());
+        dto.setModifiedAt(portalUser.getModifiedAt());
         return dto;
     }
 
@@ -961,6 +1008,8 @@ public class TranslationService {
         dto.setMovieId(releaseDetail.getMovieId().getId());
         dto.setReleaseDate(releaseDetail.getReleaseDate());
         dto.setCountryId(releaseDetail.getCountryId().getId());
+        dto.setCreatedAt(releaseDetail.getCreatedAt());
+        dto.setModifiedAt(releaseDetail.getModifiedAt());
         return dto;
     }
 
@@ -1007,6 +1056,8 @@ public class TranslationService {
         dto.setDescription(roleReviewCompliant.getDescription());
         dto.setModeratedStatus(roleReviewCompliant.getModeratedStatus());
         dto.setModeratorId(roleReviewCompliant.getModeratorId().getId());
+        dto.setCreatedAt(roleReviewCompliant.getCreatedAt());
+        dto.setModifiedAt(roleReviewCompliant.getModifiedAt());
         return dto;
     }
 
@@ -1074,6 +1125,8 @@ public class TranslationService {
         dto.setRoleId(roleReviewFeedback.getRoleId().getId());
         dto.setRoleReviewId(roleReviewFeedback.getRoleReviewId().getId());
         dto.setIsLiked(roleReviewFeedback.getIsLiked());
+        dto.setCreatedAt(roleReviewFeedback.getCreatedAt());
+        dto.setModifiedAt(roleReviewFeedback.getModifiedAt());
         return dto;
     }
 
@@ -1128,6 +1181,8 @@ public class TranslationService {
         dto.setTextReview(roleReview.getTextReview());
         dto.setModeratedStatus(roleReview.getModeratedStatus());
         dto.setModeratorId(roleReview.getModeratorId().getId());
+        dto.setCreatedAt(roleReview.getCreatedAt());
+        dto.setModifiedAt(roleReview.getModifiedAt());
         return dto;
     }
 
@@ -1196,6 +1251,8 @@ public class TranslationService {
         dto.setRoleType(role.getRoleType());
         dto.setDescription(role.getDescription());
         dto.setPersonId(role.getPersonId().getId());
+        dto.setCreatedAt(role.getCreatedAt());
+        dto.setModifiedAt(role.getModifiedAt());
         return dto;
     }
 
@@ -1240,6 +1297,8 @@ public class TranslationService {
         dto.setRoleReviewId(roleSpoilerData.getRoleReviewId().getId());
         dto.setStartIndex(roleSpoilerData.getStartIndex());
         dto.setEndIndex(roleSpoilerData.getEndIndex());
+        dto.setCreatedAt(roleSpoilerData.getCreatedAt());
+        dto.setModifiedAt(roleSpoilerData.getModifiedAt());
         return dto;
     }
 
@@ -1279,6 +1338,8 @@ public class TranslationService {
         dto.setUserId(roleVote.getUserId().getId());
         dto.setRoleId(roleVote.getRoleId().getId());
         dto.setRating(roleVote.getRating());
+        dto.setCreatedAt(roleVote.getCreatedAt());
+        dto.setModifiedAt(roleVote.getModifiedAt());
         return dto;
     }
 
@@ -1320,6 +1381,8 @@ public class TranslationService {
         UserTypeReadDTO dto = new UserTypeReadDTO();
         dto.setId(userType.getId());
         dto.setUserGroup(userType.getUserGroup());
+        dto.setCreatedAt(userType.getCreatedAt());
+        dto.setModifiedAt(userType.getModifiedAt());
         return dto;
     }
 
