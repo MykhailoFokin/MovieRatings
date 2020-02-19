@@ -94,7 +94,6 @@ public class GenreServiceTest {
         });
     }
 
-    @Transactional
     @Test
     public void testPatchGenresEmptyPatch() {
         Movie movie = testObjectsFactory.createMovie();
@@ -114,7 +113,7 @@ public class GenreServiceTest {
             Assert.assertNotNull(genreAfterUpdate.getMovieId());
 
             Assertions.assertThat(genre).isEqualToIgnoringGivenFields(genreAfterUpdate, "movieId");
-            Assertions.assertThat(genre.getMovieId()).isEqualToComparingFieldByField(genreAfterUpdate.getMovieId());
+            Assertions.assertThat(genre.getMovieId().getId()).isEqualTo(genreAfterUpdate.getMovieId().getId());
         });
     }
 
@@ -134,14 +133,15 @@ public class GenreServiceTest {
         genreService.deleteGenre(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutGenres() {
         Movie movie = testObjectsFactory.createMovie();
         Genre genre = testObjectsFactory.createGenre(movie);
 
+        Movie movie2 = testObjectsFactory.createMovie();
         GenrePutDTO put = new GenrePutDTO();
         put.setName(MovieGenreType.ACTION);
+        put.setMovieId(movie2.getId());
         GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
         Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movieId");

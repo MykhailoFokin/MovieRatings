@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class NewsPutDTO {
 
-    private UUID userId;
+    private UUID publisher;
 
     private Instant published;
 

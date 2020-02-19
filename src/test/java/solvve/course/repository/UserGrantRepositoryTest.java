@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserGrant;
 import solvve.course.domain.UserType;
 import solvve.course.utils.TestObjectsFactory;
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Sql(statements = {"delete from user_grant",
+        "delete from portal_user",
         "delete from user_type"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
@@ -32,22 +33,22 @@ public class UserGrantRepositoryTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testSave() {
         UserType u = testObjectsFactory.createUserType();
-        UserGrant g = new UserGrant();
-        g.setUserTypeId(u);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        UserGrant g = testObjectsFactory.createUserGrant(u, portalUser);
+
         g = userGrantRepository.save(g);
         assertNotNull(g.getId());
         assertTrue(userGrantRepository.findById(g.getId()).isPresent());
     }
 
-    @Transactional
     @Test
     public void testCteatedAtIsSet() {
         UserType u = testObjectsFactory.createUserType();
-        UserGrant entity = testObjectsFactory.createUserGrant(u);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
         Assert.assertNotNull(createdAtBeforeReload);
@@ -58,36 +59,36 @@ public class UserGrantRepositoryTest {
         Assert.assertEquals(createdAtBeforeReload, createdAtAfterReload);
     }
 
-    @Transactional
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         UserType u = testObjectsFactory.createUserType();
-        UserGrant entity = testObjectsFactory.createUserGrant(u);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = userGrantRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
-    @Transactional
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         UserType u = testObjectsFactory.createUserType();
-        UserGrant entity = testObjectsFactory.createUserGrant(u);
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setObjectName("NewNameTest");
         userGrantRepository.save(entity);
         entity = userGrantRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

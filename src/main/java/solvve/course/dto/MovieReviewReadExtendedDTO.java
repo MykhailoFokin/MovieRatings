@@ -30,5 +30,5 @@ public class MovieReviewReadExtendedDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

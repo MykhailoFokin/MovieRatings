@@ -47,8 +47,8 @@ public class NewsServiceTest {
         News news = testObjectsFactory.createNews(portalUser);
 
         NewsReadDTO readDTO = newsService.getNews(news.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(news, "userId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualTo(news.getUserId().getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(news, "publisher");
+        Assertions.assertThat(readDTO.getPublisher()).isEqualTo(news.getPublisher().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -62,7 +62,7 @@ public class NewsServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
 
         NewsCreateDTO create = new NewsCreateDTO();
-        create.setUserId(portalUser.getId());
+        create.setPublisher(portalUser.getId());
         create.setTopic("Main_News");
         create.setDescription("Our main news are absent today!");
         create.setPublished(Instant.now());
@@ -70,8 +70,8 @@ public class NewsServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         News news = newsRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(news, "userId");
-        Assertions.assertThat(read.getUserId()).isEqualTo(news.getUserId().getId());
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(news, "publisher");
+        Assertions.assertThat(read.getPublisher()).isEqualTo(news.getPublisher().getId());
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class NewsServiceTest {
         News news = testObjectsFactory.createNews(portalUser);
 
         NewsPatchDTO patch = new NewsPatchDTO();
-        patch.setUserId(portalUser.getId());
+        patch.setPublisher(portalUser.getId());
         patch.setTopic("Main_News");
         patch.setDescription("Our main news are absent today!");
         patch.setPublished(Instant.now());
@@ -90,8 +90,8 @@ public class NewsServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         news = newsRepository.findById(read.getId()).get();
-        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "userId");
-        Assertions.assertThat(news.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher");
+        Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisher());
     }
 
     @Transactional
@@ -103,14 +103,14 @@ public class NewsServiceTest {
         NewsPatchDTO patch = new NewsPatchDTO();
         NewsReadDTO read = newsService.patchNews(news.getId(), patch);
 
-        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getPublisher());
         Assert.assertNotNull(read.getTopic());
         Assert.assertNotNull(read.getDescription());
         Assert.assertNotNull(read.getPublished());
 
         News newsAfterUpdate = newsRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(newsAfterUpdate.getUserId());
+        Assert.assertNotNull(newsAfterUpdate.getPublisher());
         Assert.assertNotNull(newsAfterUpdate.getTopic());
         Assert.assertNotNull(newsAfterUpdate.getDescription());
         Assert.assertNotNull(newsAfterUpdate.getPublished());
@@ -139,7 +139,7 @@ public class NewsServiceTest {
         News news = testObjectsFactory.createNews(portalUser);
 
         NewsPutDTO put = new NewsPutDTO();
-        put.setUserId(portalUser.getId());
+        put.setPublisher(portalUser.getId());
         put.setTopic("Main_News");
         put.setDescription("Our main news are absent today!");
         put.setPublished(Instant.now());
@@ -148,8 +148,8 @@ public class NewsServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         news = newsRepository.findById(read.getId()).get();
-        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "userId");
-        Assertions.assertThat(news.getUserId().getId()).isEqualTo(read.getUserId());
+        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher");
+        Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisher());
     }
 
     @Transactional
@@ -161,14 +161,14 @@ public class NewsServiceTest {
         NewsPutDTO put = new NewsPutDTO();
         NewsReadDTO read = newsService.updateNews(news.getId(), put);
 
-        Assert.assertNull(read.getUserId());
+        Assert.assertNull(read.getPublisher());
         Assert.assertNull(read.getTopic());
         Assert.assertNull(read.getDescription());
         Assert.assertNull(read.getPublished());
 
         News newsAfterUpdate = newsRepository.findById(read.getId()).get();
 
-        Assert.assertNull(newsAfterUpdate.getUserId().getId());
+        Assert.assertNull(newsAfterUpdate.getPublisher().getId());
         Assert.assertNull(newsAfterUpdate.getTopic());
         Assert.assertNull(newsAfterUpdate.getDescription());
         Assert.assertNull(newsAfterUpdate.getPublished());

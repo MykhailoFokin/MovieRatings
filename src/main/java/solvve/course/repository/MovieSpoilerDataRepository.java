@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface MovieSpoilerDataRepository extends CrudRepository<MovieSpoilerData, UUID> {
 
-    List<MovieSpoilerData> findByMovieReviewIdOrderByIdAsc(UUID movieReviewId);
+    Optional<List<MovieSpoilerData>> findByMovieReviewIdOrderByIdAsc(UUID movieReviewId);
 
     Optional<MovieSpoilerData> findByMovieReviewIdAndId(UUID movieReviewId, UUID id);
 }

@@ -20,5 +20,5 @@ public class MovieReviewFeedbackReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

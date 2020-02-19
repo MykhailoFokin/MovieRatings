@@ -7,11 +7,14 @@ import java.util.UUID;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class EntityNotFoundException extends RuntimeException {
+
     public EntityNotFoundException(Class entityClass, UUID id) {
+
         super(String.format("Entity %s with id=%s is not found!",entityClass.getSimpleName(), id));
     }
 
     public EntityNotFoundException(Class entityClass, UUID parentId, UUID id) {
+
         super(String.format("Entity %s with parentID=%s and id=%s is not found!",
                 entityClass.getSimpleName(), parentId, id));
     }

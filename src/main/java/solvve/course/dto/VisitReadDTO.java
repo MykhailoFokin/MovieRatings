@@ -13,8 +13,6 @@ public class VisitReadDTO {
 
     private UUID userId;
 
-    private UUID masterId;
-
     private Instant startAt;
 
     private Instant finishAt;
@@ -23,5 +21,5 @@ public class VisitReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

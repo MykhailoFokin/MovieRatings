@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -36,7 +35,6 @@ public class UserGrantServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetGrants() {
         UserType userType = testObjectsFactory.createUserType();
@@ -55,7 +53,6 @@ public class UserGrantServiceTest {
         userGrantService.getGrants(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateGrants() {
         UserType userType = testObjectsFactory.createUserType();
@@ -76,7 +73,6 @@ public class UserGrantServiceTest {
         Assertions.assertThat(read.getGrantedBy()).isEqualTo(userGrant.getGrantedBy().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchGrants() {
         UserType userType = testObjectsFactory.createUserType();
@@ -99,7 +95,6 @@ public class UserGrantServiceTest {
         Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
     }
 
-    @Transactional
     @Test
     public void testPatchGrantsEmptyPatch() {
         UserType userType = testObjectsFactory.createUserType();
@@ -121,7 +116,12 @@ public class UserGrantServiceTest {
         Assert.assertNotNull(userGrantAfterUpdate.getUserPermission());
         Assert.assertNotNull(userGrantAfterUpdate.getGrantedBy());
 
-        Assertions.assertThat(userGrant).isEqualToComparingFieldByField(userGrantAfterUpdate);
+        Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(userGrantAfterUpdate,
+                "userTypeId", "grantedBy");
+        Assertions.assertThat(userGrant.getUserTypeId().getId())
+                .isEqualTo(userGrantAfterUpdate.getUserTypeId().getId());
+        Assertions.assertThat(userGrant.getGrantedBy().getId())
+                .isEqualTo(userGrantAfterUpdate.getGrantedBy().getId());
     }
 
     @Test
@@ -139,7 +139,6 @@ public class UserGrantServiceTest {
         userGrantService.deleteGrants(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutGrants() {
         UserType userType = testObjectsFactory.createUserType();
@@ -162,7 +161,6 @@ public class UserGrantServiceTest {
         Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
     }
 
-    @Transactional
     @Test
     public void testPutGrantsEmptyPut() {
         UserType userType = testObjectsFactory.createUserType();
@@ -172,18 +170,22 @@ public class UserGrantServiceTest {
         UserGrantPutDTO put = new UserGrantPutDTO();
         UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 
-        Assert.assertNull(read.getUserTypeId());
+        Assert.assertNotNull(read.getUserTypeId());
         Assert.assertNull(read.getObjectName());
         Assert.assertNull(read.getUserPermission());
-        Assert.assertNull(read.getGrantedBy());
+        Assert.assertNotNull(read.getGrantedBy());
 
         UserGrant userGrantAfterUpdate = userGrantRepository.findById(read.getId()).get();
 
-        Assert.assertNull(userGrantAfterUpdate.getUserTypeId().getId());
+        Assert.assertNotNull(userGrantAfterUpdate.getUserTypeId().getId());
         Assert.assertNull(userGrantAfterUpdate.getObjectName());
         Assert.assertNull(userGrantAfterUpdate.getUserPermission());
-        Assert.assertNull(userGrantAfterUpdate.getGrantedBy().getId());
+        Assert.assertNotNull(userGrantAfterUpdate.getGrantedBy().getId());
 
-        Assertions.assertThat(userGrant).isEqualToComparingFieldByField(userGrantAfterUpdate);
+        Assertions.assertThat(userGrant).isEqualToComparingOnlyGivenFields(userGrantAfterUpdate, "id");
+        Assertions.assertThat(userGrant.getUserTypeId().getId())
+                .isEqualTo(userGrantAfterUpdate.getUserTypeId().getId());
+        Assertions.assertThat(userGrant.getGrantedBy().getId())
+                .isEqualTo(userGrantAfterUpdate.getGrantedBy().getId());
     }
 }

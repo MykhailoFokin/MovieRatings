@@ -13,11 +13,13 @@ public class RoleExtendedDTO {
 
     private String title;
 
-    private String roleType;
+    private RoleType roleType;
 
     private String description;
 
     private Person personId;
+
+    private UUID movieId;
 
     private Set<RoleReview> roleReviewSet;
 

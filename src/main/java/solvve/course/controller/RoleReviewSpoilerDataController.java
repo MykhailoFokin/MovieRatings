@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas")
+@RequestMapping("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas")
 public class RoleReviewSpoilerDataController {
 
     @Autowired
@@ -20,31 +20,31 @@ public class RoleReviewSpoilerDataController {
 
     @GetMapping
     public List<RoleSpoilerDataReadDTO> getRoleReviewSpoilerData(
-            @PathVariable(value = "rolereviewid") UUID roleReviewId) {
+            @PathVariable UUID roleReviewId) {
         return roleSpoilerDataService.getRoleReviewSpoilerData(roleReviewId);
     }
 
     @PostMapping
-    public RoleSpoilerDataReadDTO createRoleSpoilerData(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleSpoilerDataReadDTO createRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                         @RequestBody RoleSpoilerDataCreateDTO createDTO) {
         return roleSpoilerDataService.createRoleReviewSpoilerData(roleReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                        @PathVariable (value = "id") UUID id,
                                                        @RequestBody RoleSpoilerDataPatchDTO patch) {
         return roleSpoilerDataService.patchRoleReviewSpoilerData(roleReviewId, id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleSpoilerData(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public void deleteRoleSpoilerData(@PathVariable UUID roleReviewId,
                                       @PathVariable (value = "id") UUID id) {
         roleSpoilerDataService.deleteRoleReviewSpoilerData(roleReviewId, id);
     }
 
     @PutMapping("/{id}")
-    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                      @PathVariable (value = "id") UUID id,
                                                      @RequestBody RoleSpoilerDataPutDTO put) {
         return roleSpoilerDataService.updateRoleReviewSpoilerData(roleReviewId, id, put);

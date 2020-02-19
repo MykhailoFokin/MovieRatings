@@ -38,5 +38,5 @@ public class RoleReviewFeedback {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

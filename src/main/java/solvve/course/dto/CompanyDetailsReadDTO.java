@@ -19,5 +19,5 @@ public class CompanyDetailsReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

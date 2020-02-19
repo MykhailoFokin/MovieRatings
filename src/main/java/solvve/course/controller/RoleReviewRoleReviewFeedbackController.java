@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks")
+@RequestMapping("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks")
 public class RoleReviewRoleReviewFeedbackController {
 
     @Autowired
@@ -20,31 +20,31 @@ public class RoleReviewRoleReviewFeedbackController {
 
     @GetMapping
     public List<RoleReviewFeedbackReadDTO> getRoleReviewSpoilerData(
-            @PathVariable(value = "rolereviewid") UUID roleReviewId) {
+            @PathVariable UUID roleReviewId) {
         return roleReviewFeedbackService.getRoleReviewRoleReviewFeedback(roleReviewId);
     }
 
     @PostMapping
-    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                               @RequestBody RoleReviewFeedbackCreateDTO createDTO) {
         return roleReviewFeedbackService.createRoleReviewRoleReviewFeedback(roleReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                              @PathVariable (value = "id") UUID id,
                                                              @RequestBody RoleReviewFeedbackPatchDTO patch) {
         return roleReviewFeedbackService.patchRoleReviewRoleReviewFeedback(roleReviewId, id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleReviewFeedback(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public void deleteRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                          @PathVariable (value = "id") UUID id) {
         roleReviewFeedbackService.deleteRoleReviewRoleReviewFeedback(roleReviewId, id);
     }
 
     @PutMapping("/{id}")
-    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                            @PathVariable (value = "id") UUID id,
                                                            @RequestBody RoleReviewFeedbackPutDTO put) {
         return roleReviewFeedbackService.updateRoleReviewRoleReviewFeedback(roleReviewId, id, put);

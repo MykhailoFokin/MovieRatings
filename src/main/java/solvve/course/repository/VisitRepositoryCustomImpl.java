@@ -17,9 +17,6 @@ public class VisitRepositoryCustomImpl implements VisitRepositoryCustom {
     public List<Visit> findByFilter(VisitFilter filter) {
         StringBuilder sb = new StringBuilder();
         sb.append("select v from Visit v where 1=1");
-        if (filter.getMasterId() != null) {
-            sb.append(" and v.masterId.id = :masterId");
-        }
         if (filter.getUserId() != null) {
             sb.append(" and v.userId.id = :userId");
         }
@@ -34,9 +31,6 @@ public class VisitRepositoryCustomImpl implements VisitRepositoryCustom {
         }
         TypedQuery<Visit> query = entityManager.createQuery(sb.toString(), Visit.class);
 
-        if (filter.getMasterId() != null) {
-            query.setParameter("masterId", filter.getMasterId());
-        }
         if (filter.getUserId() != null) {
             query.setParameter("userId", filter.getUserId());
         }

@@ -19,5 +19,5 @@ public class RoleVoteReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

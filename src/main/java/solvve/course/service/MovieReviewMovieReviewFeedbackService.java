@@ -11,6 +11,7 @@ import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewFeedbackRepository;
+import solvve.course.repository.RepositoryHelper;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,10 +24,10 @@ public class MovieReviewMovieReviewFeedbackService {
     private TranslationService translationService;
 
     @Autowired
-    private MovieReviewService movieReviewService;
+    private MovieReviewFeedbackRepository movieReviewFeedbackRepository;
 
     @Autowired
-    private MovieReviewFeedbackRepository movieReviewFeedbackRepository;
+    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<MovieReviewFeedbackReadDTO> getMovieReviewMovieReviewFeedback(UUID movieReviewId) {
@@ -36,22 +37,19 @@ public class MovieReviewMovieReviewFeedbackService {
 
     public MovieReviewFeedbackReadDTO createMovieReviewMovieReviewFeedback(UUID movieReviewId,
                                                                            MovieReviewFeedbackCreateDTO create) {
-        MovieReview movieReview = translationService.ReadDTOtoEntity(movieReviewService.getMovieReview(movieReviewId));
-
         MovieReviewFeedback movieReviewFeedback = translationService.toEntity(create);
-        movieReviewFeedback.setMovieReviewId(movieReview);
-
+        movieReviewFeedback.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
+
         return translationService.toRead(movieReviewFeedback);
     }
 
     public MovieReviewFeedbackReadDTO patchMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id,
                                                                           MovieReviewFeedbackPatchDTO patch) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewMovieReviewFeedbackRequired(movieReviewId, id);
-
         translationService.patchEntity(patch, movieReviewFeedback);
-
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
+
         return translationService.toRead(movieReviewFeedback);
     }
 
@@ -62,10 +60,9 @@ public class MovieReviewMovieReviewFeedbackService {
     public MovieReviewFeedbackReadDTO updateMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id,
                                                                            MovieReviewFeedbackPutDTO put) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewMovieReviewFeedbackRequired(movieReviewId, id);
-
         translationService.updateEntity(put, movieReviewFeedback);
-
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
+
         return translationService.toRead(movieReviewFeedback);
     }
 

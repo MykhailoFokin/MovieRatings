@@ -115,31 +115,31 @@ public class CompanyDetailsRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         CompanyDetails company = testObjectsFactory.createCompanyDetails();
 
-        Instant modifiedAtBeforeReload = company.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = company.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         company = companyDetailsRepository.findById(company.getId()).get();
 
-        Instant modifiedAtAfterReload = company.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = company.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         CompanyDetails company = testObjectsFactory.createCompanyDetails();
 
-        Instant modifiedAtBeforeReload = company.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = company.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         company.setName("NewNameTest");
         companyDetailsRepository.save(company);
         company = companyDetailsRepository.findById(company.getId()).get();
 
-        Instant modifiedAtAfterReload = company.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = company.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

@@ -27,7 +27,7 @@ public class Crew {
     private Movie movieId;
 
     @OneToOne
-    private CrewType crewType = new CrewType();
+    private CrewType crewTypeId = new CrewType();
 
     private String description;
 
@@ -35,5 +35,5 @@ public class Crew {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

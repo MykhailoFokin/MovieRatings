@@ -22,7 +22,7 @@ public class News {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser publisher;
 
     private Instant published;
 
@@ -34,5 +34,5 @@ public class News {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

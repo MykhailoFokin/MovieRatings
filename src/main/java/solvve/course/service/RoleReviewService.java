@@ -44,12 +44,6 @@ public class RoleReviewService {
         return translationService.toRead(roleReview);
     }
 
-    private RoleReview getRoleReviewRequired(UUID id) {
-        return roleReviewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleReview.class, id);
-        });
-    }
-
     public void deleteRoleReview(UUID id) {
         roleReviewRepository.delete(getRoleReviewRequired(id));
     }
@@ -61,5 +55,11 @@ public class RoleReviewService {
 
         roleReview = roleReviewRepository.save(roleReview);
         return translationService.toRead(roleReview);
+    }
+
+    private RoleReview getRoleReviewRequired(UUID id) {
+        return roleReviewRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException(RoleReview.class, id);
+        });
     }
 }

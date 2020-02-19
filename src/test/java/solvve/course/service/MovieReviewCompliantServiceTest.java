@@ -38,7 +38,6 @@ public class MovieReviewCompliantServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetMovieReviewCompliant() {
         Movie movie = testObjectsFactory.createMovie();
@@ -62,7 +61,6 @@ public class MovieReviewCompliantServiceTest {
         movieReviewCompliantService.getMovieReviewCompliant(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateMovieReviewCompliant() {
         Movie movie = testObjectsFactory.createMovie();
@@ -89,7 +87,6 @@ public class MovieReviewCompliantServiceTest {
         Assertions.assertThat(read.getModeratorId()).isEqualTo(movieReviewCompliant.getModeratorId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieReviewCompliant() {
         Movie movie = testObjectsFactory.createMovie();
@@ -120,7 +117,6 @@ public class MovieReviewCompliantServiceTest {
         Assertions.assertThat(movieReviewCompliant.getModeratorId().getId()).isEqualTo(read.getModeratorId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieReviewCompliantEmptyPatch() {
         Movie movie = testObjectsFactory.createMovie();
@@ -150,7 +146,16 @@ public class MovieReviewCompliantServiceTest {
         Assert.assertNotNull(movieReviewCompliantAfterUpdate.getModeratedStatus());
         Assert.assertNotNull(movieReviewCompliantAfterUpdate.getModeratorId());
 
-        Assertions.assertThat(movieReviewCompliant).isEqualToComparingFieldByField(movieReviewCompliantAfterUpdate);
+        Assertions.assertThat(movieReviewCompliant).isEqualToIgnoringGivenFields(movieReviewCompliantAfterUpdate,
+                "userId", "movieId", "movieReviewId", "moderatorId");
+        Assertions.assertThat(movieReviewCompliant.getUserId().getId())
+                .isEqualTo(movieReviewCompliantAfterUpdate.getUserId().getId());
+        Assertions.assertThat(movieReviewCompliant.getMovieId().getId())
+                .isEqualTo(movieReviewCompliantAfterUpdate.getMovieId().getId());
+        Assertions.assertThat(movieReviewCompliant.getMovieReviewId().getId())
+                .isEqualTo(movieReviewCompliantAfterUpdate.getMovieReviewId().getId());
+        Assertions.assertThat(movieReviewCompliant.getModeratorId().getId())
+                .isEqualTo(movieReviewCompliantAfterUpdate.getModeratorId().getId());
     }
 
     @Test
@@ -170,7 +175,6 @@ public class MovieReviewCompliantServiceTest {
         movieReviewCompliantService.deleteMovieReviewCompliant(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutMovieReviewCompliant() {
         Movie movie = testObjectsFactory.createMovie();

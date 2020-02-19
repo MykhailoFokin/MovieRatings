@@ -38,7 +38,6 @@ public class MovieSpoilerDataServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetMovieSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -57,7 +56,6 @@ public class MovieSpoilerDataServiceTest {
         movieSpoilerDataService.getMovieSpoilerData(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateMovieSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -78,7 +76,6 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReviewId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -100,7 +97,6 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieSpoilerDataEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -121,7 +117,10 @@ public class MovieSpoilerDataServiceTest {
         Assert.assertNotNull(movieSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNotNull(movieSpoilerDataAfterUpdate.getEndIndex());
 
-        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(movieSpoilerDataAfterUpdate);
+        Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(movieSpoilerDataAfterUpdate,
+                "movieReviewId");
+        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId())
+                .isEqualTo(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
     }
 
     @Test
@@ -140,7 +139,6 @@ public class MovieSpoilerDataServiceTest {
         movieSpoilerDataService.deleteMovieSpoilerData(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutMovieSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -162,7 +160,6 @@ public class MovieSpoilerDataServiceTest {
         Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
     }
 
-    @Transactional
     @Test
     public void testPutMovieSpoilerDataEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -173,16 +170,14 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.updateMovieSpoilerData(movieSpoilerData.getId(), put);
 
-        Assert.assertNull(read.getMovieReviewId());
+        Assert.assertNotNull(read.getMovieReviewId());
         Assert.assertNull(read.getStartIndex());
         Assert.assertNull(read.getEndIndex());
 
         MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getEndIndex());
-
-        Assertions.assertThat(movieSpoilerData).isEqualToComparingFieldByField(movieSpoilerDataAfterUpdate);
     }
 }

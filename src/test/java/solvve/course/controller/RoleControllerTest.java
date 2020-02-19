@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Role;
+import solvve.course.domain.RoleType;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
@@ -44,7 +45,7 @@ public class RoleControllerTest {
         RoleReadDTO role = new RoleReadDTO();
         role.setId(UUID.randomUUID());
         role.setTitle("Actor");
-        role.setRoleType("Main_Role");
+        role.setRoleType(RoleType.LEAD);
         role.setDescription("Description test");
         return role;
     }
@@ -95,7 +96,7 @@ public class RoleControllerTest {
 
         RoleCreateDTO create = new RoleCreateDTO();
         create.setTitle("Actor");
-        create.setRoleType("Main_Role");
+        create.setRoleType(RoleType.LEAD);
         create.setDescription("Description test");
 
         RoleReadDTO read = createRoleRead();
@@ -117,7 +118,7 @@ public class RoleControllerTest {
 
         RolePatchDTO patchDTO = new RolePatchDTO();
         patchDTO.setTitle("Role Test");
-        patchDTO.setRoleType("Main_Role");
+        patchDTO.setRoleType(RoleType.LEAD);
         patchDTO.setDescription("Description test");
 
         RoleReadDTO read = createRoleRead();
@@ -148,7 +149,7 @@ public class RoleControllerTest {
 
         RolePutDTO putDTO = new RolePutDTO();
         putDTO.setTitle("Role Test");
-        putDTO.setRoleType("Main_Role");
+        putDTO.setRoleType(RoleType.LEAD);
         putDTO.setDescription("Description test");
 
         RoleReadDTO read = createRoleRead();

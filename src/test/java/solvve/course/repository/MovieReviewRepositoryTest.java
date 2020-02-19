@@ -8,7 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.domain.Movie;
 import solvve.course.domain.MovieReview;
+import solvve.course.domain.PortalUser;
+import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
@@ -24,9 +27,17 @@ public class MovieReviewRepositoryTest {
     @Autowired
     private MovieReviewRepository movieReviewRepository;
 
+    @Autowired
+    private TestObjectsFactory testObjectsFactory;
+
     @Test
     public void testSave() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         MovieReview r = new MovieReview();
+        r.setUserId(portalUser);
+        r.setMovieId(movie);
+        r.setModeratorId(portalUser);
         r = movieReviewRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieReviewRepository.findById(r.getId()).isPresent());
@@ -34,7 +45,12 @@ public class MovieReviewRepositoryTest {
 
     @Test
     public void testCteatedAtIsSet() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
+        entity.setUserId(portalUser);
+        entity.setMovieId(movie);
+        entity.setModeratorId(portalUser);
         entity = movieReviewRepository.save(entity);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -47,33 +63,43 @@ public class MovieReviewRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
+        entity.setUserId(portalUser);
+        entity.setMovieId(movie);
+        entity.setModeratorId(portalUser);
         entity = movieReviewRepository.save(entity);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = movieReviewRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
+        entity.setUserId(portalUser);
+        entity.setMovieId(movie);
+        entity.setModeratorId(portalUser);
         entity = movieReviewRepository.save(entity);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setTextReview("NewNameTest");
         movieReviewRepository.save(entity);
         entity = movieReviewRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

@@ -11,8 +11,6 @@ public class VisitPutDTO {
 
     private UUID userId;
 
-    private UUID masterId;
-
     private Instant startAt;
 
     private Instant finishAt;

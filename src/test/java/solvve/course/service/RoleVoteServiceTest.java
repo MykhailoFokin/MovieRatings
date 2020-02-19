@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -38,12 +37,12 @@ public class RoleVoteServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetRoleVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVoteReadDTO readDTO = roleVoteService.getRoleVote(roleVote.getId());
@@ -58,12 +57,12 @@ public class RoleVoteServiceTest {
         roleVoteService.getRoleVote(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateRoleVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
 
         RoleVoteCreateDTO create = new RoleVoteCreateDTO();
         create.setRoleId(role.getId());
@@ -79,12 +78,12 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
@@ -102,12 +101,12 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleVoteEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
@@ -123,14 +122,19 @@ public class RoleVoteServiceTest {
         Assert.assertNotNull(roleVoteAfterUpdate.getUserId());
         Assert.assertNotNull(roleVoteAfterUpdate.getRating());
 
-        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(roleVoteAfterUpdate);
+        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(roleVoteAfterUpdate, "userId", "roleId");
+        Assertions.assertThat(roleVote.getUserId().getId())
+                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getUserId().getId());
+        Assertions.assertThat(roleVote.getRoleId().getId())
+                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getRoleId().getId());
     }
 
     @Test
     public void testDeleteRoleVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         roleVoteService.deleteRoleVote(roleVote.getId());
@@ -142,12 +146,12 @@ public class RoleVoteServiceTest {
         roleVoteService.deleteRoleVote(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutRoleVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVotePutDTO put = new RoleVotePutDTO();
@@ -165,27 +169,30 @@ public class RoleVoteServiceTest {
         Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
     }
 
-    @Transactional
     @Test
     public void testPutRoleVoteEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
         RoleVotePutDTO put = new RoleVotePutDTO();
         RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
-        Assert.assertNull(read.getRoleId());
-        Assert.assertNull(read.getUserId());
+        Assert.assertNotNull(read.getRoleId());
+        Assert.assertNotNull(read.getUserId());
         Assert.assertNull(read.getRating());
 
         RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleVoteAfterUpdate.getRoleId().getId());
-        Assert.assertNull(roleVoteAfterUpdate.getUserId().getId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getRoleId().getId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getUserId().getId());
         Assert.assertNull(roleVoteAfterUpdate.getRating());
 
-        Assertions.assertThat(roleVote).isEqualToComparingFieldByField(roleVoteAfterUpdate);
+        Assertions.assertThat(roleVote).isEqualToComparingOnlyGivenFields(roleVoteAfterUpdate,
+                "id");
+        Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(roleVoteAfterUpdate.getRoleId().getId());
+        Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(roleVoteAfterUpdate.getUserId().getId());
     }
 }

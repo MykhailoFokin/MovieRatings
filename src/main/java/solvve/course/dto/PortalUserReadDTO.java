@@ -19,11 +19,11 @@ public class PortalUserReadDTO {
 
     private String middleName;
 
-    private UUID userType;
+    private UUID userTypeId;
 
     private UserConfidenceType userConfidence;
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

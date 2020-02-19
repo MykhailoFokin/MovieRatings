@@ -39,7 +39,6 @@ public class MovieCompanyServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -56,7 +55,6 @@ public class MovieCompanyServiceTest {
         movieCompanyService.getMovieCompany(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -71,7 +69,6 @@ public class MovieCompanyServiceTest {
         Assertions.assertThat(read.getCompanyId()).isEqualTo(movieCompany.getCompanyId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -91,7 +88,6 @@ public class MovieCompanyServiceTest {
         Assertions.assertThat(movieCompany.getCompanyId().getId()).isEqualTo(read.getCompanyId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieCompanyEmptyPatch() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();
@@ -111,7 +107,10 @@ public class MovieCompanyServiceTest {
         Assert.assertNotNull(movieCompanyAfterUpdate.getDescription());
         Assert.assertNotNull(movieCompanyAfterUpdate.getCompanyId().getId());
 
-        Assertions.assertThat(movieCompany).isEqualToComparingFieldByField(movieCompanyAfterUpdate);
+        Assertions.assertThat(movieCompany).isEqualToIgnoringGivenFields(movieCompanyAfterUpdate,
+                "movies","companyId");
+        Assertions.assertThat(movieCompany.getCompanyId().getId())
+                .isEqualTo(movieCompanyAfterUpdate.getCompanyId().getId());
     }
 
     @Test
@@ -129,7 +128,6 @@ public class MovieCompanyServiceTest {
         movieCompanyService.deleteMovieCompany(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutMovieCompany() {
         CompanyDetails companyDetails = testObjectsFactory.createCompanyDetails();

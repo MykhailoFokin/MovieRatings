@@ -23,5 +23,5 @@ public class RoleReviewReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

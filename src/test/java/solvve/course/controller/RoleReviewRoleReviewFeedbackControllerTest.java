@@ -63,7 +63,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         Mockito.when(roleReviewFeedbackService.getRoleReviewRoleReviewFeedback(roleReview.getId()))
                 .thenReturn(roleReviewFeedbackReadDTOList);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks",
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks",
                 roleReview.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -83,7 +83,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         Mockito.when(roleReviewFeedbackService.getRoleReviewRoleReviewFeedback(wrongId)).thenThrow(exception);
 
         String resultJson = mvc.perform(get(
-                "/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks", wrongId))
+                "/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks", wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
@@ -95,7 +95,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         String wrongId = "123";
 
         String resultJson = mvc.perform(get(
-                "/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks",wrongId))
+                "/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks",wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
 
@@ -115,7 +115,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         Mockito.when(roleReviewFeedbackService.createRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
                 create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks",
+        String resultJson = mvc.perform(post("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks",
                 roleReviewReadDTO.getId())
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -141,7 +141,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
                 read.getId(),patchDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(patch(
-                "/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks/{id}",
+                "/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks/{id}",
                 roleReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -157,7 +157,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
     public void testDeleteRoleReviewRoleReviewFeedback() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks/{id}",
+        mvc.perform(delete("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks/{id}",
                 id, id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleReviewFeedbackService).deleteRoleReviewRoleReviewFeedback(id, id);
@@ -176,7 +176,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         Mockito.when(roleReviewFeedbackService.updateRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(put("/api/v1/rolereviews/{rolereviewid}/rolereviewfeedbacks/{id}",
+        String resultJson = mvc.perform(put("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks/{id}",
                 roleReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
                 .contentType(MediaType.APPLICATION_JSON))

@@ -43,12 +43,6 @@
 			<column name = "id" type="uuid"/>
 			<column name = "name" type="string"/>
 		</loadUpdateData>
-		<loadUpdateData tableName="master" file="db/data/master.csv" separator=";" primaryKey="Id">
-			<column name = "id" type="uuid"/>
-			<column name = "name" type="string"/>
-			<column name = "phone" type="string"/>
-			<column name = "about" type="string"/>
-		</loadUpdateData>
 		<loadUpdateData tableName="role" file="db/data/role.csv" separator=";" primaryKey="Id">
 			<column name = "id" type="uuid"/>
 			<column name = "title" type="string"/>

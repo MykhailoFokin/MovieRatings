@@ -144,33 +144,33 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         Movie m = testObjectsFactory.createMovie();
         Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = genreRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         Movie m = testObjectsFactory.createMovie();
         Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setName(MovieGenreType.SAGA);
         genreRepository.save(entity);
         entity = genreRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

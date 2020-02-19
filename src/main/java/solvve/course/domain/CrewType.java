@@ -22,12 +22,12 @@ public class CrewType {
 
     private String name;
 
-    @OneToOne(mappedBy = "crewType")
+    @OneToOne(mappedBy = "crewTypeId")
     private Crew crew;
 
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

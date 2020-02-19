@@ -17,5 +17,5 @@ public class UserTypeReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

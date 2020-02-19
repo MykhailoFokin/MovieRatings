@@ -23,8 +23,8 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         if (filter.getMovieId() != null) {
             sb.append(" and c.movieId.id = :movieId");
         }
-        if (filter.getCrewType() != null) {
-            sb.append(" and c.crewType.id = :crewTypeId");
+        if (filter.getCrewTypeId() != null) {
+            sb.append(" and c.crewTypeId.id = :crewTypeId");
         }
         if (filter.getDescription() != null) {
             sb.append(" and c.description = :description");
@@ -36,7 +36,7 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
             sb.append(" and c.movieId.id in (:movieIds)");
         }
         if (filter.getCrewTypesIds() != null) {
-            sb.append(" and c.crewType.id in (:crewTypeIds)");
+            sb.append(" and c.crewTypeId.id in (:crewTypeIds)");
         }
         if (filter.getDescriptions() != null) {
             sb.append(" and c.description in (:descriptions)");
@@ -49,8 +49,8 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         if (filter.getMovieId() != null) {
             query.setParameter("movieId", filter.getMovieId());
         }
-        if (filter.getCrewType() != null) {
-            query.setParameter("crewTypeId", filter.getCrewType());
+        if (filter.getCrewTypeId() != null) {
+            query.setParameter("crewTypeId", filter.getCrewTypeId());
         }
         if (filter.getDescription() != null) {
             query.setParameter("description", filter.getDescription());

@@ -81,7 +81,7 @@ public class MovieServiceTest {
         Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
                 "movieProdCountries","crews","movieReview","movieReviewCompliants"
                 ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
-                ,"movieProdLanguages");
+                ,"movieProdLanguages","role");
     }
 
     @Transactional
@@ -150,7 +150,7 @@ public class MovieServiceTest {
         Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
                 "movieProdCountries","crews","movieReview","movieReviewCompliants"
                         ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
-                        ,"movieProdLanguages");
+                        ,"movieProdLanguages","role");
     }
 
     @Transactional

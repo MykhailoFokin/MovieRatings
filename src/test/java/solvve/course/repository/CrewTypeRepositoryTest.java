@@ -74,12 +74,11 @@ public class CrewTypeRepositoryTest {
         });
     }
 
-    @Transactional
     @Test
     public void testGetCrewTypesByName() {
         CrewType ct1 = testObjectsFactory.createCrewType("Type1");
-        CrewType ct2 = testObjectsFactory.createCrewType("Type1");
-        testObjectsFactory.createCrewType("Type2");
+        CrewType ct2 = testObjectsFactory.createCrewType("Type2");
+        testObjectsFactory.createCrewType("Type3");
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
         testObjectsFactory.createCrew(p, ct1, m);
@@ -90,7 +89,7 @@ public class CrewTypeRepositoryTest {
         filter.setName("Type1");
         testObjectsFactory.inTransaction(() -> {
             Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(ct1.getId(), ct2.getId());
+                    .containsExactlyInAnyOrder(ct1.getId());
         });
     }
 
@@ -180,31 +179,31 @@ public class CrewTypeRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         CrewType entity = testObjectsFactory.createCrewType();
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = crewTypeRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         CrewType entity = testObjectsFactory.createCrewType();
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setName("NewNameTest");
         crewTypeRepository.save(entity);
         entity = crewTypeRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

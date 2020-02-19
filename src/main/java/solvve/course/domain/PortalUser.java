@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,53 +38,53 @@ public class PortalUser {
     private UserConfidenceType userConfidence;  // user rating according to activity (set by moderator)
 
     @OneToMany(mappedBy = "grantedBy", cascade = CascadeType.PERSIST)
-    private  Set<UserGrant> userGrants;
+    private  Set<UserGrant> userGrants = new HashSet<UserGrant>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<MovieReview> movieReview;
+    private Set<MovieReview> movieReview = new HashSet<MovieReview>();
 
     @OneToMany(mappedBy = "moderatorId", cascade = CascadeType.PERSIST)
-    private Set<MovieReview> movieReviewModerator;
+    private Set<MovieReview> movieReviewModerator = new HashSet<MovieReview>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private  Set<MovieReviewCompliant> movieReviewCompliants;
+    private  Set<MovieReviewCompliant> movieReviewCompliants = new HashSet<MovieReviewCompliant>();
 
     @OneToMany(mappedBy = "moderatorId", cascade = CascadeType.PERSIST)
-    private  Set<MovieReviewCompliant> movieReviewCompliantsModerator;
+    private  Set<MovieReviewCompliant> movieReviewCompliantsModerator = new HashSet<MovieReviewCompliant>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private  Set<MovieReviewFeedback> movieReviewFeedbacks;
+    private  Set<MovieReviewFeedback> movieReviewFeedbacks = new HashSet<MovieReviewFeedback>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<RoleReview> roleReviews;
+    private Set<RoleReview> roleReviews = new HashSet<RoleReview>();
 
     @OneToMany(mappedBy = "moderatorId", cascade = CascadeType.PERSIST)
-    private Set<RoleReview> roleReviewsModerator;
+    private Set<RoleReview> roleReviewsModerator = new HashSet<RoleReview>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private  Set<RoleReviewCompliant> roleReviewCompliants;
+    private  Set<RoleReviewCompliant> roleReviewCompliants = new HashSet<RoleReviewCompliant>();
 
     @OneToMany(mappedBy = "moderatorId", cascade = CascadeType.PERSIST)
-    private  Set<RoleReviewCompliant> roleReviewCompliantsModerator;
+    private  Set<RoleReviewCompliant> roleReviewCompliantsModerator = new HashSet<RoleReviewCompliant>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private  Set<RoleReviewFeedback> roleReviewFeedbacks;
+    private  Set<RoleReviewFeedback> roleReviewFeedbacks = new HashSet<RoleReviewFeedback>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<MovieVote> movieVotes;
+    private Set<MovieVote> movieVotes = new HashSet<MovieVote>();
+
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.PERSIST)
+    private Set<News> news = new HashSet<News>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<News> news;
+    private Set<RoleVote> roleVotes = new HashSet<RoleVote>();
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<RoleVote> roleVotes;
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    private Set<Visit> visits;
+    private Set<Visit> visits = new HashSet<Visit>();
 
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

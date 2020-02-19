@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.domain.Role;
 import solvve.course.utils.TestObjectsFactory;
@@ -31,8 +32,9 @@ public class RoleRepositoryTest {
 
     @Test
     public void testSave() {
-        Role r = new Role();
-        r = roleRepository.save(r);
+        Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
+        Role r = testObjectsFactory.createRole(person,movie);
         assertNotNull(r.getId());
         assertTrue(roleRepository.findById(r.getId()).isPresent());
     }
@@ -40,7 +42,8 @@ public class RoleRepositoryTest {
     @Test
     public void testCteatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
-        Role entity = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role entity = testObjectsFactory.createRole(person,movie);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
         Assert.assertNotNull(createdAtBeforeReload);
@@ -52,33 +55,35 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
-        Role entity = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role entity = testObjectsFactory.createRole(person,movie);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = roleRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         Person person = testObjectsFactory.createPerson();
-        Role entity = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role entity = testObjectsFactory.createRole(person,movie);
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setDescription("NewNameTest");
         roleRepository.save(entity);
         entity = roleRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

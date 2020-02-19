@@ -49,7 +49,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         Mockito.when(movieReviewCompliantService.getMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId()))
                 .thenReturn(movieReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants",
+        String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants",
                 movieReviewReadDTO.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -68,7 +68,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(MovieReviewCompliant.class,wrongId);
         Mockito.when(movieReviewCompliantService.getMovieReviewMovieReviewCompliant(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants",
+        String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants",
                 wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
@@ -80,7 +80,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
     public void testGetMovieReviewCompliantWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants"
+        String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants"
                 , wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
@@ -103,7 +103,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         Mockito.when(movieReviewCompliantService.createMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId(),
                 create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants",
+        String resultJson = mvc.perform(post("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants",
                 movieReviewReadDTO.getId())
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -131,7 +131,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
                 read.getId(), patchDTO)).thenReturn(read);
 
         String resultJson = mvc.perform(patch(
-                "/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}"
+                "/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}"
                 ,movieReviewReadDTO.getId() ,read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -147,7 +147,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
     public void testDeleteMovieReviewCompliant() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}",
+        mvc.perform(delete("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}",
                 id, id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieReviewCompliantService).deleteMovieReviewMovieReviewCompliant(id, id);
@@ -169,7 +169,7 @@ public class MovieReviewMovieReviewCompliantControllerTest {
         Mockito.when(movieReviewCompliantService.updateMovieReviewMovieReviewCompliant(movieReviewReadDTO.getId(),
                 read.getId(), putDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(put("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants/{id}"
+        String resultJson = mvc.perform(put("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}"
                 , movieReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
                 .contentType(MediaType.APPLICATION_JSON))

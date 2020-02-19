@@ -25,5 +25,5 @@ public class MovieReviewCompliantReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

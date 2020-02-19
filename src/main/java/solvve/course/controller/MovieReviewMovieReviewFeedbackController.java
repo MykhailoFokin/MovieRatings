@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/moviereviews/{moviereviewid}/moviereviewfeedbacks")
+@RequestMapping("/api/v1/movie-reviews/{movieReviewId}/movie-review-feedbacks")
 public class MovieReviewMovieReviewFeedbackController {
 
     @Autowired
@@ -20,33 +20,31 @@ public class MovieReviewMovieReviewFeedbackController {
 
     @GetMapping
     public List<MovieReviewFeedbackReadDTO> getMovieReviewSpoilerData(
-            @PathVariable(value = "moviereviewid") UUID movieReviewId) {
+            @PathVariable UUID movieReviewId) {
         return movieReviewFeedbackService.getMovieReviewMovieReviewFeedback(movieReviewId);
     }
 
     @PostMapping
-    public MovieReviewFeedbackReadDTO createMovieReviewFeedback(@PathVariable (value = "moviereviewid")
-                                                                            UUID movieReviewId,
+    public MovieReviewFeedbackReadDTO createMovieReviewFeedback(@PathVariable UUID movieReviewId,
                                                                 @RequestBody MovieReviewFeedbackCreateDTO createDTO) {
         return movieReviewFeedbackService.createMovieReviewMovieReviewFeedback(movieReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(@PathVariable (value = "moviereviewid")
-                                                                           UUID movieReviewId,
+    public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(@PathVariable UUID movieReviewId,
                                                                @PathVariable (value = "id") UUID id,
                                                                @RequestBody MovieReviewFeedbackPatchDTO patch) {
         return movieReviewFeedbackService.patchMovieReviewMovieReviewFeedback(movieReviewId, id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieReviewFeedback(@PathVariable (value = "moviereviewid") UUID movieReviewId,
+    public void deleteMovieReviewFeedback(@PathVariable UUID movieReviewId,
                                           @PathVariable (value = "id") UUID id) {
         movieReviewFeedbackService.deleteMovieReviewMovieReviewFeedback(movieReviewId, id);
     }
 
     @PutMapping("/{id}")
-    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable (value = "moviereviewid") UUID movieReviewId,
+    public MovieReviewFeedbackReadDTO putMovieReviewFeedback(@PathVariable UUID movieReviewId,
                                                              @PathVariable (value = "id") UUID id,
                                                              @RequestBody MovieReviewFeedbackPutDTO put) {
         return movieReviewFeedbackService.updateMovieReviewMovieReviewFeedback(movieReviewId, id, put);

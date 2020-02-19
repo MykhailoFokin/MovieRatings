@@ -23,9 +23,6 @@ public class Visit {
     @ManyToOne
     private PortalUser userId;
 
-    @ManyToOne
-    private Master masterId;
-
     private Instant startAt;
 
     private Instant finishAt;
@@ -37,5 +34,5 @@ public class Visit {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

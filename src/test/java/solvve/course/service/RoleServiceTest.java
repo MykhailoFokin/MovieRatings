@@ -10,8 +10,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.domain.Role;
+import solvve.course.domain.RoleType;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
@@ -39,15 +41,16 @@ public class RoleServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetRole() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
 
         RoleReadDTO readDTO = roleService.getRole(role.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(role,"personId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(role,"personId","movieId");
         Assertions.assertThat(readDTO.getPersonId()).isEqualTo(role.getPersonId().getId());
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(role.getMovieId().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -55,51 +58,54 @@ public class RoleServiceTest {
         roleService.getRole(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateRole() {
         Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
 
         RoleCreateDTO create = new RoleCreateDTO();
         create.setTitle("Actor");
-        create.setRoleType("Main_Role");
+        create.setRoleType(RoleType.LEAD);
         create.setDescription("Description test");
         create.setPersonId(person.getId());
+        create.setMovieId(movie.getId());
         RoleReadDTO read = roleService.createRole(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         Role role = roleRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(role,"personId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(role,"personId","movieId");
         Assertions.assertThat(read.getPersonId()).isEqualTo(role.getPersonId().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualTo(role.getMovieId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchRole() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
 
         RolePatchDTO patch = new RolePatchDTO();
         patch.setTitle("Actor");
-        patch.setRoleType("Main_Role");
+        patch.setRoleType(RoleType.LEAD);
         patch.setDescription("Description test");
         patch.setPersonId(person.getId());
+        patch.setMovieId(movie.getId());
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
-                "personId", "roleReviewSet",
+                "movieId","personId", "roleReviewSet",
                 "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
         Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleEmptyPatch() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
 
         RolePatchDTO patch = new RolePatchDTO();
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
@@ -114,13 +120,16 @@ public class RoleServiceTest {
         Assert.assertNotNull(roleAfterUpdate.getRoleType());
         Assert.assertNotNull(roleAfterUpdate.getDescription());
 
-        Assertions.assertThat(role).isEqualToComparingFieldByField(roleAfterUpdate);
+        Assertions.assertThat(role).isEqualToIgnoringGivenFields(roleAfterUpdate,
+                "movieId","personId", "roleReviewSet",
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
     }
 
     @Test
     public void testDeleteRole() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
 
         roleService.deleteRole(role.getId());
         Assert.assertFalse(roleRepository.existsById(role.getId()));
@@ -131,24 +140,25 @@ public class RoleServiceTest {
         roleService.deleteRole(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutRole() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
 
         RolePutDTO put = new RolePutDTO();
         put.setTitle("Actor");
-        put.setRoleType("Main_Role");
+        put.setRoleType(RoleType.LEAD);
         put.setDescription("Description test");
         put.setPersonId(person.getId());
+        put.setMovieId(movie.getId());
         RoleReadDTO read = roleService.updateRole(role.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
-                "personId", "roleReviewSet",
+                "movieId","personId", "roleReviewSet",
                 "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
         Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
     }
@@ -157,7 +167,8 @@ public class RoleServiceTest {
     @Test
     public void testPutRoleEmptyPut() {
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
 
         RolePutDTO put = new RolePutDTO();
         RoleReadDTO read = roleService.updateRole(role.getId(), put);

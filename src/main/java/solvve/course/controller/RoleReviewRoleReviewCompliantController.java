@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants")
+@RequestMapping("/api/v1/role-reviews/{roleReviewId}/role-review-compliants")
 public class RoleReviewRoleReviewCompliantController {
 
     @Autowired
@@ -20,33 +20,33 @@ public class RoleReviewRoleReviewCompliantController {
 
     @GetMapping
     public List<RoleReviewCompliantReadDTO> getRoleReviewSpoilerData(
-            @PathVariable(value = "rolereviewid") UUID roleReviewId) {
+            @PathVariable UUID roleReviewId) {
         return roleReviewCompliantService.getRoleReviewRoleReviewCompliant(roleReviewId);
     }
 
     @PostMapping
     public RoleReviewCompliantReadDTO createRoleReviewCompliant(
-            @PathVariable (value = "rolereviewid") UUID roleReviewId,
+            @PathVariable UUID roleReviewId,
             @RequestBody RoleReviewCompliantCreateDTO createDTO) {
         return roleReviewCompliantService.createRoleReviewRoleReviewCompliant(roleReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
     public RoleReviewCompliantReadDTO patchRoleReviewCompliant(
-            @PathVariable (value = "rolereviewid") UUID roleReviewId,
+            @PathVariable UUID roleReviewId,
             @PathVariable (value = "id") UUID id,
             @RequestBody RoleReviewCompliantPatchDTO patch) {
         return roleReviewCompliantService.patchRoleReviewRoleReviewCompliant(roleReviewId, id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleReviewCompliant(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public void deleteRoleReviewCompliant(@PathVariable UUID roleReviewId,
                                           @PathVariable (value = "id") UUID id) {
         roleReviewCompliantService.deleteRoleReviewRoleReviewCompliant(roleReviewId, id);
     }
 
     @PutMapping("/{id}")
-    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable (value = "rolereviewid") UUID roleReviewId,
+    public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID roleReviewId,
                                                              @PathVariable (value = "id") UUID id,
                                                              @RequestBody RoleReviewCompliantPutDTO put) {
         return roleReviewCompliantService.updateRoleReviewRoleReviewCompliant(roleReviewId, id, put);

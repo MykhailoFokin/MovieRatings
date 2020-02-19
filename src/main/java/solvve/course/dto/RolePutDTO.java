@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.RoleType;
 
 import java.util.UUID;
 
@@ -9,9 +10,11 @@ public class RolePutDTO {
 
     private String title;
 
-    private String roleType;
+    private RoleType roleType;
 
     private String description;
 
     private UUID personId;
+
+    private UUID movieId;
 }

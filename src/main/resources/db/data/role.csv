@@ -1,4 +1,4 @@
-id;title;role_type;description;person_id;movie_id
+id;title;role_type;description;person_id_id;movie_id_id
 88f76ac1-662d-492f-b907-33e5a861e696;SpoungeBob;Second;test;c0b31c91-c5bc-40d7-8910-b008739b79e2;a107f8d4-7578-4ce9-a219-63cd5e021a20
 eaed6088-e41d-4ac5-885d-ad75159aede6;Star;Third;test;d742b2fb-0708-4873-b3f2-218a8b3aa99a;3397320c-5658-4e6a-83f6-e8affe0ae20d
 39052bac-afd5-4e76-b58d-93ab44e487bb;Cookies;Main;test;1a21d2f6-af17-4ed1-9c42-2228c1cab73d;d06832a7-1528-495f-91f9-1cb465b06722

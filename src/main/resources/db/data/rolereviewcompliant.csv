@@ -1,4 +1,4 @@
-id;user_id;role_id;role_review_id;description;moderated_status;moderator_id
+id;user_id_id;role_id_id;role_review_id_id;description;moderated_status;moderator_id_id
 f5bce10e-fd1c-4701-9d8f-fc6699b4a248;2c80168d-8159-431b-99e9-e721620349ca;88f76ac1-662d-492f-b907-33e5a861e696;9d35b5df-863a-4ba8-99ea-8bd222218ae3;testdesc;SUCCESS;2c80168d-8159-431b-99e9-e721620349ca
 ec431599-6dee-4922-8404-ae7dcab76371;2fb20a92-ef08-471f-8cc4-e33e0ece788d;eaed6088-e41d-4ac5-885d-ad75159aede6;ed184022-d8e1-4dd9-8862-4baca347e097;testdesc;SUCCESS;2fb20a92-ef08-471f-8cc4-e33e0ece788d
 66ac9287-219c-4a84-a2ea-fb6364f2ed74;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41;39052bac-afd5-4e76-b58d-93ab44e487bb;685dbbcf-20d9-410b-957e-72efe6ede67c;testdesc;SUCCESS;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41

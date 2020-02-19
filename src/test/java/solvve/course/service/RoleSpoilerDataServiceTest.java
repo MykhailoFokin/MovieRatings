@@ -64,7 +64,8 @@ public class RoleSpoilerDataServiceTest {
     public void testCreateRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
@@ -86,7 +87,8 @@ public class RoleSpoilerDataServiceTest {
     public void testPatchRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
@@ -133,7 +135,8 @@ public class RoleSpoilerDataServiceTest {
     public void testDeleteRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
@@ -151,7 +154,8 @@ public class RoleSpoilerDataServiceTest {
     public void testPutRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
@@ -181,13 +185,13 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.updateRoleSpoilerData(roleSpoilerData.getId(), put);
 
-        Assert.assertNull(read.getRoleReviewId());
+        Assert.assertNotNull(read.getRoleReviewId());
         Assert.assertNull(read.getStartIndex());
         Assert.assertNull(read.getEndIndex());
 
         RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleSpoilerDataAfterUpdate.getRoleReviewId().getId());
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReviewId().getId());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getEndIndex());
 

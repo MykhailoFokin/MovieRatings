@@ -189,7 +189,6 @@ public class MovieRepositoryTest {
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
-    @Transactional
     @Test
     public void testGetMovieByCompanyType() {
         CompanyDetails cd1 = testObjectsFactory.createCompanyDetails("Company1", "Overview",
@@ -527,7 +526,6 @@ public class MovieRepositoryTest {
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m3.getId());
     }
 
-    @Transactional
     @Test
     public void testGetMovieByCompanyTypes() {
         CompanyDetails cd1 = testObjectsFactory.createCompanyDetails("Company1", "Overview",
@@ -598,7 +596,6 @@ public class MovieRepositoryTest {
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m4.getId());
     }
 
-    @Transactional
     @Test
     public void testGetMovieByAllFilters() {
         Country c1 = testObjectsFactory.createCountry("Ukraine");
@@ -674,31 +671,31 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         Movie entity = testObjectsFactory.createMovie();
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         entity = movieRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         Movie entity = testObjectsFactory.createMovie();
 
-        Instant modifiedAtBeforeReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setDescription("NewNameTest");
         movieRepository.save(entity);
         entity = movieRepository.findById(entity.getId()).get();
 
-        Instant modifiedAtAfterReload = entity.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

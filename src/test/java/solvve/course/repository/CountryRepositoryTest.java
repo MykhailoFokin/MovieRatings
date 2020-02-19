@@ -96,31 +96,31 @@ public class CountryRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         Country country = testObjectsFactory.createCountry();
 
-        Instant modifiedAtBeforeReload = country.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = country.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         country = countryRepository.findById(country.getId()).get();
 
-        Instant modifiedAtAfterReload = country.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = country.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         Country country = testObjectsFactory.createCountry();
 
-        Instant modifiedAtBeforeReload = country.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = country.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         country.setName("NewNameTest");
         countryRepository.save(country);
         country = countryRepository.findById(country.getId()).get();
 
-        Instant modifiedAtAfterReload = country.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = country.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

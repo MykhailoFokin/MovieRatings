@@ -63,7 +63,7 @@ public class MovieReviewSpoilerDataControllerTest {
         Mockito.when(movieSpoilerDataService.getMovieReviewSpoilerDatas(movieReview.getId()))
                 .thenReturn(movieSpoilerData);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas",
+        String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas",
                 movieReview.getId().toString()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -82,7 +82,7 @@ public class MovieReviewSpoilerDataControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(MovieSpoilerData.class,wrongId);
         Mockito.when(movieSpoilerDataService.getMovieReviewSpoilerDatas(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas"
+        String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas"
                 , wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
@@ -104,7 +104,7 @@ public class MovieReviewSpoilerDataControllerTest {
         Mockito.when(movieSpoilerDataService.createMovieReviewSpoilerData(movieReviewReadDTO.getId(),
                 create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas"
+        String resultJson = mvc.perform(post("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas"
                 , movieReviewReadDTO.getId().toString())
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ public class MovieReviewSpoilerDataControllerTest {
         Mockito.when(movieSpoilerDataService.patchMovieReviewSpoilerData(movieReviewReadDTO.getId(),
                 read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas/{id}",
+        String resultJson = mvc.perform(patch("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas/{id}",
                 movieReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -146,7 +146,7 @@ public class MovieReviewSpoilerDataControllerTest {
     public void testDeleteMovieSpoilerData() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas/{id}",
+        mvc.perform(delete("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas/{id}",
                 id, id.toString())).andExpect(status().isOk());
 
         Mockito.verify(movieSpoilerDataService).deleteMovieReviewSpoilerData(id, id);
@@ -166,7 +166,7 @@ public class MovieReviewSpoilerDataControllerTest {
         Mockito.when(movieSpoilerDataService.updateMovieReviewSpoilerData(movieReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(put("/api/v1/moviereviews/{moviereviewid}/moviespoilerdatas/{id}",
+        String resultJson = mvc.perform(put("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas/{id}",
                 movieReviewReadDTO.getId().toString(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
                 .contentType(MediaType.APPLICATION_JSON))

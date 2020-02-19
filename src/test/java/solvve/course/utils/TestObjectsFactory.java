@@ -45,9 +45,6 @@ public class TestObjectsFactory {
     private PortalUserRepository portalUserRepository;
 
     @Autowired
-    private MasterRepository masterRepository;
-
-    @Autowired
     private VisitRepository visitRepository;
 
     @Autowired
@@ -106,7 +103,6 @@ public class TestObjectsFactory {
 
     public Movie createMovie() {
         Movie movie = new Movie();
-        movie.setId(UUID.randomUUID());
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
         movie.setAspectRatio("1:10");
@@ -125,7 +121,6 @@ public class TestObjectsFactory {
                              String laboratory, String soundMix, Boolean isPublished,
                              Set<MovieCompany> movieCompanySet, Set<Language> languageSet) {
         Movie movie = new Movie();
-        movie.setId(UUID.randomUUID());
         movie.setTitle(title);
         movie.setYear(year);
         movie.setAspectRatio(aspectRatio);
@@ -169,7 +164,6 @@ public class TestObjectsFactory {
 
     public Country createCountry() {
         Country country = new Country();
-        country.setId(UUID.randomUUID());
         country.setName("Ukraine");
         return countryRepository.save(country);
     }
@@ -227,7 +221,6 @@ public class TestObjectsFactory {
 
     public Genre createGenre(Movie movie) {
         Genre genre = new Genre();
-        genre.setId(UUID.randomUUID());
         genre.setMovieId(movie);
         genre.setName(MovieGenreType.ACTION);
         return genreRepository.save(genre);
@@ -235,14 +228,12 @@ public class TestObjectsFactory {
 
     public Genre createGenre() {
         Genre genre = new Genre();
-        genre.setId(UUID.randomUUID());
         genre.setName(MovieGenreType.ACTION);
         return genreRepository.save(genre);
     }
 
     public Genre createGenre(Movie movie, MovieGenreType movieGenreType) {
         Genre genre = new Genre();
-        genre.setId(UUID.randomUUID());
         genre.setMovieId(movie);
         genre.setName(movieGenreType);
         return genreRepository.save(genre);
@@ -275,7 +266,6 @@ public class TestObjectsFactory {
 
     public CompanyDetails createCompanyDetails() {
         CompanyDetails companyDetails = new CompanyDetails();
-        companyDetails.setId(UUID.randomUUID());
         companyDetails.setName("Paramount");
         companyDetails.setOverview("Test Test Test");
         companyDetails.setYearOfFoundation(LocalDate.now());
@@ -284,7 +274,6 @@ public class TestObjectsFactory {
 
     public CompanyDetails createCompanyDetails(String name, String overview, LocalDate yearOfFoundation) {
         CompanyDetails companyDetails = new CompanyDetails();
-        companyDetails.setId(UUID.randomUUID());
         companyDetails.setName(name);
         companyDetails.setOverview(overview);
         companyDetails.setYearOfFoundation(yearOfFoundation);
@@ -317,7 +306,6 @@ public class TestObjectsFactory {
 
     public MovieCompany createMovieCompany(CompanyDetails companyDetails, MovieProductionType movieProductionType) {
         MovieCompany movieCompany = new MovieCompany();
-        movieCompany.setId(UUID.randomUUID());
         movieCompany.setCompanyId(companyDetails);
         movieCompany.setMovieProductionType(movieProductionType);
         movieCompany.setDescription("DescTest");
@@ -359,7 +347,6 @@ public class TestObjectsFactory {
 
     public Language createLanguage(LanguageType languageType) {
         Language language = new Language();
-        language.setId(UUID.randomUUID());
         language.setName(languageType);
         return languageRepository.save(language);
     }
@@ -411,92 +398,73 @@ public class TestObjectsFactory {
         return portalUser;
     }
 
-    public Master createMaster() {
-        Master master = new Master();
-        master.setId(UUID.randomUUID());
-        master.setName("MasterName");
-        master.setPhone("645768767");
-        master.setAbout("What about");
-        master = masterRepository.save(master);
-
-        return master;
-    }
-
-    public Master createMaster(String masterName, String phone, String about) {
-        Master master = new Master();
-        master.setId(UUID.randomUUID());
-        master.setName(masterName);
-        master.setPhone(phone);
-        master.setAbout(about);
-        return masterRepository.save(master);
-    }
-
-    public Visit createVisit(PortalUser portalUser, Master master) {
+    public Visit createVisit(PortalUser portalUser) {
         Visit visit = new Visit();
-        visit.setId(UUID.randomUUID());
         visit.setUserId(portalUser);
-        visit.setMasterId(master);
-        visit.setStartAt(Instant.now());
-        visit.setFinishAt(Instant.now());
+        visit.setStartAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
+        visit.setFinishAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         visit.setStatus(VisitStatus.FINISHED);
         return visitRepository.save(visit);
     }
 
-    public Visit createVisit(PortalUser portalUser, Master master, VisitStatus visitStatus) {
+    public Visit createVisit(PortalUser portalUser, VisitStatus visitStatus) {
         Visit visit = new Visit();
-        visit.setId(UUID.randomUUID());
         visit.setUserId(portalUser);
-        visit.setMasterId(master);
-        visit.setStartAt(Instant.now());
-        visit.setFinishAt(Instant.now());
+        visit.setStartAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
+        visit.setFinishAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         visit.setStatus(visitStatus);
         return visitRepository.save(visit);
     }
 
-    public Visit createVisit(PortalUser portalUser, Master master, VisitStatus visitStatus, Instant startAt) {
+    public Visit createVisit(PortalUser portalUser, VisitStatus visitStatus, Instant startAt) {
         Visit visit = new Visit();
-        visit.setId(UUID.randomUUID());
         visit.setUserId(portalUser);
-        visit.setMasterId(master);
         visit.setStartAt(startAt);
-        visit.setFinishAt(Instant.now());
+        visit.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         visit.setStatus(visitStatus);
         return visitRepository.save(visit);
     }
 
-    public VisitCreateDTO createVisitCreateDTO(PortalUser portalUser, Master master) {
+    public VisitCreateDTO createVisitCreateDTO(PortalUser portalUser) {
         VisitCreateDTO create = new VisitCreateDTO();
         create.setUserId(portalUser.getId());
-        create.setMasterId(master.getId());
-        create.setStartAt(Instant.now());
-        create.setFinishAt(Instant.now());
+        create.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
+        create.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         create.setStatus(VisitStatus.FINISHED);
         return create;
     }
 
-    public VisitPatchDTO createVisitPatchDTO(PortalUser portalUser, Master master) {
+    public VisitPatchDTO createVisitPatchDTO(PortalUser portalUser) {
         VisitPatchDTO patch = new VisitPatchDTO();
         patch.setUserId(portalUser.getId());
-        patch.setMasterId(master.getId());
-        patch.setStartAt(Instant.now());
-        patch.setFinishAt(Instant.now());
+        patch.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
+        patch.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         patch.setStatus(VisitStatus.FINISHED);
         return patch;
     }
 
-    public VisitPutDTO createVisitPutDTO(PortalUser portalUser, Master master) {
+    public VisitPutDTO createVisitPutDTO(PortalUser portalUser) {
         VisitPutDTO put = new VisitPutDTO();
         put.setUserId(portalUser.getId());
-        put.setMasterId(master.getId());
-        put.setStartAt(Instant.now());
-        put.setFinishAt(Instant.now());
+        put.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
+        put.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
+                .toInstant(ZoneOffset.UTC));
         put.setStatus(VisitStatus.FINISHED);
         return put;
     }
 
     public CrewType createCrewType() {
         CrewType crewType = new CrewType();
-        crewType.setId(UUID.randomUUID());
         crewType.setName("Director");
         crewType = crewTypeRepository.save(crewType);
         return  crewType;
@@ -513,9 +481,8 @@ public class TestObjectsFactory {
 
     public Crew createCrew(Person person, CrewType crewType, Movie movie) {
         Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
         crew.setPersonId(person);
-        crew.setCrewType(crewType);
+        crew.setCrewTypeId(crewType);
         crew.setMovieId(movie);
         crew.setDescription("Description");
         return crewRepository.save(crew);
@@ -536,7 +503,6 @@ public class TestObjectsFactory {
 
     public MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
         MovieReview movieReview = new MovieReview();
-        movieReview.setId(UUID.randomUUID());
         movieReview.setUserId(portalUser);
         movieReview.setMovieId(movie);
         movieReview.setTextReview("This movie can be described as junk.");
@@ -575,8 +541,7 @@ public class TestObjectsFactory {
 
     public News createNews(PortalUser portalUser) {
         News news = new News();
-        news.setId(UUID.randomUUID());
-        news.setUserId(portalUser);
+        news.setPublisher(portalUser);
         news.setTopic("Main_News");
         news.setDescription("Our main news are absent today!");
         news.setPublished(Instant.now());
@@ -585,7 +550,6 @@ public class TestObjectsFactory {
 
     public UserType createUserType() {
         UserType userType = new UserType();
-        userType.setId(UUID.randomUUID());
         userType.setUserGroup(UserGroupType.USER);
         userType = userTypeRepository.save(userType);
         return userType;
@@ -604,7 +568,6 @@ public class TestObjectsFactory {
 
     public ReleaseDetail createReleaseDetail(Movie movie, Country country) {
         ReleaseDetail releaseDetail = new ReleaseDetail();
-        releaseDetail.setId(UUID.randomUUID());
         releaseDetail.setMovieId(movie);
         releaseDetail.setCountryId(country);
         releaseDetail.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
@@ -624,18 +587,27 @@ public class TestObjectsFactory {
 
     public Role createRole(Person person) {
         Role role = new Role();
-        role.setId(UUID.randomUUID());
         role.setTitle("Actor");
-        role.setRoleType("Main_Role");
+        role.setRoleType(RoleType.LEAD);
         role.setDescription("Description test");
         role.setPersonId(person);
         role = roleRepository.save(role);
         return role;
     }
 
+    public Role createRole(Person person, Movie movie) {
+        Role role = new Role();
+        role.setTitle("Actor");
+        role.setRoleType(RoleType.LEAD);
+        role.setDescription("Description test");
+        role.setPersonId(person);
+        role.setMovieId(movie);
+        role = roleRepository.save(role);
+        return role;
+    }
+
     public RoleReview createRoleReview(PortalUser portalUser, Role role) {
         RoleReview roleReview = new RoleReview();
-        roleReview.setId(UUID.randomUUID());
         roleReview.setUserId(portalUser);
         roleReview.setRoleId(role);
         roleReview.setTextReview("This role can be described as junk.");
@@ -647,7 +619,6 @@ public class TestObjectsFactory {
 
     public RoleReviewFeedback createRoleReviewFeedback(PortalUser portalUser, Role role, RoleReview roleReview) {
         RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
-        roleReviewFeedback.setId(UUID.randomUUID());
         roleReviewFeedback.setUserId(portalUser);
         roleReviewFeedback.setRoleId(role);
         roleReviewFeedback.setRoleReviewId(roleReview);
@@ -665,7 +636,6 @@ public class TestObjectsFactory {
 
     public RoleVote createRoleVote(PortalUser portalUser, Role role) {
         RoleVote roleVote = new RoleVote();
-        roleVote.setId(UUID.randomUUID());
         roleVote.setRoleId(role);
         roleVote.setUserId(portalUser);
         roleVote.setRating(UserVoteRatingType.R9);
@@ -674,7 +644,6 @@ public class TestObjectsFactory {
 
     public UserGrant createGrants(UserType userType, PortalUser portalUser) {
         UserGrant userGrant = new UserGrant();
-        userGrant.setId(UUID.randomUUID());
         userGrant.setUserTypeId(userType);
         userGrant.setObjectName("Movie");
         userGrant.setUserPermission(UserPermType.READ);
@@ -684,7 +653,6 @@ public class TestObjectsFactory {
 
     public UserType createUserTypeWithGrants(Set<UserGrant> userGrantSet) {
         UserType userType = new UserType();
-        userType.setId(UUID.randomUUID());
         userType.setUserGroup(UserGroupType.USER);
         userType.setUserGrants(userGrantSet);
         return userTypeRepository.save(userType);
@@ -692,9 +660,8 @@ public class TestObjectsFactory {
 
     public Crew createCrew(Person person, CrewType crewType, Movie movie, String description) {
         Crew crew = new Crew();
-        crew.setId(UUID.randomUUID());
         crew.setPersonId(person);
-        crew.setCrewType(crewType);
+        crew.setCrewTypeId(crewType);
         crew.setMovieId(movie);
         crew.setDescription(description);
         return crewRepository.save(crew);
@@ -702,7 +669,6 @@ public class TestObjectsFactory {
 
     public CrewType createCrewType(String typeName) {
         CrewType crewType = new CrewType();
-        crewType.setId(UUID.randomUUID());
         crewType.setName(typeName);
         crewType = crewTypeRepository.save(crewType);
         return crewType;
@@ -712,6 +678,14 @@ public class TestObjectsFactory {
         UserGrant userGrant = new UserGrant();
         userGrant.setUserTypeId(userType);
         userGrant.setObjectName("ObjectName");
+        return userGrantRepository.save(userGrant);
+    }
+
+    public UserGrant createUserGrant(UserType userType, PortalUser grantedBy) {
+        UserGrant userGrant = new UserGrant();
+        userGrant.setUserTypeId(userType);
+        userGrant.setObjectName("ObjectName");
+        userGrant.setGrantedBy(grantedBy);
         return userGrantRepository.save(userGrant);
     }
 

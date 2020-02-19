@@ -116,7 +116,7 @@ public class CrewRepositoryTest {
         Crew c3 = testObjectsFactory.createCrew(p2, ct3, m2, "Description Test");
 
         CrewFilter filter = new CrewFilter();
-        filter.setCrewType(ct3.getId());
+        filter.setCrewTypeId(ct3.getId());
         Assertions.assertThat(crewService.getCrews(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(c3.getId());
     }
@@ -221,7 +221,7 @@ public class CrewRepositoryTest {
         CrewFilter filter = new CrewFilter();
         filter.setMovieId(m2.getId());
         filter.setPersonId(p1.getId());
-        filter.setCrewType(ct1.getId());
+        filter.setCrewTypeId(ct1.getId());
         filter.setMovieIds(List.of(m2.getId(), m1.getId(),m3.getId()));
         filter.setCrewTypesIds(List.of(ct1.getId(), ct2.getId(),ct3.getId()));
         filter.setPersonIds(List.of(p1.getId(), p3.getId()));
@@ -247,37 +247,37 @@ public class CrewRepositoryTest {
     }
 
     @Test
-    public void testModifiedAtIsSet() {
+    public void testupdatedAtIsSet() {
         CrewType ct = testObjectsFactory.createCrewType();
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
         Crew crew = testObjectsFactory.createCrew(p, ct, m, "Desc");
 
-        Instant modifiedAtBeforeReload = crew.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = crew.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
         crew = crewRepository.findById(crew.getId()).get();
 
-        Instant modifiedAtAfterReload = crew.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertEquals(modifiedAtBeforeReload, modifiedAtAfterReload);
+        Instant updatedAtAfterReload = crew.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertEquals(updatedAtBeforeReload, updatedAtAfterReload);
     }
 
     @Test
-    public void testModifiedAtIsModified() {
+    public void testupdatedAtIsModified() {
         CrewType ct = testObjectsFactory.createCrewType();
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
         Crew crew = testObjectsFactory.createCrew(p, ct, m, "Desc");
 
-        Instant modifiedAtBeforeReload = crew.getModifiedAt();
-        Assert.assertNotNull(modifiedAtBeforeReload);
+        Instant updatedAtBeforeReload = crew.getUpdatedAt();
+        Assert.assertNotNull(updatedAtBeforeReload);
 
         crew.setDescription("NewTest");
         crewRepository.save(crew);
         crew = crewRepository.findById(crew.getId()).get();
 
-        Instant modifiedAtAfterReload = crew.getModifiedAt();
-        Assert.assertNotNull(modifiedAtAfterReload);
-        Assert.assertTrue(modifiedAtBeforeReload.compareTo(modifiedAtAfterReload) < 1);
+        Instant updatedAtAfterReload = crew.getUpdatedAt();
+        Assert.assertNotNull(updatedAtAfterReload);
+        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
     }
 }

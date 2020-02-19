@@ -49,7 +49,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
         Mockito.when(roleReviewCompliantService.getRoleReviewRoleReviewCompliant(roleReviewReadDTO.getId()))
                 .thenReturn(roleReviewCompliant);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants",
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-review-compliants",
                 roleReviewReadDTO.getId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -68,7 +68,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(RoleReviewCompliant.class,wrongId);
         Mockito.when(roleReviewCompliantService.getRoleReviewRoleReviewCompliant(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants",
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-review-compliants",
                 wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
@@ -80,7 +80,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
     public void testGetRoleReviewCompliantWrongFormatId() throws Exception {
         String wrongId = "123";
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants"
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-review-compliants"
                 , wrongId))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
@@ -103,7 +103,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
         Mockito.when(roleReviewCompliantService.createRoleReviewRoleReviewCompliant(roleReviewReadDTO.getId(),
                 create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants",
+        String resultJson = mvc.perform(post("/api/v1/role-reviews/{roleReviewId}/role-review-compliants",
                 roleReviewReadDTO.getId())
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
         Mockito.when(roleReviewCompliantService.patchRoleReviewRoleReviewCompliant(roleReviewReadDTO.getId(),
                 read.getId(), patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants/{id}"
+        String resultJson = mvc.perform(patch("/api/v1/role-reviews/{roleReviewId}/role-review-compliants/{id}"
                 ,roleReviewReadDTO.getId() ,read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -146,7 +146,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
     public void testDeleteRoleReviewCompliant() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants/{id}",
+        mvc.perform(delete("/api/v1/role-reviews/{roleReviewId}/role-review-compliants/{id}",
                 id, id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleReviewCompliantService).deleteRoleReviewRoleReviewCompliant(id, id);
@@ -168,7 +168,7 @@ public class RoleReviewRoleReviewCompliantControllerTest {
         Mockito.when(roleReviewCompliantService.updateRoleReviewRoleReviewCompliant(roleReviewReadDTO.getId(),
                 read.getId(), putDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(put("/api/v1/rolereviews/{rolereviewid}/rolereviewcompliants/{id}"
+        String resultJson = mvc.perform(put("/api/v1/role-reviews/{roleReviewId}/role-review-compliants/{id}"
                 , roleReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
                 .contentType(MediaType.APPLICATION_JSON))

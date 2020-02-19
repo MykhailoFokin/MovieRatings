@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.RoleType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,13 +13,15 @@ public class RoleReadDTO {
 
     private String title;
 
-    private String roleType;
+    private RoleType roleType;
 
     private String description;
 
     private UUID personId;
 
+    private UUID movieId;
+
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

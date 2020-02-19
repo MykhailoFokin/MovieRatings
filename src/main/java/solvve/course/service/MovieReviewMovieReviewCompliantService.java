@@ -11,6 +11,7 @@ import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewCompliantRepository;
+import solvve.course.repository.RepositoryHelper;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,10 +24,10 @@ public class MovieReviewMovieReviewCompliantService {
     private TranslationService translationService;
 
     @Autowired
-    private MovieReviewService movieReviewService;
+    private MovieReviewCompliantRepository movieReviewCompliantRepository;
 
     @Autowired
-    private MovieReviewCompliantRepository movieReviewCompliantRepository;
+    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<MovieReviewCompliantReadDTO> getMovieReviewMovieReviewCompliant(UUID movieReviewId) {
@@ -37,12 +38,10 @@ public class MovieReviewMovieReviewCompliantService {
 
     public MovieReviewCompliantReadDTO createMovieReviewMovieReviewCompliant(UUID movieReviewId,
                                                                              MovieReviewCompliantCreateDTO create) {
-        MovieReview movieReview = translationService.ReadDTOtoEntity(movieReviewService.getMovieReview(movieReviewId));
-
         MovieReviewCompliant movieReviewCompliant = translationService.toEntity(create);
-        movieReviewCompliant.setMovieReviewId(movieReview);
-
+        movieReviewCompliant.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
+
         return translationService.toRead(movieReviewCompliant);
     }
 
@@ -51,8 +50,8 @@ public class MovieReviewMovieReviewCompliantService {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewMovieReviewCompliantRequired(movieReviewId, id);
 
         translationService.patchEntity(patch, movieReviewCompliant);
-
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
+
         return translationService.toRead(movieReviewCompliant);
     }
 
@@ -63,10 +62,9 @@ public class MovieReviewMovieReviewCompliantService {
     public MovieReviewCompliantReadDTO updateMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id,
                                                                              MovieReviewCompliantPutDTO put) {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewMovieReviewCompliantRequired(movieReviewId, id);
-
         translationService.updateEntity(put, movieReviewCompliant);
-
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
+
         return translationService.toRead(movieReviewCompliant);
     }
 

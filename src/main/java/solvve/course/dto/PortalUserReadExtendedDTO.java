@@ -20,7 +20,7 @@ public class PortalUserReadExtendedDTO {
 
     private String middleName;
 
-    private UserType userType;
+    private UserType userTypeId;
 
     private UserConfidenceType userConfidence;
 
@@ -56,5 +56,5 @@ public class PortalUserReadExtendedDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

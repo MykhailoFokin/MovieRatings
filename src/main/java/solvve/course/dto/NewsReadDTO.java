@@ -10,7 +10,7 @@ public class NewsReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private UUID publisher;
 
     private Instant published;
 
@@ -20,5 +20,5 @@ public class NewsReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

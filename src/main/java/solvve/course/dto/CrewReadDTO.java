@@ -14,11 +14,11 @@ public class CrewReadDTO {
 
     private UUID movieId;
 
-    private UUID crewType;
+    private UUID crewTypeId;
 
     private String description;
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

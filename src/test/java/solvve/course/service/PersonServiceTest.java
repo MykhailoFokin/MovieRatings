@@ -49,7 +49,6 @@ public class PersonServiceTest {
         personService.getPersons(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreatePersons() {
         PersonCreateDTO create = new PersonCreateDTO();
@@ -63,7 +62,6 @@ public class PersonServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(person);
     }
 
-    @Transactional
     @Test
     public void testPatchPersons() {
         Person person = testObjectsFactory.createPerson();
@@ -80,7 +78,6 @@ public class PersonServiceTest {
         Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
     }
 
-    @Transactional
     @Test
     public void testPatchPersonsEmptyPatch() {
         Person person = testObjectsFactory.createPerson();
@@ -98,7 +95,7 @@ public class PersonServiceTest {
         Assert.assertNotNull(personAfterUpdate.getSurname());
         Assert.assertNotNull(personAfterUpdate.getMiddleName());
 
-        Assertions.assertThat(person).isEqualToComparingFieldByField(personAfterUpdate);
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(personAfterUpdate,"crews");
     }
 
     @Test
@@ -114,7 +111,6 @@ public class PersonServiceTest {
         personService.deletePersons(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutPersons() {
         Person person = testObjectsFactory.createPerson();

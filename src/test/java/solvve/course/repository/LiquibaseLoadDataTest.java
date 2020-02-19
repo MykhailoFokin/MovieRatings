@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("test")
 @TestPropertySource(properties = "spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml")
 @Sql(statements = {"delete from visit"
-        ,"delete from master","delete from news","delete from movie_review_compliant",
+        ,"delete from news","delete from movie_review_compliant",
         "delete from movie_review_feedback","delete from movie_spoiler_data","delete from movie_vote",
         "delete from movie_review","delete from genre","delete from crew_type","delete from crew",
         "delete from movie_company","delete from role_review_compliant","delete from role_review_feedback",
@@ -44,9 +44,6 @@ public class LiquibaseLoadDataTest {
 
     @Autowired
     private LanguageRepository languageRepository;
-
-    @Autowired
-    private MasterRepository masterRepository;
 
     @Autowired
     private MovieCompanyRepository movieCompanyRepository;
@@ -108,7 +105,6 @@ public class LiquibaseLoadDataTest {
     @Autowired
     private VisitRepository visitRepository;
 
-    @Ignore
     @Test
     public void testDataLoaded() {
         Assert.assertTrue(countryRepository.count() > 0);
@@ -117,7 +113,6 @@ public class LiquibaseLoadDataTest {
         Assert.assertTrue(crewTypeRepository.count() > 0);
         Assert.assertTrue(genreRepository.count() > 0);
         Assert.assertTrue(languageRepository.count() > 0);
-        Assert.assertTrue(masterRepository.count() > 0);
         Assert.assertTrue(movieRepository.count() > 0);
         Assert.assertTrue(movieCompanyRepository.count() > 0);
         Assert.assertTrue(movieReviewRepository.count() > 0);

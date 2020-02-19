@@ -118,7 +118,8 @@
 			<column name = "description" type="varchar(1000)"/>
 			<column name = "company_id" type="uuid">
 				<constraints nullable="false"
-							 foreignKeyName="fk_mcompany_companydetails" references="company_details(id)"/>
+							 foreignKeyName="fk_mcompany_companydetails" references="company_details(id)"
+							 deleteCascade="true"/>
 			</column>
 			<column name = "created_at" type="datetime"/>
 			<column name = "modified_at" type="datetime"/>
@@ -378,6 +379,10 @@
 			<column name = "status" type="varchar(20)"/>
 			<column name = "created_at" type="datetime"/>
 			<column name = "modified_at" type="datetime"/>
+		</createTable>
+		<createTable tableName="country_languages">
+			<column name="country_id" type="uuid"></column>
+			<column name="language_id" type="uuid"></column>
 		</createTable>
 	</changeSet>
 	

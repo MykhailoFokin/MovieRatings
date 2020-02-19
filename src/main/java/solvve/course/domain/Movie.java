@@ -80,9 +80,12 @@ public class Movie {
     @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
     private Set<ReleaseDetail> releaseDetails;
 
+    @OneToOne(mappedBy = "movieId")
+    private Role role;
+
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

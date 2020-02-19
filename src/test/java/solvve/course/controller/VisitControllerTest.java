@@ -179,14 +179,12 @@ public class VisitControllerTest {
     public void testGetVisits() throws Exception {
         VisitFilter visitFilter = new VisitFilter();
         visitFilter.setUserId(UUID.randomUUID());
-        visitFilter.setMasterId(UUID.randomUUID());
         visitFilter.setStatuses(Set.of(VisitStatus.SCHEDULED, VisitStatus.FINISHED));
         visitFilter.setStartAtFrom(Instant.now());
         visitFilter.setStartAtTo(Instant.now());
 
         VisitReadDTO read = new VisitReadDTO();
         read.setUserId(visitFilter.getUserId());
-        read.setMasterId(visitFilter.getMasterId());
         read.setStatus(VisitStatus.SCHEDULED);
         read.setId(UUID.randomUUID());
         read.setStartAt(Instant.now());
@@ -196,7 +194,6 @@ public class VisitControllerTest {
 
         String resultJson = mvc.perform(get("/api/v1/visits")
                 .param("userId", visitFilter.getUserId().toString())
-                .param("masterId", visitFilter.getMasterId().toString())
                 .param("statuses", "SCHEDULED, FINISHED")
                 .param("startAtFrom", visitFilter.getStartAtFrom().toString())
                 .param("startAtTo", visitFilter.getStartAtTo().toString()))

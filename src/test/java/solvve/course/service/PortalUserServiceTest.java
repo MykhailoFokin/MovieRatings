@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
 import solvve.course.domain.UserType;
@@ -40,15 +39,14 @@ public class PortalUserServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetPortalUsers() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userType");
-        Assertions.assertThat(readDTO.getUserType())
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userTypeId");
+        Assertions.assertThat(readDTO.getUserTypeId())
                 .isEqualToComparingFieldByField(portalUser.getUserTypeId().getId());
     }
 
@@ -57,13 +55,12 @@ public class PortalUserServiceTest {
         portalUserService.getPortalUser(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreatePortalUsers() {
         UserType userType = testObjectsFactory.createUserType();
 
         PortalUserCreateDTO create = new PortalUserCreateDTO();
-        create.setUserType(userType.getId());
+        create.setUserTypeId(userType.getId());
         create.setSurname("Surname");
         create.setName("Name");
         create.setMiddleName("MiddleName");
@@ -73,18 +70,17 @@ public class PortalUserServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         PortalUser portalUser = portalUserRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(portalUser,"userType");
-        Assertions.assertThat(read.getUserType()).isEqualTo(portalUser.getUserTypeId().getId());
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(portalUser,"userTypeId");
+        Assertions.assertThat(read.getUserTypeId()).isEqualTo(portalUser.getUserTypeId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchPortalUser() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
-        patch.setUserType(userType.getId());
+        patch.setUserTypeId(userType.getId());
         patch.setSurname("Surname");
         patch.setName("Name");
         patch.setMiddleName("MiddleName");
@@ -100,10 +96,9 @@ public class PortalUserServiceTest {
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
                 ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
-        Assertions.assertThat(portalUser.getUserTypeId().getId()).isEqualTo(read.getUserType());
+        Assertions.assertThat(portalUser.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
     }
 
-    @Transactional
     @Test
     public void testPatchPortalUserEmptyPatch() {
         UserType userType = testObjectsFactory.createUserType();
@@ -112,7 +107,7 @@ public class PortalUserServiceTest {
         PortalUserPatchDTO patch = new PortalUserPatchDTO();
         PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
 
-        Assert.assertNotNull(read.getUserType());
+        Assert.assertNotNull(read.getUserTypeId());
         Assert.assertNotNull(read.getSurname());
         Assert.assertNotNull(read.getName());
         Assert.assertNotNull(read.getMiddleName());
@@ -128,7 +123,11 @@ public class PortalUserServiceTest {
         Assert.assertNotNull(portalUserAfterUpdate.getLogin());
         Assert.assertNotNull(portalUserAfterUpdate.getUserConfidence());
 
-        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(portalUserAfterUpdate);
+        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(portalUserAfterUpdate,
+                "userTypeId", "userGrants","movieReview","movieReviewModerator",
+                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
+                ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
+                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
     }
 
     @Test
@@ -145,14 +144,13 @@ public class PortalUserServiceTest {
         portalUserService.deletePortalUser(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutPortalUser() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPutDTO put = new PortalUserPutDTO();
-        put.setUserType(userType.getId());
+        put.setUserTypeId(userType.getId());
         put.setSurname("Surname");
         put.setName("Name");
         put.setMiddleName("MiddleName");
@@ -168,10 +166,9 @@ public class PortalUserServiceTest {
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks",
                 "roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
-        Assertions.assertThat(portalUser.getUserTypeId().getId()).isEqualTo(read.getUserType());
+        Assertions.assertThat(portalUser.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
     }
 
-    @Transactional
     @Test
     public void testPutPortalUserEmptyPut() {
         UserType userType = testObjectsFactory.createUserType();
@@ -180,7 +177,7 @@ public class PortalUserServiceTest {
         PortalUserPutDTO put = new PortalUserPutDTO();
         PortalUserReadDTO read = portalUserService.updatePortalUser(portalUser.getId(), put);
 
-        Assert.assertNull(read.getUserType());
+        Assert.assertNotNull(read.getUserTypeId());
         Assert.assertNull(read.getSurname());
         Assert.assertNull(read.getName());
         Assert.assertNull(read.getMiddleName());
@@ -189,13 +186,11 @@ public class PortalUserServiceTest {
 
         PortalUser portalUserAfterUpdate = portalUserRepository.findById(read.getId()).get();
 
-        Assert.assertNull(portalUserAfterUpdate.getUserTypeId().getId());
+        Assert.assertNotNull(portalUserAfterUpdate.getUserTypeId().getId());
         Assert.assertNull(portalUserAfterUpdate.getSurname());
         Assert.assertNull(portalUserAfterUpdate.getName());
         Assert.assertNull(portalUserAfterUpdate.getMiddleName());
         Assert.assertNull(portalUserAfterUpdate.getLogin());
         Assert.assertNull(portalUserAfterUpdate.getUserConfidence());
-
-        Assertions.assertThat(portalUser).isEqualToComparingFieldByField(portalUserAfterUpdate);
     }
 }

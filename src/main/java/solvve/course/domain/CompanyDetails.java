@@ -23,7 +23,7 @@ public class CompanyDetails {
     @GeneratedValue
     private UUID id;
 
-    @OneToMany(mappedBy = "companyId", cascade = CascadeType. PERSIST)
+    @OneToMany(mappedBy = "companyId", cascade = CascadeType.PERSIST)
     private Set<MovieCompany> movieProdTypeCompanies = new HashSet<MovieCompany>();
 
     private String name;
@@ -36,5 +36,5 @@ public class CompanyDetails {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

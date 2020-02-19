@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/moviereviews/{moviereviewid}/moviereviewcompliants")
+@RequestMapping("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants")
 public class MovieReviewMovieReviewCompliantController {
 
     @Autowired
@@ -20,34 +20,34 @@ public class MovieReviewMovieReviewCompliantController {
 
     @GetMapping
     public List<MovieReviewCompliantReadDTO> getMovieReviewSpoilerData(
-            @PathVariable(value = "moviereviewid") UUID movieReviewId) {
+            @PathVariable UUID movieReviewId) {
         return movieReviewCompliantService.getMovieReviewMovieReviewCompliant(movieReviewId);
     }
 
     @PostMapping
     public MovieReviewCompliantReadDTO createMovieReviewCompliant(
-            @PathVariable (value = "moviereviewid") UUID movieReviewId,
+            @PathVariable UUID movieReviewId,
             @RequestBody MovieReviewCompliantCreateDTO createDTO) {
         return movieReviewCompliantService.createMovieReviewMovieReviewCompliant(movieReviewId, createDTO);
     }
 
     @PatchMapping("/{id}")
     public MovieReviewCompliantReadDTO patchMovieReviewCompliant(
-            @PathVariable (value = "moviereviewid") UUID movieReviewId,
+            @PathVariable UUID movieReviewId,
             @PathVariable (value = "id") UUID id,
             @RequestBody MovieReviewCompliantPatchDTO patch) {
         return movieReviewCompliantService.patchMovieReviewMovieReviewCompliant(movieReviewId, id, patch);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovieReviewCompliant(@PathVariable (value = "moviereviewid") UUID movieReviewId,
+    public void deleteMovieReviewCompliant(@PathVariable UUID movieReviewId,
                                            @PathVariable (value = "id") UUID id) {
         movieReviewCompliantService.deleteMovieReviewMovieReviewCompliant(movieReviewId, id);
     }
 
     @PutMapping("/{id}")
     public MovieReviewCompliantReadDTO putMovieReviewCompliant(
-            @PathVariable (value = "moviereviewid") UUID movieReviewId,
+            @PathVariable UUID movieReviewId,
             @PathVariable (value = "id") UUID id,
             @RequestBody MovieReviewCompliantPutDTO put) {
         return movieReviewCompliantService.updateMovieReviewMovieReviewCompliant(movieReviewId, id, put);

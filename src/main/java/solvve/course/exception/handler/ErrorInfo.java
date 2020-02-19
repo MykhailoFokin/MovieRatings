@@ -3,6 +3,7 @@ package solvve.course.exception.handler;
 import org.springframework.http.HttpStatus;
 
 public class ErrorInfo {
+
     private final HttpStatus status;
     private final Class exceptionClass;
     private String message;

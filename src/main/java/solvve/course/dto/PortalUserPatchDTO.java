@@ -16,7 +16,7 @@ public class PortalUserPatchDTO {
 
     private String middleName;
 
-    private UUID userType;
+    private UUID userTypeId;
 
     private UserConfidenceType userConfidence;
 }

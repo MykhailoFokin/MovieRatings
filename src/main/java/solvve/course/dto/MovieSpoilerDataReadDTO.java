@@ -18,5 +18,5 @@ public class MovieSpoilerDataReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

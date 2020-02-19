@@ -1,4 +1,4 @@
-id;user_id;published;topic;description
+id;publisher_id;published;topic;description
 5cfca466-c77e-4d04-af51-181b4f4a3650;2c80168d-8159-431b-99e9-e721620349ca;2019-12-26 12:00:00;test;test
 59cc05d6-4ddb-422e-ad8d-dc4a5be1cef2;2fb20a92-ef08-471f-8cc4-e33e0ece788d;2019-12-26 12:00:00;test;test
 0625a94f-97b0-4db7-9f55-cc084c3551a4;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41;2019-12-26 12:00:00;test;test

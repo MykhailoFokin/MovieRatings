@@ -23,9 +23,14 @@ public class Role {
 
     private String title;
 
-    private String roleType; // main, second, etc
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
     private String description;
+
+    @OneToOne
+    @JoinColumn
+    private Movie movieId;
 
     @OneToOne
     @JoinColumn
@@ -47,5 +52,5 @@ public class Role {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

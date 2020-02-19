@@ -12,8 +12,6 @@ public class VisitFilter {
 
     private UUID userId;
 
-    private UUID masterId;
-
     private Set<VisitStatus> statuses;
 
     private Instant startAtFrom;

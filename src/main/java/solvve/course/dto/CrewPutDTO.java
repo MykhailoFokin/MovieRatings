@@ -11,7 +11,7 @@ public class CrewPutDTO {
 
     private UUID movieId;
 
-    private UUID crewType;
+    private UUID crewTypeId;
 
     private String description;
 }

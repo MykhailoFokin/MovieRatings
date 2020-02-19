@@ -13,8 +13,6 @@ public class VisitReadExtendedDTO {
 
     private PortalUserReadDTO userId;
 
-    private MasterReadDTO masterId;
-
     private Instant startAt;
 
     private Instant finishAt;
@@ -23,5 +21,5 @@ public class VisitReadExtendedDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

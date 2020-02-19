@@ -21,5 +21,5 @@ public class UserGrantReadDTO {
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

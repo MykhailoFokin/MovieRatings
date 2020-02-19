@@ -1,6 +1,6 @@
 id;title;year;description;sound_mix;colour;aspect_ratio;camera;laboratory;critique;is_published
-a107f8d4-7578-4ce9-a219-63cd5e021a20;Movie1;2002;Desc1;Mix1;Black;1:10;Panasonic;Lab1;critique1;1
-3397320c-5658-4e6a-83f6-e8affe0ae20d;Movie2;2003;Desc2;Mix2;RGB;1:20;Panasonic;Lab2;critique2;1
-d06832a7-1528-495f-91f9-1cb465b06722;Movie3;2004;Desc3;Mix3;RGB;1:30;Panasonic;Lab3;critique1;1
-23f20eb2-9adb-44d1-8bc1-276ec3aaf7e9;Movie4;2005;Desc4;Mix4;RedAndGreen;1:25;Sony;Lab4;critique3;1
-4beabcf3-add4-47f8-b160-2e95ca2cdb28;Movie5;2006;Desc5;Mix5;Grey;1:15;Canon;Lab1;critique1;1
+a107f8d4-7578-4ce9-a219-63cd5e021a20;Movie1;2002;Desc1;Mix1;Black;1:10;Panasonic;Lab1;critique1;true
+3397320c-5658-4e6a-83f6-e8affe0ae20d;Movie2;2003;Desc2;Mix2;RGB;1:20;Panasonic;Lab2;critique2;true
+d06832a7-1528-495f-91f9-1cb465b06722;Movie3;2004;Desc3;Mix3;RGB;1:30;Panasonic;Lab3;critique1;true
+23f20eb2-9adb-44d1-8bc1-276ec3aaf7e9;Movie4;2005;Desc4;Mix4;RedAndGreen;1:25;Sony;Lab4;critique3;true
+4beabcf3-add4-47f8-b160-2e95ca2cdb28;Movie5;2006;Desc5;Mix5;Grey;1:15;Canon;Lab1;critique1;true

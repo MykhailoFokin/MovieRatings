@@ -63,7 +63,7 @@ public class RoleReviewSpoilerDataControllerTest {
         Mockito.when(roleSpoilerDataService.getRoleReviewSpoilerData(roleReview.getId()))
                 .thenReturn(roleSpoilerData);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas",
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas",
                 roleReview.getId().toString()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -82,7 +82,7 @@ public class RoleReviewSpoilerDataControllerTest {
         EntityNotFoundException exception = new EntityNotFoundException(RoleSpoilerData.class,wrongId);
         Mockito.when(roleSpoilerDataService.getRoleReviewSpoilerData(wrongId)).thenThrow(exception);
 
-        String resultJson = mvc.perform(get("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas"
+        String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas"
                 , wrongId))
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
@@ -104,7 +104,7 @@ public class RoleReviewSpoilerDataControllerTest {
         Mockito.when(roleSpoilerDataService.createRoleReviewSpoilerData(roleReviewReadDTO.getId(),
                 create)).thenReturn(read);
 
-        String resultJson = mvc.perform(post("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas"
+        String resultJson = mvc.perform(post("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas"
                 , roleReviewReadDTO.getId().toString())
                 .content(objectMapper.writeValueAsString(create))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ public class RoleReviewSpoilerDataControllerTest {
         Mockito.when(roleSpoilerDataService.patchRoleReviewSpoilerData(roleReviewReadDTO.getId(),
                 read.getId(),patchDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(patch("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas/{id}",
+        String resultJson = mvc.perform(patch("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas/{id}",
                 roleReviewReadDTO.getId(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -146,7 +146,7 @@ public class RoleReviewSpoilerDataControllerTest {
     public void testDeleteRoleSpoilerData() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mvc.perform(delete("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas/{id}",
+        mvc.perform(delete("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas/{id}",
                 id, id.toString())).andExpect(status().isOk());
 
         Mockito.verify(roleSpoilerDataService).deleteRoleReviewSpoilerData(id, id);
@@ -166,7 +166,7 @@ public class RoleReviewSpoilerDataControllerTest {
         Mockito.when(roleSpoilerDataService.updateRoleReviewSpoilerData(roleReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
 
-        String resultJson = mvc.perform(put("/api/v1/rolereviews/{rolereviewid}/rolespoilerdatas/{id}",
+        String resultJson = mvc.perform(put("/api/v1/role-reviews/{roleReviewId}/role-spoiler-datas/{id}",
                 roleReviewReadDTO.getId().toString(), read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
                 .contentType(MediaType.APPLICATION_JSON))

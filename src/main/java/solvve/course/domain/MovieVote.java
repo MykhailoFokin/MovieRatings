@@ -35,5 +35,5 @@ public class MovieVote {
     private Instant createdAt;
 
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

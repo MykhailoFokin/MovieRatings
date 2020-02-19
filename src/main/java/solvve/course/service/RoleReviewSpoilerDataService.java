@@ -10,6 +10,7 @@ import solvve.course.dto.RoleSpoilerDataPatchDTO;
 import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleSpoilerDataRepository;
 
 import java.util.List;
@@ -23,37 +24,35 @@ public class RoleReviewSpoilerDataService {
     private TranslationService translationService;
 
     @Autowired
-    private RoleReviewService roleReviewService;
+    private RoleSpoilerDataRepository roleSpoilerDataRepository;
 
     @Autowired
-    private RoleSpoilerDataRepository roleSpoilerDataRepository;
+    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<RoleSpoilerDataReadDTO> getRoleReviewSpoilerData(UUID roleReviewId) {
-        roleReviewService.getRoleReview(roleReviewId);
-
         List<RoleSpoilerData> roleSpoilerDataList =
-                roleSpoilerDataRepository.findByRoleReviewIdOrderByIdAsc(roleReviewId);
+                roleSpoilerDataRepository.findByRoleReviewIdOrderByIdAsc(roleReviewId).orElseThrow(() -> {
+                    throw new EntityNotFoundException(RoleSpoilerData.class, roleReviewId);
+                });
+
         return roleSpoilerDataList.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public RoleSpoilerDataReadDTO createRoleReviewSpoilerData(UUID roleReviewId, RoleSpoilerDataCreateDTO create) {
-        RoleReview roleReview = translationService.ReadDTOtoEntity(roleReviewService.getRoleReview(roleReviewId));
-
         RoleSpoilerData roleSpoilerData = translationService.toEntity(create);
-        roleSpoilerData.setRoleReviewId(roleReview);
-
+        roleSpoilerData.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
+
         return translationService.toRead(roleSpoilerData);
     }
 
     public RoleSpoilerDataReadDTO patchRoleReviewSpoilerData(UUID roleReviewId, UUID id,
                                                              RoleSpoilerDataPatchDTO patch) {
         RoleSpoilerData roleSpoilerData = getRoleReviewSpoilerDataRequired(roleReviewId, id);
-
         translationService.patchEntity(patch, roleSpoilerData);
-
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
+
         return translationService.toRead(roleSpoilerData);
     }
 
@@ -63,10 +62,9 @@ public class RoleReviewSpoilerDataService {
 
     public RoleSpoilerDataReadDTO updateRoleReviewSpoilerData(UUID roleReviewId, UUID id, RoleSpoilerDataPutDTO put) {
         RoleSpoilerData roleSpoilerData = getRoleReviewSpoilerDataRequired(roleReviewId, id);
-
         translationService.updateEntity(put, roleSpoilerData);
-
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
+
         return translationService.toRead(roleSpoilerData);
     }
 

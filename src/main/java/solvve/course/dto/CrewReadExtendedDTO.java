@@ -14,11 +14,11 @@ public class CrewReadExtendedDTO {
 
     private MovieReadDTO movieId;
 
-    private CrewTypeReadDTO crewType;
+    private CrewTypeReadDTO crewTypeId;
 
     private String description;
 
     private Instant createdAt;
 
-    private Instant modifiedAt;
+    private Instant updatedAt;
 }

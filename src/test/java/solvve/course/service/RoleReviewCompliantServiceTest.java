@@ -39,12 +39,12 @@ public class RoleReviewCompliantServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetRoleReviewCompliant() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -68,12 +68,12 @@ public class RoleReviewCompliantServiceTest {
         roleReviewCompliantService.getRoleReviewCompliant(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateRoleReviewCompliant() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewCompliantCreateDTO create = new RoleReviewCompliantCreateDTO();
@@ -100,12 +100,12 @@ public class RoleReviewCompliantServiceTest {
                 .isEqualToComparingFieldByField(roleReviewCompliant.getModeratorId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleReviewCompliant() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -135,12 +135,12 @@ public class RoleReviewCompliantServiceTest {
                 .isEqualToComparingFieldByField(read.getModeratorId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleReviewCompliantEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -166,14 +166,24 @@ public class RoleReviewCompliantServiceTest {
         Assert.assertNotNull(roleReviewCompliantAfterUpdate.getModeratedStatus());
         Assert.assertNotNull(roleReviewCompliantAfterUpdate.getModeratorId());
 
-        Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(roleReviewCompliantAfterUpdate);
+        Assertions.assertThat(roleReviewCompliant).isEqualToIgnoringGivenFields(roleReviewCompliantAfterUpdate,
+                "userId", "roleId", "roleReviewId", "moderatorId");
+        Assertions.assertThat(roleReviewCompliant.getUserId().getId())
+                .isEqualTo(roleReviewCompliantAfterUpdate.getUserId().getId());
+        Assertions.assertThat(roleReviewCompliant.getRoleId().getId())
+                .isEqualTo(roleReviewCompliantAfterUpdate.getRoleId().getId());
+        Assertions.assertThat(roleReviewCompliant.getRoleReviewId().getId())
+                .isEqualTo(roleReviewCompliantAfterUpdate.getRoleReviewId().getId());
+        Assertions.assertThat(roleReviewCompliant.getModeratorId().getId())
+                .isEqualTo(roleReviewCompliantAfterUpdate.getModeratorId().getId());
     }
 
     @Test
     public void testDeleteRoleReviewCompliant() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -187,12 +197,12 @@ public class RoleReviewCompliantServiceTest {
         roleReviewCompliantService.deleteRoleReviewCompliant(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutRoleReviewCompliant() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -227,7 +237,8 @@ public class RoleReviewCompliantServiceTest {
     public void testPutRoleReviewCompliantEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
@@ -236,9 +247,9 @@ public class RoleReviewCompliantServiceTest {
         RoleReviewCompliantReadDTO read =
                 roleReviewCompliantService.updateRoleReviewCompliant(roleReviewCompliant.getId(), put);
 
-        Assert.assertNull(read.getUserId());
-        Assert.assertNull(read.getRoleId());
-        Assert.assertNull(read.getRoleReviewId());
+        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getRoleId());
+        Assert.assertNotNull(read.getRoleReviewId());
         Assert.assertNull(read.getDescription());
         Assert.assertNull(read.getModeratedStatus());
         Assert.assertNull(read.getModeratorId());
@@ -246,13 +257,11 @@ public class RoleReviewCompliantServiceTest {
         RoleReviewCompliant roleReviewCompliantAfterUpdate =
                 roleReviewCompliantRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getUserId().getId());
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleId().getId());
-        Assert.assertNull(roleReviewCompliantAfterUpdate.getRoleReviewId().getId());
+        Assert.assertNotNull(roleReviewCompliantAfterUpdate.getUserId().getId());
+        Assert.assertNotNull(roleReviewCompliantAfterUpdate.getRoleId().getId());
+        Assert.assertNotNull(roleReviewCompliantAfterUpdate.getRoleReviewId().getId());
         Assert.assertNull(roleReviewCompliantAfterUpdate.getDescription());
         Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratedStatus());
         Assert.assertNull(roleReviewCompliantAfterUpdate.getModeratorId().getId());
-
-        Assertions.assertThat(roleReviewCompliant).isEqualToComparingFieldByField(roleReviewCompliantAfterUpdate);
     }
 }

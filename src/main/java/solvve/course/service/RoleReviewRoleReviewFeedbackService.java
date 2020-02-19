@@ -10,6 +10,7 @@ import solvve.course.dto.RoleReviewFeedbackPatchDTO;
 import solvve.course.dto.RoleReviewFeedbackPutDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleReviewFeedbackRepository;
 
 import java.util.List;
@@ -23,10 +24,10 @@ public class RoleReviewRoleReviewFeedbackService {
     private TranslationService translationService;
 
     @Autowired
-    private RoleReviewService roleReviewService;
+    private RoleReviewFeedbackRepository roleReviewFeedbackRepository;
 
     @Autowired
-    private RoleReviewFeedbackRepository roleReviewFeedbackRepository;
+    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<RoleReviewFeedbackReadDTO> getRoleReviewRoleReviewFeedback(UUID roleReviewId) {
@@ -36,22 +37,19 @@ public class RoleReviewRoleReviewFeedbackService {
 
     public RoleReviewFeedbackReadDTO createRoleReviewRoleReviewFeedback(UUID roleReviewId,
                                                                         RoleReviewFeedbackCreateDTO create) {
-        RoleReview roleReview = translationService.ReadDTOtoEntity(roleReviewService.getRoleReview(roleReviewId));
-
         RoleReviewFeedback roleReviewFeedback = translationService.toEntity(create);
-        roleReviewFeedback.setRoleReviewId(roleReview);
-
+        roleReviewFeedback.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
+
         return translationService.toRead(roleReviewFeedback);
     }
 
     public RoleReviewFeedbackReadDTO patchRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id,
                                                                        RoleReviewFeedbackPatchDTO patch) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewRoleReviewFeedbackRequired(roleReviewId, id);
-
         translationService.patchEntity(patch, roleReviewFeedback);
-
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
+
         return translationService.toRead(roleReviewFeedback);
     }
 
@@ -62,10 +60,9 @@ public class RoleReviewRoleReviewFeedbackService {
     public RoleReviewFeedbackReadDTO updateRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id,
                                                                         RoleReviewFeedbackPutDTO put) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewRoleReviewFeedbackRequired(roleReviewId, id);
-
         translationService.updateEntity(put, roleReviewFeedback);
-
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
+
         return translationService.toRead(roleReviewFeedback);
     }
 

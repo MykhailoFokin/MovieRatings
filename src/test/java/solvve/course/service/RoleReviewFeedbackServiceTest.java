@@ -68,7 +68,8 @@ public class RoleReviewFeedbackServiceTest {
     public void testCreateRoleReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
@@ -93,7 +94,8 @@ public class RoleReviewFeedbackServiceTest {
     public void testPatchRoleReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewFeedback roleReviewFeedback =
                 testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
@@ -150,7 +152,8 @@ public class RoleReviewFeedbackServiceTest {
     public void testDeleteRoleReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewFeedback roleReviewFeedback =
                 testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
@@ -169,7 +172,8 @@ public class RoleReviewFeedbackServiceTest {
     public void testPutRoleReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleReviewFeedback roleReviewFeedback =
                 testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);

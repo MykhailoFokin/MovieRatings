@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
 import solvve.course.domain.Movie;
 import solvve.course.domain.ReleaseDetail;
@@ -43,7 +42,6 @@ public class ReleaseDetailServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetReleaseDetail() {
         Movie movie = testObjectsFactory.createMovie();
@@ -64,7 +62,6 @@ public class ReleaseDetailServiceTest {
         releaseDetailService.getReleaseDetails(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateReleaseDetail() {
         Movie movie = testObjectsFactory.createMovie();
@@ -86,7 +83,6 @@ public class ReleaseDetailServiceTest {
                 .isEqualToComparingFieldByField(releaseDetail.getCountryId().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchReleaseDetail() {
         Movie movie = testObjectsFactory.createMovie();
@@ -110,7 +106,6 @@ public class ReleaseDetailServiceTest {
                 .isEqualToComparingFieldByField(read.getCountryId());
     }
 
-    @Transactional
     @Test
     public void testPatchReleaseDetailEmptyPatch() {
         Movie movie = testObjectsFactory.createMovie();
@@ -126,7 +121,12 @@ public class ReleaseDetailServiceTest {
 
         Assert.assertNotNull(releaseDetailAfterUpdate.getReleaseDate());
 
-        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(releaseDetailAfterUpdate);
+        Assertions.assertThat(releaseDetail).isEqualToIgnoringGivenFields(releaseDetailAfterUpdate,
+                "movieId", "countryId");
+        Assertions.assertThat(releaseDetail.getMovieId().getId())
+                .isEqualTo(releaseDetailAfterUpdate.getMovieId().getId());
+        Assertions.assertThat(releaseDetail.getCountryId().getId())
+                .isEqualTo(releaseDetailAfterUpdate.getCountryId().getId());
     }
 
     @Test
@@ -144,7 +144,6 @@ public class ReleaseDetailServiceTest {
         releaseDetailService.deleteReleaseDetails(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutReleaseDetail() {
         Movie movie = testObjectsFactory.createMovie();
@@ -168,7 +167,6 @@ public class ReleaseDetailServiceTest {
                 .isEqualToComparingFieldByField(read.getCountryId());
     }
 
-    @Transactional
     @Test
     public void testPutReleaseDetailEmptyPut() {
         Movie movie = testObjectsFactory.createMovie();
@@ -179,11 +177,19 @@ public class ReleaseDetailServiceTest {
         ReleaseDetailReadDTO read = releaseDetailService.updateReleaseDetails(releaseDetail.getId(), put);
 
         Assert.assertNull(read.getReleaseDate());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getCountryId());
 
         ReleaseDetail releaseDetailAfterUpdate = releaseDetailRepository.findById(read.getId()).get();
 
         Assert.assertNull(releaseDetailAfterUpdate.getReleaseDate());
+        Assert.assertNotNull(releaseDetailAfterUpdate.getMovieId());
+        Assert.assertNotNull(releaseDetailAfterUpdate.getCountryId());
 
-        Assertions.assertThat(releaseDetail).isEqualToComparingFieldByField(releaseDetailAfterUpdate);
+        Assertions.assertThat(releaseDetail).isEqualToComparingOnlyGivenFields(releaseDetailAfterUpdate, "id");
+        Assertions.assertThat(releaseDetail.getCountryId().getId())
+                .isEqualTo(releaseDetailAfterUpdate.getCountryId().getId());
+        Assertions.assertThat(releaseDetail.getMovieId().getId())
+                .isEqualTo(releaseDetailAfterUpdate.getMovieId().getId());
     }
 }

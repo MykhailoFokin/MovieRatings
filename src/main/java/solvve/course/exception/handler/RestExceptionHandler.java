@@ -14,6 +14,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handlerException(Exception ex) {
+
         ResponseStatus status = AnnotatedElementUtils.findMergedAnnotation(ex.getClass(),ResponseStatus.class);
         HttpStatus httpStatus = status != null ? status.code() : HttpStatus.INTERNAL_SERVER_ERROR;
 

@@ -11,8 +11,6 @@ public class VisitPatchDTO {
 
     private UUID userId;
 
-    private UUID masterId;
-
     private Instant startAt;
 
     private Instant finishAt;
