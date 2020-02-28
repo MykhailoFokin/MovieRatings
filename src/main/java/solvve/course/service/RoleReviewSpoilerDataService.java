@@ -31,12 +31,12 @@ public class RoleReviewSpoilerDataService {
 
     @Transactional(readOnly = true)
     public List<RoleSpoilerDataReadDTO> getRoleReviewSpoilerData(UUID roleReviewId) {
-        List<RoleSpoilerData> roleSpoilerDataList =
+        List<RoleSpoilerData> roleSpoilerDatas =
                 roleSpoilerDataRepository.findByRoleReviewIdOrderByIdAsc(roleReviewId).orElseThrow(() -> {
                     throw new EntityNotFoundException(RoleSpoilerData.class, roleReviewId);
                 });
 
-        return roleSpoilerDataList.stream().map(translationService::toRead).collect(Collectors.toList());
+        return roleSpoilerDatas.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public RoleSpoilerDataReadDTO createRoleReviewSpoilerData(UUID roleReviewId, RoleSpoilerDataCreateDTO create) {

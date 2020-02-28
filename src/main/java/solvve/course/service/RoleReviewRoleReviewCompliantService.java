@@ -31,8 +31,8 @@ public class RoleReviewRoleReviewCompliantService {
 
     @Transactional(readOnly = true)
     public List<RoleReviewCompliantReadDTO> getRoleReviewRoleReviewCompliant(UUID roleReviewId) {
-        List<RoleReviewCompliant> roleReviewCompliantList = getRoleReviewRoleReviewCompliantsRequired(roleReviewId);
-        return roleReviewCompliantList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<RoleReviewCompliant> roleReviewCompliants = getRoleReviewRoleReviewCompliantsRequired(roleReviewId);
+        return roleReviewCompliants.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public RoleReviewCompliantReadDTO createRoleReviewRoleReviewCompliant(UUID roleReviewId,

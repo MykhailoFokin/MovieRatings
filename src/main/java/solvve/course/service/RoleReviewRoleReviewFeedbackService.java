@@ -31,8 +31,8 @@ public class RoleReviewRoleReviewFeedbackService {
 
     @Transactional(readOnly = true)
     public List<RoleReviewFeedbackReadDTO> getRoleReviewRoleReviewFeedback(UUID roleReviewId) {
-        List<RoleReviewFeedback> roleReviewFeedbackList = getRoleReviewRoleReviewFeedbacksRequired(roleReviewId);
-        return roleReviewFeedbackList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<RoleReviewFeedback> roleReviewFeedbacks = getRoleReviewRoleReviewFeedbacksRequired(roleReviewId);
+        return roleReviewFeedbacks.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public RoleReviewFeedbackReadDTO createRoleReviewRoleReviewFeedback(UUID roleReviewId,

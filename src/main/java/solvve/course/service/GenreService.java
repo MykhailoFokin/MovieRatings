@@ -57,8 +57,8 @@ public class GenreService {
     }
 
     public List<GenreReadDTO> getGenres(GenreFilter genreFilter) {
-        List<Genre> genreList = genreRepository.findByFilter(genreFilter);
-        return genreList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<Genre> genres = genreRepository.findByFilter(genreFilter);
+        return genres.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private Genre getGenreRequired(UUID id) {

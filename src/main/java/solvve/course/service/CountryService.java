@@ -57,8 +57,8 @@ public class CountryService {
     }
 
     public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
-        List<Country> countryList = countryRepository.findByFilter(countryFilter);
-        return countryList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<Country> countries = countryRepository.findByFilter(countryFilter);
+        return countries.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private Country getCountriesRequired(UUID id) {

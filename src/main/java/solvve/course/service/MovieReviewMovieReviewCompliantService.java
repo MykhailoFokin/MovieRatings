@@ -31,9 +31,9 @@ public class MovieReviewMovieReviewCompliantService {
 
     @Transactional(readOnly = true)
     public List<MovieReviewCompliantReadDTO> getMovieReviewMovieReviewCompliant(UUID movieReviewId) {
-        List<MovieReviewCompliant> movieReviewCompliantList =
+        List<MovieReviewCompliant> movieReviewCompliants =
                 getMovieReviewMovieReviewCompliantsRequired(movieReviewId);
-        return movieReviewCompliantList.stream().map(translationService::toRead).collect(Collectors.toList());
+        return movieReviewCompliants.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public MovieReviewCompliantReadDTO createMovieReviewMovieReviewCompliant(UUID movieReviewId,

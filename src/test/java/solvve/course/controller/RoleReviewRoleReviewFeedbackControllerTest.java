@@ -57,11 +57,11 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
     @Test
     public void testGetRoleReviewRoleReviewFeedback() throws Exception {
         RoleReviewReadDTO roleReview = createRoleReview();
-        List<RoleReviewFeedbackReadDTO> roleReviewFeedbackReadDTOList =
+        List<RoleReviewFeedbackReadDTO> roleReviewFeedbackReadDTOs =
                 List.of(createRoleReviewFeedbackRead(roleReview.getId()));
 
         Mockito.when(roleReviewFeedbackService.getRoleReviewRoleReviewFeedback(roleReview.getId()))
-                .thenReturn(roleReviewFeedbackReadDTOList);
+                .thenReturn(roleReviewFeedbackReadDTOs);
 
         String resultJson = mvc.perform(get("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks",
                 roleReview.getId()))
@@ -70,7 +70,7 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
 
         List<RoleReviewFeedbackReadDTO> actualRole = objectMapper.readValue(resultJson,
                 new TypeReference<List<RoleReviewFeedbackReadDTO>>(){});
-        Assertions.assertThat(actualRole).isEqualTo(roleReviewFeedbackReadDTOList);
+        Assertions.assertThat(actualRole).isEqualTo(roleReviewFeedbackReadDTOs);
 
         Mockito.verify(roleReviewFeedbackService).getRoleReviewRoleReviewFeedback(roleReview.getId());
     }

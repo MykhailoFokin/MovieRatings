@@ -31,8 +31,8 @@ public class PortalUserRoleReviewService {
 
     @Transactional(readOnly = true)
     public List<RoleReviewReadDTO> getPortalUserRoleReview(UUID portalUserId) {
-        List<RoleReview> roleReviewList = getPortalUserRoleReviewsRequired(portalUserId);
-        return roleReviewList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<RoleReview> roleReviews = getPortalUserRoleReviewsRequired(portalUserId);
+        return roleReviews.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public RoleReviewReadDTO createPortalUserRoleReview(UUID portalUserId,

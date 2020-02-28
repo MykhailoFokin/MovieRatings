@@ -57,8 +57,8 @@ public class CrewTypeService {
     }
 
     public List<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter) {
-        List<CrewType> crewTypeList = crewTypeRepository.findByFilter(filter);
-        return crewTypeList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<CrewType> crewTypes = crewTypeRepository.findByFilter(filter);
+        return crewTypes.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private CrewType getCrewTypeRequired(UUID id) {

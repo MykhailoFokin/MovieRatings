@@ -57,8 +57,8 @@ public class MovieService {
     }
 
     public List<MovieReadExtendedDTO> getMovies(MovieFilter filter) {
-        List<Movie> movieList = movieRepository.findByFilter(filter);
-        return movieList.stream().map(translationService::toReadExtended).collect(Collectors.toList());
+        List<Movie> movies = movieRepository.findByFilter(filter);
+        return movies.stream().map(translationService::toReadExtended).collect(Collectors.toList());
     }
 
     private Movie getMovieRequired(UUID id) {
