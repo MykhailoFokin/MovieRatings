@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -37,7 +36,6 @@ public class MovieVoteServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetMovieVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -46,9 +44,9 @@ public class MovieVoteServiceTest {
 
         MovieVoteReadDTO readDTO = movieVoteService.getMovieVote(movieVote.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieVote,
-                "userId","movieId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualTo(movieVote.getUserId().getId());
-        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
+                "portalUserId","movieId");
+        Assertions.assertThat(readDTO.getPortalUserId()).isEqualTo(movieVote.getPortalUser().getId());
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(movieVote.getMovie().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -56,7 +54,6 @@ public class MovieVoteServiceTest {
         movieVoteService.getMovieVote(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateMovieVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -64,19 +61,18 @@ public class MovieVoteServiceTest {
 
         MovieVoteCreateDTO create = new MovieVoteCreateDTO();
         create.setMovieId(movie.getId());
-        create.setUserId(portalUser.getId());
+        create.setPortalUserId(portalUser.getId());
         create.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.createMovieVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         MovieVote movieVote = movieVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieVote,
-                "userId","movieId");
-        Assertions.assertThat(read.getUserId()).isEqualTo(movieVote.getUserId().getId());
-        Assertions.assertThat(read.getMovieId()).isEqualTo(movieVote.getMovieId().getId());
+                "portalUserId","movieId");
+        Assertions.assertThat(read.getPortalUserId()).isEqualTo(movieVote.getPortalUser().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualTo(movieVote.getMovie().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -85,7 +81,7 @@ public class MovieVoteServiceTest {
 
         MovieVotePatchDTO patch = new MovieVotePatchDTO();
         patch.setMovieId(movie.getId());
-        patch.setUserId(portalUser.getId());
+        patch.setPortalUserId(portalUser.getId());
         patch.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
 
@@ -93,12 +89,11 @@ public class MovieVoteServiceTest {
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,
-                "movieId","userId");
-        Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
+                "movie","portalUser");
+        Assertions.assertThat(movieVote.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(movieVote.getMovie().getId()).isEqualTo(read.getMovieId());
     }
 
-    @Transactional
     @Test
     public void testPatchMovieVoteEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -109,16 +104,19 @@ public class MovieVoteServiceTest {
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
 
         Assert.assertNotNull(read.getMovieId());
-        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getRating());
 
         MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(movieVoteAfterUpdate.getMovieId());
-        Assert.assertNotNull(movieVoteAfterUpdate.getUserId());
+        Assert.assertNotNull(movieVoteAfterUpdate.getMovie());
+        Assert.assertNotNull(movieVoteAfterUpdate.getPortalUser());
         Assert.assertNotNull(movieVoteAfterUpdate.getRating());
 
-        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(movieVoteAfterUpdate);
+        Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(movieVoteAfterUpdate, "portalUser", "movie");
+        Assertions.assertThat(movieVote.getPortalUser().getId())
+                .isEqualTo(movieVoteAfterUpdate.getPortalUser().getId());
+        Assertions.assertThat(movieVote.getMovie().getId()).isEqualTo(movieVoteAfterUpdate.getMovie().getId());
     }
 
     @Test
@@ -136,7 +134,6 @@ public class MovieVoteServiceTest {
         movieVoteService.deleteMovieVote(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutMovieVote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -145,7 +142,7 @@ public class MovieVoteServiceTest {
 
         MovieVotePutDTO put = new MovieVotePutDTO();
         put.setMovieId(movie.getId());
-        put.setUserId(portalUser.getId());
+        put.setPortalUserId(portalUser.getId());
         put.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.updateMovieVote(movieVote.getId(), put);
 
@@ -153,12 +150,11 @@ public class MovieVoteServiceTest {
 
         movieVote = movieVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(movieVote).isEqualToIgnoringGivenFields(read,
-                "movieId","userId");
-        Assertions.assertThat(movieVote.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(movieVote.getMovieId().getId()).isEqualTo(read.getMovieId());
+                "movie","portalUser");
+        Assertions.assertThat(movieVote.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(movieVote.getMovie().getId()).isEqualTo(read.getMovieId());
     }
 
-    @Transactional
     @Test
     public void testPutMovieVoteEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -168,16 +164,19 @@ public class MovieVoteServiceTest {
         MovieVotePutDTO put = new MovieVotePutDTO();
         MovieVoteReadDTO read = movieVoteService.updateMovieVote(movieVote.getId(), put);
 
-        Assert.assertNull(read.getMovieId());
-        Assert.assertNull(read.getUserId());
+        Assert.assertNotNull(read.getMovieId());
+        Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNull(read.getRating());
 
         MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieVoteAfterUpdate.getMovieId().getId());
-        Assert.assertNull(movieVoteAfterUpdate.getUserId().getId());
+        Assert.assertNotNull(movieVoteAfterUpdate.getMovie().getId());
+        Assert.assertNotNull(movieVoteAfterUpdate.getPortalUser().getId());
         Assert.assertNull(movieVoteAfterUpdate.getRating());
 
-        Assertions.assertThat(movieVote).isEqualToComparingFieldByField(movieVoteAfterUpdate);
+        Assertions.assertThat(movieVote).isEqualToComparingOnlyGivenFields(movieVoteAfterUpdate, "id");
+        Assertions.assertThat(movieVote.getMovie().getId()).isEqualTo(movieVoteAfterUpdate.getMovie().getId());
+        Assertions.assertThat(movieVote.getPortalUser().getId())
+                .isEqualTo(movieVoteAfterUpdate.getPortalUser().getId());
     }
 }

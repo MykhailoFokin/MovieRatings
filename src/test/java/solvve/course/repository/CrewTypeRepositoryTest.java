@@ -105,7 +105,7 @@ public class CrewTypeRepositoryTest {
         Crew c3 = testObjectsFactory.createCrew(p, ct3, m);
 
         CrewTypeFilter filter = new CrewTypeFilter();
-        filter.setCrew(c2.getId());
+        filter.setCrewId(c2.getId());
         testObjectsFactory.inTransaction(() -> {
             Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
                     .containsExactlyInAnyOrder(ct2.getId());
@@ -156,7 +156,7 @@ public class CrewTypeRepositoryTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setName("Type1");
-        filter.setCrew(c2.getId());
+        filter.setCrewId(c2.getId());
         filter.setCrewIds(List.of(c2.getId(), c1.getId()));
         filter.setNames(List.of("Type1", "Test", "Type2"));
         testObjectsFactory.inTransaction(() -> {

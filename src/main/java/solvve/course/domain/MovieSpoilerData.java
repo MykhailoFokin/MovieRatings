@@ -22,7 +22,7 @@ public class MovieSpoilerData {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private MovieReview movieReviewId;
+    private MovieReview movieReview;
 
     private Integer startIndex;
 

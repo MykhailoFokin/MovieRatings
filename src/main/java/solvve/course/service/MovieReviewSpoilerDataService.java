@@ -39,7 +39,7 @@ public class MovieReviewSpoilerDataService {
 
     public MovieSpoilerDataReadDTO createMovieReviewSpoilerData(UUID movieReviewId, MovieSpoilerDataCreateDTO create) {
         MovieSpoilerData movieSpoilerData = translationService.toEntity(create);
-        movieSpoilerData.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
+        movieSpoilerData.setMovieReview(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
 
         return translationService.toRead(movieSpoilerData);

@@ -37,7 +37,7 @@ public class PortalUserRepositoryTest {
         UserType userType = testObjectsFactory.createUserType();
 
         PortalUser r = new PortalUser();
-        r.setUserTypeId(userType);
+        r.setUserType(userType);
         r = portalUserRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(portalUserRepository.findById(r.getId()).isPresent());

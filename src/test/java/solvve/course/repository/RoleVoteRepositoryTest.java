@@ -42,8 +42,8 @@ public class RoleVoteRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         RoleVote r = new RoleVote();
-        r.setRoleId(role);
-        r.setUserId(portalUser);
+        r.setRole(role);
+        r.setPortalUser(portalUser);
         r = roleVoteRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleVoteRepository.findById(r.getId()).isPresent());

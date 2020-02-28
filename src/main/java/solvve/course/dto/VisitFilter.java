@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 public class VisitFilter {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private Set<VisitStatus> statuses;
 

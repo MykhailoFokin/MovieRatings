@@ -1,4 +1,4 @@
-id;person_Id_id;movie_Id_id;crew_Type_id_id;description
+id;person_Id;movie_id;crew_Type_id;description
 58c7d29d-cd8e-4d10-bbfd-3c735f2df4c4;c0b31c91-c5bc-40d7-8910-b008739b79e2;a107f8d4-7578-4ce9-a219-63cd5e021a20;184952ed-6eb5-4853-aea4-dc17c9722899;Description
 f9b1134d-439b-402b-a14d-bc761a6a8a67;d742b2fb-0708-4873-b3f2-218a8b3aa99a;3397320c-5658-4e6a-83f6-e8affe0ae20d;026b9a01-c6be-42b9-a4d8-8da7963ca47e;Description
 c0e32a64-ec95-4b7b-af36-853f706c1382;1a21d2f6-af17-4ed1-9c42-2228c1cab73d;d06832a7-1528-495f-91f9-1cb465b06722;22caaeea-c6ca-44b4-a9ac-2002f6760991;Description

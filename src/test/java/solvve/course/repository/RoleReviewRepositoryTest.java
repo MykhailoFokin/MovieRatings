@@ -42,9 +42,9 @@ public class RoleReviewRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         RoleReview r = new RoleReview();
-        r.setRoleId(role);
-        r.setUserId(portalUser);
-        r.setModeratorId(portalUser);
+        r.setRole(role);
+        r.setPortalUser(portalUser);
+        r.setModerator(portalUser);
         r = roleReviewRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleReviewRepository.findById(r.getId()).isPresent());

@@ -30,22 +30,22 @@ public class Role {
 
     @OneToOne
     @JoinColumn
-    private Movie movieId;
+    private Movie movie;
 
     @OneToOne
     @JoinColumn
-    private Person personId;
+    private Person person;
 
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.PERSIST)
-    private Set<RoleReview> roleReviewSet;
+    @OneToMany(mappedBy = "role", cascade = CascadeType.PERSIST)
+    private Set<RoleReview> roleReviews;
 
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.PERSIST)
     private Set<RoleReviewCompliant> roleReviewCompliants;
 
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.PERSIST)
     private Set<RoleReviewFeedback> roleReviewFeedbacks;
 
-    @OneToMany(mappedBy = "roleId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.PERSIST)
     private Set<RoleVote> roleVotes;
 
     @CreatedDate

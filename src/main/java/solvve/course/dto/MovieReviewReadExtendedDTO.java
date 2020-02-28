@@ -12,15 +12,15 @@ public class MovieReviewReadExtendedDTO {
 
     private UUID id;
 
-    private PortalUser userId;
+    private PortalUser portalUser;
 
-    private Movie movieId;
+    private Movie movie;
 
     private String textReview;
 
     private UserModeratedStatusType moderatedStatus;
 
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
     private Set<MovieReviewCompliant> movieReviewCompliants;
 

@@ -39,7 +39,7 @@ public class MovieReviewMovieReviewCompliantService {
     public MovieReviewCompliantReadDTO createMovieReviewMovieReviewCompliant(UUID movieReviewId,
                                                                              MovieReviewCompliantCreateDTO create) {
         MovieReviewCompliant movieReviewCompliant = translationService.toEntity(create);
-        movieReviewCompliant.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
+        movieReviewCompliant.setMovieReview(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
 
         return translationService.toRead(movieReviewCompliant);

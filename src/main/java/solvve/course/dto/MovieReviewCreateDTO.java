@@ -1,14 +1,14 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.*;
+import solvve.course.domain.UserModeratedStatusType;
 
 import java.util.UUID;
 
 @Data
 public class MovieReviewCreateDTO {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID movieId;
 

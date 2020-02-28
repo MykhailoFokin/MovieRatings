@@ -111,7 +111,7 @@ public class GenreRepositoryTest {
         Genre g3 = testObjectsFactory.createGenre(m2, MovieGenreType.SAGA);
         testObjectsFactory.createGenre(m3, MovieGenreType.DRAMA);
 
-        List<Genre> res = genreRepository.findByMovieIdOrderByNameAsc(m2);
+        List<Genre> res = genreRepository.findByMovieIdOrderByNameAsc(m2.getId());
         Assertions.assertThat(res).extracting(Genre::getId).isEqualTo(Arrays.asList(g2.getId(), g3.getId()));
     }
 

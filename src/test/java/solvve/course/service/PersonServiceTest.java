@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Person;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
@@ -127,7 +126,6 @@ public class PersonServiceTest {
         Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
     }
 
-    @Transactional
     @Test
     public void testPutPersonsEmptyPut() {
         Person person = testObjectsFactory.createPerson();
@@ -139,12 +137,14 @@ public class PersonServiceTest {
         Assert.assertNull(read.getSurname());
         Assert.assertNull(read.getMiddleName());
 
-        Person personAfterUpdate = personRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Person personAfterUpdate = personRepository.findById(read.getId()).get();
 
-        Assert.assertNull(personAfterUpdate.getName());
-        Assert.assertNull(personAfterUpdate.getSurname());
-        Assert.assertNull(personAfterUpdate.getMiddleName());
+            Assert.assertNull(personAfterUpdate.getName());
+            Assert.assertNull(personAfterUpdate.getSurname());
+            Assert.assertNull(personAfterUpdate.getMiddleName());
 
-        Assertions.assertThat(person).isEqualToComparingFieldByField(personAfterUpdate);
+            Assertions.assertThat(person).isEqualToComparingOnlyGivenFields(personAfterUpdate, "id");
+        });
     }
 }

@@ -20,7 +20,7 @@ public class CrewTypeRepositoryCustomImpl implements CrewTypeRepositoryCustom {
         if (filter.getName() != null) {
             sb.append(" and c.name = :name");
         }
-        if (filter.getCrew() != null) {
+        if (filter.getCrewId() != null) {
             sb.append(" and c.crew.id = :crewId");
         }
         if (filter.getNames() != null) {
@@ -34,8 +34,8 @@ public class CrewTypeRepositoryCustomImpl implements CrewTypeRepositoryCustom {
         if (filter.getName() != null) {
             query.setParameter("name", filter.getName());
         }
-        if (filter.getCrew() != null) {
-            query.setParameter("crewId", filter.getCrew());
+        if (filter.getCrewId() != null) {
+            query.setParameter("crewId", filter.getCrewId());
         }
         if (filter.getNames() != null) {
             query.setParameter("names", filter.getNames());

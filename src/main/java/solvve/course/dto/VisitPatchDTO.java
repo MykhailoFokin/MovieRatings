@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class VisitPatchDTO {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private Instant startAt;
 

@@ -79,7 +79,7 @@ public class MovieCompanyRepositoryTest {
         testObjectsFactory.createMovieCompany(c3, MovieProductionType.PRODUCTION_COMPANIES);
 
         MovieCompanyFilter filter = new MovieCompanyFilter();
-        filter.setCompanyId(c2.getId());
+        filter.setCompanyDetailsId(c2.getId());
         Assertions.assertThat(movieCompanyService.getMovieCompanies(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(m2.getId(), m3.getId());
     }
@@ -97,7 +97,7 @@ public class MovieCompanyRepositoryTest {
         MovieCompanyFilter filter = new MovieCompanyFilter();
         filter.setMovieProductionTypes(List.of(MovieProductionType.PRODUCTION_COMPANIES,
                 MovieProductionType.DISTRIBUTORS, MovieProductionType.OTHER_COMPANIES));
-        filter.setCompanyId(c1.getId());
+        filter.setCompanyDetailsId(c1.getId());
         Assertions.assertThat(movieCompanyService.getMovieCompanies(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId());
     }

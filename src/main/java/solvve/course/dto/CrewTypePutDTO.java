@@ -9,5 +9,5 @@ public class CrewTypePutDTO {
 
     private String name;
 
-    private UUID crew;
+    private UUID crewId;
 }

@@ -22,7 +22,7 @@ public class CrewType {
 
     private String name;
 
-    @OneToOne(mappedBy = "crewTypeId")
+    @OneToOne(mappedBy = "crewType")
     private Crew crew;
 
     @CreatedDate

@@ -40,7 +40,6 @@ public class MovieServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetMovie() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -55,7 +54,6 @@ public class MovieServiceTest {
         movieService.getMovie(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateMovie() {
         MovieCreateDTO create = testObjectsFactory.createMovieCreateDTO();
@@ -66,7 +64,6 @@ public class MovieServiceTest {
         Assertions.assertThat(read).isEqualToComparingFieldByField(movie);
     }
 
-    @Transactional
     @Test
     public void testPatchMovie() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -84,7 +81,6 @@ public class MovieServiceTest {
                 ,"movieProdLanguages","role");
     }
 
-    @Transactional
     @Test
     public void testPatchMovieEmptyPatch() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -117,10 +113,12 @@ public class MovieServiceTest {
         Assert.assertNotNull(movieAfterUpdate.getSoundMix());
         Assert.assertNotNull(movieAfterUpdate.getIsPublished());
 
-        Assertions.assertThat(movie).isEqualToComparingFieldByField(movieAfterUpdate);
+        Assertions.assertThat(movie).isEqualToIgnoringGivenFields(movieAfterUpdate,
+                "movieProdCountries","crews","movieReview","movieReviewCompliants"
+                ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
+                ,"movieProdLanguages","role");
     }
 
-    @Transactional
     @Test
     public void testDeleteMovie() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -135,7 +133,6 @@ public class MovieServiceTest {
         movieService.deleteMovie(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutMovie() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -153,7 +150,6 @@ public class MovieServiceTest {
                         ,"movieProdLanguages","role");
     }
 
-    @Transactional
     @Test
     public void testPutMovieEmptyPut() {
         Set<Country> countrySet = testObjectsFactory.createCountrySet();
@@ -185,7 +181,5 @@ public class MovieServiceTest {
         Assert.assertNull(movieAfterUpdate.getLaboratory());
         Assert.assertNull(movieAfterUpdate.getSoundMix());
         Assert.assertNull(movieAfterUpdate.getIsPublished());
-
-        Assertions.assertThat(movie).isEqualToComparingFieldByField(movieAfterUpdate);
     }
 }

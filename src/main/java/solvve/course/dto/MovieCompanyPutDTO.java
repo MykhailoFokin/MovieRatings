@@ -12,5 +12,5 @@ public class MovieCompanyPutDTO {
 
     private String description;
 
-    private UUID companyId;
+    private UUID companyDetailsId;
 }

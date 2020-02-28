@@ -7,7 +7,7 @@ import java.util.UUID;
 @Data
 public class MovieReviewFeedbackPatchDTO {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID movieId;
 

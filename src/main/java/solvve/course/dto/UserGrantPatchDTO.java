@@ -14,5 +14,5 @@ public class UserGrantPatchDTO {
 
     private String objectName;
 
-    private UUID grantedBy;
+    private UUID grantedById;
 }

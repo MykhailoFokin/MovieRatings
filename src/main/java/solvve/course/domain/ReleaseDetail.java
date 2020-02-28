@@ -23,13 +23,13 @@ public class ReleaseDetail {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Movie movieId;
+    private Movie movie;
 
     private LocalDate releaseDate;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Country countryId;
+    private Country country;
 
     @CreatedDate
     private Instant createdAt;

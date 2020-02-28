@@ -15,7 +15,7 @@ public class MovieCompanyReadDTO {
 
     private String description;
 
-    private UUID companyId;
+    private UUID companyDetailsId;
 
     private Instant createdAt;
 

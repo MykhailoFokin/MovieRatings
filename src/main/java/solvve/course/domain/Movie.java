@@ -24,7 +24,7 @@ public class Movie {
 
     private Short year; // year of production
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<Genre> genres = new HashSet<Genre>(); // type of genres
 
     private String description; // short movie description
@@ -62,25 +62,25 @@ public class Movie {
             inverseJoinColumns = {@JoinColumn(name = "language_id")})
     private Set<Language> movieProdLanguages;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<Crew> crews;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<MovieReview> movieReview;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<MovieReviewCompliant> movieReviewCompliants;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<MovieVote> movieVotes;
 
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<ReleaseDetail> releaseDetails;
 
-    @OneToOne(mappedBy = "movieId")
+    @OneToOne(mappedBy = "movie")
     private Role role;
 
     @CreatedDate

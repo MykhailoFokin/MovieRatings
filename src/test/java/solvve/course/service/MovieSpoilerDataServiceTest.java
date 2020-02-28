@@ -48,7 +48,7 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerDataReadDTO readDTO = movieSpoilerDataService.getMovieSpoilerData(movieSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(movieSpoilerData,
                 "movieReviewId");
-        Assertions.assertThat(readDTO.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReviewId().getId());
+        Assertions.assertThat(readDTO.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReview().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -73,7 +73,7 @@ public class MovieSpoilerDataServiceTest {
         MovieSpoilerData movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(movieSpoilerData,
                 "movieReviewId");
-        Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReviewId().getId());
+        Assertions.assertThat(read.getMovieReviewId()).isEqualTo(movieSpoilerData.getMovieReview().getId());
     }
 
     @Test
@@ -93,8 +93,8 @@ public class MovieSpoilerDataServiceTest {
 
         movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(read,
-                "movieReviewId");
-        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
+                "movieReview");
+        Assertions.assertThat(movieSpoilerData.getMovieReview().getId()).isEqualTo(read.getMovieReviewId());
     }
 
     @Test
@@ -113,14 +113,14 @@ public class MovieSpoilerDataServiceTest {
 
         MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReviewId());
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReview());
         Assert.assertNotNull(movieSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNotNull(movieSpoilerDataAfterUpdate.getEndIndex());
 
         Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(movieSpoilerDataAfterUpdate,
-                "movieReviewId");
-        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId())
-                .isEqualTo(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
+                "movieReview");
+        Assertions.assertThat(movieSpoilerData.getMovieReview().getId())
+                .isEqualTo(movieSpoilerDataAfterUpdate.getMovieReview().getId());
     }
 
     @Test
@@ -156,8 +156,8 @@ public class MovieSpoilerDataServiceTest {
 
         movieSpoilerData = movieSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(movieSpoilerData).isEqualToIgnoringGivenFields(read,
-                "movieReviewId");
-        Assertions.assertThat(movieSpoilerData.getMovieReviewId().getId()).isEqualTo(read.getMovieReviewId());
+                "movieReview");
+        Assertions.assertThat(movieSpoilerData.getMovieReview().getId()).isEqualTo(read.getMovieReviewId());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class MovieSpoilerDataServiceTest {
 
         MovieSpoilerData movieSpoilerDataAfterUpdate = movieSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReviewId().getId());
+        Assert.assertNotNull(movieSpoilerDataAfterUpdate.getMovieReview().getId());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(movieSpoilerDataAfterUpdate.getEndIndex());
     }

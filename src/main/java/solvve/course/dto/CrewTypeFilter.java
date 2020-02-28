@@ -10,7 +10,7 @@ public class CrewTypeFilter {
 
     private String name;
 
-    private UUID crew;
+    private UUID crewId;
 
     private List<String> names;
 

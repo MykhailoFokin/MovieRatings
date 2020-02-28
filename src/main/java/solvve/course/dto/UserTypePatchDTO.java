@@ -10,5 +10,5 @@ public class UserTypePatchDTO {
 
     private UserGroupType userGroup;
 
-    private UUID portalUser;
+    private UUID portalUserId;
 }

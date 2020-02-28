@@ -44,9 +44,9 @@ public class RoleReviewFeedbackRepositoryTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewFeedback r = new RoleReviewFeedback();
-        r.setRoleId(role);
-        r.setRoleReviewId(roleReview);
-        r.setUserId(portalUser);
+        r.setRole(role);
+        r.setRoleReview(roleReview);
+        r.setPortalUser(portalUser);
         r = roleReviewFeedbackRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleReviewFeedbackRepository.findById(r.getId()).isPresent());

@@ -11,7 +11,7 @@ public class VisitReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private Instant startAt;
 

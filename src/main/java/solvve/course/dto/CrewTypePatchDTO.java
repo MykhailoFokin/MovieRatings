@@ -9,5 +9,5 @@ public class CrewTypePatchDTO {
 
     private String name;
 
-    private UUID crew;
+    private UUID crewId;
 }

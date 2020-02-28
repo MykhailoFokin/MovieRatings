@@ -17,8 +17,8 @@ public class VisitRepositoryCustomImpl implements VisitRepositoryCustom {
     public List<Visit> findByFilter(VisitFilter filter) {
         StringBuilder sb = new StringBuilder();
         sb.append("select v from Visit v where 1=1");
-        if (filter.getUserId() != null) {
-            sb.append(" and v.userId.id = :userId");
+        if (filter.getPortalUserId() != null) {
+            sb.append(" and v.portalUser.id = :portalUserId");
         }
         if (filter.getStatuses() != null) {
             sb.append(" and v.status in (:statuses)");
@@ -31,8 +31,8 @@ public class VisitRepositoryCustomImpl implements VisitRepositoryCustom {
         }
         TypedQuery<Visit> query = entityManager.createQuery(sb.toString(), Visit.class);
 
-        if (filter.getUserId() != null) {
-            query.setParameter("userId", filter.getUserId());
+        if (filter.getPortalUserId() != null) {
+            query.setParameter("portalUserId", filter.getPortalUserId());
         }
         if (filter.getStatuses() != null) {
             query.setParameter("statuses", filter.getStatuses());

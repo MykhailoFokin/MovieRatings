@@ -18,7 +18,7 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("select m from Movie m");
         if (filter.getGenres() != null) {
-            sb.append(" join Genre g on g.movieId = m.id");
+            sb.append(" join Genre g on g.movie.id = m.id");
         }
         if (filter.getCompanyTypes() != null ||
                 filter.getCompanyType() != null ||
@@ -26,7 +26,7 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
             sb.append(" join m.movieProdCompanies mpc ");
         }
         if (filter.getCompanyName() != null) {
-            sb.append(" join mpc.companyId cd");
+            sb.append(" join mpc.companyDetails cd");
         }
         if (filter.getLanguage() != null || filter.getLanguages() != null) {
             sb.append(" join m.movieProdLanguages l");

@@ -22,15 +22,15 @@ public class RoleReviewFeedback {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Role roleId;
+    private Role role;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private RoleReview roleReviewId;
+    private RoleReview roleReview;
 
     private Boolean isLiked;
 

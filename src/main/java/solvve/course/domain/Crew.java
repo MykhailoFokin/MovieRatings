@@ -21,13 +21,13 @@ public class Crew {
     private UUID id;
 
     @ManyToOne
-    private Person personId;
+    private Person person;
 
     @ManyToOne
-    private Movie movieId;
+    private Movie movie;
 
     @OneToOne
-    private CrewType crewTypeId = new CrewType();
+    private CrewType crewType = new CrewType();
 
     private String description;
 

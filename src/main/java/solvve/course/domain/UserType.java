@@ -24,10 +24,10 @@ public class UserType {
     @Enumerated(EnumType.STRING)
     private UserGroupType userGroup;
 
-    @OneToMany(mappedBy="userTypeId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy="userType", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<UserGrant> userGrants;
 
-    @OneToOne(mappedBy = "userTypeId")
+    @OneToOne(mappedBy = "userType", cascade = CascadeType.REMOVE)
     private PortalUser portalUser;
 
     @CreatedDate

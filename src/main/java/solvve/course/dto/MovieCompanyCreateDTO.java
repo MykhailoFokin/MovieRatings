@@ -12,5 +12,5 @@ public class MovieCompanyCreateDTO {
 
     private String description;
 
-    private UUID companyId;
+    private UUID companyDetailsId;
 }

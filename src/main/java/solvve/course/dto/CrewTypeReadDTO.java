@@ -12,7 +12,7 @@ public class CrewTypeReadDTO {
 
     private String name;
 
-    private UUID crew;
+    private UUID crewId;
 
     private Instant createdAt;
 

@@ -1,0 +1,148 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="rename movie_id to movie_id in crew" author="mykhailo">
+        <renameColumn tableName="crew" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to person_id in crew" author="mykhailo">
+        <renameColumn tableName="crew" oldColumnName="person_id_id" newColumnName="person_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in genre" author="mykhailo">
+        <renameColumn tableName="genre" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename company_id to company_id in movie_company" author="mykhailo">
+        <renameColumn tableName="movie_company" oldColumnName="company_id_id" newColumnName="company_details_id" />
+    </changeSet>
+    <changeSet id="rename moderator_id to moderator_id in movie_review_compliant" author="mykhailo">
+        <renameColumn tableName="movie_review_compliant" oldColumnName="moderator_id_id" newColumnName="moderator_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in movie_review_compliant" author="mykhailo">
+        <renameColumn tableName="movie_review_compliant" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename movie_review_id to movie_review_id in movie_review_compliant" author="mykhailo">
+        <renameColumn tableName="movie_review_compliant" oldColumnName="movie_review_id_id" newColumnName="movie_review_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in movie_review_compliant" author="mykhailo">
+        <renameColumn tableName="movie_review_compliant" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in movie_review_feedback" author="mykhailo">
+        <renameColumn tableName="movie_review_feedback" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename movie_review_id to movie_review_id in movie_review_feedback" author="mykhailo">
+        <renameColumn tableName="movie_review_feedback" oldColumnName="movie_review_id_id" newColumnName="movie_review_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in movie_review_feedback" author="mykhailo">
+        <renameColumn tableName="movie_review_feedback" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename movie_review_id to movie_review_id in movie_spoiler_data" author="mykhailo">
+        <renameColumn tableName="movie_spoiler_data" oldColumnName="movie_review_id_id" newColumnName="movie_review_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in movie_vote" author="mykhailo">
+        <renameColumn tableName="movie_vote" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in movie_vote" author="mykhailo">
+        <renameColumn tableName="movie_vote" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename user_type_id to user_type_id in portal_user" author="mykhailo">
+        <renameColumn tableName="portal_user" oldColumnName="user_type_id_id" newColumnName="user_type_id" />
+    </changeSet>
+    <changeSet id="rename country_id to country_id in release_detail" author="mykhailo">
+        <renameColumn tableName="release_detail" oldColumnName="country_id_id" newColumnName="country_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in release_detail" author="mykhailo">
+        <renameColumn tableName="release_detail" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename person_id to person_id in role" author="mykhailo">
+        <renameColumn tableName="role" oldColumnName="person_id_id" newColumnName="person_id" />
+    </changeSet>
+    <changeSet id="rename moderator_id to moderator_id in role_review" author="mykhailo">
+        <renameColumn tableName="role_review" oldColumnName="moderator_id_id" newColumnName="moderator_id" />
+    </changeSet>
+    <changeSet id="rename moderator_id to moderator_id in movie_review_compliant" author="mykhailo">
+        <renameColumn tableName="movie_review_compliant" oldColumnName="moderator_id_id" newColumnName="moderator_id" />
+    </changeSet>
+    <changeSet id="rename moderator_id to moderator_id in role_review_compliant" author="mykhailo">
+        <renameColumn tableName="role_review_compliant" oldColumnName="moderator_id_id" newColumnName="moderator_id" />
+    </changeSet>
+    <changeSet id="rename role_id to role_id in role_review" author="mykhailo">
+        <renameColumn tableName="role_review" oldColumnName="role_id_id" newColumnName="role_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in role_review" author="mykhailo">
+        <renameColumn tableName="role_review" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename role_id to role_id in role_review_compliant" author="mykhailo">
+        <renameColumn tableName="role_review_compliant" oldColumnName="role_id_id" newColumnName="role_id" />
+    </changeSet>
+    <changeSet id="rename role_review_id to role_review_id in role_review_compliant" author="mykhailo">
+        <renameColumn tableName="role_review_compliant" oldColumnName="role_review_id_id" newColumnName="role_review_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in role_review_compliant" author="mykhailo">
+        <renameColumn tableName="role_review_compliant" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename role_id to role_id in role_review_feedback" author="mykhailo">
+        <renameColumn tableName="role_review_feedback" oldColumnName="role_id_id" newColumnName="role_id" />
+    </changeSet>
+    <changeSet id="rename role_review_id to role_review_id in role_review_feedback" author="mykhailo">
+        <renameColumn tableName="role_review_feedback" oldColumnName="role_review_id_id" newColumnName="role_review_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in role_review_feedback" author="mykhailo">
+        <renameColumn tableName="role_review_feedback" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename role_review_id to role_review_id in role_spoiler_data" author="mykhailo">
+        <renameColumn tableName="role_spoiler_data" oldColumnName="role_review_id_id" newColumnName="role_review_id" />
+    </changeSet>
+    <changeSet id="rename role_id to role_id in role_vote" author="mykhailo">
+        <renameColumn tableName="role_vote" oldColumnName="role_id_id" newColumnName="role_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in role_vote" author="mykhailo">
+        <renameColumn tableName="role_vote" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename user_id to user_id in visit" author="mykhailo">
+        <renameColumn tableName="visit" oldColumnName="user_id_id" newColumnName="portal_user_id" />
+    </changeSet>
+    <changeSet id="rename movie_id to movie_id in role" author="mykhailo">
+        <renameColumn tableName="role" oldColumnName="movie_id_id" newColumnName="movie_id" />
+    </changeSet>
+    <changeSet id="rename crew_type_id_id to crew_type_id in crew" author="mykhailo">
+        <renameColumn tableName="crew" oldColumnName="crew_type_id_id" newColumnName="crew_type_id" />
+    </changeSet>
+    <changeSet id="add missed table foe many-to-many relationship" author="mykhailo">
+        <createTable tableName="country_languages">
+            <column name="country_id" type="uuid"></column>
+            <column name="language_id" type="uuid"></column>
+        </createTable>
+    </changeSet>
+    <changeSet id="recreate constraint for movie_company" author="mykhailo">
+        <dropForeignKeyConstraint baseTableName="movie_company" constraintName="fk_mcompany_companydetails" />
+        <addForeignKeyConstraint baseTableName="movie_company" baseColumnNames="company_details_id"
+                                 constraintName="fk_mcompany_companydetails" referencedTableName="company_details"
+                                 referencedColumnNames="id" deleteCascade="true" />
+    </changeSet>
+    <changeSet id="recreate constraint for portal_user" author="mykhailo">
+        <dropForeignKeyConstraint baseTableName="portal_user" constraintName="fk_pusers_user_type" />
+        <addForeignKeyConstraint baseTableName="portal_user" baseColumnNames="user_type_id"
+                                 constraintName="fk_pusers_user_type" referencedTableName="user_type"
+                                 referencedColumnNames="id" deleteCascade="true" onDelete="CASCADE" />
+    </changeSet>
+    <changeSet id="allow null as moderator for movie_review_compliant" author="mykhailo">
+        <dropNotNullConstraint tableName="movie_review_compliant" columnName="moderator_id" />
+    </changeSet>
+    <changeSet id="allow null as moderator for movie_review" author="mykhailo">
+        <dropNotNullConstraint tableName="movie_review" columnName="moderator_id" />
+    </changeSet>
+    <changeSet id="allow null as moderator for role_review" author="mykhailo">
+        <dropNotNullConstraint tableName="role_review" columnName="moderator_id" />
+    </changeSet>
+    <changeSet id="allow null as moderator for role_review_compliant" author="mykhailo">
+        <dropNotNullConstraint tableName="role_review_compliant" columnName="moderator_id" />
+    </changeSet>
+    <changeSet id="allow null as person_id for role" author="mykhailo">
+        <dropNotNullConstraint tableName="role" columnName="person_id" />
+    </changeSet>
+
+</databaseChangeLog>

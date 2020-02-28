@@ -18,25 +18,25 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("select c from Crew c where 1=1");
         if (filter.getPersonId() != null) {
-            sb.append(" and c.personId.id = :personId");
+            sb.append(" and c.person.id = :personId");
         }
         if (filter.getMovieId() != null) {
-            sb.append(" and c.movieId.id = :movieId");
+            sb.append(" and c.movie.id = :movieId");
         }
         if (filter.getCrewTypeId() != null) {
-            sb.append(" and c.crewTypeId.id = :crewTypeId");
+            sb.append(" and c.crewType.id = :crewTypeId");
         }
         if (filter.getDescription() != null) {
             sb.append(" and c.description = :description");
         }
         if (filter.getPersonIds() != null) {
-            sb.append(" and c.personId.id in (:personIds)");
+            sb.append(" and c.person.id in (:personIds)");
         }
         if (filter.getMovieIds() != null) {
-            sb.append(" and c.movieId.id in (:movieIds)");
+            sb.append(" and c.movie.id in (:movieIds)");
         }
         if (filter.getCrewTypesIds() != null) {
-            sb.append(" and c.crewTypeId.id in (:crewTypeIds)");
+            sb.append(" and c.crewType.id in (:crewTypeIds)");
         }
         if (filter.getDescriptions() != null) {
             sb.append(" and c.description in (:descriptions)");

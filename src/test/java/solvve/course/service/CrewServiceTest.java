@@ -20,6 +20,7 @@ import solvve.course.domain.Person;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
+import solvve.course.repository.CrewTypeRepository;
 import solvve.course.utils.TestObjectsFactory;
 
 @RunWith(SpringRunner.class)
@@ -44,6 +45,9 @@ public class CrewServiceTest {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
+    @Autowired
+    private CrewTypeRepository crewTypeRepository;
+
     @Test
     public void testGetCrew() {
         Movie movie = testObjectsFactory.createMovie();
@@ -54,10 +58,10 @@ public class CrewServiceTest {
         testObjectsFactory.inTransaction(() -> {
             CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
             Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew,
-                    "movieId", "personId", "crewTypeId");
-            Assertions.assertThat(readDTO.getMovieId()).isEqualToIgnoringGivenFields(movie);
-            Assertions.assertThat(readDTO.getPersonId()).isEqualToIgnoringGivenFields(person);
-            Assertions.assertThat(readDTO.getCrewTypeId()).isEqualToIgnoringGivenFields(crewType);
+                    "movieId", "personId", "crewTypeId","person", "movie", "crewType");
+            Assertions.assertThat(readDTO.getMovie().getId()).isEqualToIgnoringGivenFields(movie.getId());
+            Assertions.assertThat(readDTO.getPerson().getId()).isEqualToIgnoringGivenFields(person.getId());
+            Assertions.assertThat(readDTO.getCrewType().getId()).isEqualToIgnoringGivenFields(crewType.getId());
         });
     }
 
@@ -83,9 +87,9 @@ public class CrewServiceTest {
         Crew crew = crewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(crew,
                 "movieId", "personId", "crewTypeId");
-        Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovieId().getId());
-        Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPersonId().getId());
-        Assertions.assertThat(read.getCrewTypeId()).isEqualToIgnoringGivenFields(crew.getCrewTypeId().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovie().getId());
+        Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPerson().getId());
+        Assertions.assertThat(read.getCrewTypeId()).isEqualToIgnoringGivenFields(crew.getCrewType().getId());
     }
 
     @Test
@@ -107,10 +111,10 @@ public class CrewServiceTest {
         testObjectsFactory.inTransaction(() -> {
             Crew crew1 = crewRepository.findById(read.getId()).get();
             Assertions.assertThat(crew1).isEqualToIgnoringGivenFields(read,
-                    "movieId", "personId", "crewTypeId");
-            Assertions.assertThat(crew1.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
-            Assertions.assertThat(crew1.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
-            Assertions.assertThat(crew1.getCrewTypeId().getId()).isEqualToIgnoringGivenFields(read.getCrewTypeId());
+                    "movie", "person", "crewType");
+            Assertions.assertThat(crew1.getMovie().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+            Assertions.assertThat(crew1.getPerson().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+            Assertions.assertThat(crew1.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewTypeId());
         });
     }
 
@@ -132,19 +136,19 @@ public class CrewServiceTest {
         testObjectsFactory.inTransaction(() -> {
             Crew crewAfterUpdate = crewRepository.findById(read.getId()).get();
 
-            Assert.assertNotNull(crewAfterUpdate.getPersonId());
-            Assert.assertNotNull(crewAfterUpdate.getCrewTypeId());
-            Assert.assertNotNull(crewAfterUpdate.getMovieId());
+            Assert.assertNotNull(crewAfterUpdate.getPerson());
+            Assert.assertNotNull(crewAfterUpdate.getCrewType());
+            Assert.assertNotNull(crewAfterUpdate.getMovie());
             Assert.assertNotNull(crewAfterUpdate.getDescription());
 
             Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate,
-                    "personId", "movieId", "crewTypeId");
-            Assertions.assertThat(crew.getMovieId()).isEqualToIgnoringGivenFields(crewAfterUpdate.getMovieId(),
+                    "person", "movie", "crewType");
+            Assertions.assertThat(crew.getMovie()).isEqualToIgnoringGivenFields(crewAfterUpdate.getMovie(),
                     "genres","movieProdCountries","movieProdCompanies","movieProdLanguages",
                     "crews","movieReview","movieReviewCompliants","movieReviewFeedbacks","movieVotes","releaseDetails");
-            Assertions.assertThat(crew.getCrewTypeId()).isEqualToIgnoringGivenFields(crewAfterUpdate.getCrewTypeId(),
+            Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewAfterUpdate.getCrewType(),
                     "crew");
-            Assertions.assertThat(crew.getPersonId()).isEqualToIgnoringGivenFields(crewAfterUpdate.getPersonId(),
+            Assertions.assertThat(crew.getPerson()).isEqualToIgnoringGivenFields(crewAfterUpdate.getPerson(),
                     "crews");
         });
     }
@@ -186,14 +190,13 @@ public class CrewServiceTest {
         testObjectsFactory.inTransaction(() -> {
             Crew crew1 = crewRepository.findById(read.getId()).get();
             Assertions.assertThat(crew1).isEqualToIgnoringGivenFields(read,
-                    "movieId", "personId", "crewTypeId");
-            Assertions.assertThat(crew1.getMovieId().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
-            Assertions.assertThat(crew1.getPersonId().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
-            Assertions.assertThat(crew1.getCrewTypeId().getId()).isEqualToIgnoringGivenFields(read.getCrewTypeId());
+                    "movie", "person", "crewType");
+            Assertions.assertThat(crew1.getMovie().getId()).isEqualToIgnoringGivenFields(read.getMovieId());
+            Assertions.assertThat(crew1.getPerson().getId()).isEqualToIgnoringGivenFields(read.getPersonId());
+            Assertions.assertThat(crew1.getCrewType().getId()).isEqualToIgnoringGivenFields(read.getCrewTypeId());
         });
     }
 
-    @Transactional
     @Test
     public void testPutCrewEmptyPut() {
         Movie movie = testObjectsFactory.createMovie();
@@ -202,6 +205,8 @@ public class CrewServiceTest {
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
         CrewPutDTO put = new CrewPutDTO();
+        crewType.setCrew(null);
+        crewTypeRepository.save(crewType);
         CrewReadDTO read = crewService.updateCrew(crew.getId(), put);
 
         Assert.assertNotNull(read.getMovieId());
@@ -212,12 +217,15 @@ public class CrewServiceTest {
         testObjectsFactory.inTransaction(() -> {
             Crew crewAfterUpdate = crewRepository.findById(crew.getId()).get();
 
-            Assert.assertNotNull(crewAfterUpdate.getMovieId());
-            Assert.assertNotNull(crewAfterUpdate.getPersonId());
-            Assert.assertNull(crewAfterUpdate.getCrewTypeId().getId());
+            Assert.assertNotNull(crewAfterUpdate.getMovie());
+            Assert.assertNotNull(crewAfterUpdate.getPerson());
+            Assert.assertNull(crewAfterUpdate.getCrewType());
             Assert.assertNull(crewAfterUpdate.getDescription());
 
-            Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate, "crewTypeId","description");
+            Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate,
+                    "crewType","description","person", "movie", "updatedAt");
+            Assertions.assertThat(crew.getPerson().getId()).isEqualTo(crewAfterUpdate.getPerson().getId());
+            Assertions.assertThat(crew.getMovie().getId()).isEqualTo(crewAfterUpdate.getMovie().getId());
         });
     }
 }

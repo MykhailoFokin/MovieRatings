@@ -35,9 +35,9 @@ public class MovieReviewRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview r = new MovieReview();
-        r.setUserId(portalUser);
-        r.setMovieId(movie);
-        r.setModeratorId(portalUser);
+        r.setPortalUser(portalUser);
+        r.setMovie(movie);
+        r.setModerator(portalUser);
         r = movieReviewRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieReviewRepository.findById(r.getId()).isPresent());
@@ -48,9 +48,9 @@ public class MovieReviewRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
-        entity.setUserId(portalUser);
-        entity.setMovieId(movie);
-        entity.setModeratorId(portalUser);
+        entity.setPortalUser(portalUser);
+        entity.setMovie(movie);
+        entity.setModerator(portalUser);
         entity = movieReviewRepository.save(entity);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -67,9 +67,9 @@ public class MovieReviewRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
-        entity.setUserId(portalUser);
-        entity.setMovieId(movie);
-        entity.setModeratorId(portalUser);
+        entity.setPortalUser(portalUser);
+        entity.setMovie(movie);
+        entity.setModerator(portalUser);
         entity = movieReviewRepository.save(entity);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -86,9 +86,9 @@ public class MovieReviewRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
-        entity.setUserId(portalUser);
-        entity.setMovieId(movie);
-        entity.setModeratorId(portalUser);
+        entity.setPortalUser(portalUser);
+        entity.setMovie(movie);
+        entity.setModerator(portalUser);
         entity = movieReviewRepository.save(entity);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();

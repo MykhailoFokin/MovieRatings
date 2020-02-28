@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class MovieReviewCompliantCreateDTO {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID movieId;
 

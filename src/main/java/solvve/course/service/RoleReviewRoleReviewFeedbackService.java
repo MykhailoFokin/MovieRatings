@@ -38,7 +38,7 @@ public class RoleReviewRoleReviewFeedbackService {
     public RoleReviewFeedbackReadDTO createRoleReviewRoleReviewFeedback(UUID roleReviewId,
                                                                         RoleReviewFeedbackCreateDTO create) {
         RoleReviewFeedback roleReviewFeedback = translationService.toEntity(create);
-        roleReviewFeedback.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
+        roleReviewFeedback.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
 
         return translationService.toRead(roleReviewFeedback);

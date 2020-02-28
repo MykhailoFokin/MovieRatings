@@ -27,10 +27,10 @@ public class Person {
 
     private String middleName;
 
-    @OneToMany(mappedBy = "personId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
     private Set<Crew> crews;
 
-    @OneToOne(mappedBy = "personId")
+    @OneToOne(mappedBy = "person")
     private Role role;
 
     @CreatedDate

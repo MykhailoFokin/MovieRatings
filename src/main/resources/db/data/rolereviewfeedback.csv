@@ -1,4 +1,4 @@
-id;user_Id_id;role_Id_id;role_Review_Id_id;is_liked
+id;portal_user_id;role_id;role_Review_id;is_liked
 c02b6b7b-14c6-49a5-9e6d-3734cb1b3019;2c80168d-8159-431b-99e9-e721620349ca;88f76ac1-662d-492f-b907-33e5a861e696;9d35b5df-863a-4ba8-99ea-8bd222218ae3;true
 8e4dd93b-f912-4452-92af-7137c674c93c;2fb20a92-ef08-471f-8cc4-e33e0ece788d;eaed6088-e41d-4ac5-885d-ad75159aede6;ed184022-d8e1-4dd9-8862-4baca347e097;true
 b91b8ce5-82ea-4bd4-9ffb-cf26e4fe1e73;d23b54cd-eb5b-4ea8-ad9a-4529ea907e41;39052bac-afd5-4e76-b58d-93ab44e487bb;685dbbcf-20d9-410b-957e-72efe6ede67c;true

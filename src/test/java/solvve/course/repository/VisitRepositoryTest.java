@@ -49,7 +49,8 @@ public class VisitRepositoryTest {
         Visit v2 = testObjectsFactory.createVisit(p1, VisitStatus.SCHEDULED);
         testObjectsFactory.createVisit(p2, VisitStatus.SCHEDULED);
 
-        List<Visit> res = visitRepository.findByUserIdAndStatusOrderByStartAtAsc(p1, VisitStatus.SCHEDULED);
+        List<Visit> res = visitRepository.findByPortalUserIdAndStatusOrderByStartAtAsc(p1.getId(),
+                VisitStatus.SCHEDULED);
         Assertions.assertThat(res).extracting(Visit::getId).isEqualTo(Arrays.asList(v1.getId(), v2.getId()));
     }
 
@@ -104,7 +105,7 @@ public class VisitRepositoryTest {
         testObjectsFactory.createVisit(p2, VisitStatus.SCHEDULED);
 
         VisitFilter filter = new VisitFilter();
-        filter.setUserId(p1.getId());
+        filter.setPortalUserId(p1.getId());
         Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
                 .containsExactlyInAnyOrder(v1.getId(),v2.getId());
     }
@@ -150,7 +151,7 @@ public class VisitRepositoryTest {
         testObjectsFactory.createVisit(p2, VisitStatus.FINISHED, testObjectsFactory.createInstant(9));
 
         VisitFilter filter = new VisitFilter();
-        filter.setUserId(p1.getId());
+        filter.setPortalUserId(p1.getId());
         filter.setStartAtFrom(testObjectsFactory.createInstant(9));
         filter.setStartAtTo(testObjectsFactory.createInstant(13));
         filter.setStatuses(Set.of(VisitStatus.SCHEDULED));

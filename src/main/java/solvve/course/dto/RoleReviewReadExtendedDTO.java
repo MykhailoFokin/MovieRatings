@@ -12,15 +12,15 @@ public class RoleReviewReadExtendedDTO {
 
     private UUID id;
 
-    private PortalUser userId;
+    private PortalUser portalUser;
 
-    private Role roleId;
+    private Role role;
 
     private String textReview;
 
     private UserModeratedStatusType moderatedStatus;
 
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
     private Set<RoleReviewCompliant> roleReviewCompliants;
 

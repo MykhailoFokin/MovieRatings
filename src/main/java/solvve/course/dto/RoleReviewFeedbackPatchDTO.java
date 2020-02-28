@@ -7,7 +7,7 @@ import java.util.UUID;
 @Data
 public class RoleReviewFeedbackPatchDTO {
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID roleId;
 

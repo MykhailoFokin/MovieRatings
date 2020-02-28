@@ -22,7 +22,7 @@ public class Genre {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Movie movieId;
+    private Movie movie;
 
     @Enumerated(EnumType.STRING)
     private MovieGenreType name;

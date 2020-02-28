@@ -14,5 +14,5 @@ public class UserGrantCreateDTO {
 
     private String objectName;
 
-    private UUID grantedBy;
+    private UUID grantedById;
 }

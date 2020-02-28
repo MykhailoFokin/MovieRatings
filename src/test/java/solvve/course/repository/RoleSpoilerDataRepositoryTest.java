@@ -45,7 +45,7 @@ public class RoleSpoilerDataRepositoryTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleSpoilerData r = new RoleSpoilerData();
-        r.setRoleReviewId(roleReview);
+        r.setRoleReview(roleReview);
         r = roleSpoilerDataRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleSpoilerDataRepository.findById(r.getId()).isPresent());

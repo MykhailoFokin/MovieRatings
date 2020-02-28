@@ -38,7 +38,7 @@ public class MovieReviewMovieReviewFeedbackService {
     public MovieReviewFeedbackReadDTO createMovieReviewMovieReviewFeedback(UUID movieReviewId,
                                                                            MovieReviewFeedbackCreateDTO create) {
         MovieReviewFeedback movieReviewFeedback = translationService.toEntity(create);
-        movieReviewFeedback.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
+        movieReviewFeedback.setMovieReview(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
 
         return translationService.toRead(movieReviewFeedback);

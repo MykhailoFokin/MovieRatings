@@ -43,8 +43,8 @@ public class MovieVoteRepositoryTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         MovieVote r = new MovieVote();
-        r.setMovieId(movie);
-        r.setUserId(portalUser);
+        r.setMovie(movie);
+        r.setPortalUser(portalUser);
         r = movieVoteRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieVoteRepository.findById(r.getId()).isPresent());

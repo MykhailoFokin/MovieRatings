@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.domain.Role;
@@ -49,8 +48,8 @@ public class RoleServiceTest {
 
         RoleReadDTO readDTO = roleService.getRole(role.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(role,"personId","movieId");
-        Assertions.assertThat(readDTO.getPersonId()).isEqualTo(role.getPersonId().getId());
-        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(role.getMovieId().getId());
+        Assertions.assertThat(readDTO.getPersonId()).isEqualTo(role.getPerson().getId());
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(role.getMovie().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -74,8 +73,8 @@ public class RoleServiceTest {
 
         Role role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(role,"personId","movieId");
-        Assertions.assertThat(read.getPersonId()).isEqualTo(role.getPersonId().getId());
-        Assertions.assertThat(read.getMovieId()).isEqualTo(role.getMovieId().getId());
+        Assertions.assertThat(read.getPersonId()).isEqualTo(role.getPerson().getId());
+        Assertions.assertThat(read.getMovieId()).isEqualTo(role.getMovie().getId());
     }
 
     @Test
@@ -96,9 +95,9 @@ public class RoleServiceTest {
 
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
-                "movieId","personId", "roleReviewSet",
+                "movie","person", "roleReviews",
                 "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
-        Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
+        Assertions.assertThat(role.getPerson().getId()).isEqualTo(read.getPersonId());
     }
 
     @Test
@@ -121,7 +120,7 @@ public class RoleServiceTest {
         Assert.assertNotNull(roleAfterUpdate.getDescription());
 
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(roleAfterUpdate,
-                "movieId","personId", "roleReviewSet",
+                "movie","person", "roleReviews",
                 "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
     }
 
@@ -158,12 +157,11 @@ public class RoleServiceTest {
 
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
-                "movieId","personId", "roleReviewSet",
+                "movie","person", "roleReviews",
                 "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
-        Assertions.assertThat(role.getPersonId().getId()).isEqualTo(read.getPersonId());
+        Assertions.assertThat(role.getPerson().getId()).isEqualTo(read.getPersonId());
     }
 
-    @Transactional
     @Test
     public void testPutRoleEmptyPut() {
         Person person = testObjectsFactory.createPerson();
@@ -177,12 +175,14 @@ public class RoleServiceTest {
         Assert.assertNull(read.getRoleType());
         Assert.assertNull(read.getDescription());
 
-        Role roleAfterUpdate = roleRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            Role roleAfterUpdate = roleRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleAfterUpdate.getTitle());
-        Assert.assertNull(roleAfterUpdate.getRoleType());
-        Assert.assertNull(roleAfterUpdate.getDescription());
+            Assert.assertNull(roleAfterUpdate.getTitle());
+            Assert.assertNull(roleAfterUpdate.getRoleType());
+            Assert.assertNull(roleAfterUpdate.getDescription());
 
-        Assertions.assertThat(role).isEqualToComparingFieldByField(roleAfterUpdate);
+            Assertions.assertThat(role).isEqualToComparingOnlyGivenFields(roleAfterUpdate,"id");
+        });
     }
 }

@@ -38,7 +38,7 @@ public class RoleReviewRoleReviewCompliantService {
     public RoleReviewCompliantReadDTO createRoleReviewRoleReviewCompliant(UUID roleReviewId,
                                                                           RoleReviewCompliantCreateDTO create) {
         RoleReviewCompliant roleReviewCompliant = translationService.toEntity(create);
-        roleReviewCompliant.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
+        roleReviewCompliant.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
 
         return translationService.toRead(roleReviewCompliant);

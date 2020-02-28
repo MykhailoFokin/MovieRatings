@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -48,13 +47,13 @@ public class RoleReviewServiceTest {
 
         RoleReviewReadDTO readDTO = roleReviewService.getRoleReview(roleReview.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleReview,
-                "userId", "roleId", "moderatorId");
-        Assertions.assertThat(readDTO.getUserId())
-                .isEqualToComparingFieldByField(roleReview.getUserId().getId());
+                "portalUserId", "roleId", "moderatorId");
+        Assertions.assertThat(readDTO.getPortalUserId())
+                .isEqualToComparingFieldByField(roleReview.getPortalUser().getId());
         Assertions.assertThat(readDTO.getRoleId())
-                .isEqualToComparingFieldByField(roleReview.getRoleId().getId());
+                .isEqualToComparingFieldByField(roleReview.getRole().getId());
         Assertions.assertThat(readDTO.getModeratorId())
-                .isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
+                .isEqualToComparingFieldByField(roleReview.getModerator().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -70,7 +69,7 @@ public class RoleReviewServiceTest {
         Role role = testObjectsFactory.createRole(person,movie);
 
         RoleReviewCreateDTO create = new RoleReviewCreateDTO();
-        create.setUserId(portalUser.getId());
+        create.setPortalUserId(portalUser.getId());
         create.setRoleId(role.getId());
         create.setTextReview("This role can be described as junk.");
         create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
@@ -81,13 +80,13 @@ public class RoleReviewServiceTest {
 
         RoleReview roleReview = roleReviewRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleReview,
-                "userId", "roleId", "moderatorId");
-        Assertions.assertThat(read.getUserId())
-                .isEqualToComparingFieldByField(roleReview.getUserId().getId());
+                "portalUserId", "roleId", "moderatorId");
+        Assertions.assertThat(read.getPortalUserId())
+                .isEqualToComparingFieldByField(roleReview.getPortalUser().getId());
         Assertions.assertThat(read.getRoleId())
-                .isEqualToComparingFieldByField(roleReview.getRoleId().getId());
+                .isEqualToComparingFieldByField(roleReview.getRole().getId());
         Assertions.assertThat(read.getModeratorId())
-                .isEqualToComparingFieldByField(roleReview.getModeratorId().getId());
+                .isEqualToComparingFieldByField(roleReview.getModerator().getId());
     }
 
     @Test
@@ -99,7 +98,7 @@ public class RoleReviewServiceTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
-        patch.setUserId(portalUser.getId());
+        patch.setPortalUserId(portalUser.getId());
         patch.setRoleId(role.getId());
         patch.setTextReview("This role can be described as junk.");
         patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
@@ -110,11 +109,11 @@ public class RoleReviewServiceTest {
 
         roleReview = roleReviewRepository.findById(read.getId()).get();
         Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,
-                "userId", "roleId", "moderatorId",
+                "portalUser", "role", "moderator",
                 "roleReviewCompliants","roleReviewFeedbacks","roleSpoilerData");
-        Assertions.assertThat(roleReview.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(roleReview.getRoleId().getId()).isEqualTo(read.getRoleId());
-        Assertions.assertThat(roleReview.getModeratorId().getId()).isEqualTo(read.getModeratorId());
+        Assertions.assertThat(roleReview.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(roleReview.getRole().getId()).isEqualTo(read.getRoleId());
+        Assertions.assertThat(roleReview.getModerator().getId()).isEqualTo(read.getModeratorId());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class RoleReviewServiceTest {
         RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
         RoleReviewReadDTO read = roleReviewService.patchRoleReview(roleReview.getId(), patch);
 
-        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getRoleId());
         Assert.assertNotNull(read.getTextReview());
         Assert.assertNotNull(read.getModeratedStatus());
@@ -136,19 +135,20 @@ public class RoleReviewServiceTest {
 
         RoleReview roleReviewAfterUpdate = roleReviewRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(roleReviewAfterUpdate.getUserId());
-        Assert.assertNotNull(roleReviewAfterUpdate.getRoleId());
+        Assert.assertNotNull(roleReviewAfterUpdate.getPortalUser());
+        Assert.assertNotNull(roleReviewAfterUpdate.getRole());
         Assert.assertNotNull(roleReviewAfterUpdate.getTextReview());
         Assert.assertNotNull(roleReviewAfterUpdate.getModeratedStatus());
-        Assert.assertNotNull(roleReviewAfterUpdate.getModeratorId());
+        Assert.assertNotNull(roleReviewAfterUpdate.getModerator());
 
         Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(roleReviewAfterUpdate,
                 "roleReviewCompliants","roleReviewFeedbacks","roleSpoilerData",
-                "userId", "roleId", "moderatorId");
-        Assertions.assertThat(roleReview.getUserId().getId()).isEqualTo(roleReviewAfterUpdate.getUserId().getId());
-        Assertions.assertThat(roleReview.getRoleId().getId()).isEqualTo(roleReviewAfterUpdate.getRoleId().getId());
-        Assertions.assertThat(roleReview.getModeratorId().getId())
-                .isEqualTo(roleReviewAfterUpdate.getModeratorId().getId());
+                "portalUser", "role", "moderator");
+        Assertions.assertThat(roleReview.getPortalUser().getId())
+                .isEqualTo(roleReviewAfterUpdate.getPortalUser().getId());
+        Assertions.assertThat(roleReview.getRole().getId()).isEqualTo(roleReviewAfterUpdate.getRole().getId());
+        Assertions.assertThat(roleReview.getModerator().getId())
+                .isEqualTo(roleReviewAfterUpdate.getModerator().getId());
     }
 
     @Test
@@ -177,7 +177,7 @@ public class RoleReviewServiceTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewPutDTO put = new RoleReviewPutDTO();
-        put.setUserId(portalUser.getId());
+        put.setPortalUserId(portalUser.getId());
         put.setRoleId(role.getId());
         put.setTextReview("This role can be described as junk.");
         put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
@@ -188,14 +188,13 @@ public class RoleReviewServiceTest {
 
         roleReview = roleReviewRepository.findById(read.getId()).get();
         Assertions.assertThat(roleReview).isEqualToIgnoringGivenFields(read,
-                "userId", "roleId", "moderatorId",
+                "portalUser", "role", "moderator",
                 "roleReviewCompliants","roleReviewFeedbacks","roleSpoilerData");
-        Assertions.assertThat(roleReview.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(roleReview.getRoleId().getId()).isEqualTo(read.getRoleId());
-        Assertions.assertThat(roleReview.getModeratorId().getId()).isEqualTo(read.getModeratorId());
+        Assertions.assertThat(roleReview.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(roleReview.getRole().getId()).isEqualTo(read.getRoleId());
+        Assertions.assertThat(roleReview.getModerator().getId()).isEqualTo(read.getModeratorId());
     }
 
-    @Transactional
     @Test
     public void testPutRoleReviewEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -207,20 +206,24 @@ public class RoleReviewServiceTest {
         RoleReviewPutDTO put = new RoleReviewPutDTO();
         RoleReviewReadDTO read = roleReviewService.updateRoleReview(roleReview.getId(), put);
 
-        Assert.assertNull(read.getUserId());
-        Assert.assertNull(read.getRoleId());
+        Assert.assertNotNull(read.getPortalUserId());
+        Assert.assertNotNull(read.getRoleId());
         Assert.assertNull(read.getTextReview());
         Assert.assertNull(read.getModeratedStatus());
         Assert.assertNull(read.getModeratorId());
 
         RoleReview roleReviewAfterUpdate = roleReviewRepository.findById(read.getId()).get();
 
-        Assert.assertNull(roleReviewAfterUpdate.getUserId().getId());
-        Assert.assertNull(roleReviewAfterUpdate.getRoleId().getId());
+        Assert.assertNotNull(roleReviewAfterUpdate.getPortalUser());
+        Assert.assertNotNull(roleReviewAfterUpdate.getRole());
         Assert.assertNull(roleReviewAfterUpdate.getTextReview());
         Assert.assertNull(roleReviewAfterUpdate.getModeratedStatus());
-        Assert.assertNull(roleReviewAfterUpdate.getModeratorId().getId());
+        Assert.assertNull(roleReviewAfterUpdate.getModerator());
 
-        Assertions.assertThat(roleReview).isEqualToComparingFieldByField(roleReviewAfterUpdate);
+        Assertions.assertThat(roleReview).isEqualToComparingOnlyGivenFields(roleReviewAfterUpdate,"id");
+        Assertions.assertThat(roleReview.getPortalUser().getId())
+                .isEqualTo(roleReviewAfterUpdate.getPortalUser().getId());
+        Assertions.assertThat(roleReview.getRole().getId())
+                .isEqualTo(roleReviewAfterUpdate.getRole().getId());
     }
 }

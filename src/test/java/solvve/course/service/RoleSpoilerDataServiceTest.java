@@ -39,19 +39,19 @@ public class RoleSpoilerDataServiceTest {
     @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
         RoleSpoilerDataReadDTO readDTO = roleSpoilerDataService.getRoleSpoilerData(roleSpoilerData.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleSpoilerData,
                 "roleReviewId");
-        Assertions.assertThat(readDTO.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
+        Assertions.assertThat(readDTO.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReview().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -59,7 +59,6 @@ public class RoleSpoilerDataServiceTest {
         roleSpoilerDataService.getRoleSpoilerData(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -79,10 +78,9 @@ public class RoleSpoilerDataServiceTest {
         RoleSpoilerData roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(roleSpoilerData,
                 "roleReviewId");
-        Assertions.assertThat(read.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReviewId().getId());
+        Assertions.assertThat(read.getRoleReviewId()).isEqualTo(roleSpoilerData.getRoleReview().getId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -102,16 +100,16 @@ public class RoleSpoilerDataServiceTest {
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,
-                "roleReviewId");
-        Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
+                "roleReview");
+        Assertions.assertThat(roleSpoilerData.getRoleReview().getId()).isEqualTo(read.getRoleReviewId());
     }
 
-    @Transactional
     @Test
     public void testPatchRoleSpoilerDataEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
@@ -124,11 +122,14 @@ public class RoleSpoilerDataServiceTest {
 
         RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReviewId());
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReview());
         Assert.assertNotNull(roleSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNotNull(roleSpoilerDataAfterUpdate.getEndIndex());
 
-        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(roleSpoilerDataAfterUpdate);
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(roleSpoilerDataAfterUpdate,
+                "roleReview");
+        Assertions.assertThat(roleSpoilerData.getRoleReview().getId())
+                .isEqualTo(roleSpoilerDataAfterUpdate.getRoleReview().getId());
     }
 
     @Test
@@ -149,7 +150,6 @@ public class RoleSpoilerDataServiceTest {
         roleSpoilerDataService.deleteRoleSpoilerData(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutRoleSpoilerData() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -169,16 +169,16 @@ public class RoleSpoilerDataServiceTest {
 
         roleSpoilerData = roleSpoilerDataRepository.findById(read.getId()).get();
         Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(read,
-                "roleReviewId");
-        Assertions.assertThat(roleSpoilerData.getRoleReviewId().getId()).isEqualTo(read.getRoleReviewId());
+                "roleReview");
+        Assertions.assertThat(roleSpoilerData.getRoleReview().getId()).isEqualTo(read.getRoleReviewId());
     }
 
-    @Transactional
     @Test
     public void testPutRoleSpoilerDataEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Person person = testObjectsFactory.createPerson();
-        Role role = testObjectsFactory.createRole(person);
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
@@ -191,10 +191,11 @@ public class RoleSpoilerDataServiceTest {
 
         RoleSpoilerData roleSpoilerDataAfterUpdate = roleSpoilerDataRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReviewId().getId());
+        Assert.assertNotNull(roleSpoilerDataAfterUpdate.getRoleReview().getId());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getStartIndex());
         Assert.assertNull(roleSpoilerDataAfterUpdate.getEndIndex());
 
-        Assertions.assertThat(roleSpoilerData).isEqualToComparingFieldByField(roleSpoilerDataAfterUpdate);
+        Assertions.assertThat(roleSpoilerData).isEqualToIgnoringGivenFields(roleSpoilerDataAfterUpdate,
+                "roleReview", "startIndex", "endIndex", "updatedAt");
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -43,10 +42,12 @@ public class VisitServiceTest {
 
         VisitReadExtendedDTO readDTO = visitService.getVisit(visit.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(visit,
-                "userId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId(),
+                "portalUserId","portalUser");
+        Assertions.assertThat(readDTO.getPortalUser().getId())
+                .isEqualToIgnoringGivenFields(visit.getPortalUser().getId(),
                 "userTypeId");
-        Assertions.assertThat(readDTO.getUserId().getUserTypeId()).isEqualTo(visit.getUserId().getUserTypeId().getId());
+        Assertions.assertThat(readDTO.getPortalUser().getUserTypeId())
+                .isEqualTo(visit.getPortalUser().getUserType().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -64,8 +65,8 @@ public class VisitServiceTest {
 
         Visit visit = visitRepository.findById(read.getId()).get();
         Assertions.assertThat(create).isEqualToIgnoringGivenFields(visit,
-                "userId");
-        Assertions.assertThat(create.getUserId()).isEqualToIgnoringGivenFields(visit.getUserId().getId());
+                "portalUserId");
+        Assertions.assertThat(create.getPortalUserId()).isEqualToIgnoringGivenFields(visit.getPortalUser().getId());
     }
 
     @Test
@@ -80,8 +81,8 @@ public class VisitServiceTest {
 
         visit = visitRepository.findById(read.getId()).get();
         Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read,
-                "userId","startAt", "finishAt");
-        Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
+                "portalUser","startAt", "finishAt");
+        Assertions.assertThat(visit.getPortalUser().getId()).isEqualToIgnoringGivenFields(read.getPortalUserId());
     }
 
     @Test
@@ -98,9 +99,9 @@ public class VisitServiceTest {
 
         Assert.assertNotNull(visitAfterUpdate.getStartAt());
 
-        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(visitAfterUpdate, "userId");
-        Assertions.assertThat(visit.getUserId().getId())
-                .isEqualToIgnoringGivenFields(visitAfterUpdate.getUserId().getId());
+        Assertions.assertThat(visit).isEqualToIgnoringGivenFields(visitAfterUpdate, "portalUser");
+        Assertions.assertThat(visit.getPortalUser().getId())
+                .isEqualToIgnoringGivenFields(visitAfterUpdate.getPortalUser().getId());
     }
 
     @Test
@@ -129,11 +130,10 @@ public class VisitServiceTest {
 
         visit = visitRepository.findById(read.getId()).get();
         Assertions.assertThat(visit).isEqualToIgnoringGivenFields(read,
-                "userId");
-        Assertions.assertThat(visit.getUserId().getId()).isEqualToIgnoringGivenFields(read.getUserId());
+                "portalUser");
+        Assertions.assertThat(visit.getPortalUser().getId()).isEqualToIgnoringGivenFields(read.getPortalUserId());
     }
 
-    @Transactional
     @Test
     public void testPutVisitEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
@@ -143,11 +143,15 @@ public class VisitServiceTest {
         VisitReadDTO read = visitService.updateVisit(visit.getId(), put);
 
         Assert.assertNull(read.getStartAt());
+        Assert.assertNull(read.getFinishAt());
+        Assert.assertNull(read.getStatus());
 
         Visit visitAfterUpdate = visitRepository.findById(read.getId()).get();
 
         Assert.assertNull(visitAfterUpdate.getStartAt());
+        Assert.assertNull(visitAfterUpdate.getFinishAt());
+        Assert.assertNull(visitAfterUpdate.getStatus());
 
-        Assertions.assertThat(visit).isEqualToComparingFieldByField(visitAfterUpdate);
+        Assertions.assertThat(visit).isEqualToComparingOnlyGivenFields(visitAfterUpdate, "id");
     }
 }

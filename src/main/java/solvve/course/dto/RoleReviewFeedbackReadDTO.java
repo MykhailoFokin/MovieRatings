@@ -10,7 +10,7 @@ public class RoleReviewFeedbackReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID roleId;
 

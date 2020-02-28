@@ -13,7 +13,7 @@ public class UserTypeReadDTO {
 
     private UserGroupType userGroup;
 
-    private UUID portalUser;
+    private UUID portalUserId;
 
     private Instant createdAt;
 

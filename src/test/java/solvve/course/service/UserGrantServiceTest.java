@@ -43,9 +43,9 @@ public class UserGrantServiceTest {
 
         UserGrantReadDTO readDTO = userGrantService.getGrants(userGrant.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(userGrant,
-                "userTypeId", "grantedBy");
-        Assertions.assertThat(readDTO.getUserTypeId()).isEqualTo(userGrant.getUserTypeId().getId());
-        Assertions.assertThat(readDTO.getGrantedBy()).isEqualTo(userGrant.getGrantedBy().getId());
+                "userTypeId", "grantedById");
+        Assertions.assertThat(readDTO.getUserTypeId()).isEqualTo(userGrant.getUserType().getId());
+        Assertions.assertThat(readDTO.getGrantedById()).isEqualTo(userGrant.getGrantedBy().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -62,15 +62,15 @@ public class UserGrantServiceTest {
         create.setUserTypeId(userType.getId());
         create.setObjectName("Movie");
         create.setUserPermission(UserPermType.READ);
-        create.setGrantedBy(portalUser.getId());
+        create.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.createGrants(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         UserGrant userGrant = userGrantRepository.findById(read.getId()).get();
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(userGrant,
-                "userTypeId", "grantedBy");
-        Assertions.assertThat(read.getUserTypeId()).isEqualTo(userGrant.getUserTypeId().getId());
-        Assertions.assertThat(read.getGrantedBy()).isEqualTo(userGrant.getGrantedBy().getId());
+                "userTypeId", "grantedById");
+        Assertions.assertThat(read.getUserTypeId()).isEqualTo(userGrant.getUserType().getId());
+        Assertions.assertThat(read.getGrantedById()).isEqualTo(userGrant.getGrantedBy().getId());
     }
 
     @Test
@@ -83,16 +83,16 @@ public class UserGrantServiceTest {
         patch.setUserTypeId(userType.getId());
         patch.setObjectName("Movie");
         patch.setUserPermission(UserPermType.READ);
-        patch.setGrantedBy(portalUser.getId());
+        patch.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.patchGrants(userGrant.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         userGrant = userGrantRepository.findById(read.getId()).get();
         Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,
-                "userTypeId", "grantedBy");
-        Assertions.assertThat(userGrant.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
-        Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
+                "userType", "grantedBy");
+        Assertions.assertThat(userGrant.getUserType().getId()).isEqualTo(read.getUserTypeId());
+        Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedById());
     }
 
     @Test
@@ -107,19 +107,19 @@ public class UserGrantServiceTest {
         Assert.assertNotNull(read.getUserTypeId());
         Assert.assertNotNull(read.getObjectName());
         Assert.assertNotNull(read.getUserPermission());
-        Assert.assertNotNull(read.getGrantedBy());
+        Assert.assertNotNull(read.getGrantedById());
 
         UserGrant userGrantAfterUpdate = userGrantRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(userGrantAfterUpdate.getUserTypeId());
+        Assert.assertNotNull(userGrantAfterUpdate.getUserType());
         Assert.assertNotNull(userGrantAfterUpdate.getObjectName());
         Assert.assertNotNull(userGrantAfterUpdate.getUserPermission());
         Assert.assertNotNull(userGrantAfterUpdate.getGrantedBy());
 
         Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(userGrantAfterUpdate,
-                "userTypeId", "grantedBy");
-        Assertions.assertThat(userGrant.getUserTypeId().getId())
-                .isEqualTo(userGrantAfterUpdate.getUserTypeId().getId());
+                "userType", "grantedBy");
+        Assertions.assertThat(userGrant.getUserType().getId())
+                .isEqualTo(userGrantAfterUpdate.getUserType().getId());
         Assertions.assertThat(userGrant.getGrantedBy().getId())
                 .isEqualTo(userGrantAfterUpdate.getGrantedBy().getId());
     }
@@ -149,16 +149,16 @@ public class UserGrantServiceTest {
         put.setUserTypeId(userType.getId());
         put.setObjectName("Movie");
         put.setUserPermission(UserPermType.READ);
-        put.setGrantedBy(portalUser.getId());
+        put.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         userGrant = userGrantRepository.findById(read.getId()).get();
         Assertions.assertThat(userGrant).isEqualToIgnoringGivenFields(read,
-                "userTypeId", "grantedBy");
-        Assertions.assertThat(userGrant.getUserTypeId().getId()).isEqualTo(read.getUserTypeId());
-        Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedBy());
+                "userType", "grantedBy");
+        Assertions.assertThat(userGrant.getUserType().getId()).isEqualTo(read.getUserTypeId());
+        Assertions.assertThat(userGrant.getGrantedBy().getId()).isEqualTo(read.getGrantedById());
     }
 
     @Test
@@ -173,18 +173,18 @@ public class UserGrantServiceTest {
         Assert.assertNotNull(read.getUserTypeId());
         Assert.assertNull(read.getObjectName());
         Assert.assertNull(read.getUserPermission());
-        Assert.assertNotNull(read.getGrantedBy());
+        Assert.assertNotNull(read.getGrantedById());
 
         UserGrant userGrantAfterUpdate = userGrantRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(userGrantAfterUpdate.getUserTypeId().getId());
+        Assert.assertNotNull(userGrantAfterUpdate.getUserType().getId());
         Assert.assertNull(userGrantAfterUpdate.getObjectName());
         Assert.assertNull(userGrantAfterUpdate.getUserPermission());
         Assert.assertNotNull(userGrantAfterUpdate.getGrantedBy().getId());
 
         Assertions.assertThat(userGrant).isEqualToComparingOnlyGivenFields(userGrantAfterUpdate, "id");
-        Assertions.assertThat(userGrant.getUserTypeId().getId())
-                .isEqualTo(userGrantAfterUpdate.getUserTypeId().getId());
+        Assertions.assertThat(userGrant.getUserType().getId())
+                .isEqualTo(userGrantAfterUpdate.getUserType().getId());
         Assertions.assertThat(userGrant.getGrantedBy().getId())
                 .isEqualTo(userGrantAfterUpdate.getGrantedBy().getId());
     }

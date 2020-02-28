@@ -47,9 +47,9 @@ public class RoleVoteServiceTest {
 
         RoleVoteReadDTO readDTO = roleVoteService.getRoleVote(roleVote.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(roleVote,
-                "userId","roleId");
-        Assertions.assertThat(readDTO.getUserId()).isEqualTo(roleVote.getUserId().getId());
-        Assertions.assertThat(readDTO.getRoleId()).isEqualTo(roleVote.getRoleId().getId());
+                "portalUserId","roleId");
+        Assertions.assertThat(readDTO.getPortalUserId()).isEqualTo(roleVote.getPortalUser().getId());
+        Assertions.assertThat(readDTO.getRoleId()).isEqualTo(roleVote.getRole().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -66,16 +66,16 @@ public class RoleVoteServiceTest {
 
         RoleVoteCreateDTO create = new RoleVoteCreateDTO();
         create.setRoleId(role.getId());
-        create.setUserId(portalUser.getId());
+        create.setPortalUserId(portalUser.getId());
         create.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.createRoleVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         RoleVote roleVote = roleVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
-                "userId","roleId");
-        Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
+                "portalUser","role");
+        Assertions.assertThat(roleVote.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(roleVote.getRole().getId()).isEqualTo(read.getRoleId());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class RoleVoteServiceTest {
 
         RoleVotePatchDTO patch = new RoleVotePatchDTO();
         patch.setRoleId(role.getId());
-        patch.setUserId(portalUser.getId());
+        patch.setPortalUserId(portalUser.getId());
         patch.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
 
@@ -96,9 +96,9 @@ public class RoleVoteServiceTest {
 
         roleVote = roleVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
-                "userId","roleId");
-        Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
+                "portalUser","role");
+        Assertions.assertThat(roleVote.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(roleVote.getRole().getId()).isEqualTo(read.getRoleId());
     }
 
     @Test
@@ -113,20 +113,20 @@ public class RoleVoteServiceTest {
         RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
 
         Assert.assertNotNull(read.getRoleId());
-        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getRating());
 
         RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(roleVoteAfterUpdate.getRoleId());
-        Assert.assertNotNull(roleVoteAfterUpdate.getUserId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getRole());
+        Assert.assertNotNull(roleVoteAfterUpdate.getPortalUser());
         Assert.assertNotNull(roleVoteAfterUpdate.getRating());
 
-        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(roleVoteAfterUpdate, "userId", "roleId");
-        Assertions.assertThat(roleVote.getUserId().getId())
-                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getUserId().getId());
-        Assertions.assertThat(roleVote.getRoleId().getId())
-                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getRoleId().getId());
+        Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(roleVoteAfterUpdate, "portalUser", "role");
+        Assertions.assertThat(roleVote.getPortalUser().getId())
+                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getPortalUser().getId());
+        Assertions.assertThat(roleVote.getRole().getId())
+                .isEqualToComparingFieldByField(roleVoteAfterUpdate.getRole().getId());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class RoleVoteServiceTest {
 
         RoleVotePutDTO put = new RoleVotePutDTO();
         put.setRoleId(role.getId());
-        put.setUserId(portalUser.getId());
+        put.setPortalUserId(portalUser.getId());
         put.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
@@ -164,9 +164,9 @@ public class RoleVoteServiceTest {
 
         roleVote = roleVoteRepository.findById(read.getId()).get();
         Assertions.assertThat(roleVote).isEqualToIgnoringGivenFields(read,
-                "userId","roleId");
-        Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(read.getUserId());
-        Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(read.getRoleId());
+                "portalUser","role");
+        Assertions.assertThat(roleVote.getPortalUser().getId()).isEqualTo(read.getPortalUserId());
+        Assertions.assertThat(roleVote.getRole().getId()).isEqualTo(read.getRoleId());
     }
 
     @Test
@@ -181,18 +181,18 @@ public class RoleVoteServiceTest {
         RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
         Assert.assertNotNull(read.getRoleId());
-        Assert.assertNotNull(read.getUserId());
+        Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNull(read.getRating());
 
         RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
 
-        Assert.assertNotNull(roleVoteAfterUpdate.getRoleId().getId());
-        Assert.assertNotNull(roleVoteAfterUpdate.getUserId().getId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getRole().getId());
+        Assert.assertNotNull(roleVoteAfterUpdate.getPortalUser().getId());
         Assert.assertNull(roleVoteAfterUpdate.getRating());
 
         Assertions.assertThat(roleVote).isEqualToComparingOnlyGivenFields(roleVoteAfterUpdate,
                 "id");
-        Assertions.assertThat(roleVote.getRoleId().getId()).isEqualTo(roleVoteAfterUpdate.getRoleId().getId());
-        Assertions.assertThat(roleVote.getUserId().getId()).isEqualTo(roleVoteAfterUpdate.getUserId().getId());
+        Assertions.assertThat(roleVote.getRole().getId()).isEqualTo(roleVoteAfterUpdate.getRole().getId());
+        Assertions.assertThat(roleVote.getPortalUser().getId()).isEqualTo(roleVoteAfterUpdate.getPortalUser().getId());
     }
 }

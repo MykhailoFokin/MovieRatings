@@ -9,5 +9,5 @@ public class CrewTypeCreateDTO {
 
     private String name;
 
-    private UUID crew;
+    private UUID crewId;
 }

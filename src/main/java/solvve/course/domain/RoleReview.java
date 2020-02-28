@@ -23,11 +23,11 @@ public class RoleReview {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Role roleId;
+    private Role role;
 
     private String textReview;
 
@@ -36,15 +36,15 @@ public class RoleReview {
 
     @ManyToOne
     @JoinColumn
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
-    @OneToMany(mappedBy = "roleReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "roleReview", cascade = CascadeType.PERSIST)
     private Set<RoleReviewCompliant> roleReviewCompliants;
 
-    @OneToMany(mappedBy = "roleReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "roleReview", cascade = CascadeType.PERSIST)
     private Set<RoleReviewFeedback> roleReviewFeedbacks;
 
-    @OneToMany(mappedBy = "roleReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "roleReview", cascade = CascadeType.PERSIST)
     private Set<RoleSpoilerData> roleSpoilerData;
 
     @CreatedDate

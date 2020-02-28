@@ -31,7 +31,7 @@ public class MovieCompany {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private CompanyDetails companyId;
+    private CompanyDetails companyDetails;
 
     @CreatedDate
     private Instant createdAt;

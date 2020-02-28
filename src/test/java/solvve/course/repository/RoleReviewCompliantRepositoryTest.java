@@ -44,12 +44,12 @@ public class RoleReviewCompliantRepositoryTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
         RoleReviewCompliant r = new RoleReviewCompliant();
-        r.setUserId(portalUser);
-        r.setRoleId(role);
-        r.setRoleReviewId(roleReview);
+        r.setPortalUser(portalUser);
+        r.setRole(role);
+        r.setRoleReview(roleReview);
         r.setDescription("Just punish him!");
         r.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        r.setModeratorId(portalUser);
+        r.setModerator(portalUser);
         r = roleReviewCompliantRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(roleReviewCompliantRepository.findById(r.getId()).isPresent());

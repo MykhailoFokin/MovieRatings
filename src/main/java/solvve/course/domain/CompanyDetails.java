@@ -23,7 +23,7 @@ public class CompanyDetails {
     @GeneratedValue
     private UUID id;
 
-    @OneToMany(mappedBy = "companyId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "companyDetails", cascade = CascadeType.PERSIST)
     private Set<MovieCompany> movieProdTypeCompanies = new HashSet<MovieCompany>();
 
     private String name;

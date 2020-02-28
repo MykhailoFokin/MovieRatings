@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Genre;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieGenreType;
@@ -21,7 +20,6 @@ import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.GenreRepository;
 import solvve.course.utils.TestObjectsFactory;
 
-import java.util.Set;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -49,7 +47,7 @@ public class GenreServiceTest {
         testObjectsFactory.inTransaction(() -> {
             GenreReadDTO readDTO = genreService.getGenre(genre.getId());
             Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(genre, "movieId");
-            Assertions.assertThat(readDTO.getMovieId()).isEqualTo(genre.getMovieId().getId());
+            Assertions.assertThat(readDTO.getMovieId()).isEqualTo(genre.getMovie().getId());
         });
     }
 
@@ -70,7 +68,7 @@ public class GenreServiceTest {
         testObjectsFactory.inTransaction(() -> {
             Genre genre = genreRepository.findById(read.getId()).get();
             Assertions.assertThat(read).isEqualToIgnoringGivenFields(genre, "movieId");
-            Assertions.assertThat(read.getMovieId()).isEqualTo(genre.getMovieId().getId());
+            Assertions.assertThat(read.getMovieId()).isEqualTo(genre.getMovie().getId());
         });
     }
 
@@ -84,13 +82,13 @@ public class GenreServiceTest {
         patch.setMovieId(movie.getId());
         GenreReadDTO read = genreService.patchGenre(genre.getId(), patch);
 
-        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movieId");
+        Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movie");
         Assertions.assertThat(patch.getMovieId()).isEqualTo(read.getMovieId());
 
         testObjectsFactory.inTransaction(() -> {
             Genre genre1 = genreRepository.findById(read.getId()).get();
-            Assertions.assertThat(genre1).isEqualToIgnoringGivenFields(read, "movieId");
-            Assertions.assertThat(genre1.getMovieId().getId()).isEqualTo(read.getMovieId());
+            Assertions.assertThat(genre1).isEqualToIgnoringGivenFields(read, "movie");
+            Assertions.assertThat(genre1.getMovie().getId()).isEqualTo(read.getMovieId());
         });
     }
 
@@ -110,10 +108,10 @@ public class GenreServiceTest {
             Genre genreAfterUpdate = genreRepository.findById(read.getId()).get();
 
             Assert.assertNotNull(genreAfterUpdate.getName());
-            Assert.assertNotNull(genreAfterUpdate.getMovieId());
+            Assert.assertNotNull(genreAfterUpdate.getMovie());
 
-            Assertions.assertThat(genre).isEqualToIgnoringGivenFields(genreAfterUpdate, "movieId");
-            Assertions.assertThat(genre.getMovieId().getId()).isEqualTo(genreAfterUpdate.getMovieId().getId());
+            Assertions.assertThat(genre).isEqualToIgnoringGivenFields(genreAfterUpdate, "movie");
+            Assertions.assertThat(genre.getMovie().getId()).isEqualTo(genreAfterUpdate.getMovie().getId());
         });
     }
 
@@ -144,17 +142,16 @@ public class GenreServiceTest {
         put.setMovieId(movie2.getId());
         GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
-        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movieId");
+        Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movie");
         Assertions.assertThat(put.getMovieId()).isEqualTo(read.getMovieId());
 
         testObjectsFactory.inTransaction(() -> {
             Genre genre1 = genreRepository.findById(read.getId()).get();
-            Assertions.assertThat(genre1).isEqualToIgnoringGivenFields(read, "movieId");
-            Assertions.assertThat(genre1.getMovieId().getId()).isEqualTo(read.getMovieId());
+            Assertions.assertThat(genre1).isEqualToIgnoringGivenFields(read, "movie");
+            Assertions.assertThat(genre1.getMovie().getId()).isEqualTo(read.getMovieId());
         });
     }
 
-    @Transactional
     @Test
     public void testPutGenresEmptyPut() {
         Movie movie = testObjectsFactory.createMovie();
@@ -164,11 +161,13 @@ public class GenreServiceTest {
         GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
         Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getMovieId());
 
         testObjectsFactory.inTransaction(() -> {
             Genre genreAfterUpdate = genreRepository.findById(read.getId()).get();
 
             Assert.assertNull(genreAfterUpdate.getName());
+            Assert.assertNotNull(genreAfterUpdate.getMovie());
         });
     }
 

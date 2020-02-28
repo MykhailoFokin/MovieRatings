@@ -14,21 +14,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.VisitService;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,7 +65,7 @@ public class VisitControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         VisitReadDTO actualMovie = objectMapper.readValue(resultJson, VisitReadDTO.class);
-        Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(visit);
+        Assertions.assertThat(actualMovie).isEqualToIgnoringGivenFields(visit,"portalUserId");
 
         Mockito.verify(visitService).getVisit(visit.getId());
     }
@@ -178,13 +173,13 @@ public class VisitControllerTest {
     @Test
     public void testGetVisits() throws Exception {
         VisitFilter visitFilter = new VisitFilter();
-        visitFilter.setUserId(UUID.randomUUID());
+        visitFilter.setPortalUserId(UUID.randomUUID());
         visitFilter.setStatuses(Set.of(VisitStatus.SCHEDULED, VisitStatus.FINISHED));
         visitFilter.setStartAtFrom(Instant.now());
         visitFilter.setStartAtTo(Instant.now());
 
         VisitReadDTO read = new VisitReadDTO();
-        read.setUserId(visitFilter.getUserId());
+        read.setPortalUserId(visitFilter.getPortalUserId());
         read.setStatus(VisitStatus.SCHEDULED);
         read.setId(UUID.randomUUID());
         read.setStartAt(Instant.now());
@@ -193,7 +188,7 @@ public class VisitControllerTest {
         Mockito.when(visitService.getVisits(visitFilter)).thenReturn(expectedResult);
 
         String resultJson = mvc.perform(get("/api/v1/visits")
-                .param("userId", visitFilter.getUserId().toString())
+                .param("portalUserId", visitFilter.getPortalUserId().toString())
                 .param("statuses", "SCHEDULED, FINISHED")
                 .param("startAtFrom", visitFilter.getStartAtFrom().toString())
                 .param("startAtTo", visitFilter.getStartAtTo().toString()))

@@ -11,5 +11,5 @@ public class MovieCompanyFilter {
 
     private List<MovieProductionType> movieProductionTypes;
 
-    private UUID companyId;
+    private UUID companyDetailsId;
 }

@@ -22,7 +22,7 @@ public class RoleSpoilerData {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private RoleReview roleReviewId;
+    private RoleReview roleReview;
 
     private Integer startIndex;
 

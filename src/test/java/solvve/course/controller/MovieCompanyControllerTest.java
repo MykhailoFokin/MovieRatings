@@ -154,7 +154,7 @@ public class MovieCompanyControllerTest {
     @Test
     public void testGetMovieCompanies() throws Exception {
         MovieCompanyFilter movieCompanyFilter = new MovieCompanyFilter();
-        movieCompanyFilter.setCompanyId(UUID.randomUUID());
+        movieCompanyFilter.setCompanyDetailsId(UUID.randomUUID());
         movieCompanyFilter.setMovieProductionTypes(List.of(MovieProductionType.PRODUCTION_COMPANIES));
 
         MovieCompanyReadDTO read = createMovieCompanyRead();
@@ -162,7 +162,7 @@ public class MovieCompanyControllerTest {
         Mockito.when(movieCompanyService.getMovieCompanies(movieCompanyFilter)).thenReturn(expectedResult);
 
         String resultJson = mvc.perform(get("/api/v1/moviecompanies")
-                .param("companyId", movieCompanyFilter.getCompanyId().toString())
+                .param("companyDetailsId", movieCompanyFilter.getCompanyDetailsId().toString())
                 .param("movieProductionTypes", "PRODUCTION_COMPANIES"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 

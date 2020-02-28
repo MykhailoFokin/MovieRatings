@@ -1,5 +1,6 @@
 package solvve.course.service;
 
+import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class CrewTypeServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypeReadDTO readDTO = crewTypeService.getCrewType(crewType.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(crewType);
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crewType,"crewId");
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -56,7 +57,7 @@ public class CrewTypeServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         CrewType crewType = crewTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(crewType);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(crewType,"crewId");
     }
 
     @Test
@@ -70,7 +71,7 @@ public class CrewTypeServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         crewType = crewTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(crewType).isEqualToIgnoringGivenFields(read, "crew");
     }
 
     @Test
@@ -113,7 +114,7 @@ public class CrewTypeServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         crewType = crewTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(crewType).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(crewType).isEqualToIgnoringGivenFields(read,"crew");
     }
 
     @Test

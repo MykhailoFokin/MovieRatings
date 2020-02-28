@@ -11,7 +11,7 @@ public class VisitReadExtendedDTO {
 
     private UUID id;
 
-    private PortalUserReadDTO userId;
+    private PortalUserReadDTO portalUser;
 
     private Instant startAt;
 

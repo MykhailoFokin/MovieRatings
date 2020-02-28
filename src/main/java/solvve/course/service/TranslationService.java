@@ -6,9 +6,6 @@ import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.repository.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
 public class TranslationService {
 
@@ -18,7 +15,7 @@ public class TranslationService {
     public VisitReadExtendedDTO toReadExtended(Visit visit) {
         VisitReadExtendedDTO dto = new VisitReadExtendedDTO();
         dto.setId(visit.getId());
-        dto.setUserId(toRead(visit.getUserId()));
+        dto.setPortalUser(toRead(visit.getPortalUser()));
         dto.setStartAt(visit.getStartAt());
         dto.setFinishAt(visit.getFinishAt());
         dto.setStatus(visit.getStatus());
@@ -30,7 +27,7 @@ public class TranslationService {
     public VisitReadDTO toRead(Visit visit) {
         VisitReadDTO dto = new VisitReadDTO();
         dto.setId(visit.getId());
-        dto.setUserId(visit.getUserId().getId());
+        dto.setPortalUserId(visit.getPortalUser().getId());
         dto.setStartAt(visit.getStartAt());
         dto.setFinishAt(visit.getFinishAt());
         dto.setStatus(visit.getStatus());
@@ -39,22 +36,9 @@ public class TranslationService {
         return dto;
     }
 
-    public Set<VisitReadDTO> toRead(Set<Visit> visitSet) {
-        return visitSet.stream().map(visit -> {
-            VisitReadDTO visitReadDTO = new VisitReadDTO();
-            visitReadDTO.setUserId(visit.getUserId().getId());
-            visitReadDTO.setStatus(visit.getStatus());
-            visitReadDTO.setStartAt(visit.getStartAt());
-            visitReadDTO.setFinishAt(visit.getFinishAt());
-            visitReadDTO.setCreatedAt(visit.getCreatedAt());
-            visitReadDTO.setUpdatedAt(visit.getUpdatedAt());
-            return visitReadDTO;
-        }).collect(Collectors.toSet());
-    }
-
     public Visit toEntity(VisitCreateDTO create) {
         Visit visit = new Visit();
-        visit.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
+        visit.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
         visit.setStartAt(create.getStartAt());
         visit.setFinishAt(create.getFinishAt());
         visit.setStatus(create.getStatus());
@@ -62,8 +46,8 @@ public class TranslationService {
     }
 
     public void patchEntity(VisitPatchDTO patch, Visit visit) {
-        if (patch.getUserId()!=null) {
-            visit.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            visit.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getStartAt()!=null) {
             visit.setStartAt(patch.getStartAt());
@@ -77,8 +61,8 @@ public class TranslationService {
     }
 
     public void updateEntity(VisitPutDTO put, Visit visit) {
-        if (put.getUserId()!=null) {
-            visit.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
+        if (put.getPortalUserId()!=null) {
+            visit.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         visit.setStartAt(put.getStartAt());
         visit.setFinishAt(put.getFinishAt());
@@ -150,9 +134,9 @@ public class TranslationService {
     public CrewReadExtendedDTO toReadExtended(Crew crew) {
         CrewReadExtendedDTO dto = new CrewReadExtendedDTO();
         dto.setId(crew.getId());
-        dto.setMovieId(toRead(crew.getMovieId()));
-        dto.setPersonId(toRead(crew.getPersonId()));
-        dto.setCrewTypeId(toRead(crew.getCrewTypeId()));
+        dto.setMovie(toRead(crew.getMovie()));
+        dto.setPerson(toRead(crew.getPerson()));
+        dto.setCrewType(toRead(crew.getCrewType()));
         dto.setDescription(crew.getDescription());
         dto.setCreatedAt(crew.getCreatedAt());
         dto.setUpdatedAt(crew.getUpdatedAt());
@@ -162,10 +146,10 @@ public class TranslationService {
     public CrewReadDTO toRead(Crew crew) {
         CrewReadDTO dto = new CrewReadDTO();
         dto.setId(crew.getId());
-        dto.setMovieId(crew.getMovieId().getId());
-        dto.setPersonId(crew.getPersonId().getId());
-        if (crew.getCrewTypeId() != null) {
-            dto.setCrewTypeId(crew.getCrewTypeId().getId());
+        dto.setMovieId(crew.getMovie().getId());
+        dto.setPersonId(crew.getPerson().getId());
+        if (crew.getCrewType() != null) {
+            dto.setCrewTypeId(crew.getCrewType().getId());
         }
         dto.setDescription(crew.getDescription());
         dto.setCreatedAt(crew.getCreatedAt());
@@ -175,22 +159,22 @@ public class TranslationService {
 
     public Crew toEntity(CrewCreateDTO create) {
         Crew crew = new Crew();
-        crew.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
-        crew.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, create.getPersonId()));
-        crew.setCrewTypeId(repositoryHelper.getReferenceIfExists(CrewType.class, create.getCrewTypeId()));
+        crew.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        crew.setPerson(repositoryHelper.getReferenceIfExists(Person.class, create.getPersonId()));
+        crew.setCrewType(repositoryHelper.getReferenceIfExists(CrewType.class, create.getCrewTypeId()));
         crew.setDescription(create.getDescription());
         return crew;
     }
 
     public void patchEntity(CrewPatchDTO patch, Crew crew) {
         if (patch.getMovieId()!=null) {
-            crew.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            crew.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getPersonId()!=null) {
-            crew.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, patch.getPersonId()));
+            crew.setPerson(repositoryHelper.getReferenceIfExists(Person.class, patch.getPersonId()));
         }
         if (patch.getCrewTypeId()!=null) {
-            crew.setCrewTypeId(repositoryHelper.getReferenceIfExists(CrewType.class, patch.getCrewTypeId()));
+            crew.setCrewType(repositoryHelper.getReferenceIfExists(CrewType.class, patch.getCrewTypeId()));
         }
         if (patch.getDescription()!=null) {
             crew.setDescription(patch.getDescription());
@@ -199,15 +183,15 @@ public class TranslationService {
 
     public void updateEntity(CrewPutDTO put, Crew crew) {
         if (put.getMovieId()!=null) {
-            crew.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
+            crew.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         if (put.getPersonId()!=null) {
-            crew.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, put.getPersonId()));
+            crew.setPerson(repositoryHelper.getReferenceIfExists(Person.class, put.getPersonId()));
         }
         if (put.getCrewTypeId()!=null) {
-            crew.setCrewTypeId(repositoryHelper.getReferenceIfExists(CrewType.class, put.getCrewTypeId()));
+            crew.setCrewType(repositoryHelper.getReferenceIfExists(CrewType.class, put.getCrewTypeId()));
         } else {
-            crew.setCrewTypeId(new CrewType());
+            crew.setCrewType(null);
         }
         crew.setDescription(put.getDescription());
     }
@@ -240,7 +224,7 @@ public class TranslationService {
     public GenreReadDTO toRead(Genre genre) {
         GenreReadDTO dto = new GenreReadDTO();
         dto.setId(genre.getId());
-        dto.setMovieId(genre.getMovieId().getId());
+        dto.setMovieId(genre.getMovie().getId());
         dto.setName(genre.getName());
         dto.setCreatedAt(genre.getCreatedAt());
         dto.setUpdatedAt(genre.getUpdatedAt());
@@ -249,36 +233,34 @@ public class TranslationService {
 
     public Genre toEntity(GenreCreateDTO create) {
         Genre genre = new Genre();
-        genre.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        genre.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
         genre.setName(create.getName());
         return genre;
     }
 
     public void patchEntity(GenrePatchDTO patch, Genre genre) {
         if (patch.getMovieId()!=null) {
-            genre.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            genre.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getName()!=null) {
             genre.setName(patch.getName());
         }
     }
 
-    public void updateEntity(GenrePutDTO put, Genre Genre) {
+    public void updateEntity(GenrePutDTO put, Genre genre) {
         if (put.getMovieId()!=null) {
-            Genre.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
-        } else {
-            Genre.setMovieId(new Movie());
+            genre.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
-        Genre.setName(put.getName());
+        genre.setName(put.getName());
     }
 
     public UserGrantReadDTO toRead(UserGrant userGrant) {
         UserGrantReadDTO dto = new UserGrantReadDTO();
         dto.setId(userGrant.getId());
-        dto.setUserTypeId(userGrant.getUserTypeId().getId());
+        dto.setUserTypeId(userGrant.getUserType().getId());
         dto.setUserPermission(userGrant.getUserPermission());
         dto.setObjectName(userGrant.getObjectName());
-        dto.setGrantedBy(userGrant.getGrantedBy().getId());
+        dto.setGrantedById(userGrant.getGrantedBy().getId());
         dto.setCreatedAt(userGrant.getCreatedAt());
         dto.setUpdatedAt(userGrant.getUpdatedAt());
         return dto;
@@ -286,16 +268,16 @@ public class TranslationService {
 
     public UserGrant toEntity(UserGrantCreateDTO create) {
         UserGrant userGrant = new UserGrant();
-        userGrant.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, create.getUserTypeId()));
+        userGrant.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, create.getUserTypeId()));
         userGrant.setUserPermission(create.getUserPermission());
         userGrant.setObjectName(create.getObjectName());
-        userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getGrantedBy()));
+        userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getGrantedById()));
         return userGrant;
     }
 
     public void patchEntity(UserGrantPatchDTO patch, UserGrant userGrant) {
         if (patch.getUserTypeId()!=null) {
-            userGrant.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, patch.getUserTypeId()));
+            userGrant.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, patch.getUserTypeId()));
         }
         if (patch.getObjectName()!=null) {
             userGrant.setObjectName(patch.getObjectName());
@@ -303,19 +285,19 @@ public class TranslationService {
         if (patch.getUserPermission()!=null) {
             userGrant.setUserPermission(patch.getUserPermission());
         }
-        if (patch.getGrantedBy()!=null) {
-            userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getGrantedBy()));
+        if (patch.getGrantedById()!=null) {
+            userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getGrantedById()));
         }
     }
 
     public void updateEntity(UserGrantPutDTO put, UserGrant userGrant) {
         if (put.getUserTypeId()!=null) {
-            userGrant.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
+            userGrant.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
         }
         userGrant.setObjectName(put.getObjectName());
         userGrant.setUserPermission(put.getUserPermission());
-        if (put.getGrantedBy()!=null) {
-            userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getGrantedBy()));
+        if (put.getGrantedById()!=null) {
+            userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getGrantedById()));
         }
     }
 
@@ -347,7 +329,7 @@ public class TranslationService {
     public MovieCompanyReadDTO toRead(MovieCompany movieCompany) {
         MovieCompanyReadDTO dto = new MovieCompanyReadDTO();
         dto.setId(movieCompany.getId());
-        dto.setCompanyId(movieCompany.getCompanyId().getId());
+        dto.setCompanyDetailsId(movieCompany.getCompanyDetails().getId());
         dto.setMovieProductionType(movieCompany.getMovieProductionType());
         dto.setDescription(movieCompany.getDescription());
         dto.setCreatedAt(movieCompany.getCreatedAt());
@@ -357,15 +339,17 @@ public class TranslationService {
 
     public MovieCompany toEntity(MovieCompanyCreateDTO create) {
         MovieCompany movieCompany = new MovieCompany();
-        movieCompany.setCompanyId(repositoryHelper.getReferenceIfExists(CompanyDetails.class, create.getCompanyId()));
+        movieCompany.setCompanyDetails(repositoryHelper
+                .getReferenceIfExists(CompanyDetails.class, create.getCompanyDetailsId()));
         movieCompany.setMovieProductionType(create.getMovieProductionType());
         movieCompany.setDescription(create.getDescription());
         return movieCompany;
     }
 
     public void patchEntity(MovieCompanyPatchDTO patch, MovieCompany movieCompany) {
-        if (patch.getCompanyId()!=null) {
-            movieCompany.setCompanyId(repositoryHelper.getReferenceIfExists(CompanyDetails.class, patch.getCompanyId()));
+        if (patch.getCompanyDetailsId()!=null) {
+            movieCompany.setCompanyDetails(repositoryHelper
+                    .getReferenceIfExists(CompanyDetails.class, patch.getCompanyDetailsId()));
         }
         if (patch.getMovieProductionType()!=null) {
             movieCompany.setMovieProductionType(patch.getMovieProductionType());
@@ -376,8 +360,9 @@ public class TranslationService {
     }
 
     public void updateEntity(MovieCompanyPutDTO put, MovieCompany movieCompany) {
-        if (put.getCompanyId()!=null) {
-            movieCompany.setCompanyId(repositoryHelper.getReferenceIfExists(CompanyDetails.class, put.getCompanyId()));
+        if (put.getCompanyDetailsId()!=null) {
+            movieCompany.setCompanyDetails(repositoryHelper
+                    .getReferenceIfExists(CompanyDetails.class, put.getCompanyDetailsId()));
         }
         movieCompany.setMovieProductionType(put.getMovieProductionType());
         movieCompany.setDescription(put.getDescription());
@@ -386,12 +371,14 @@ public class TranslationService {
     public MovieReviewCompliantReadDTO toRead(MovieReviewCompliant movieReviewCompliant) {
         MovieReviewCompliantReadDTO dto = new MovieReviewCompliantReadDTO();
         dto.setId(movieReviewCompliant.getId());
-        dto.setUserId(movieReviewCompliant.getUserId().getId());
-        dto.setMovieId(movieReviewCompliant.getMovieId().getId());
-        dto.setMovieReviewId(movieReviewCompliant.getMovieReviewId().getId());
+        dto.setPortalUserId(movieReviewCompliant.getPortalUser().getId());
+        dto.setMovieId(movieReviewCompliant.getMovie().getId());
+        dto.setMovieReviewId(movieReviewCompliant.getMovieReview().getId());
         dto.setDescription(movieReviewCompliant.getDescription());
         dto.setModeratedStatus(movieReviewCompliant.getModeratedStatus());
-        dto.setModeratorId(movieReviewCompliant.getModeratorId().getId());
+        if (movieReviewCompliant.getModerator()!=null) {
+            dto.setModeratorId(movieReviewCompliant.getModerator().getId());
+        }
         dto.setCreatedAt(movieReviewCompliant.getCreatedAt());
         dto.setUpdatedAt(movieReviewCompliant.getUpdatedAt());
         return dto;
@@ -399,24 +386,29 @@ public class TranslationService {
 
     public MovieReviewCompliant toEntity(MovieReviewCompliantCreateDTO create) {
         MovieReviewCompliant movieReviewCompliant = new MovieReviewCompliant();
-        movieReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        movieReviewCompliant.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
-        movieReviewCompliant.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
+        movieReviewCompliant.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                create.getPortalUserId()));
+        movieReviewCompliant.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        movieReviewCompliant.setMovieReview(repositoryHelper
+                .getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
         movieReviewCompliant.setDescription(create.getDescription());
         movieReviewCompliant.setModeratedStatus(create.getModeratedStatus());
-        movieReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        movieReviewCompliant.setModerator(repositoryHelper
+                .getReferenceIfExists(PortalUser.class, create.getModeratorId()));
         return movieReviewCompliant;
     }
 
     public void patchEntity(MovieReviewCompliantPatchDTO patch, MovieReviewCompliant movieReviewCompliant) {
-        if (patch.getUserId()!=null) {
-            movieReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            movieReviewCompliant.setPortalUser(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getMovieId()!=null) {
-            movieReviewCompliant.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            movieReviewCompliant.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getMovieReviewId()!=null) {
-            movieReviewCompliant.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
+            movieReviewCompliant.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
         }
         if (patch.getDescription()!=null) {
             movieReviewCompliant.setDescription(patch.getDescription());
@@ -425,41 +417,39 @@ public class TranslationService {
             movieReviewCompliant.setModeratedStatus(patch.getModeratedStatus());
         }
         if (patch.getModeratorId()!=null) {
-            movieReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
+            movieReviewCompliant.setModerator(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
         }
     }
 
     public void updateEntity(MovieReviewCompliantPutDTO put, MovieReviewCompliant movieReviewCompliant) {
-        if (put.getUserId()!=null) {
-            movieReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
-        } else {
-            movieReviewCompliant.setUserId(new PortalUser());
+        if (put.getPortalUserId()!=null) {
+            movieReviewCompliant.setPortalUser(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         if (put.getMovieId()!=null) {
-            movieReviewCompliant.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
-        } else {
-            movieReviewCompliant.setMovieId(new Movie());
+            movieReviewCompliant.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         if (put.getMovieReviewId()!=null) {
-            movieReviewCompliant.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
-        } else {
-            movieReviewCompliant.setMovieReviewId(new MovieReview());
+            movieReviewCompliant.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
         }
         movieReviewCompliant.setDescription(put.getDescription());
         movieReviewCompliant.setModeratedStatus(put.getModeratedStatus());
         if (put.getModeratorId()!=null) {
-            movieReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
+            movieReviewCompliant.setModerator(repositoryHelper.
+                    getReferenceIfExists(PortalUser.class, put.getModeratorId()));
         } else {
-            movieReviewCompliant.setModeratorId(new PortalUser());
+            movieReviewCompliant.setModerator(null);
         }
     }
 
     public MovieReviewFeedbackReadDTO toRead(MovieReviewFeedback movieReviewFeedback) {
         MovieReviewFeedbackReadDTO dto = new MovieReviewFeedbackReadDTO();
         dto.setId(movieReviewFeedback.getId());
-        dto.setUserId(movieReviewFeedback.getUserId().getId());
-        dto.setMovieId(movieReviewFeedback.getMovieId().getId());
-        dto.setMovieReviewId(movieReviewFeedback.getMovieReviewId().getId());
+        dto.setPortalUserId(movieReviewFeedback.getPortalUser().getId());
+        dto.setMovieId(movieReviewFeedback.getMovie().getId());
+        dto.setMovieReviewId(movieReviewFeedback.getMovieReview().getId());
         dto.setIsLiked(movieReviewFeedback.getIsLiked());
         dto.setCreatedAt(movieReviewFeedback.getCreatedAt());
         dto.setUpdatedAt(movieReviewFeedback.getUpdatedAt());
@@ -468,22 +458,26 @@ public class TranslationService {
 
     public MovieReviewFeedback toEntity(MovieReviewFeedbackCreateDTO create) {
         MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
-        movieReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        movieReviewFeedback.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
-        movieReviewFeedback.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
+        movieReviewFeedback.setPortalUser(repositoryHelper
+                .getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        movieReviewFeedback.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        movieReviewFeedback.setMovieReview(repositoryHelper
+                .getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
         movieReviewFeedback.setIsLiked(create.getIsLiked());
         return movieReviewFeedback;
     }
 
     public void patchEntity(MovieReviewFeedbackPatchDTO patch, MovieReviewFeedback movieReviewFeedback) {
         if (patch.getMovieId()!=null) {
-            movieReviewFeedback.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            movieReviewFeedback.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getMovieReviewId()!=null) {
-            movieReviewFeedback.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
+            movieReviewFeedback.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
         }
-        if (patch.getUserId()!=null) {
-            movieReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            movieReviewFeedback.setPortalUser(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getIsLiked()!=null) {
             movieReviewFeedback.setIsLiked(patch.getIsLiked());
@@ -492,13 +486,15 @@ public class TranslationService {
 
     public void updateEntity(MovieReviewFeedbackPutDTO put, MovieReviewFeedback movieReviewFeedback) {
         if (put.getMovieId()!=null) {
-            movieReviewFeedback.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
+            movieReviewFeedback.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         if (put.getMovieReviewId()!=null) {
-            movieReviewFeedback.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
+            movieReviewFeedback.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
         }
-        if (put.getUserId()!=null) {
-            movieReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
+        if (put.getPortalUserId()!=null) {
+            movieReviewFeedback.setPortalUser(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         movieReviewFeedback.setIsLiked(put.getIsLiked());
     }
@@ -506,11 +502,13 @@ public class TranslationService {
     public MovieReviewReadDTO toRead(MovieReview movieReview) {
         MovieReviewReadDTO dto = new MovieReviewReadDTO();
         dto.setId(movieReview.getId());
-        dto.setMovieId(movieReview.getMovieId().getId());
-        dto.setUserId(movieReview.getUserId().getId());
+        dto.setMovieId(movieReview.getMovie().getId());
+        dto.setPortalUserId(movieReview.getPortalUser().getId());
         dto.setTextReview(movieReview.getTextReview());
         dto.setModeratedStatus(movieReview.getModeratedStatus());
-        dto.setModeratorId(movieReview.getModeratorId().getId());
+        if (movieReview.getModerator()!=null) {
+            dto.setModeratorId(movieReview.getModerator().getId());
+        }
         dto.setCreatedAt(movieReview.getCreatedAt());
         dto.setUpdatedAt(movieReview.getUpdatedAt());
         return dto;
@@ -518,20 +516,20 @@ public class TranslationService {
 
     public MovieReview toEntity(MovieReviewCreateDTO create) {
         MovieReview movieReview = new MovieReview();
-        movieReview.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
-        movieReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
+        movieReview.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        movieReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
         movieReview.setTextReview(create.getTextReview());
         movieReview.setModeratedStatus(create.getModeratedStatus());
-        movieReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        movieReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
         return movieReview;
     }
 
     public void patchEntity(MovieReviewPatchDTO patch, MovieReview movieReview) {
-        if (patch.getUserId()!=null) {
-            movieReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            movieReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getMovieId()!=null) {
-            movieReview.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            movieReview.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getTextReview()!=null) {
             movieReview.setTextReview(patch.getTextReview());
@@ -540,27 +538,23 @@ public class TranslationService {
             movieReview.setModeratedStatus(patch.getModeratedStatus());
         }
         if (patch.getModeratorId()!=null) {
-            movieReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
+            movieReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
         }
     }
 
     public void updateEntity(MovieReviewPutDTO put, MovieReview movieReview) {
-        if (put.getUserId()!=null) {
-            movieReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
-        } else {
-            movieReview.setUserId(new PortalUser());
+        if (put.getPortalUserId()!=null) {
+            movieReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         if (put.getMovieId()!=null) {
-            movieReview.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
-        } else {
-            movieReview.setMovieId(new Movie());
+            movieReview.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         movieReview.setTextReview(put.getTextReview());
         movieReview.setModeratedStatus(put.getModeratedStatus());
         if (put.getModeratorId()!=null) {
-            movieReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
+            movieReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
         } else {
-            movieReview.setModeratorId(new PortalUser());
+            movieReview.setModerator(null);
         }
     }
 
@@ -673,7 +667,7 @@ public class TranslationService {
     public MovieSpoilerDataReadDTO toRead(MovieSpoilerData movieSpoilerData) {
         MovieSpoilerDataReadDTO dto = new MovieSpoilerDataReadDTO();
         dto.setId(movieSpoilerData.getId());
-        dto.setMovieReviewId(movieSpoilerData.getMovieReviewId().getId());
+        dto.setMovieReviewId(movieSpoilerData.getMovieReview().getId());
         dto.setStartIndex(movieSpoilerData.getStartIndex());
         dto.setEndIndex(movieSpoilerData.getEndIndex());
         dto.setCreatedAt(movieSpoilerData.getCreatedAt());
@@ -683,7 +677,8 @@ public class TranslationService {
 
     public MovieSpoilerData toEntity(MovieSpoilerDataCreateDTO create) {
         MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
-        movieSpoilerData.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
+        movieSpoilerData.setMovieReview(repositoryHelper
+                .getReferenceIfExists(MovieReview.class, create.getMovieReviewId()));
         movieSpoilerData.setStartIndex(create.getStartIndex());
         movieSpoilerData.setEndIndex(create.getEndIndex());
         return movieSpoilerData;
@@ -691,7 +686,8 @@ public class TranslationService {
 
     public void patchEntity(MovieSpoilerDataPatchDTO patch, MovieSpoilerData movieSpoilerData) {
         if (patch.getMovieReviewId()!=null) {
-            movieSpoilerData.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
+            movieSpoilerData.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, patch.getMovieReviewId()));
         }
         if (patch.getStartIndex()!=null) {
             movieSpoilerData.setStartIndex(patch.getStartIndex());
@@ -703,7 +699,8 @@ public class TranslationService {
 
     public void updateEntity(MovieSpoilerDataPutDTO put, MovieSpoilerData movieSpoilerData) {
         if (put.getMovieReviewId()!=null) {
-            movieSpoilerData.setMovieReviewId(repositoryHelper.getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
+            movieSpoilerData.setMovieReview(repositoryHelper
+                    .getReferenceIfExists(MovieReview.class, put.getMovieReviewId()));
         }
         movieSpoilerData.setStartIndex(put.getStartIndex());
         movieSpoilerData.setEndIndex(put.getEndIndex());
@@ -712,8 +709,8 @@ public class TranslationService {
     public MovieVoteReadDTO toRead(MovieVote movieVote) {
         MovieVoteReadDTO dto = new MovieVoteReadDTO();
         dto.setId(movieVote.getId());
-        dto.setUserId(movieVote.getUserId().getId());
-        dto.setMovieId(movieVote.getMovieId().getId());
+        dto.setPortalUserId(movieVote.getPortalUser().getId());
+        dto.setMovieId(movieVote.getMovie().getId());
         dto.setRating(movieVote.getRating());
         dto.setCreatedAt(movieVote.getCreatedAt());
         dto.setUpdatedAt(movieVote.getUpdatedAt());
@@ -722,18 +719,18 @@ public class TranslationService {
 
     public MovieVote toEntity(MovieVoteCreateDTO create) {
         MovieVote movieVote = new MovieVote();
-        movieVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        movieVote.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        movieVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        movieVote.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
         movieVote.setRating(create.getRating());
         return movieVote;
     }
 
     public void patchEntity(MovieVotePatchDTO patch, MovieVote movieVote) {
-        if (patch.getUserId()!=null) {
-            movieVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            movieVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getMovieId()!=null) {
-            movieVote.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            movieVote.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getRating()!=null) {
             movieVote.setRating(patch.getRating());
@@ -741,15 +738,11 @@ public class TranslationService {
     }
 
     public void updateEntity(MovieVotePutDTO put, MovieVote movieVote) {
-        if (put.getUserId()!=null) {
-            movieVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
-        } else {
-            movieVote.setUserId(new PortalUser());
+        if (put.getPortalUserId()!=null) {
+            movieVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         if (put.getMovieId()!=null) {
-            movieVote.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
-        } else {
-            movieVote.setMovieId(new Movie());
+            movieVote.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         movieVote.setRating(put.getRating());
     }
@@ -757,7 +750,7 @@ public class TranslationService {
     public NewsReadDTO toRead(News news) {
         NewsReadDTO dto = new NewsReadDTO();
         dto.setId(news.getId());
-        dto.setPublisher(news.getPublisher().getId());
+        dto.setPublisherId(news.getPublisher().getId());
         dto.setPublished(news.getPublished());
         dto.setTopic(news.getTopic());
         dto.setDescription(news.getDescription());
@@ -768,7 +761,7 @@ public class TranslationService {
 
     public News toEntity(NewsCreateDTO create) {
         News news = new News();
-        news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPublisher()));
+        news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPublisherId()));
         news.setPublished(create.getPublished());
         news.setTopic(create.getTopic());
         news.setDescription(create.getDescription());
@@ -776,8 +769,8 @@ public class TranslationService {
     }
 
     public void patchEntity(NewsPatchDTO patch, News news) {
-        if (patch.getPublisher()!=null) {
-            news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPublisher()));
+        if (patch.getPublisherId()!=null) {
+            news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPublisherId()));
         }
         if (patch.getPublished()!=null) {
             news.setPublished(patch.getPublished());
@@ -791,10 +784,8 @@ public class TranslationService {
     }
 
     public void updateEntity(NewsPutDTO put, News news) {
-        if (put.getPublisher()!=null) {
-            news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPublisher()));
-        } else {
-            news.setPublisher(new PortalUser());
+        if (put.getPublisherId()!=null) {
+            news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPublisherId()));
         }
         news.setPublished(put.getPublished());
         news.setTopic(put.getTopic());
@@ -845,7 +836,7 @@ public class TranslationService {
         dto.setSurname(portalUser.getSurname());
         dto.setName(portalUser.getName());
         dto.setMiddleName(portalUser.getMiddleName());
-        dto.setUserTypeId(portalUser.getUserTypeId().getId());
+        dto.setUserTypeId(portalUser.getUserType().getId());
         dto.setUserConfidence(portalUser.getUserConfidence());
         dto.setCreatedAt(portalUser.getCreatedAt());
         dto.setUpdatedAt(portalUser.getUpdatedAt());
@@ -858,7 +849,7 @@ public class TranslationService {
         portalUser.setSurname(create.getSurname());
         portalUser.setName(create.getName());
         portalUser.setMiddleName(create.getMiddleName());
-        portalUser.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, create.getUserTypeId()));
+        portalUser.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, create.getUserTypeId()));
         portalUser.setUserConfidence(create.getUserConfidence());
         return portalUser;
     }
@@ -877,7 +868,7 @@ public class TranslationService {
             portalUser.setMiddleName(patch.getMiddleName());
         }
         if (patch.getUserTypeId()!=null) {
-            portalUser.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, patch.getUserTypeId()));
+            portalUser.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, patch.getUserTypeId()));
         }
         if (patch.getUserConfidence()!=null) {
             portalUser.setUserConfidence(patch.getUserConfidence());
@@ -890,7 +881,7 @@ public class TranslationService {
         portalUser.setName(put.getName());
         portalUser.setMiddleName(put.getMiddleName());
         if (put.getUserTypeId()!=null) {
-            portalUser.setUserTypeId(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
+            portalUser.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
         }
         portalUser.setUserConfidence(put.getUserConfidence());
     }
@@ -898,9 +889,9 @@ public class TranslationService {
     public ReleaseDetailReadDTO toRead(ReleaseDetail releaseDetail) {
         ReleaseDetailReadDTO dto = new ReleaseDetailReadDTO();
         dto.setId(releaseDetail.getId());
-        dto.setMovieId(releaseDetail.getMovieId().getId());
+        dto.setMovieId(releaseDetail.getMovie().getId());
         dto.setReleaseDate(releaseDetail.getReleaseDate());
-        dto.setCountryId(releaseDetail.getCountryId().getId());
+        dto.setCountryId(releaseDetail.getCountry().getId());
         dto.setCreatedAt(releaseDetail.getCreatedAt());
         dto.setUpdatedAt(releaseDetail.getUpdatedAt());
         return dto;
@@ -908,43 +899,45 @@ public class TranslationService {
 
     public ReleaseDetail toEntity(ReleaseDetailCreateDTO create) {
         ReleaseDetail releaseDetail = new ReleaseDetail();
-        releaseDetail.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        releaseDetail.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
         releaseDetail.setReleaseDate(create.getReleaseDate());
-        releaseDetail.setCountryId(repositoryHelper.getReferenceIfExists(Country.class, create.getCountryId()));
+        releaseDetail.setCountry(repositoryHelper.getReferenceIfExists(Country.class, create.getCountryId()));
         return releaseDetail;
     }
 
     public void patchEntity(ReleaseDetailPatchDTO patch, ReleaseDetail releaseDetail) {
         if (patch.getMovieId()!=null) {
-            releaseDetail.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            releaseDetail.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
         if (patch.getReleaseDate()!=null) {
             releaseDetail.setReleaseDate(patch.getReleaseDate());
         }
         if (patch.getCountryId()!=null) {
-            releaseDetail.setCountryId(repositoryHelper.getReferenceIfExists(Country.class, patch.getCountryId()));
+            releaseDetail.setCountry(repositoryHelper.getReferenceIfExists(Country.class, patch.getCountryId()));
         }
     }
 
     public void updateEntity(ReleaseDetailPutDTO put, ReleaseDetail releaseDetail) {
         if (put.getMovieId()!=null) {
-            releaseDetail.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
+            releaseDetail.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
         releaseDetail.setReleaseDate(put.getReleaseDate());
         if (put.getCountryId()!=null) {
-            releaseDetail.setCountryId(repositoryHelper.getReferenceIfExists(Country.class, put.getCountryId()));
+            releaseDetail.setCountry(repositoryHelper.getReferenceIfExists(Country.class, put.getCountryId()));
         }
     }
 
     public RoleReviewCompliantReadDTO toRead(RoleReviewCompliant roleReviewCompliant) {
         RoleReviewCompliantReadDTO dto = new RoleReviewCompliantReadDTO();
         dto.setId(roleReviewCompliant.getId());
-        dto.setUserId(roleReviewCompliant.getUserId().getId());
-        dto.setRoleId(roleReviewCompliant.getRoleId().getId());
-        dto.setRoleReviewId(roleReviewCompliant.getRoleReviewId().getId());
+        dto.setPortalUserId(roleReviewCompliant.getPortalUser().getId());
+        dto.setRoleId(roleReviewCompliant.getRole().getId());
+        dto.setRoleReviewId(roleReviewCompliant.getRoleReview().getId());
         dto.setDescription(roleReviewCompliant.getDescription());
         dto.setModeratedStatus(roleReviewCompliant.getModeratedStatus());
-        dto.setModeratorId(roleReviewCompliant.getModeratorId().getId());
+        if (roleReviewCompliant.getModerator()!=null) {
+            dto.setModeratorId(roleReviewCompliant.getModerator().getId());
+        }
         dto.setCreatedAt(roleReviewCompliant.getCreatedAt());
         dto.setUpdatedAt(roleReviewCompliant.getUpdatedAt());
         return dto;
@@ -952,24 +945,29 @@ public class TranslationService {
 
     public RoleReviewCompliant toEntity(RoleReviewCompliantCreateDTO create) {
         RoleReviewCompliant roleReviewCompliant = new RoleReviewCompliant();
-        roleReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        roleReviewCompliant.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
-        roleReviewCompliant.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
+        roleReviewCompliant.setPortalUser(repositoryHelper
+                .getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        roleReviewCompliant.setRole(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
+        roleReviewCompliant.setRoleReview(repositoryHelper
+                .getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
         roleReviewCompliant.setDescription(create.getDescription());
         roleReviewCompliant.setModeratedStatus(create.getModeratedStatus());
-        roleReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        roleReviewCompliant.setModerator(repositoryHelper
+                .getReferenceIfExists(PortalUser.class, create.getModeratorId()));
         return roleReviewCompliant;
     }
 
     public void patchEntity(RoleReviewCompliantPatchDTO patch, RoleReviewCompliant roleReviewCompliant) {
-        if (patch.getUserId()!=null) {
-            roleReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            roleReviewCompliant.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getPortalUserId()));
         }
         if (patch.getRoleId()!=null) {
-            roleReviewCompliant.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
+            roleReviewCompliant.setRole(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
         }
         if (patch.getRoleReviewId()!=null) {
-            roleReviewCompliant.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
+            roleReviewCompliant.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
         }
         if (patch.getDescription()!=null) {
             roleReviewCompliant.setDescription(patch.getDescription());
@@ -978,41 +976,39 @@ public class TranslationService {
             roleReviewCompliant.setModeratedStatus(patch.getModeratedStatus());
         }
         if (patch.getModeratorId()!=null) {
-            roleReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
+            roleReviewCompliant.setModerator(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
         }
     }
 
     public void updateEntity(RoleReviewCompliantPutDTO put, RoleReviewCompliant roleReviewCompliant) {
-        if (put.getUserId()!=null) {
-            roleReviewCompliant.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
+        if (put.getPortalUserId()!=null) {
+            roleReviewCompliant.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getPortalUserId()));
         }
         if (put.getRoleId()!=null) {
-            roleReviewCompliant.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
+            roleReviewCompliant.setRole(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
         }
         if (put.getRoleReviewId()!=null) {
-            roleReviewCompliant.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
+            roleReviewCompliant.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
         }
         roleReviewCompliant.setDescription(put.getDescription());
         roleReviewCompliant.setModeratedStatus(put.getModeratedStatus());
         if (put.getModeratorId()!=null) {
-            roleReviewCompliant.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
-        } else if (roleReviewCompliant.getModeratorId() != null) {
-            roleReviewCompliant.setModeratorId(new PortalUser());
-
-            //PortalUser portalUser = repositoryHelper.getReferenceIfExists(PortalUser.class,
-            //        roleReviewCompliant.getModeratorId().getId());
-            //portalUser.getRoleReviewCompliants().remove(roleReviewCompliant);
-            //portalUserRepository.save(portalUser);
-            //roleReviewCompliant.getModeratorId().getRoleReviewCompliants().remove(roleReviewCompliant);
+            roleReviewCompliant.setModerator(repositoryHelper
+                    .getReferenceIfExists(PortalUser.class, put.getModeratorId()));
+        } else if (roleReviewCompliant.getModerator() != null) {
+            roleReviewCompliant.setModerator(null);
         }
     }
 
     public RoleReviewFeedbackReadDTO toRead(RoleReviewFeedback roleReviewFeedback) {
         RoleReviewFeedbackReadDTO dto = new RoleReviewFeedbackReadDTO();
         dto.setId(roleReviewFeedback.getId());
-        dto.setUserId(roleReviewFeedback.getUserId().getId());
-        dto.setRoleId(roleReviewFeedback.getRoleId().getId());
-        dto.setRoleReviewId(roleReviewFeedback.getRoleReviewId().getId());
+        dto.setPortalUserId(roleReviewFeedback.getPortalUser().getId());
+        dto.setRoleId(roleReviewFeedback.getRole().getId());
+        dto.setRoleReviewId(roleReviewFeedback.getRoleReview().getId());
         dto.setIsLiked(roleReviewFeedback.getIsLiked());
         dto.setCreatedAt(roleReviewFeedback.getCreatedAt());
         dto.setUpdatedAt(roleReviewFeedback.getUpdatedAt());
@@ -1021,22 +1017,26 @@ public class TranslationService {
 
     public RoleReviewFeedback toEntity(RoleReviewFeedbackCreateDTO create) {
         RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
-        roleReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        roleReviewFeedback.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
-        roleReviewFeedback.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
+        roleReviewFeedback.setPortalUser(repositoryHelper
+                .getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        roleReviewFeedback.setRole(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
+        roleReviewFeedback.setRoleReview(repositoryHelper
+                .getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
         roleReviewFeedback.setIsLiked(create.getIsLiked());
         return roleReviewFeedback;
     }
 
     public void patchEntity(RoleReviewFeedbackPatchDTO patch, RoleReviewFeedback roleReviewFeedback) {
-        if (patch.getUserId()!=null) {
-            roleReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            roleReviewFeedback.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getPortalUserId()));
         }
         if (patch.getRoleId()!=null) {
-            roleReviewFeedback.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
+            roleReviewFeedback.setRole(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
         }
         if (patch.getRoleReviewId()!=null) {
-            roleReviewFeedback.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
+            roleReviewFeedback.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
         }
         if (patch.getIsLiked()!=null) {
             roleReviewFeedback.setIsLiked(patch.getIsLiked());
@@ -1044,20 +1044,16 @@ public class TranslationService {
     }
 
     public void updateEntity(RoleReviewFeedbackPutDTO put, RoleReviewFeedback roleReviewFeedback) {
-        if (put.getUserId()!=null) {
-            roleReviewFeedback.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
-        } else {
-            roleReviewFeedback.setUserId(new PortalUser());
+        if (put.getPortalUserId()!=null) {
+            roleReviewFeedback.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getPortalUserId()));
         }
         if (put.getRoleId()!=null) {
-            roleReviewFeedback.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
-        } else {
-            roleReviewFeedback.setRoleId(new Role());
+            roleReviewFeedback.setRole(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
         }
         if (put.getRoleReviewId()!=null) {
-            roleReviewFeedback.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
-        } else {
-            roleReviewFeedback.setRoleReviewId(new RoleReview());
+            roleReviewFeedback.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
         }
         roleReviewFeedback.setIsLiked(put.getIsLiked());
     }
@@ -1065,11 +1061,13 @@ public class TranslationService {
     public RoleReviewReadDTO toRead(RoleReview roleReview) {
         RoleReviewReadDTO dto = new RoleReviewReadDTO();
         dto.setId(roleReview.getId());
-        dto.setUserId(roleReview.getUserId().getId());
-        dto.setRoleId(roleReview.getRoleId().getId());
+        dto.setPortalUserId(roleReview.getPortalUser().getId());
+        dto.setRoleId(roleReview.getRole().getId());
         dto.setTextReview(roleReview.getTextReview());
         dto.setModeratedStatus(roleReview.getModeratedStatus());
-        dto.setModeratorId(roleReview.getModeratorId().getId());
+        if (roleReview.getModerator()!=null) {
+            dto.setModeratorId(roleReview.getModerator().getId());
+        }
         dto.setCreatedAt(roleReview.getCreatedAt());
         dto.setUpdatedAt(roleReview.getUpdatedAt());
         return dto;
@@ -1077,20 +1075,20 @@ public class TranslationService {
 
     public RoleReview toEntity(RoleReviewCreateDTO create) {
         RoleReview roleReview = new RoleReview();
-        roleReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        roleReview.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
+        roleReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        roleReview.setRole(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
         roleReview.setTextReview(create.getTextReview());
         roleReview.setModeratedStatus(create.getModeratedStatus());
-        roleReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        roleReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
         return roleReview;
     }
 
     public void patchEntity(RoleReviewPatchDTO patch, RoleReview roleReview) {
-        if (patch.getUserId()!=null) {
-            roleReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            roleReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getRoleId()!=null) {
-            roleReview.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
+            roleReview.setRole(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
         }
         if (patch.getTextReview()!=null) {
             roleReview.setTextReview(patch.getTextReview());
@@ -1099,27 +1097,23 @@ public class TranslationService {
             roleReview.setModeratedStatus(patch.getModeratedStatus());
         }
         if (patch.getModeratorId()!=null) {
-            roleReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
+            roleReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getModeratorId()));
         }
     }
 
     public void updateEntity(RoleReviewPutDTO put, RoleReview roleReview) {
-        if (put.getUserId()!=null) {
-            roleReview.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
-        } else {
-            roleReview.setUserId(new PortalUser());
+        if (put.getPortalUserId()!=null) {
+            roleReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         if (put.getRoleId()!=null) {
-            roleReview.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
-        } else {
-            roleReview.setRoleId(new Role());
+            roleReview.setRole(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
         }
         roleReview.setTextReview(put.getTextReview());
         roleReview.setModeratedStatus(put.getModeratedStatus());
         if (put.getModeratorId()!=null) {
-            roleReview.setModeratorId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
+            roleReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
         } else {
-            roleReview.setModeratorId(new PortalUser());
+            roleReview.setModerator(null);
         }
     }
 
@@ -1129,8 +1123,10 @@ public class TranslationService {
         dto.setTitle(role.getTitle());
         dto.setRoleType(role.getRoleType());
         dto.setDescription(role.getDescription());
-        dto.setPersonId(role.getPersonId().getId());
-        dto.setMovieId(role.getMovieId().getId());
+        if (role.getPerson()!=null) {
+            dto.setPersonId(role.getPerson().getId());
+        }
+        dto.setMovieId(role.getMovie().getId());
         dto.setCreatedAt(role.getCreatedAt());
         dto.setUpdatedAt(role.getUpdatedAt());
         return dto;
@@ -1141,8 +1137,8 @@ public class TranslationService {
         role.setTitle(create.getTitle());
         role.setRoleType(create.getRoleType());
         role.setDescription(create.getDescription());
-        role.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, create.getPersonId()));
-        role.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
+        role.setPerson(repositoryHelper.getReferenceIfExists(Person.class, create.getPersonId()));
+        role.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, create.getMovieId()));
         return role;
     }
 
@@ -1157,10 +1153,10 @@ public class TranslationService {
             role.setDescription(patch.getDescription());
         }
         if (patch.getPersonId()!=null) {
-            role.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, patch.getPersonId()));
+            role.setPerson(repositoryHelper.getReferenceIfExists(Person.class, patch.getPersonId()));
         }
         if (patch.getMovieId()!=null) {
-            role.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
+            role.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, patch.getMovieId()));
         }
     }
 
@@ -1169,19 +1165,19 @@ public class TranslationService {
         role.setRoleType(put.getRoleType());
         role.setDescription(put.getDescription());
         if (put.getPersonId()!=null) {
-            role.setPersonId(repositoryHelper.getReferenceIfExists(Person.class, put.getPersonId()));
+            role.setPerson(repositoryHelper.getReferenceIfExists(Person.class, put.getPersonId()));
         } else {
-            role.setPersonId(new Person());
+            role.setPerson(null);
         }
         if (put.getMovieId()!=null) {
-            role.setMovieId(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
+            role.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
     }
 
     public RoleSpoilerDataReadDTO toRead(RoleSpoilerData roleSpoilerData) {
         RoleSpoilerDataReadDTO dto = new RoleSpoilerDataReadDTO();
         dto.setId(roleSpoilerData.getId());
-        dto.setRoleReviewId(roleSpoilerData.getRoleReviewId().getId());
+        dto.setRoleReviewId(roleSpoilerData.getRoleReview().getId());
         dto.setStartIndex(roleSpoilerData.getStartIndex());
         dto.setEndIndex(roleSpoilerData.getEndIndex());
         dto.setCreatedAt(roleSpoilerData.getCreatedAt());
@@ -1191,7 +1187,8 @@ public class TranslationService {
 
     public RoleSpoilerData toEntity(RoleSpoilerDataCreateDTO create) {
         RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
-        roleSpoilerData.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
+        roleSpoilerData.setRoleReview(repositoryHelper
+                .getReferenceIfExists(RoleReview.class, create.getRoleReviewId()));
         roleSpoilerData.setStartIndex(create.getStartIndex());
         roleSpoilerData.setEndIndex(create.getEndIndex());
         return roleSpoilerData;
@@ -1199,7 +1196,8 @@ public class TranslationService {
 
     public void patchEntity(RoleSpoilerDataPatchDTO patch, RoleSpoilerData roleSpoilerData) {
         if (patch.getRoleReviewId()!=null) {
-            roleSpoilerData.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
+            roleSpoilerData.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, patch.getRoleReviewId()));
         }
         if (patch.getStartIndex()!=null) {
             roleSpoilerData.setStartIndex(patch.getStartIndex());
@@ -1211,7 +1209,8 @@ public class TranslationService {
 
     public void updateEntity(RoleSpoilerDataPutDTO put, RoleSpoilerData roleSpoilerData) {
         if (put.getRoleReviewId()!=null) {
-            roleSpoilerData.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
+            roleSpoilerData.setRoleReview(repositoryHelper
+                    .getReferenceIfExists(RoleReview.class, put.getRoleReviewId()));
         }
         roleSpoilerData.setStartIndex(put.getStartIndex());
         roleSpoilerData.setEndIndex(put.getEndIndex());
@@ -1220,8 +1219,8 @@ public class TranslationService {
     public RoleVoteReadDTO toRead(RoleVote roleVote) {
         RoleVoteReadDTO dto = new RoleVoteReadDTO();
         dto.setId(roleVote.getId());
-        dto.setUserId(roleVote.getUserId().getId());
-        dto.setRoleId(roleVote.getRoleId().getId());
+        dto.setPortalUserId(roleVote.getPortalUser().getId());
+        dto.setRoleId(roleVote.getRole().getId());
         dto.setRating(roleVote.getRating());
         dto.setCreatedAt(roleVote.getCreatedAt());
         dto.setUpdatedAt(roleVote.getUpdatedAt());
@@ -1230,18 +1229,18 @@ public class TranslationService {
 
     public RoleVote toEntity(RoleVoteCreateDTO create) {
         RoleVote roleVote = new RoleVote();
-        roleVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getUserId()));
-        roleVote.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
+        roleVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        roleVote.setRole(repositoryHelper.getReferenceIfExists(Role.class, create.getRoleId()));
         roleVote.setRating(create.getRating());
         return roleVote;
     }
 
     public void patchEntity(RoleVotePatchDTO patch, RoleVote roleVote) {
-        if (patch.getUserId()!=null) {
-            roleVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getUserId()));
+        if (patch.getPortalUserId()!=null) {
+            roleVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, patch.getPortalUserId()));
         }
         if (patch.getRoleId()!=null) {
-            roleVote.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
+            roleVote.setRole(repositoryHelper.getReferenceIfExists(Role.class, patch.getRoleId()));
         }
         if (patch.getRating()!=null) {
             roleVote.setRating(patch.getRating());
@@ -1249,11 +1248,11 @@ public class TranslationService {
     }
 
     public void updateEntity(RoleVotePutDTO put, RoleVote roleVote) {
-        if (put.getUserId()!=null) {
-            roleVote.setUserId(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getUserId()));
+        if (put.getPortalUserId()!=null) {
+            roleVote.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
         if (put.getRoleId()!=null) {
-            roleVote.setRoleId(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
+            roleVote.setRole(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
         }
         roleVote.setRating(put.getRating());
     }

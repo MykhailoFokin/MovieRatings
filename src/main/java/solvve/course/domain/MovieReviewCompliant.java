@@ -22,15 +22,15 @@ public class MovieReviewCompliant {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Movie movieId;
+    private Movie movie;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private MovieReview movieReviewId;
+    private MovieReview movieReview;
 
     private String description;
 
@@ -39,7 +39,7 @@ public class MovieReviewCompliant {
 
     @ManyToOne
     @JoinColumn
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
     @CreatedDate
     private Instant createdAt;

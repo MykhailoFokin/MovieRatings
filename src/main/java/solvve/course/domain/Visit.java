@@ -21,7 +21,7 @@ public class Visit {
     private UUID id;
 
     @ManyToOne
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     private Instant startAt;
 

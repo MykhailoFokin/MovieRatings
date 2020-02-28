@@ -9,27 +9,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.UserTypeCreateDTO;
 import solvve.course.dto.UserTypePatchDTO;
 import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.UserGrantRepository;
 import solvve.course.repository.UserTypeRepository;
 import solvve.course.utils.TestObjectsFactory;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from user_type",
-        "delete from user_grant",
-        "delete from portal_user"},
+@Sql(statements = {"delete from user_type"
+        },
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class UserTypeServiceTest {
 
@@ -40,20 +35,16 @@ public class UserTypeServiceTest {
     private UserTypeService userTypeService;
 
     @Autowired
-    private UserGrantRepository userGrantRepository;
-
-    @Autowired
     private TestObjectsFactory testObjectsFactory;
 
-    @Transactional
     @Test
     public void testGetUserTypes() {
-        PortalUser portalUser = testObjectsFactory.createPortalUser();
-        Set<UserGrant> userGrantSet = createGrantSet(portalUser);
-        UserType userType = testObjectsFactory.createUserTypeWithGrants(userGrantSet);
+        UserType userType = testObjectsFactory.createUserType();
 
-        UserTypeReadDTO readDTO = userTypeService.getUserTypes(userType.getId());
-        Assertions.assertThat(readDTO).isEqualToComparingFieldByField(userType);
+        testObjectsFactory.inTransaction(()-> {
+            UserTypeReadDTO readDTO = userTypeService.getUserTypes(userType.getId());
+            Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(userType,"portalUserId");
+        });
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -61,7 +52,6 @@ public class UserTypeServiceTest {
         userTypeService.getUserTypes(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testCreateUserTypes() {
         UserTypeCreateDTO create = new UserTypeCreateDTO();
@@ -70,10 +60,9 @@ public class UserTypeServiceTest {
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         UserType userType = userTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToComparingFieldByField(userType);
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(userType,"portalUserId");
     }
 
-    @Transactional
     @Test
     public void testPatchUserTypes() {
         UserType userType = testObjectsFactory.createUserType();
@@ -85,10 +74,9 @@ public class UserTypeServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         userType = userTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants");
+        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants","portalUser");
     }
 
-    @Transactional
     @Test
     public void testPatchUserTypesEmptyPatch() {
         UserType userType = testObjectsFactory.createUserType();
@@ -102,10 +90,9 @@ public class UserTypeServiceTest {
 
         Assert.assertNotNull(userTypeAfterUpdate.getUserGroup());
 
-        Assertions.assertThat(userType).isEqualToComparingFieldByField(userTypeAfterUpdate);
+        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(userTypeAfterUpdate, "userGrants");
     }
 
-    @Transactional
     @Test
     public void testDeleteUserTypes() {
         UserType userType = testObjectsFactory.createUserType();
@@ -119,7 +106,6 @@ public class UserTypeServiceTest {
         userTypeService.deleteUserTypes(UUID.randomUUID());
     }
 
-    @Transactional
     @Test
     public void testPutUserTypes() {
         UserType userType = testObjectsFactory.createUserType();
@@ -131,10 +117,9 @@ public class UserTypeServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         userType = userTypeRepository.findById(read.getId()).get();
-        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants");
+        Assertions.assertThat(userType).isEqualToIgnoringGivenFields(read,"userGrants","portalUser");
     }
 
-    @Transactional
     @Test
     public void testPutUserTypesEmptyPut() {
         UserType userType = testObjectsFactory.createUserType();
@@ -144,20 +129,12 @@ public class UserTypeServiceTest {
 
         Assert.assertNull(read.getUserGroup());
 
-        UserType userTypeAfterUpdate = userTypeRepository.findById(read.getId()).get();
+        testObjectsFactory.inTransaction(() -> {
+            UserType userTypeAfterUpdate = userTypeRepository.findById(read.getId()).get();
 
-        Assert.assertNull(userTypeAfterUpdate.getUserGroup());
+            Assert.assertNull(userTypeAfterUpdate.getUserGroup());
 
-        Assertions.assertThat(userType).isEqualToComparingFieldByField(userTypeAfterUpdate);
-    }
-
-    private Set<UserGrant> createGrantSet(PortalUser portalUser) {
-        UserGrant us = new UserGrant();
-        us.setObjectName("C1");
-        us.setGrantedBy(portalUser);
-        us = userGrantRepository.save(us);
-        Set<UserGrant> sc = new HashSet<>();
-        sc.add(us);
-        return sc;
+            Assertions.assertThat(userType).isEqualToComparingOnlyGivenFields(userTypeAfterUpdate,"id");
+        });
     }
 }

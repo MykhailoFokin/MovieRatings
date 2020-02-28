@@ -42,7 +42,7 @@ public class MovieSpoilerDataRepositoryTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
         MovieSpoilerData r = new MovieSpoilerData();
-        r.setMovieReviewId(movieReview);
+        r.setMovieReview(movieReview);
         r = movieSpoilerDataRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieSpoilerDataRepository.findById(r.getId()).isPresent());

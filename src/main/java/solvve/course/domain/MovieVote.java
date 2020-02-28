@@ -22,11 +22,11 @@ public class MovieVote {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Movie movieId;
+    private Movie movie;
 
     @Enumerated(EnumType.ORDINAL)
     private UserVoteRatingType rating;

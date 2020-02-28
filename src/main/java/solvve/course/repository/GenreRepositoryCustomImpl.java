@@ -18,7 +18,7 @@ public class GenreRepositoryCustomImpl implements GenreRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("select g from Genre g where 1=1");
         if (filter.getMovieId() != null) {
-            sb.append(" and g.movieId.id = :movieId");
+            sb.append(" and g.movie.id = :movieId");
         }
         if (filter.getGenres() != null) {
             sb.append(" and g.name in (:genres)");

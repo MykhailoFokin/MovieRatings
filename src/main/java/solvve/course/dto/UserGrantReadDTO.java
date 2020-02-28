@@ -17,7 +17,7 @@ public class UserGrantReadDTO {
 
     private String objectName;
 
-    private UUID grantedBy;
+    private UUID grantedById;
 
     private Instant createdAt;
 

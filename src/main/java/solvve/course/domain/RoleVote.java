@@ -22,11 +22,11 @@ public class RoleVote {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Role roleId;
+    private Role role;
 
     @Enumerated(EnumType.ORDINAL)
     private UserVoteRatingType rating;

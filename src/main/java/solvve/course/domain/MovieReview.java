@@ -23,11 +23,11 @@ public class MovieReview {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(name = "movie_id", referencedColumnName = "id")
-    private Movie movieId;
+    private Movie movie;
 
     private String textReview;
 
@@ -36,15 +36,15 @@ public class MovieReview {
 
     @ManyToOne
     @JoinColumn(name = "moderator_id", referencedColumnName = "id")
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
-    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movieReview", cascade = CascadeType.PERSIST)
     private Set<MovieReviewCompliant> movieReviewCompliants;
 
-    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movieReview", cascade = CascadeType.PERSIST)
     private Set<MovieReviewFeedback> movieReviewFeedbacks;
 
-    @OneToMany(mappedBy = "movieReviewId", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "movieReview", cascade = CascadeType.PERSIST)
     private Set<MovieSpoilerData> movieSpoilerData;
 
     @CreatedDate

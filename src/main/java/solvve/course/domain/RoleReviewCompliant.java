@@ -22,15 +22,15 @@ public class RoleReviewCompliant {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Role roleId;
+    private Role role;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private RoleReview roleReviewId;
+    private RoleReview roleReview;
 
     private String description;
 
@@ -39,7 +39,7 @@ public class RoleReviewCompliant {
 
     @ManyToOne
     @JoinColumn
-    private PortalUser moderatorId;
+    private PortalUser moderator;
 
     @CreatedDate
     private Instant createdAt;

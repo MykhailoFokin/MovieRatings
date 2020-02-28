@@ -22,15 +22,15 @@ public class MovieReviewFeedback {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private PortalUser userId;
+    private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Movie movieId;
+    private Movie movie;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private MovieReview movieReviewId;
+    private MovieReview movieReview;
 
     private Boolean isLiked;
 

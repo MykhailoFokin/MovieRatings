@@ -225,7 +225,6 @@ public class MovieRepositoryTest {
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
-    @Transactional
     @Test
     public void testGetMovieByCompanyName() {
         CompanyDetails cd1 = testObjectsFactory.createCompanyDetails("Company1", "Overview",

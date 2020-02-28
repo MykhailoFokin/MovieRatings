@@ -11,7 +11,7 @@ public class MovieReviewCompliantReadDTO {
 
     private UUID id;
 
-    private UUID userId;
+    private UUID portalUserId;
 
     private UUID movieId;
 

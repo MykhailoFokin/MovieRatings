@@ -41,7 +41,7 @@ public class RoleReviewSpoilerDataService {
 
     public RoleSpoilerDataReadDTO createRoleReviewSpoilerData(UUID roleReviewId, RoleSpoilerDataCreateDTO create) {
         RoleSpoilerData roleSpoilerData = translationService.toEntity(create);
-        roleSpoilerData.setRoleReviewId(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
+        roleSpoilerData.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
 
         return translationService.toRead(roleSpoilerData);
