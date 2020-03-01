@@ -30,7 +30,9 @@ import java.util.Set;
         "delete from language",
         "delete from genre",
         "delete from movie",
-        "delete from country"},
+        "delete from country",
+        "delete from movie_company",
+        "delete from company_details"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class MovieRepositoryTest {
