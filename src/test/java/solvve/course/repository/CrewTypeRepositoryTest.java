@@ -166,7 +166,7 @@ public class CrewTypeRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         CrewType entity = testObjectsFactory.createCrewType();
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -179,7 +179,7 @@ public class CrewTypeRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         CrewType entity = testObjectsFactory.createCrewType();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -192,7 +192,7 @@ public class CrewTypeRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         CrewType entity = testObjectsFactory.createCrewType();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -204,6 +204,6 @@ public class CrewTypeRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

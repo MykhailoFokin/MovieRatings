@@ -8,16 +8,17 @@ import solvve.course.domain.Movie;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Repository
 public interface MovieRepository extends CrudRepository<Movie, UUID>, MovieRepositoryCustom {
 
-    @Query("select m from Movie m left join MovieReview mr on mr.movie.id = m.id and mr.portalUser.id = :portalUserId" +
-            " and mr.updatedAt >= :startFrom and mr.updatedAt < :startTo"
-            + " left join MovieReviewCompliant mrc on mrc.movie.id = m.id and mrc.portalUser.id = :portalUserId and " +
-            "mrc.updatedAt >= :startFrom and mrc.updatedAt < :startTo"
-            + " left join MovieReviewFeedback mrf on mrf.movie.id = m.id and mrf.portalUser.id = :portalUserId and " +
-            "mrf.updatedAt >= :startFrom and mrf.updatedAt < :startTo"
+    @Query("select m from Movie m left join MovieReview mr on mr.movie.id = m.id and mr.portalUser.id = :portalUserId"
+            + " and mr.updatedAt >= :startFrom and mr.updatedAt < :startTo"
+            + " left join MovieReviewCompliant mrc on mrc.movie.id = m.id and mrc.portalUser.id = :portalUserId and "
+            + "mrc.updatedAt >= :startFrom and mrc.updatedAt < :startTo"
+            + " left join MovieReviewFeedback mrf on mrf.movie.id = m.id and mrf.portalUser.id = :portalUserId and "
+            + "mrf.updatedAt >= :startFrom and mrf.updatedAt < :startTo"
             + " where (mr.id is not null)"
             + " or (mrc.id is not null)"
             + " or (mrf.id is not null) "
@@ -36,4 +37,7 @@ public interface MovieRepository extends CrudRepository<Movie, UUID>, MovieRepos
             + " where mrf3.portalUser.id = :portalUserId and m3.id = mrf0.movie.id)"
             + " order by m0.createdAt desc")
     List<Movie> findPortalUserRecommendedMovies(UUID portalUserId);
+
+    @Query("select m.id from Movie m")
+    Stream<UUID> getIdsOfMovies();
 }

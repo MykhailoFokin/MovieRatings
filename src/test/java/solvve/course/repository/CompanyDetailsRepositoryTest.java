@@ -16,6 +16,7 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -84,6 +85,24 @@ public class CompanyDetailsRepositoryTest {
     }
 
     @Test
+    public void testGetCompanyDetailYearsOfFoundation() {
+        CompanyDetails c1 = testObjectsFactory.createCompanyDetails("Paramaount",
+                "Overview1", LocalDate.of(2001, 12, 31));
+        CompanyDetails c2 = testObjectsFactory.createCompanyDetails("20CenturyFox",
+                "Overview1", LocalDate.of(2002, 12, 31));
+        CompanyDetails c3 = testObjectsFactory.createCompanyDetails("Paramaount",
+                "Overview2", LocalDate.of(2002, 12, 31));
+        testObjectsFactory.createCompanyDetails("20CenturyFox",
+                "Overview3", LocalDate.of(2004, 12, 31));
+
+        CompanyDetailsFilter filter = new CompanyDetailsFilter();
+        filter.setYearsOfFoundation(List.of(LocalDate.of(2002, 12, 31),
+                LocalDate.of(2001, 12, 31)));
+        Assertions.assertThat(companyDetailsService.getCompanyDetails(filter)).extracting("Id")
+                .containsExactlyInAnyOrder(c1.getId(), c2.getId(), c3.getId());
+    }
+
+    @Test
     public void testGetCompanyDetailByAllFilters() {
         testObjectsFactory.createCompanyDetails("Paramaount",
                 "Overview1", LocalDate.of(2001, 12, 31));
@@ -102,7 +121,7 @@ public class CompanyDetailsRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         CompanyDetails company = testObjectsFactory.createCompanyDetails();
 
         Instant createdAtBeforeReload = company.getCreatedAt();
@@ -115,7 +134,7 @@ public class CompanyDetailsRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         CompanyDetails company = testObjectsFactory.createCompanyDetails();
 
         Instant updatedAtBeforeReload = company.getUpdatedAt();
@@ -128,7 +147,7 @@ public class CompanyDetailsRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         CompanyDetails company = testObjectsFactory.createCompanyDetails();
 
         Instant updatedAtBeforeReload = company.getUpdatedAt();
@@ -140,6 +159,6 @@ public class CompanyDetailsRepositoryTest {
 
         Instant updatedAtAfterReload = company.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

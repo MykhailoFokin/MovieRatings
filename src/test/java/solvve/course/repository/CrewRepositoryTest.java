@@ -231,7 +231,7 @@ public class CrewRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         CrewType ct = testObjectsFactory.createCrewType();
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
@@ -247,7 +247,7 @@ public class CrewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         CrewType ct = testObjectsFactory.createCrewType();
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
@@ -263,7 +263,7 @@ public class CrewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         CrewType ct = testObjectsFactory.createCrewType();
         Person p = testObjectsFactory.createPerson();
         Movie m = testObjectsFactory.createMovie();
@@ -278,6 +278,6 @@ public class CrewRepositoryTest {
 
         Instant updatedAtAfterReload = crew.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

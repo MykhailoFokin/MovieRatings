@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 public class MovieReadExtendedDTO {
 
-    private UUID Id;
+    private UUID id;
 
     private String title;
 
@@ -54,4 +54,6 @@ public class MovieReadExtendedDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private Double averageRating;
 }

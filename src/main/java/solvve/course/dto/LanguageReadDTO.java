@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class LanguageReadDTO {
 
-    private UUID Id;
+    private UUID id;
 
     private LanguageType name;
 

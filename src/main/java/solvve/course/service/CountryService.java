@@ -27,6 +27,11 @@ public class CountryService {
         return translationService.toRead(country);
     }
 
+    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
+        List<Country> countries = countryRepository.findByFilter(countryFilter);
+        return countries.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
     public CountryReadDTO createCountries(CountryCreateDTO create) {
         Country country = translationService.toEntity(create);
 
@@ -54,11 +59,6 @@ public class CountryService {
 
         country = countryRepository.save(country);
         return translationService.toRead(country);
-    }
-
-    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
-        List<Country> countries = countryRepository.findByFilter(countryFilter);
-        return countries.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private Country getCountriesRequired(UUID id) {

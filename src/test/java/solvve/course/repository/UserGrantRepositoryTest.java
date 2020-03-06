@@ -2,6 +2,7 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +46,7 @@ public class UserGrantRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         UserType u = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
@@ -60,7 +61,7 @@ public class UserGrantRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         UserType u = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
@@ -75,7 +76,7 @@ public class UserGrantRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         UserType u = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         UserGrant entity = testObjectsFactory.createUserGrant(u, portalUser);
@@ -89,6 +90,6 @@ public class UserGrantRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

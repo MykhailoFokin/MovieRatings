@@ -53,4 +53,6 @@ public class Role {
 
     @LastModifiedDate
     private Instant updatedAt;
+
+    private Double averageRating;
 }

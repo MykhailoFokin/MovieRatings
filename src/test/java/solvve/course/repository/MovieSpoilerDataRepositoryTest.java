@@ -49,7 +49,7 @@ public class MovieSpoilerDataRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
@@ -65,7 +65,7 @@ public class MovieSpoilerDataRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
@@ -81,7 +81,7 @@ public class MovieSpoilerDataRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
@@ -96,6 +96,6 @@ public class MovieSpoilerDataRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

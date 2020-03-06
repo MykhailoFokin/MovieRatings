@@ -34,7 +34,7 @@ public class RoleSpoilerDataController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleSpoilerData(@PathVariable UUID id){
+    public void deleteRoleSpoilerData(@PathVariable UUID id) {
         roleSpoilerDataService.deleteRoleSpoilerData(id);
     }
 

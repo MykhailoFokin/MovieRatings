@@ -33,7 +33,7 @@ public class PortalUserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePortalUser(@PathVariable UUID id){
+    public void deletePortalUser(@PathVariable UUID id) {
         portalUserService.deletePortalUser(id);
     }
 

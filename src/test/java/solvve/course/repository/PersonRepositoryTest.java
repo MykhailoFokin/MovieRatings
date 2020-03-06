@@ -37,7 +37,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Person entity = testObjectsFactory.createPerson();
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -50,7 +50,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Person entity = testObjectsFactory.createPerson();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -63,7 +63,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Person entity = testObjectsFactory.createPerson();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -75,6 +75,6 @@ public class PersonRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

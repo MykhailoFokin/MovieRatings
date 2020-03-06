@@ -28,4 +28,6 @@ public class RoleExtendedDTO {
     private Set<RoleReviewFeedback> roleReviewFeedbacks;
 
     private Set<RoleVote> roleVotes;
+
+    private Double averageRating;
 }

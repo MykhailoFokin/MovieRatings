@@ -25,7 +25,7 @@ public class Country {
     @ManyToMany(mappedBy = "movieProdCountries")
     private Set<Movie> movies = new HashSet<Movie>();
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType. PERSIST)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.PERSIST)
     private Set<ReleaseDetail> releaseDetails = new HashSet<ReleaseDetail>();
 
     @ManyToMany(cascade = CascadeType.REMOVE)

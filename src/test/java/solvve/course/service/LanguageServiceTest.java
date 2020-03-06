@@ -77,7 +77,7 @@ public class LanguageServiceTest {
     public void testPatchLanguageEmptyPatch() {
         Language language = testObjectsFactory.createLanguage();
 
-        LanguagePatchDTO patch = testObjectsFactory.createLanguagePatchDTO();
+        LanguagePatchDTO patch = new LanguagePatchDTO();
         LanguageReadDTO read = languageService.patchLanguage(language.getId(), patch);
 
         Assert.assertNotNull(read.getName());

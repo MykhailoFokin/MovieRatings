@@ -8,10 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import solvve.course.domain.Movie;
-import solvve.course.domain.MovieVote;
-import solvve.course.domain.PortalUser;
-import solvve.course.domain.UserType;
+import solvve.course.domain.*;
 import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
@@ -51,7 +48,7 @@ public class MovieVoteRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Movie movie = testObjectsFactory.createMovie();
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
@@ -67,7 +64,7 @@ public class MovieVoteRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Movie movie = testObjectsFactory.createMovie();
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
@@ -83,7 +80,7 @@ public class MovieVoteRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Movie movie = testObjectsFactory.createMovie();
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
@@ -98,6 +95,19 @@ public class MovieVoteRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test
+    public void testCalcAverageMarkOfMovie() {
+        Movie movie = testObjectsFactory.createMovie();
+        UserType userType1 = testObjectsFactory.createUserType();
+        PortalUser portalUser1 = testObjectsFactory.createPortalUser(userType1);
+        testObjectsFactory.createMovieVote(portalUser1, movie, UserVoteRatingType.R7);
+        UserType userType2 = testObjectsFactory.createUserType();
+        PortalUser portalUser2 = testObjectsFactory.createPortalUser(userType2);
+        testObjectsFactory.createMovieVote(portalUser2, movie, UserVoteRatingType.R9);
+
+        Assert.assertEquals(7.0, movieVoteRepository.calcAverageMarkOfMovie(movie.getId()), Double.MIN_NORMAL);
     }
 }

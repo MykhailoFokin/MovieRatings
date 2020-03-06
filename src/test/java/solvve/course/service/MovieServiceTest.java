@@ -9,8 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import solvve.course.domain.Country;
-import solvve.course.domain.Movie;
+import solvve.course.domain.*;
 import solvve.course.dto.MovieCreateDTO;
 import solvve.course.dto.MoviePatchDTO;
 import solvve.course.dto.MoviePutDTO;
@@ -27,8 +26,10 @@ import java.util.UUID;
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql(statements = {"delete from movie_prod_countries",
+        "delete from movie_vote",
         "delete from movie",
-        "delete from country"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+        "delete from country",
+        "delete from portal_user"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class MovieServiceTest {
 
     @Autowired
@@ -181,5 +182,25 @@ public class MovieServiceTest {
         Assert.assertNull(movieAfterUpdate.getLaboratory());
         Assert.assertNull(movieAfterUpdate.getSoundMix());
         Assert.assertNull(movieAfterUpdate.getIsPublished());
+    }
+
+    @Test
+    public void testUpdateAverageRatingOfMovie() {
+        PortalUser portalUser1 = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        testObjectsFactory.createMovieVote(portalUser1, movie, UserVoteRatingType.R5);
+
+        PortalUser portalUser2 = testObjectsFactory.createPortalUser();
+        testObjectsFactory.createMovieVote(portalUser2, movie, UserVoteRatingType.R7);
+
+        movieService.updateAverageRatingOfMovie(movie.getId());
+        movie = movieRepository.findById(movie.getId()).get();
+        Assert.assertEquals(5.0, movie.getAverageRating(), Double.MIN_NORMAL);
+    }
+
+    @Test
+    public void testUpdateAverageRatingOfMovieEmptyMovie() {
+        Assertions.assertThatThrownBy(()-> movieService.updateAverageRatingOfMovie(UUID.randomUUID()))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }

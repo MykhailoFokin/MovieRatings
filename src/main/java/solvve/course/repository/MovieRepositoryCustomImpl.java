@@ -20,9 +20,9 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
         if (filter.getGenres() != null) {
             sb.append(" join Genre g on g.movie.id = m.id");
         }
-        if (filter.getCompanyTypes() != null ||
-                filter.getCompanyType() != null ||
-                filter.getCompanyName() != null) {
+        if (filter.getCompanyTypes() != null
+                || filter.getCompanyType() != null
+                || filter.getCompanyName() != null) {
             sb.append(" join m.movieProdCompanies mpc ");
         }
         if (filter.getCompanyName() != null) {

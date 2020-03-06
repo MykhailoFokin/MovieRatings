@@ -50,7 +50,7 @@ public class RoleVoteRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -68,7 +68,7 @@ public class RoleVoteRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -86,7 +86,7 @@ public class RoleVoteRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -103,6 +103,21 @@ public class RoleVoteRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test
+    public void testCalcAverageMarkOfRole() {
+        Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person,movie);
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser1 = testObjectsFactory.createPortalUser(userType);
+        testObjectsFactory.createRoleVote(portalUser1, role, UserVoteRatingType.R7);
+
+        PortalUser portalUser2 = testObjectsFactory.createPortalUser(userType);
+       testObjectsFactory.createRoleVote(portalUser2, role, UserVoteRatingType.R9);
+
+        Assert.assertEquals(7.0, roleVoteRepository.calcAverageMarkOfRole(role.getId()), Double.MIN_NORMAL);
     }
 }

@@ -44,7 +44,7 @@ public class MovieReviewRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
@@ -63,7 +63,7 @@ public class MovieReviewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
@@ -82,7 +82,7 @@ public class MovieReviewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
         MovieReview entity = new MovieReview();
@@ -100,6 +100,6 @@ public class MovieReviewRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

@@ -44,7 +44,7 @@ public class PortalUserRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         PortalUser entity = testObjectsFactory.createPortalUser();
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -57,7 +57,7 @@ public class PortalUserRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         PortalUser entity = testObjectsFactory.createPortalUser();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -70,7 +70,7 @@ public class PortalUserRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         PortalUser entity = testObjectsFactory.createPortalUser();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -82,6 +82,6 @@ public class PortalUserRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

@@ -20,6 +20,11 @@ public class CountryController {
         return countryService.getCountries(id);
     }
 
+    @GetMapping
+    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
+        return countryService.getCountries(countryFilter);
+    }
+
     @PostMapping
     public CountryReadDTO createCountries(@RequestBody CountryCreateDTO createDTO) {
         return countryService.createCountries(createDTO);
@@ -38,10 +43,5 @@ public class CountryController {
     @PutMapping("/{id}")
     public CountryReadDTO putCountries(@PathVariable UUID id, @RequestBody CountryPutDTO put) {
         return countryService.updateCountries(id, put);
-    }
-
-    @GetMapping
-    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
-        return countryService.getCountries(countryFilter);
     }
 }

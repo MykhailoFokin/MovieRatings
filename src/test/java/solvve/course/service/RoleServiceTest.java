@@ -1,6 +1,7 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
+import org.hibernate.LazyInitializationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import solvve.course.domain.Movie;
-import solvve.course.domain.Person;
-import solvve.course.domain.Role;
-import solvve.course.domain.RoleType;
+import solvve.course.domain.*;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
@@ -26,7 +24,10 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql(statements = {"delete from role",
+@Sql(statements = {"delete from role_vote",
+        "delete from portal_user",
+        "delete from role",
+        "delete from movie",
         " delete from person"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class RoleServiceTest {
@@ -184,5 +185,27 @@ public class RoleServiceTest {
 
             Assertions.assertThat(role).isEqualToComparingOnlyGivenFields(roleAfterUpdate,"id");
         });
+    }
+
+    @Test
+    public void testUpdateAverageRatingOfRole() {
+        Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
+        Role role = testObjectsFactory.createRole(person, movie);
+        PortalUser portalUser1 = testObjectsFactory.createPortalUser();
+        testObjectsFactory.createRoleVote(portalUser1, role, UserVoteRatingType.R3);
+
+        PortalUser portalUser2 = testObjectsFactory.createPortalUser();
+        testObjectsFactory.createRoleVote(portalUser2, role, UserVoteRatingType.R8);
+
+        roleService.updateAverageRatingOfRole(role.getId());
+        role = roleRepository.findById(role.getId()).get();
+        Assert.assertEquals(4.5, role.getAverageRating(), Double.MIN_NORMAL);
+    }
+
+    @Test
+    public void testUpdateAverageRatingOfRoleEmptyRole() {
+        Assertions.assertThatThrownBy(()-> roleService.updateAverageRatingOfRole(UUID.randomUUID()))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }

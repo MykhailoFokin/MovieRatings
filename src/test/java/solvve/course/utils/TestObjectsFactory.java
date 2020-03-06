@@ -537,6 +537,14 @@ public class TestObjectsFactory {
         return movieVoteRepository.save(movieVote);
     }
 
+    public MovieVote createMovieVote(PortalUser portalUser, Movie movie, UserVoteRatingType userVoteRatingType) {
+        MovieVote movieVote = new MovieVote();
+        movieVote.setMovie(movie);
+        movieVote.setPortalUser(portalUser);
+        movieVote.setRating(userVoteRatingType);
+        return movieVoteRepository.save(movieVote);
+    }
+
     public News createNews(PortalUser portalUser) {
         News news = new News();
         news.setPublisher(portalUser);
@@ -637,6 +645,14 @@ public class TestObjectsFactory {
         roleVote.setRole(role);
         roleVote.setPortalUser(portalUser);
         roleVote.setRating(UserVoteRatingType.R9);
+        return roleVoteRepository.save(roleVote);
+    }
+
+    public RoleVote createRoleVote(PortalUser portalUser, Role role, UserVoteRatingType userVoteRatingType) {
+        RoleVote roleVote = new RoleVote();
+        roleVote.setRole(role);
+        roleVote.setPortalUser(portalUser);
+        roleVote.setRating(userVoteRatingType);
         return roleVoteRepository.save(roleVote);
     }
 

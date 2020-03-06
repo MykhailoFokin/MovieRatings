@@ -51,7 +51,7 @@ public class RoleReviewRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -69,7 +69,7 @@ public class RoleReviewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -87,7 +87,7 @@ public class RoleReviewRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
@@ -104,6 +104,6 @@ public class RoleReviewRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

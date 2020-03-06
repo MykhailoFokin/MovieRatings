@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.PortalUser;
-import solvve.course.dto.PortalUserCreateDTO;
-import solvve.course.dto.PortalUserPatchDTO;
-import solvve.course.dto.PortalUserPutDTO;
-import solvve.course.dto.PortalUserReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
 

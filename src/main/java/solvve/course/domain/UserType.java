@@ -24,7 +24,7 @@ public class UserType {
     @Enumerated(EnumType.STRING)
     private UserGroupType userGroup;
 
-    @OneToMany(mappedBy="userType", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "userType", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<UserGrant> userGrants;
 
     @OneToOne(mappedBy = "userType", cascade = CascadeType.REMOVE)

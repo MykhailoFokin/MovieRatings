@@ -12,16 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import solvve.course.domain.MovieReview;
-import solvve.course.domain.PortalUser;
 import solvve.course.dto.MovieReadDTO;
-import solvve.course.dto.MovieReviewCompliantReadDTO;
-import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.dto.PortalUserReadDTO;
-import solvve.course.service.MovieReviewMovieReviewCompliantService;
 import solvve.course.service.PortalUserMovieService;
-import solvve.course.service.TranslationService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

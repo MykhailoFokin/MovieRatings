@@ -1,8 +1,9 @@
 package solvve.course.repository;
 
+import org.assertj.core.api.Assertions;
+import org.hibernate.LazyInitializationException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,17 +37,23 @@ public class RepositoryHelperTest {
     @Test
     public void testGetReferenceIfExistsWrongId() throws Exception {
 
-        Assertions.assertThrows(EntityNotFoundException.class,
-                () -> repositoryHelper.getReferenceIfExists(PortalUser.class,  UUID.randomUUID()));
+        Assertions.assertThatThrownBy(() -> repositoryHelper.getReferenceIfExists(PortalUser.class,
+                UUID.randomUUID())).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
     public void testGetReferenceIfExistsWithEntity() {
 
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-
         PortalUser portalUserReference = repositoryHelper.getReferenceIfExists(PortalUser.class, portalUser.getId());
-
         Assert.assertFalse(entityManager.contains(portalUserReference));
+    }
+
+    @Test
+    public void testGetReferenceIfExistsLazyInitializationException() {
+
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        PortalUser userReference = repositoryHelper.getReferenceIfExists(PortalUser.class, portalUser.getId());
+        Assertions.assertThatThrownBy(()-> userReference.getName()).isInstanceOf(LazyInitializationException.class);
     }
 }

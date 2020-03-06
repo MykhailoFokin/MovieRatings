@@ -33,4 +33,6 @@ public class MovieReadDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private Double averageRating;
 }

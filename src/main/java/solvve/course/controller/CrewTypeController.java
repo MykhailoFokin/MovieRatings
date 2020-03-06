@@ -31,7 +31,7 @@ public class CrewTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCrewType(@PathVariable UUID id){
+    public void deleteCrewType(@PathVariable UUID id) {
         crewTypeService.deleteCrewType(id);
     }
 

@@ -17,9 +17,11 @@ public class ErrorInfo {
     public HttpStatus getStatus() {
         return status;
     }
+
     public Class getExceptionClass() {
         return exceptionClass;
     }
+
     public String getMessage() {
         return message;
     }

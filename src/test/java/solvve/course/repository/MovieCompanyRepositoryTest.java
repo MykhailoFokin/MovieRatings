@@ -103,7 +103,7 @@ public class MovieCompanyRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         CompanyDetails c = testObjectsFactory.createCompanyDetails();
         MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
 
@@ -117,7 +117,7 @@ public class MovieCompanyRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         CompanyDetails c = testObjectsFactory.createCompanyDetails();
         MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
 
@@ -131,7 +131,7 @@ public class MovieCompanyRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         CompanyDetails c = testObjectsFactory.createCompanyDetails();
         MovieCompany entity = testObjectsFactory.createMovieCompany(c, MovieProductionType.PRODUCTION_COMPANIES);
 
@@ -144,6 +144,6 @@ public class MovieCompanyRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

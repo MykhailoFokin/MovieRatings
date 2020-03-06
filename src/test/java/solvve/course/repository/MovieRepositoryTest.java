@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -659,7 +661,7 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Movie entity = testObjectsFactory.createMovie();
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -672,7 +674,7 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Movie entity = testObjectsFactory.createMovie();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -685,7 +687,7 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Movie entity = testObjectsFactory.createMovie();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -697,6 +699,17 @@ public class MovieRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test
+    public void testGetIdsOfMovies() {
+        Set<UUID> expectedIdsOfMovies = new HashSet<>();
+        expectedIdsOfMovies.add(testObjectsFactory.createMovie().getId());
+        expectedIdsOfMovies.add(testObjectsFactory.createMovie().getId());
+
+        testObjectsFactory.inTransaction(()-> {
+            Assert.assertEquals(expectedIdsOfMovies, movieRepository.getIdsOfMovies().collect(Collectors.toSet()));
+        });
     }
 }

@@ -14,13 +14,18 @@ import solvve.course.domain.Role;
 import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Sql(statements = {"delete from role","delete from person"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(statements = {"delete from role","delete from person","delete from movie"}, executionPhase =
+        Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 public class RoleRepositoryTest {
 
@@ -40,7 +45,7 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role entity = testObjectsFactory.createRole(person,movie);
@@ -55,7 +60,7 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role entity = testObjectsFactory.createRole(person,movie);
@@ -70,7 +75,7 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
         Role entity = testObjectsFactory.createRole(person,movie);
@@ -84,6 +89,19 @@ public class RoleRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test
+    public void testGetIdsOfRoles() {
+        Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
+        Set<UUID> expectedIdsOfRoles = new HashSet<>();
+        expectedIdsOfRoles.add(testObjectsFactory.createRole(person, movie).getId());
+        expectedIdsOfRoles.add(testObjectsFactory.createRole(person, movie).getId());
+
+        testObjectsFactory.inTransaction(()-> {
+            Assert.assertEquals(expectedIdsOfRoles, roleRepository.getIdsOfRoles().collect(Collectors.toSet()));
+        });
     }
 }

@@ -20,10 +20,10 @@ public class RepositoryHelper {
     }
 
     public <E> void validateIFExists(Class<E> entityClass, UUID id) {
-        Query query = entityManager.createQuery("select count(e) from " + entityClass.getSimpleName() +
-                " e where e.id = :id");
+        Query query = entityManager.createQuery("select count(e) from " + entityClass.getSimpleName()
+                + " e where e.id = :id");
         query.setParameter("id", id);
-        boolean exists = ((Number)query.getSingleResult()).intValue() > 0;
+        boolean exists = ((Number) query.getSingleResult()).intValue() > 0;
         if (!exists) {
             throw new EntityNotFoundException(entityClass, id);
         }

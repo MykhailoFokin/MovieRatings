@@ -130,7 +130,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Movie m = testObjectsFactory.createMovie();
         Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
 
@@ -144,7 +144,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Movie m = testObjectsFactory.createMovie();
         Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
 
@@ -158,7 +158,7 @@ public class GenreRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Movie m = testObjectsFactory.createMovie();
         Genre entity = testObjectsFactory.createGenre(m, MovieGenreType.ADVENTURE);
 
@@ -171,6 +171,6 @@ public class GenreRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

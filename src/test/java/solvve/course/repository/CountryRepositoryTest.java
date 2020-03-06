@@ -83,7 +83,7 @@ public class CountryRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         Country country = testObjectsFactory.createCountry();
 
         Instant createdAtBeforeReload = country.getCreatedAt();
@@ -96,7 +96,7 @@ public class CountryRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         Country country = testObjectsFactory.createCountry();
 
         Instant updatedAtBeforeReload = country.getUpdatedAt();
@@ -109,7 +109,7 @@ public class CountryRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         Country country = testObjectsFactory.createCountry();
 
         Instant updatedAtBeforeReload = country.getUpdatedAt();
@@ -121,6 +121,6 @@ public class CountryRepositoryTest {
 
         Instant updatedAtAfterReload = country.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }

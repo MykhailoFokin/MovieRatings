@@ -88,4 +88,6 @@ public class Movie {
 
     @LastModifiedDate
     private Instant updatedAt;
+
+    private Double averageRating;
 }

@@ -24,4 +24,6 @@ public class RoleReadDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private Double averageRating;
 }

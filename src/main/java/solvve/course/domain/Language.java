@@ -19,7 +19,7 @@ public class Language {
 
     @Id
     @GeneratedValue
-    private UUID Id;
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     private LanguageType name;

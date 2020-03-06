@@ -10,7 +10,7 @@ public class EntityNotFoundException extends RuntimeException {
 
     public EntityNotFoundException(Class entityClass, UUID id) {
 
-        super(String.format("Entity %s with id=%s is not found!",entityClass.getSimpleName(), id));
+        super(String.format("Entity %s with id=%s is not found!", entityClass.getSimpleName(), id));
     }
 
     public EntityNotFoundException(Class entityClass, UUID parentId, UUID id) {

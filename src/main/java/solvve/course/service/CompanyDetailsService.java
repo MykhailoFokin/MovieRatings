@@ -27,6 +27,11 @@ public class CompanyDetailsService {
         return translationService.toRead(companyDetails);
     }
 
+    public List<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter) {
+        List<CompanyDetails> companyDetails = companyDetailsRepository.findByFilter(filter);
+        return companyDetails.stream().map(translationService::toRead).collect(Collectors.toList());
+    }
+
     public CompanyDetailsReadDTO createCompanyDetails(CompanyDetailsCreateDTO create) {
         CompanyDetails companyDetails = translationService.toEntity(create);
 
@@ -54,11 +59,6 @@ public class CompanyDetailsService {
 
         companyDetails = companyDetailsRepository.save(companyDetails);
         return translationService.toRead(companyDetails);
-    }
-
-    public List<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter) {
-        List<CompanyDetails> companyDetailss = companyDetailsRepository.findByFilter(filter);
-        return companyDetailss.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     private CompanyDetails getCompanyDetailsRequired(UUID id) {

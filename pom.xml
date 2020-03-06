@@ -64,6 +64,7 @@
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
+                    <violationSeverity>warning</violationSeverity>
                 </configuration>
                 <executions>
                     <execution>
@@ -125,5 +126,19 @@
         </dependency>
 
     </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <configLocation>${basedir}/checkstyle.xml</configLocation>
+                    <violationSeverity>warning</violationSeverity>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

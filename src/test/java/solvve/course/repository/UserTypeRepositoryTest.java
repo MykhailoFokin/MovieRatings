@@ -38,7 +38,7 @@ public class UserTypeRepositoryTest {
     }
 
     @Test
-    public void testCteatedAtIsSet() {
+    public void testCreatedAtIsSet() {
         UserType entity = testObjectsFactory.createUserType();
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -51,7 +51,7 @@ public class UserTypeRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsSet() {
+    public void testUpdatedAtIsSet() {
         UserType entity = testObjectsFactory.createUserType();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -64,7 +64,7 @@ public class UserTypeRepositoryTest {
     }
 
     @Test
-    public void testupdatedAtIsModified() {
+    public void testUpdatedAtIsModified() {
         UserType entity = testObjectsFactory.createUserType();
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -76,6 +76,6 @@ public class UserTypeRepositoryTest {
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.compareTo(updatedAtAfterReload) < 1);
+        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
 }
