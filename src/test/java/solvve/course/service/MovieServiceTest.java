@@ -43,8 +43,8 @@ public class MovieServiceTest {
 
     @Test
     public void testGetMovie() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         MovieReadDTO readDTO = movieService.getMovie(movie.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(movie);
@@ -67,8 +67,8 @@ public class MovieServiceTest {
 
     @Test
     public void testPatchMovie() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePatchDTO patch = testObjectsFactory.createMoviePatchDTO();
         MovieReadDTO read = movieService.patchMovie(movie.getId(), patch);
@@ -84,8 +84,8 @@ public class MovieServiceTest {
 
     @Test
     public void testPatchMovieEmptyPatch() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePatchDTO patch = new MoviePatchDTO();
         MovieReadDTO read = movieService.patchMovie(movie.getId(), patch);
@@ -122,8 +122,8 @@ public class MovieServiceTest {
 
     @Test
     public void testDeleteMovie() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         movieService.deleteMovie(movie.getId());
         Assert.assertFalse(movieRepository.existsById(movie.getId()));
@@ -136,8 +136,8 @@ public class MovieServiceTest {
 
     @Test
     public void testPutMovie() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePutDTO put = testObjectsFactory.createMoviePutDTO();
         MovieReadDTO read = movieService.updateMovie(movie.getId(), put);
@@ -153,8 +153,8 @@ public class MovieServiceTest {
 
     @Test
     public void testPutMovieEmptyPut() {
-        Set<Country> countrySet = testObjectsFactory.createCountrySet();
-        Movie movie = testObjectsFactory.createMovie(countrySet);
+        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePutDTO put = new MoviePutDTO();
         MovieReadDTO read = movieService.updateMovie(movie.getId(), put);

@@ -114,10 +114,10 @@ public class TestObjectsFactory {
         return movieRepository.save(movie);
     }
 
-    public Movie createMovie(Set<Country> countrySet, String title, Short year, String aspectRatio,
+    public Movie createMovie(Set<Country> countries, String title, Short year, String aspectRatio,
                              String camera, String colour, String critique, String description,
                              String laboratory, String soundMix, Boolean isPublished,
-                             Set<MovieCompany> movieCompanySet, Set<Language> languageSet) {
+                             Set<MovieCompany> movieCompanies, Set<Language> languages) {
         Movie movie = new Movie();
         movie.setTitle(title);
         movie.setYear(year);
@@ -129,13 +129,13 @@ public class TestObjectsFactory {
         movie.setLaboratory(laboratory);
         movie.setSoundMix(soundMix);
         movie.setIsPublished(isPublished);
-        movie.setMovieProdCountries(countrySet);
-        movie.setMovieProdLanguages(languageSet);
-        movie.setMovieProdCompanies(movieCompanySet);
+        movie.setMovieProdCountries(countries);
+        movie.setMovieProdLanguages(languages);
+        movie.setMovieProdCompanies(movieCompanies);
         return movieRepository.save(movie);
     }
 
-    public Movie createMovie(Set<Country> countrySet) {
+    public Movie createMovie(Set<Country> countries) {
         Movie movie = new Movie();
         movie.setTitle("Movie Test");
         movie.setYear((short) 2019);
@@ -147,7 +147,7 @@ public class TestObjectsFactory {
         movie.setLaboratory("CaliforniaDreaming");
         movie.setSoundMix("DolbySurround");
         movie.setIsPublished(true);
-        movie.setMovieProdCountries(countrySet);
+        movie.setMovieProdCountries(countries);
         return movieRepository.save(movie);
     }
 
@@ -665,10 +665,10 @@ public class TestObjectsFactory {
         return userGrantRepository.save(userGrant);
     }
 
-    public UserType createUserTypeWithGrants(Set<UserGrant> userGrantSet) {
+    public UserType createUserTypeWithGrants(Set<UserGrant> userGrants) {
         UserType userType = new UserType();
         userType.setUserGroup(UserGroupType.USER);
-        userType.setUserGrants(userGrantSet);
+        userType.setUserGrants(userGrants);
         return userTypeRepository.save(userType);
     }
 

@@ -29,12 +29,12 @@ public class MovieReviewSpoilerDataService {
     private RepositoryHelper repositoryHelper;
 
     public List<MovieSpoilerDataReadDTO> getMovieReviewSpoilerDatas(UUID movieReviewId) {
-        List<MovieSpoilerData> movieSpoilerDataList =
+        List<MovieSpoilerData> movieSpoilerData =
                 movieSpoilerDataRepository.findByMovieReviewIdOrderByIdAsc(movieReviewId).orElseThrow(() -> {
                     throw new EntityNotFoundException(MovieSpoilerData.class, movieReviewId);
                 });
 
-        return movieSpoilerDataList.stream().map(translationService::toRead).collect(Collectors.toList());
+        return movieSpoilerData.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public MovieSpoilerDataReadDTO createMovieReviewSpoilerData(UUID movieReviewId, MovieSpoilerDataCreateDTO create) {

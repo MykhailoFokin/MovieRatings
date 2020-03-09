@@ -42,11 +42,11 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
     @Test
     public void testGetMovieReviewMovieReviewFeedback() throws Exception {
         MovieReviewReadDTO movieReview = createMovieReview();
-        List<MovieReviewFeedbackReadDTO> movieReviewFeedbackReadDTOList =
+        List<MovieReviewFeedbackReadDTO> movieReviewFeedbackReadDTO =
                 List.of(createMovieReviewFeedbackRead(movieReview.getId()));
 
         Mockito.when(movieReviewFeedbackService.getMovieReviewMovieReviewFeedback(movieReview.getId()))
-                .thenReturn(movieReviewFeedbackReadDTOList);
+                .thenReturn(movieReviewFeedbackReadDTO);
 
         String resultJson = mvc.perform(get("/api/v1/movie-reviews/{movieReviewId}/movie-review-feedbacks",
                 movieReview.getId()))
@@ -55,7 +55,7 @@ public class MovieReviewMovieReviewFeedbackControllerTest {
 
         List<MovieReviewFeedbackReadDTO> actualMovie = objectMapper.readValue(resultJson,
                 new TypeReference<List<MovieReviewFeedbackReadDTO>>(){});
-        Assertions.assertThat(actualMovie).isEqualTo(movieReviewFeedbackReadDTOList);
+        Assertions.assertThat(actualMovie).isEqualTo(movieReviewFeedbackReadDTO);
 
         Mockito.verify(movieReviewFeedbackService).getMovieReviewMovieReviewFeedback(movieReview.getId());
     }

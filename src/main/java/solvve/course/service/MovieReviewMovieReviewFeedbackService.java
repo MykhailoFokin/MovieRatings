@@ -31,8 +31,8 @@ public class MovieReviewMovieReviewFeedbackService {
 
     @Transactional(readOnly = true)
     public List<MovieReviewFeedbackReadDTO> getMovieReviewMovieReviewFeedback(UUID movieReviewId) {
-        List<MovieReviewFeedback> movieReviewFeedbackList = getMovieReviewMovieReviewFeedbacksRequired(movieReviewId);
-        return movieReviewFeedbackList.stream().map(translationService::toRead).collect(Collectors.toList());
+        List<MovieReviewFeedback> movieReviewFeedbacks = getMovieReviewMovieReviewFeedbacksRequired(movieReviewId);
+        return movieReviewFeedbacks.stream().map(translationService::toRead).collect(Collectors.toList());
     }
 
     public MovieReviewFeedbackReadDTO createMovieReviewMovieReviewFeedback(UUID movieReviewId,

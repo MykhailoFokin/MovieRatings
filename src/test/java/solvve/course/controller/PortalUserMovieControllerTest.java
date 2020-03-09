@@ -45,13 +45,13 @@ public class PortalUserMovieControllerTest {
         movieReadDTO.setId(UUID.randomUUID());
         PortalUserReadDTO portalUserReadDTO = new PortalUserReadDTO();
         portalUserReadDTO.setId(UUID.randomUUID());
-        List<MovieReadDTO> movieReadDTOList = List.of(movieReadDTO);
+        List<MovieReadDTO> movieReadDTOs = List.of(movieReadDTO);
 
         Instant startFrom = LocalDateTime.of(2019, 12, 23, 8, 0).toInstant(ZoneOffset.UTC);
         Instant startTo = LocalDateTime.of(2019, 12, 23, 9, 0).toInstant(ZoneOffset.UTC);
 
         Mockito.when(portalUserMovieService.getPortalUserMovies(portalUserReadDTO.getId(), startFrom, startTo))
-                .thenReturn(movieReadDTOList);
+                .thenReturn(movieReadDTOs);
 
         String resultJson = mvc.perform(get("/api/v1/portal-user/{portalUserId}/movies/{startFrom}/{startTo}",
                 portalUserReadDTO.getId(), startFrom, startTo))
@@ -60,7 +60,7 @@ public class PortalUserMovieControllerTest {
 
         List<MovieReadDTO> actualMovie = objectMapper.readValue(resultJson,
                 new TypeReference<List<MovieReadDTO>>(){});
-        Assertions.assertThat(actualMovie).isEqualTo(movieReadDTOList);
+        Assertions.assertThat(actualMovie).isEqualTo(movieReadDTOs);
 
         Mockito.verify(portalUserMovieService).getPortalUserMovies(portalUserReadDTO.getId(), startFrom, startTo);
     }
@@ -71,10 +71,10 @@ public class PortalUserMovieControllerTest {
         movieReadDTO.setId(UUID.randomUUID());
         PortalUserReadDTO portalUserReadDTO = new PortalUserReadDTO();
         portalUserReadDTO.setId(UUID.randomUUID());
-        List<MovieReadDTO> movieReadDTOList = List.of(movieReadDTO);
+        List<MovieReadDTO> movieReadDTOs = List.of(movieReadDTO);
 
         Mockito.when(portalUserMovieService.getPortalUserRecommendedMovies(portalUserReadDTO.getId()))
-                .thenReturn(movieReadDTOList);
+                .thenReturn(movieReadDTOs);
 
         String resultJson = mvc.perform(get("/api/v1/portal-user/{portalUserId}/movies/recommendations",
                 portalUserReadDTO.getId()))
@@ -83,7 +83,7 @@ public class PortalUserMovieControllerTest {
 
         List<MovieReadDTO> actualMovie = objectMapper.readValue(resultJson,
                 new TypeReference<List<MovieReadDTO>>(){});
-        Assertions.assertThat(actualMovie).isEqualTo(movieReadDTOList);
+        Assertions.assertThat(actualMovie).isEqualTo(movieReadDTOs);
 
         Mockito.verify(portalUserMovieService).getPortalUserRecommendedMovies(portalUserReadDTO.getId());
     }
