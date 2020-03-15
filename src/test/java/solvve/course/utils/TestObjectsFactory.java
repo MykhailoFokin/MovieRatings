@@ -99,6 +99,12 @@ public class TestObjectsFactory {
     @Autowired
     private UserGrantRepository userGrantRepository;
 
+    @Autowired
+    private NewsUserReviewRepository newsUserReviewRepository;
+
+    @Autowired
+    private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
+
     public Movie createMovie() {
         Movie movie = new Movie();
         movie.setTitle("Movie Test");
@@ -554,6 +560,15 @@ public class TestObjectsFactory {
         return newsRepository.save(news);
     }
 
+    public News createNews(PortalUser portalUser, String newsText) {
+        News news = new News();
+        news.setPublisher(portalUser);
+        news.setTopic("Main_News");
+        news.setDescription(newsText);
+        news.setPublished(createInstant(9));
+        return newsRepository.save(news);
+    }
+
     public UserType createUserType() {
         UserType userType = new UserType();
         userType.setUserGroup(UserGroupType.USER);
@@ -711,5 +726,32 @@ public class TestObjectsFactory {
         transactionTemplate.executeWithoutResult(status -> {
             runnable.run();
         });
+    }
+
+    public NewsUserReview createNewsUserReview(PortalUser portalUser, News news, PortalUser moderator,
+                                               NewsUserReviewStatusType newsUserReviewStatusType) {
+        NewsUserReview newsUserReview = new NewsUserReview();
+        newsUserReview.setPortalUser(portalUser);
+        newsUserReview.setNews(news);
+        newsUserReview.setNewsUserReviewStatusType(newsUserReviewStatusType);
+        newsUserReview.setModerator(moderator);
+        return newsUserReviewRepository.save(newsUserReview);
+    }
+
+    public NewsUserReviewNote createNewsUserReviewNote(PortalUser moderator, NewsUserReview newsUserReview,
+                                                       Integer startIndex, Integer endIndex, String proposedText,
+                                                       NewsUserReviewStatusType newsUserReviewStatusType, News news,
+                                                       String sourceText) {
+        NewsUserReviewNote newsUserReviewNote = new NewsUserReviewNote();
+        newsUserReviewNote.setModerator(moderator);
+        newsUserReviewNote.setNewsUserReview(newsUserReview);
+        newsUserReviewNote.setStartIndex(startIndex);
+        newsUserReviewNote.setEndIndex(endIndex);
+        newsUserReviewNote.setProposedText(proposedText);
+        newsUserReviewNote.setNewsUserReviewStatusType(newsUserReviewStatusType);
+        newsUserReviewNote.setNews(news);
+        newsUserReviewNote.setSourceText(sourceText);
+        newsUserReviewNote.setApprovedText("ApprText");
+        return newsUserReviewNoteRepository.save(newsUserReviewNote);
     }
 }

@@ -15,26 +15,28 @@ import java.util.UUID;
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class News {
+public class NewsUserReview {
 
     @Id
     @GeneratedValue
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
-    private PortalUser publisher;
+    @JoinColumn(name = "portal_user_id", referencedColumnName = "id")
+    private PortalUser portalUser;
 
-    private Instant published;
+    @ManyToOne
+    @JoinColumn(name = "news_id", referencedColumnName = "id")
+    private News news;
 
-    private String topic;
+    @Enumerated(EnumType.STRING)
+    private NewsUserReviewStatusType newsUserReviewStatusType;
 
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "moderator_id", referencedColumnName = "id")
+    private PortalUser moderator;
 
-    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
-    private Set<NewsUserReview> newsUserReviews;
-
-    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "newsUserReview", cascade = CascadeType.PERSIST)
     private Set<NewsUserReviewNote> newsUserReviewNotes;
 
     @CreatedDate

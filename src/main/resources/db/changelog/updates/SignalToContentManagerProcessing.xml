@@ -1,0 +1,53 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create new table news_user_review" author="mykhailo">
+        <createTable tableName="news_user_review">
+            <column name ="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name ="portal_user_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_nur_pu_portal_user" references="portal_user(id)"/>
+            </column>
+            <column name ="news_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_nur_news" references="news(id)"/>
+            </column>
+            <column name = "news_user_review_status_type" type="varchar(255)"/>
+            <column name ="moderator_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_nur_m_portal_user" references="portal_user(id)"/>
+            </column>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create new table news_user_review_note" author="mykhailo">
+        <createTable tableName="news_user_review_note">
+            <column name ="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name ="moderator_id" type="uuid">
+                <constraints nullable="true" foreignKeyName="fk_nur_portal_user" references="portal_user(id)"/>
+            </column>
+            <column name = "proposed_text" type="varchar(255)"/>
+            <column name = "approved_text" type="varchar(255)"/>
+            <column name = "source_text" type="varchar(255)"/>
+            <column name = "start_index" type="int(10)"/>
+            <column name = "end_index" type="int(10)"/>
+            <column name = "news_user_review_status_type" type="varchar(255)"/>
+            <column name ="news_user_review_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_nurn_news_user_review" references="news_user_review(id)"/>
+            </column>
+            <column name ="news_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_nurn_news" references="news(id)"/>
+            </column>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

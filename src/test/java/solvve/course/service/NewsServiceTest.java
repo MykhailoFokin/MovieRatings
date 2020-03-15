@@ -87,7 +87,8 @@ public class NewsServiceTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         news = newsRepository.findById(read.getId()).get();
-        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher");
+        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
+                "newsUserReviews", "newsUserReviewNotes");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -111,7 +112,8 @@ public class NewsServiceTest {
         Assert.assertNotNull(newsAfterUpdate.getDescription());
         Assert.assertNotNull(newsAfterUpdate.getPublished());
 
-        Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher");
+        Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher",
+                "newsUserReviews", "newsUserReviewNotes");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 
@@ -144,7 +146,8 @@ public class NewsServiceTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         news = newsRepository.findById(read.getId()).get();
-        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher");
+        Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
+                "newsUserReviews", "newsUserReviewNotes");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -169,7 +172,7 @@ public class NewsServiceTest {
         Assert.assertNull(newsAfterUpdate.getPublished());
 
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher", "topic","description",
-                "published","updatedAt");
+                "published", "updatedAt", "newsUserReviews", "newsUserReviewNotes");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 }

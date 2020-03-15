@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import solvve.course.exception.UnprocessableEntityException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -27,5 +28,12 @@ public class RestExceptionHandler {
 
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST, ex.getClass(), ex.getMessage());
         return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ UnprocessableEntityException.class })
+    public ResponseEntity<Object> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+
+        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.UNPROCESSABLE_ENTITY, ex.getClass(), ex.getMessage());
+        return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

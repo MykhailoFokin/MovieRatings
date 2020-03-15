@@ -383,6 +383,41 @@ public class TranslationService {
         return dto;
     }
 
+    public NewsUserReviewReadDTO toRead(NewsUserReview newsUserReview) {
+        NewsUserReviewReadDTO dto = new NewsUserReviewReadDTO();
+        dto.setId(newsUserReview.getId());
+        dto.setPortalUserId(newsUserReview.getPortalUser().getId());
+        dto.setNewsId(newsUserReview.getNews().getId());
+        dto.setNewsUserReviewStatusType(newsUserReview.getNewsUserReviewStatusType());
+        if (newsUserReview.getModerator() != null) {
+            dto.setModeratorId(newsUserReview.getModerator().getId());
+        }
+        dto.setCreatedAt(newsUserReview.getCreatedAt());
+        dto.setUpdatedAt(newsUserReview.getUpdatedAt());
+        return dto;
+    }
+
+    public NewsUserReviewNoteReadDTO toRead(NewsUserReviewNote newsUserReviewNote) {
+        NewsUserReviewNoteReadDTO dto = new NewsUserReviewNoteReadDTO();
+        dto.setId(newsUserReviewNote.getId());
+        if (newsUserReviewNote.getModerator() != null) {
+            dto.setModeratorId(newsUserReviewNote.getModerator().getId());
+        }
+        dto.setStartIndex(newsUserReviewNote.getStartIndex());
+        dto.setEndIndex(newsUserReviewNote.getEndIndex());
+        dto.setProposedText(newsUserReviewNote.getProposedText());
+        dto.setApprovedText(newsUserReviewNote.getApprovedText());
+        dto.setSourceText(newsUserReviewNote.getSourceText());
+        dto.setNewsUserReviewStatusType(newsUserReviewNote.getNewsUserReviewStatusType());
+        dto.setNewsUserReviewId(newsUserReviewNote.getNewsUserReview().getId());
+        dto.setCreatedAt(newsUserReviewNote.getCreatedAt());
+        dto.setUpdatedAt(newsUserReviewNote.getUpdatedAt());
+        if (newsUserReviewNote.getModerator() != null) {
+            dto.setNewsId(newsUserReviewNote.getNews().getId());
+        }
+        return dto;
+    }
+
     public Visit toEntity(VisitCreateDTO create) {
         Visit visit = new Visit();
         visit.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
@@ -621,6 +656,30 @@ public class TranslationService {
         UserType userType = new UserType();
         userType.setUserGroup(create.getUserGroup());
         return userType;
+    }
+
+    public NewsUserReview toEntity(NewsUserReviewCreateDTO create) {
+        NewsUserReview entity = new NewsUserReview();
+        entity.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
+        entity.setNews(repositoryHelper.getReferenceIfExists(News.class, create.getNewsId()));
+        entity.setNewsUserReviewStatusType(create.getNewsUserReviewStatusType());
+        entity.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        return entity;
+    }
+
+    public NewsUserReviewNote toEntity(NewsUserReviewNoteCreateDTO create) {
+        NewsUserReviewNote entity = new NewsUserReviewNote();
+        entity.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
+        entity.setStartIndex(create.getStartIndex());
+        entity.setEndIndex(create.getEndIndex());
+        entity.setProposedText(create.getProposedText());
+        entity.setApprovedText(create.getApprovedText());
+        entity.setSourceText(create.getSourceText());
+        entity.setNewsUserReviewStatusType(create.getNewsUserReviewStatusType());
+        entity.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
+                create.getNewsUserReviewId()));
+        entity.setNews(repositoryHelper.getReferenceIfExists(News.class, create.getNewsId()));
+        return entity;
     }
 
     public void patchEntity(CompanyDetailsPatchDTO patch, CompanyDetails companyDetails) {
@@ -1005,6 +1064,55 @@ public class TranslationService {
         }
     }
 
+    public void patchEntity(NewsUserReviewPatchDTO patch, NewsUserReview newsUserReview) {
+        if (patch.getPortalUserId() != null) {
+            newsUserReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getPortalUserId()));
+        }
+        if (patch.getNewsId() != null) {
+            newsUserReview.setNews(repositoryHelper.getReferenceIfExists(News.class, patch.getNewsId()));
+        }
+        if (patch.getNewsUserReviewStatusType() != null) {
+            newsUserReview.setNewsUserReviewStatusType(patch.getNewsUserReviewStatusType());
+        }
+        if (patch.getModeratorId() != null) {
+            newsUserReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getModeratorId()));
+        }
+    }
+
+    public void patchEntity(NewsUserReviewNotePatchDTO patch, NewsUserReviewNote newsUserReviewNote) {
+        if (patch.getModeratorId() != null) {
+            newsUserReviewNote.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getModeratorId()));
+        }
+        if (patch.getStartIndex() != null) {
+            newsUserReviewNote.setStartIndex(patch.getStartIndex());
+        }
+        if (patch.getEndIndex() != null) {
+            newsUserReviewNote.setEndIndex(patch.getEndIndex());
+        }
+        if (patch.getProposedText() != null) {
+            newsUserReviewNote.setProposedText(patch.getProposedText());
+        }
+        if (patch.getApprovedText() != null) {
+            newsUserReviewNote.setApprovedText(patch.getApprovedText());
+        }
+        if (patch.getSourceText() != null) {
+            newsUserReviewNote.setSourceText(patch.getSourceText());
+        }
+        if (patch.getNewsUserReviewStatusType() != null) {
+            newsUserReviewNote.setNewsUserReviewStatusType(patch.getNewsUserReviewStatusType());
+        }
+        if (patch.getNewsUserReviewId() != null) {
+            newsUserReviewNote.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
+                    patch.getNewsUserReviewId()));
+        }
+        if (patch.getNewsId() != null) {
+            newsUserReviewNote.setNews(repositoryHelper.getReferenceIfExists(News.class, patch.getNewsId()));
+        }
+    }
+
     public void updateEntity(CompanyDetailsPutDTO put, CompanyDetails companyDetails) {
         companyDetails.setName(put.getName());
         companyDetails.setOverview(put.getOverview());
@@ -1283,5 +1391,49 @@ public class TranslationService {
 
     public void updateEntity(UserTypePutDTO put, UserType userType) {
         userType.setUserGroup(put.getUserGroup());
+    }
+
+    public void updateEntity(NewsUserReviewPutDTO put, NewsUserReview newsUserReview) {
+        if (put.getPortalUserId() != null) {
+            newsUserReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getPortalUserId()));
+        }
+        if (put.getNewsId() != null) {
+            newsUserReview.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
+        }
+        if (put.getNewsUserReviewStatusType() != null) {
+            newsUserReview.setNewsUserReviewStatusType(put.getNewsUserReviewStatusType());
+        }
+        if (put.getModeratorId() != null) {
+            newsUserReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
+        } else {
+            newsUserReview.setModerator(null);
+        }
+    }
+
+    public void updateEntity(NewsUserReviewNotePutDTO put, NewsUserReviewNote newsUserReviewNote) {
+        if (put.getModeratorId() != null) {
+            newsUserReviewNote.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getModeratorId()));
+        } else {
+            newsUserReviewNote.setModerator(null);
+        }
+        if (put.getStartIndex() != null) {
+            newsUserReviewNote.setStartIndex(put.getStartIndex());
+        }
+        if (put.getEndIndex() != null) {
+            newsUserReviewNote.setEndIndex(put.getEndIndex());
+        }
+        newsUserReviewNote.setProposedText(put.getProposedText());
+        if (put.getNewsUserReviewStatusType() != null) {
+            newsUserReviewNote.setNewsUserReviewStatusType(put.getNewsUserReviewStatusType());
+        }
+        if (put.getNewsUserReviewId() != null) {
+            newsUserReviewNote.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
+                    put.getNewsUserReviewId()));
+        }
+        if (put.getNewsId() != null) {
+            newsUserReviewNote.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
+        }
     }
 }

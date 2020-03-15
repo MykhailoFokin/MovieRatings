@@ -82,6 +82,15 @@ public class PortalUser {
     @OneToMany(mappedBy = "portalUser", cascade = CascadeType.PERSIST)
     private Set<Visit> visits = new HashSet<Visit>();
 
+    @OneToMany(mappedBy = "portalUser", cascade = CascadeType.PERSIST)
+    private Set<NewsUserReview> newsUserReviews = new HashSet<NewsUserReview>();
+
+    @OneToMany(mappedBy = "moderator", cascade = CascadeType.PERSIST)
+    private Set<NewsUserReview> newsUserReviewsModerator = new HashSet<NewsUserReview>();
+
+    @OneToMany(mappedBy = "moderator", cascade = CascadeType.PERSIST)
+    private Set<NewsUserReviewNote> newsUserReviewNotes = new HashSet<NewsUserReviewNote>();
+
     @CreatedDate
     private Instant createdAt;
 

@@ -95,7 +95,8 @@ public class PortalUserServiceTest {
                 "userType", "userGrants","movieReview","movieReviewModerator",
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
                 ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
-                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
+                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserTypeId());
     }
 
@@ -127,7 +128,8 @@ public class PortalUserServiceTest {
                 "userType", "userGrants","movieReview","movieReviewModerator",
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
                 ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
-                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
+                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
     }
 
     @Test
@@ -165,7 +167,8 @@ public class PortalUserServiceTest {
                 "userType", "userGrants","movieReview","movieReviewModerator",
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks",
                 "roleReviews","roleReviewsModerator","roleReviewCompliants",
-                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits");
+                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserTypeId());
     }
 
