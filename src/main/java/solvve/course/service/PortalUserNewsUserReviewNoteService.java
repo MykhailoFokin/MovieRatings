@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 import solvve.course.domain.NewsUserReview;
 import solvve.course.domain.NewsUserReviewNote;
-import solvve.course.domain.NewsUserReviewStatusType;
 import solvve.course.domain.PortalUser;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -51,8 +51,8 @@ public class PortalUserNewsUserReviewNoteService {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
         NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
 
-        checkAlreadyFixedUserReviewNote(newsUserReviewNote.getNewsUserReviewStatusType(),
-                patch.getNewsUserReviewStatusType(), newsUserReviewNoteId);
+        checkAlreadyFixedUserReviewNote(newsUserReviewNote.getModeratorTypoReviewStatusType(),
+                patch.getModeratorTypoReviewStatusType(), newsUserReviewNoteId);
 
         translationService.patchEntity(patch, newsUserReviewNote);
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
@@ -61,12 +61,12 @@ public class PortalUserNewsUserReviewNoteService {
         fixNewsByUserReviewNote(newsUserReviewNote.getNews().getId(), patch.getStartIndex(), patch.getEndIndex(),
                 patch.getApprovedText());
 
-        if (newsUserReviewNote.getNewsUserReviewStatusType() == NewsUserReviewStatusType.FIXED) {
+        if (newsUserReviewNote.getModeratorTypoReviewStatusType() == ModeratorTypoReviewStatusType.FIXED) {
             transactionTemplate.executeWithoutResult(status -> {
                 if (!repositoryHelper.validateIfExistsNotNewsUserReviewStatus(NewsUserReview.class, newsUserReviewId,
-                        NewsUserReviewStatusType.FIXED)) {
+                        ModeratorTypoReviewStatusType.FIXED)) {
                     NewsUserReviewPatchDTO newsUserReviewPatch = new NewsUserReviewPatchDTO();
-                    newsUserReviewPatch.setNewsUserReviewStatusType(NewsUserReviewStatusType.FIXED);
+                    newsUserReviewPatch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
                     newsUserReviewService.patchNewsUserReview(newsUserReviewId, newsUserReviewPatch);
                 }
             });
@@ -82,8 +82,8 @@ public class PortalUserNewsUserReviewNoteService {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
         NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
 
-        checkAlreadyFixedUserReviewNote(newsUserReviewNote.getNewsUserReviewStatusType(),
-                put.getNewsUserReviewStatusType(), newsUserReviewNoteId);
+        checkAlreadyFixedUserReviewNote(newsUserReviewNote.getModeratorTypoReviewStatusType(),
+                put.getModeratorTypoReviewStatusType(), newsUserReviewNoteId);
 
         translationService.updateEntity(put, newsUserReviewNote);
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
@@ -91,12 +91,12 @@ public class PortalUserNewsUserReviewNoteService {
 
         fixNewsByUserReviewNote(put.getNewsId(), put.getStartIndex(), put.getEndIndex(), put.getApprovedText());
 
-        if (newsUserReviewNote.getNewsUserReviewStatusType() == NewsUserReviewStatusType.FIXED) {
+        if (newsUserReviewNote.getModeratorTypoReviewStatusType() == ModeratorTypoReviewStatusType.FIXED) {
             transactionTemplate.executeWithoutResult(status -> {
                 if (!repositoryHelper.validateIfExistsNotNewsUserReviewStatus(NewsUserReview.class, newsUserReviewId,
-                        NewsUserReviewStatusType.FIXED)) {
+                        ModeratorTypoReviewStatusType.FIXED)) {
                     NewsUserReviewPatchDTO newsUserReviewPatch = new NewsUserReviewPatchDTO();
-                    newsUserReviewPatch.setNewsUserReviewStatusType(NewsUserReviewStatusType.FIXED);
+                    newsUserReviewPatch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
                     newsUserReviewService.patchNewsUserReview(newsUserReviewId, newsUserReviewPatch);
                 }
             });
@@ -109,7 +109,7 @@ public class PortalUserNewsUserReviewNoteService {
 
     private List<NewsUserReviewNote> getNewsUserReviewNotesRequired(UUID moderatorId) {
         return newsUserReviewNoteRepository.findUserReviewNotesByModeratorOrRequiredAttention(moderatorId,
-                List.of(NewsUserReviewStatusType.IN_REVIEW, NewsUserReviewStatusType.NEED_TO_FIX));
+                List.of(ModeratorTypoReviewStatusType.IN_REVIEW, ModeratorTypoReviewStatusType.NEED_TO_FIX));
     }
 
     private NewsUserReviewNote getUserReviewNoteRequired(UUID id) {
@@ -119,11 +119,11 @@ public class PortalUserNewsUserReviewNoteService {
                 });
     }
 
-    private void checkAlreadyFixedUserReviewNote(NewsUserReviewStatusType entityNewsUserReviewStatusType,
-                                                 NewsUserReviewStatusType newNewsUserReviewStatusType,
+    private void checkAlreadyFixedUserReviewNote(ModeratorTypoReviewStatusType entityModeratorTypoReviewStatusType,
+                                                 ModeratorTypoReviewStatusType newModeratorTypoReviewStatusType,
                                                  UUID id) {
-        if (entityNewsUserReviewStatusType == NewsUserReviewStatusType.FIXED
-                && newNewsUserReviewStatusType == NewsUserReviewStatusType.FIXED) {
+        if (entityModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED
+                && newModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED) {
             throw new UnprocessableEntityException(NewsUserReviewNote.class, id);
         }
     }
@@ -147,7 +147,7 @@ public class PortalUserNewsUserReviewNoteService {
                 newsUserReviewNotes.stream().map(NewsUserReviewNote::getId).collect(Collectors.toList());
 
         newsUserReviewNoteRepository.updateNewsUserReviewNoteWithSameNote(newsUserReviewNote.getNews().getId(),
-                newsUserReviewNote.getNewsUserReviewStatusType(), newsUserReviewNote.getModerator().getId(),
+                newsUserReviewNote.getModeratorTypoReviewStatusType(), newsUserReviewNote.getModerator().getId(),
                 newsUserReviewNote.getApprovedText(), newsUserReviewNote.getUpdatedAt(), newsUserReviewNotesIds);
     }
 }

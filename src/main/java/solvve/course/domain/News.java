@@ -37,6 +37,9 @@ public class News {
     @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
     private Set<NewsUserReviewNote> newsUserReviewNotes;
 
+    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
+    private Set<UserTypoRequest> userTypoRequests;
+
     @CreatedDate
     private Instant createdAt;
 

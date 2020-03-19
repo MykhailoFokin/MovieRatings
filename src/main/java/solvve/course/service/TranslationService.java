@@ -388,7 +388,7 @@ public class TranslationService {
         dto.setId(newsUserReview.getId());
         dto.setPortalUserId(newsUserReview.getPortalUser().getId());
         dto.setNewsId(newsUserReview.getNews().getId());
-        dto.setNewsUserReviewStatusType(newsUserReview.getNewsUserReviewStatusType());
+        dto.setModeratorTypoReviewStatusType(newsUserReview.getModeratorTypoReviewStatusType());
         if (newsUserReview.getModerator() != null) {
             dto.setModeratorId(newsUserReview.getModerator().getId());
         }
@@ -408,12 +408,39 @@ public class TranslationService {
         dto.setProposedText(newsUserReviewNote.getProposedText());
         dto.setApprovedText(newsUserReviewNote.getApprovedText());
         dto.setSourceText(newsUserReviewNote.getSourceText());
-        dto.setNewsUserReviewStatusType(newsUserReviewNote.getNewsUserReviewStatusType());
+        dto.setModeratorTypoReviewStatusType(newsUserReviewNote.getModeratorTypoReviewStatusType());
         dto.setNewsUserReviewId(newsUserReviewNote.getNewsUserReview().getId());
         dto.setCreatedAt(newsUserReviewNote.getCreatedAt());
         dto.setUpdatedAt(newsUserReviewNote.getUpdatedAt());
         if (newsUserReviewNote.getModerator() != null) {
             dto.setNewsId(newsUserReviewNote.getNews().getId());
+        }
+        return dto;
+    }
+
+    public UserTypoRequestReadDTO toRead(UserTypoRequest userTypoRequest) {
+        UserTypoRequestReadDTO dto = new UserTypoRequestReadDTO();
+        dto.setId(userTypoRequest.getId());
+        dto.setRequesterId(userTypoRequest.getRequester().getId());
+        if (userTypoRequest.getModerator() != null) {
+            dto.setModeratorId(userTypoRequest.getModerator().getId());
+        }
+        dto.setProposedText(userTypoRequest.getProposedText());
+        dto.setApprovedText(userTypoRequest.getApprovedText());
+        dto.setSourceText(userTypoRequest.getSourceText());
+        dto.setModeratorTypoReviewStatusType(userTypoRequest.getModeratorTypoReviewStatusType());
+        dto.setFixAppliedDate(userTypoRequest.getFixAppliedDate());
+        dto.setTypoFirstEntryIndex(userTypoRequest.getTypoFirstEntryIndex());
+        dto.setCreatedAt(userTypoRequest.getCreatedAt());
+        dto.setUpdatedAt(userTypoRequest.getUpdatedAt());
+        if (userTypoRequest.getNews() != null) {
+            dto.setNewsId(userTypoRequest.getNews().getId());
+        }
+        if (userTypoRequest.getMovie() != null) {
+            dto.setMovieId(userTypoRequest.getMovie().getId());
+        }
+        if (userTypoRequest.getRole() != null) {
+            dto.setRoleId(userTypoRequest.getRole().getId());
         }
         return dto;
     }
@@ -662,7 +689,7 @@ public class TranslationService {
         NewsUserReview entity = new NewsUserReview();
         entity.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getPortalUserId()));
         entity.setNews(repositoryHelper.getReferenceIfExists(News.class, create.getNewsId()));
-        entity.setNewsUserReviewStatusType(create.getNewsUserReviewStatusType());
+        entity.setModeratorTypoReviewStatusType(create.getModeratorTypoReviewStatusType());
         entity.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, create.getModeratorId()));
         return entity;
     }
@@ -675,7 +702,7 @@ public class TranslationService {
         entity.setProposedText(create.getProposedText());
         entity.setApprovedText(create.getApprovedText());
         entity.setSourceText(create.getSourceText());
-        entity.setNewsUserReviewStatusType(create.getNewsUserReviewStatusType());
+        entity.setModeratorTypoReviewStatusType(create.getModeratorTypoReviewStatusType());
         entity.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
                 create.getNewsUserReviewId()));
         entity.setNews(repositoryHelper.getReferenceIfExists(News.class, create.getNewsId()));
@@ -1072,8 +1099,8 @@ public class TranslationService {
         if (patch.getNewsId() != null) {
             newsUserReview.setNews(repositoryHelper.getReferenceIfExists(News.class, patch.getNewsId()));
         }
-        if (patch.getNewsUserReviewStatusType() != null) {
-            newsUserReview.setNewsUserReviewStatusType(patch.getNewsUserReviewStatusType());
+        if (patch.getModeratorTypoReviewStatusType() != null) {
+            newsUserReview.setModeratorTypoReviewStatusType(patch.getModeratorTypoReviewStatusType());
         }
         if (patch.getModeratorId() != null) {
             newsUserReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
@@ -1101,8 +1128,8 @@ public class TranslationService {
         if (patch.getSourceText() != null) {
             newsUserReviewNote.setSourceText(patch.getSourceText());
         }
-        if (patch.getNewsUserReviewStatusType() != null) {
-            newsUserReviewNote.setNewsUserReviewStatusType(patch.getNewsUserReviewStatusType());
+        if (patch.getModeratorTypoReviewStatusType() != null) {
+            newsUserReviewNote.setModeratorTypoReviewStatusType(patch.getModeratorTypoReviewStatusType());
         }
         if (patch.getNewsUserReviewId() != null) {
             newsUserReviewNote.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
@@ -1110,6 +1137,22 @@ public class TranslationService {
         }
         if (patch.getNewsId() != null) {
             newsUserReviewNote.setNews(repositoryHelper.getReferenceIfExists(News.class, patch.getNewsId()));
+        }
+    }
+
+    public void patchEntity(UserTypoRequestPatchDTO patch, UserTypoRequest userTypoRequest) {
+        if (patch.getModeratorId() != null) {
+            userTypoRequest.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    patch.getModeratorId()));
+        }
+        if (patch.getApprovedText() != null) {
+            userTypoRequest.setApprovedText(patch.getApprovedText());
+        }
+        if (patch.getModeratorTypoReviewStatusType() != null) {
+            userTypoRequest.setModeratorTypoReviewStatusType(patch.getModeratorTypoReviewStatusType());
+        }
+        if (patch.getFixAppliedDate() != null) {
+            userTypoRequest.setFixAppliedDate(patch.getFixAppliedDate());
         }
     }
 
@@ -1401,8 +1444,8 @@ public class TranslationService {
         if (put.getNewsId() != null) {
             newsUserReview.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
         }
-        if (put.getNewsUserReviewStatusType() != null) {
-            newsUserReview.setNewsUserReviewStatusType(put.getNewsUserReviewStatusType());
+        if (put.getModeratorTypoReviewStatusType() != null) {
+            newsUserReview.setModeratorTypoReviewStatusType(put.getModeratorTypoReviewStatusType());
         }
         if (put.getModeratorId() != null) {
             newsUserReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
@@ -1425,8 +1468,8 @@ public class TranslationService {
             newsUserReviewNote.setEndIndex(put.getEndIndex());
         }
         newsUserReviewNote.setProposedText(put.getProposedText());
-        if (put.getNewsUserReviewStatusType() != null) {
-            newsUserReviewNote.setNewsUserReviewStatusType(put.getNewsUserReviewStatusType());
+        if (put.getModeratorTypoReviewStatusType() != null) {
+            newsUserReviewNote.setModeratorTypoReviewStatusType(put.getModeratorTypoReviewStatusType());
         }
         if (put.getNewsUserReviewId() != null) {
             newsUserReviewNote.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
@@ -1434,6 +1477,22 @@ public class TranslationService {
         }
         if (put.getNewsId() != null) {
             newsUserReviewNote.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
+        }
+    }
+
+    public void updateEntity(UserTypoRequestPutDTO put, UserTypoRequest userTypoRequest) {
+        if (put.getModeratorId() != null) {
+            userTypoRequest.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getModeratorId()));
+        }
+        if (put.getApprovedText() != null) {
+            userTypoRequest.setApprovedText(put.getApprovedText());
+        }
+        if (put.getModeratorTypoReviewStatusType() != null) {
+            userTypoRequest.setModeratorTypoReviewStatusType(put.getModeratorTypoReviewStatusType());
+        }
+        if (put.getFixAppliedDate() != null) {
+            userTypoRequest.setFixAppliedDate(put.getFixAppliedDate());
         }
     }
 }

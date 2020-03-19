@@ -9,9 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 import solvve.course.domain.News;
 import solvve.course.domain.NewsUserReview;
-import solvve.course.domain.NewsUserReviewStatusType;
 import solvve.course.domain.PortalUser;
 import solvve.course.dto.NewsUserReviewCreateDTO;
 import solvve.course.dto.NewsUserReviewPatchDTO;
@@ -47,7 +47,7 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewReadDTO readDTO = newsUserReviewService.getNewsUserReview(newsUserReview.getId());
         Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(newsUserReview, "portalUserId", "moderatorId",
@@ -70,7 +70,7 @@ public class NewsUserReviewServiceTest {
         NewsUserReviewCreateDTO create = new NewsUserReviewCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setNewsId(news.getId());
-        create.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.createNewsUserReview(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -88,12 +88,12 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewPatchDTO patch = new NewsUserReviewPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setNewsId(news.getId());
-        patch.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patch.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.patchNewsUserReview(newsUserReview.getId(), patch);
 
@@ -112,7 +112,7 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewPatchDTO patch = new NewsUserReviewPatchDTO();
         NewsUserReviewReadDTO read = newsUserReviewService.patchNewsUserReview(newsUserReview.getId(), patch);
@@ -120,14 +120,14 @@ public class NewsUserReviewServiceTest {
         Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getNewsId());
         Assert.assertNotNull(read.getModeratorId());
-        Assert.assertNotNull(read.getNewsUserReviewStatusType());
+        Assert.assertNotNull(read.getModeratorTypoReviewStatusType());
 
         NewsUserReview newsUserReviewAfterUpdate = newsUserReviewRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(newsUserReviewAfterUpdate.getPortalUser());
         Assert.assertNotNull(newsUserReviewAfterUpdate.getNews());
         Assert.assertNotNull(newsUserReviewAfterUpdate.getModerator());
-        Assert.assertNotNull(newsUserReviewAfterUpdate.getNewsUserReviewStatusType());
+        Assert.assertNotNull(newsUserReviewAfterUpdate.getModeratorTypoReviewStatusType());
 
         Assertions.assertThat(newsUserReview).isEqualToIgnoringGivenFields(newsUserReviewAfterUpdate,
                 "portalUser", "moderator", "newsUserReviewNotes", "news");
@@ -143,7 +143,7 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         newsUserReviewService.deleteNewsUserReview(newsUserReview.getId());
         Assert.assertFalse(newsUserReviewRepository.existsById(newsUserReview.getId()));
@@ -159,12 +159,12 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewPutDTO put = new NewsUserReviewPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setNewsId(news.getId());
-        put.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         put.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.updateNewsUserReview(newsUserReview.getId(), put);
 
@@ -183,7 +183,7 @@ public class NewsUserReviewServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewPutDTO put = new NewsUserReviewPutDTO();
         NewsUserReviewReadDTO read = newsUserReviewService.updateNewsUserReview(newsUserReview.getId(), put);
@@ -191,7 +191,7 @@ public class NewsUserReviewServiceTest {
         Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getNewsId());
         Assert.assertNull(read.getModeratorId());
-        Assert.assertNotNull(read.getNewsUserReviewStatusType());
+        Assert.assertNotNull(read.getModeratorTypoReviewStatusType());
 
         testObjectsFactory.inTransaction(() -> {
 
@@ -199,7 +199,7 @@ public class NewsUserReviewServiceTest {
 
             Assert.assertNotNull(newsUserReviewAfterUpdate.getPortalUser().getId());
             Assert.assertNotNull(newsUserReviewAfterUpdate.getNews());
-            Assert.assertNotNull(newsUserReviewAfterUpdate.getNewsUserReviewStatusType());
+            Assert.assertNotNull(newsUserReviewAfterUpdate.getModeratorTypoReviewStatusType());
             Assert.assertNull(newsUserReviewAfterUpdate.getModerator());
 
             Assertions.assertThat(newsUserReview).isEqualToIgnoringGivenFields(newsUserReviewAfterUpdate,

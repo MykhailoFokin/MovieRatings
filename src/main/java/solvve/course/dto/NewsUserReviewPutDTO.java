@@ -1,7 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.NewsUserReviewStatusType;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ public class NewsUserReviewPutDTO {
 
     private UUID newsId;
 
-    private NewsUserReviewStatusType newsUserReviewStatusType;
+    private ModeratorTypoReviewStatusType moderatorTypoReviewStatusType;
 
     private UUID moderatorId;
 }

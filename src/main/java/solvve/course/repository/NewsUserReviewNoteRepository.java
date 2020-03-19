@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import solvve.course.domain.NewsUserReviewNote;
-import solvve.course.domain.NewsUserReviewStatusType;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,21 +23,21 @@ public interface NewsUserReviewNoteRepository extends CrudRepository<NewsUserRev
                                                                             Integer endIndex);
 
     @Query("select n from NewsUserReviewNote n where (n.moderator.id = :userId or n.moderator.id is null)"
-            + " and newsUserReviewStatusType in (:newsUserReviewStatusTypes)"
+            + " and moderatorTypoReviewStatusType in (:moderatorTypoReviewStatusTypes)"
             + " order by n.createdAt asc")
     List<NewsUserReviewNote> findUserReviewNotesByModeratorOrRequiredAttention(UUID userId,
-                                                                               List<NewsUserReviewStatusType>
-                                                                                       newsUserReviewStatusTypes);
+                                                                               List<ModeratorTypoReviewStatusType>
+                                                                                       moderatorTypoReviewStatusTypes);
 
     @Modifying(clearAutomatically = true)
     @Query("update NewsUserReviewNote e"
             + " set e.moderator.id = :moderatorId"
             + " , e.approvedText = :moderatorApprovedText"
             + " , e.updatedAt = :updatedAt"
-            + " , e.newsUserReviewStatusType = :newsUserReviewStatusType"
-            + " where e.news.id = :newsId and e.newsUserReviewStatusType != :newsUserReviewStatusType"
+            + " , e.moderatorTypoReviewStatusType = :moderatorTypoReviewStatusType"
+            + " where e.news.id = :newsId and e.moderatorTypoReviewStatusType != :moderatorTypoReviewStatusType"
             + " and e.id in (:newsUserReviewNotes)")
-    void updateNewsUserReviewNoteWithSameNote(UUID newsId, NewsUserReviewStatusType newsUserReviewStatusType,
+    void updateNewsUserReviewNoteWithSameNote(UUID newsId, ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
                                               UUID moderatorId, String moderatorApprovedText, Instant updatedAt,
                                               List<UUID> newsUserReviewNotes);
 }

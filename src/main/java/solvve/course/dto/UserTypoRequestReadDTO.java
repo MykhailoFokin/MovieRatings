@@ -7,29 +7,31 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Data
-public class NewsUserReviewNoteReadDTO {
+public class UserTypoRequestReadDTO {
 
     private UUID id;
 
+    private UUID requesterId;
+
     private UUID moderatorId;
+
+    private ModeratorTypoReviewStatusType moderatorTypoReviewStatusType;
+
+    private Instant fixAppliedDate;
+
+    private String sourceText;
 
     private String proposedText;
 
     private String approvedText;
 
-    private String sourceText;
+    private UUID newsId;
 
-    private Integer startIndex;
+    private UUID movieId;
 
-    private Integer endIndex;
-
-    private ModeratorTypoReviewStatusType moderatorTypoReviewStatusType;
-
-    private UUID newsUserReviewId;
+    private UUID roleId;
 
     private Instant createdAt;
 
     private Instant updatedAt;
-
-    private UUID newsId;
 }

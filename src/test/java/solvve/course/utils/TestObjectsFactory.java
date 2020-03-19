@@ -729,18 +729,18 @@ public class TestObjectsFactory {
     }
 
     public NewsUserReview createNewsUserReview(PortalUser portalUser, News news, PortalUser moderator,
-                                               NewsUserReviewStatusType newsUserReviewStatusType) {
+                                               ModeratorTypoReviewStatusType moderatorTypoReviewStatusType) {
         NewsUserReview newsUserReview = new NewsUserReview();
         newsUserReview.setPortalUser(portalUser);
         newsUserReview.setNews(news);
-        newsUserReview.setNewsUserReviewStatusType(newsUserReviewStatusType);
+        newsUserReview.setModeratorTypoReviewStatusType(moderatorTypoReviewStatusType);
         newsUserReview.setModerator(moderator);
         return newsUserReviewRepository.save(newsUserReview);
     }
 
     public NewsUserReviewNote createNewsUserReviewNote(PortalUser moderator, NewsUserReview newsUserReview,
                                                        Integer startIndex, Integer endIndex, String proposedText,
-                                                       NewsUserReviewStatusType newsUserReviewStatusType, News news,
+                                                       ModeratorTypoReviewStatusType moderatorTypoReviewStatusType, News news,
                                                        String sourceText) {
         NewsUserReviewNote newsUserReviewNote = new NewsUserReviewNote();
         newsUserReviewNote.setModerator(moderator);
@@ -748,7 +748,7 @@ public class TestObjectsFactory {
         newsUserReviewNote.setStartIndex(startIndex);
         newsUserReviewNote.setEndIndex(endIndex);
         newsUserReviewNote.setProposedText(proposedText);
-        newsUserReviewNote.setNewsUserReviewStatusType(newsUserReviewStatusType);
+        newsUserReviewNote.setModeratorTypoReviewStatusType(moderatorTypoReviewStatusType);
         newsUserReviewNote.setNews(news);
         newsUserReviewNote.setSourceText(sourceText);
         newsUserReviewNote.setApprovedText("ApprText");

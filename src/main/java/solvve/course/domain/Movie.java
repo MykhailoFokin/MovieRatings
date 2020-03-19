@@ -90,4 +90,7 @@ public class Movie {
     private Instant updatedAt;
 
     private Double averageRating;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
+    private Set<UserTypoRequest> userTypoRequests;
 }

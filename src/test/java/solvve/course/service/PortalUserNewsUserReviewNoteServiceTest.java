@@ -53,10 +53,10 @@ public class PortalUserNewsUserReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 0, 14, "Ich reise viel",
-                NewsUserReviewStatusType.IN_REVIEW, news,
+                ModeratorTypoReviewStatusType.IN_REVIEW, news,
                 "Ivh reide vie;");
 
         List<NewsUserReviewNoteReadDTO> readDTO =
@@ -71,31 +71,31 @@ public class PortalUserNewsUserReviewNoteServiceTest {
         News news = testObjectsFactory.createNews(portalUser1,
                 "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
         NewsUserReview newsUserReview1 = testObjectsFactory.createNewsUserReview(portalUser1, news, portalUser1,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote1 = testObjectsFactory.createNewsUserReviewNote(portalUser1,
                 newsUserReview1, 0, 14, "Ich reise viel",
-                NewsUserReviewStatusType.IN_REVIEW, news,
+                ModeratorTypoReviewStatusType.IN_REVIEW, news,
                 "Ivh reide vie;");
 
         NewsUserReview newsUserReview2 = testObjectsFactory.createNewsUserReview(portalUser2, news, portalUser1,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote2 = testObjectsFactory.createNewsUserReviewNote(portalUser1,
                 newsUserReview2, 0, 14, "Ivh reide vie;",
-                NewsUserReviewStatusType.IN_REVIEW, news,
+                ModeratorTypoReviewStatusType.IN_REVIEW, news,
                 "Ivh reide vie;");
 
         NewsUserReview newsUserReview3 = testObjectsFactory.createNewsUserReview(portalUser2, news, portalUser1,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote3 = testObjectsFactory.createNewsUserReviewNote(portalUser1,
                 newsUserReview3, 0, 14, "Ivh reide vie;",
-                NewsUserReviewStatusType.IN_REVIEW, news,
+                ModeratorTypoReviewStatusType.IN_REVIEW, news,
                 "Ivh reide vie;");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
         patch.setApprovedText("Ich reise viel");
         patch.setStartIndex(0);
         patch.setEndIndex(14);
-        patch.setNewsUserReviewStatusType(NewsUserReviewStatusType.FIXED);
+        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
         patch.setModeratorId(portalUser2.getId());
 
         StringBuilder sb = new StringBuilder(news.getDescription());
@@ -109,9 +109,9 @@ public class PortalUserNewsUserReviewNoteServiceTest {
 
         Assertions.assertThat(newsAfterUpdate.getDescription()).isEqualTo(sb.toString());
         Assertions.assertThat(read.getModeratorId()).isEqualTo(portalUser2.getId());
-        Assertions.assertThat(read.getNewsUserReviewStatusType()).isEqualTo(patch.getNewsUserReviewStatusType());
+        Assertions.assertThat(read.getModeratorTypoReviewStatusType()).isEqualTo(patch.getModeratorTypoReviewStatusType());
 
-        Assert.assertFalse(getNewsUserReviewNotesWithSameIndexes(news.getId(), read.getNewsUserReviewStatusType()
+        Assert.assertFalse(getNewsUserReviewNotesWithSameIndexes(news.getId(), read.getModeratorTypoReviewStatusType()
                 , List.of(newsUserReviewNote2.getId(), newsUserReviewNote3.getId())));
     }
 
@@ -121,14 +121,14 @@ public class PortalUserNewsUserReviewNoteServiceTest {
         News news = testObjectsFactory.createNews(portalUser,
                 "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 0, 14, "Ivh reide vie;",
-                NewsUserReviewStatusType.FIXED, news,
+                ModeratorTypoReviewStatusType.FIXED, news,
                 "Ich reise viel, ich reise gern. Fern und nah und nah und fern");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
-        patch.setNewsUserReviewStatusType(NewsUserReviewStatusType.FIXED);
+        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
         patch.setApprovedText("new approved text");
 
         Assertions.assertThatThrownBy(()-> portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUser.getId(),
@@ -136,13 +136,13 @@ public class PortalUserNewsUserReviewNoteServiceTest {
     }
 
     private Boolean getNewsUserReviewNotesWithSameIndexes(UUID newsId,
-                                                          NewsUserReviewStatusType newsUserReviewStatusType,
+                                                          ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
                                                           List<UUID> newsUserReviewNotesIds) {
         Query query = entityManager.createQuery("select count(e) from NewsUserReviewNote e"
-                + " where e.news.id = :newsId and e.newsUserReviewStatusType != :newsUserReviewStatusType"
+                + " where e.news.id = :newsId and e.moderatorTypoReviewStatusType != :moderatorTypoReviewStatusType"
                 + " and e.id in (:newsUserReviewNotes)");
         query.setParameter("newsId", newsId);
-        query.setParameter("newsUserReviewStatusType", newsUserReviewStatusType);
+        query.setParameter("moderatorTypoReviewStatusType", moderatorTypoReviewStatusType);
         query.setParameter("newsUserReviewNotes", newsUserReviewNotesIds);
         return ((Number) query.getSingleResult()).intValue() > 0;
     }

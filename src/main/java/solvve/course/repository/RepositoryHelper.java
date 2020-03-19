@@ -1,7 +1,7 @@
 package solvve.course.repository;
 
 import org.springframework.stereotype.Component;
-import solvve.course.domain.NewsUserReviewStatusType;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 import solvve.course.exception.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
@@ -31,11 +31,11 @@ public class RepositoryHelper {
     }
 
     public <E> boolean validateIfExistsNotNewsUserReviewStatus(Class<E> entityClass, UUID id,
-                                                               NewsUserReviewStatusType newsUserReviewStatusType) {
+                                                               ModeratorTypoReviewStatusType moderatorTypoReviewStatusType) {
         Query query = entityManager.createQuery("select count(e) from " + entityClass.getSimpleName()
-                + " e where e.id = :id and e.newsUserReviewStatusType != :newsUserReviewStatusType");
+                + " e where e.id = :id and e.moderatorTypoReviewStatusType != :moderatorTypoReviewStatusType");
         query.setParameter("id", id);
-        query.setParameter("newsUserReviewStatusType", newsUserReviewStatusType);
+        query.setParameter("moderatorTypoReviewStatusType", moderatorTypoReviewStatusType);
         return ((Number) query.getSingleResult()).intValue() > 0;
     }
 }

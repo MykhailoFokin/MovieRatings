@@ -43,10 +43,10 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         List<NewsUserReviewNoteReadDTO> readDTO =
                 newsUserReviewReviewNoteService.getNewsUserReviewUserReviewNote(news.getId(), newsUserReview.getId());
@@ -63,14 +63,14 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
 
         NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
         create.setNewsUserReviewId(newsUserReview.getId());
         create.setStartIndex(10);
         create.setEndIndex(50);
         create.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        create.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setModeratorId(portalUser.getId());
         create.setNewsId(news.getId());
         create.setSourceText("Ich reise viel");
@@ -93,17 +93,17 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
         patch.setNewsUserReviewId(newsUserReview.getId());
         patch.setStartIndex(10);
         patch.setEndIndex(50);
         patch.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        patch.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patch.setModeratorId(portalUser.getId());
         patch.setSourceText("Ich reise viel");
         patch.setNewsId(news.getId());
@@ -127,10 +127,10 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
         NewsUserReviewNoteReadDTO read =
@@ -141,7 +141,7 @@ public class NewsUserReviewReviewNoteServiceTest {
         Assert.assertNotNull(read.getStartIndex());
         Assert.assertNotNull(read.getEndIndex());
         Assert.assertNotNull(read.getProposedText());
-        Assert.assertNotNull(read.getNewsUserReviewStatusType());
+        Assert.assertNotNull(read.getModeratorTypoReviewStatusType());
         Assert.assertNotNull(read.getModeratorId());
         Assert.assertNotNull(read.getNewsId());
         Assert.assertNotNull(read.getApprovedText());
@@ -153,7 +153,7 @@ public class NewsUserReviewReviewNoteServiceTest {
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getStartIndex());
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getEndIndex());
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getProposedText());
-        Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getNewsUserReviewStatusType());
+        Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getModeratorTypoReviewStatusType());
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getModerator());
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getNews());
         Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getApprovedText());
@@ -174,10 +174,10 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         newsUserReviewReviewNoteService.deleteNewsUserReviewReviewNote(news.getId(), newsUserReview.getId(),
                 newsUserReviewNote.getId());
@@ -195,17 +195,17 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
         put.setNewsUserReviewId(newsUserReview.getId());
         put.setStartIndex(10);
         put.setEndIndex(50);
         put.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        put.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         put.setModeratorId(portalUser.getId());
         put.setSourceText("Ich reise viel");
         put.setNewsId(news.getId());
@@ -229,10 +229,10 @@ public class NewsUserReviewReviewNoteServiceTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
-                NewsUserReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
-                NewsUserReviewStatusType.IN_REVIEW, news, "Ich reise viel");
+                ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
         NewsUserReviewNoteReadDTO read =
@@ -244,7 +244,7 @@ public class NewsUserReviewReviewNoteServiceTest {
         Assert.assertNotNull(read.getStartIndex());
         Assert.assertNotNull(read.getEndIndex());
         Assert.assertNotNull(read.getNewsUserReviewId());
-        Assert.assertNotNull(read.getNewsUserReviewStatusType());
+        Assert.assertNotNull(read.getModeratorTypoReviewStatusType());
 
         testObjectsFactory.inTransaction(() -> {
 
@@ -255,7 +255,7 @@ public class NewsUserReviewReviewNoteServiceTest {
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getNewsUserReview().getId());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getStartIndex());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getEndIndex());
-            Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getNewsUserReviewStatusType());
+            Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getModeratorTypoReviewStatusType());
 
             Assertions.assertThat(newsUserReviewNote).isEqualToIgnoringGivenFields(newsUserReviewNoteAfterUpdate,
                     "moderator", "updatedAt", "newsUserReview", "proposedText", "startIndex", "endIndex", "news");

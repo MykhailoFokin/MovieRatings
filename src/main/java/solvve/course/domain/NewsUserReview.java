@@ -30,7 +30,7 @@ public class NewsUserReview {
     private News news;
 
     @Enumerated(EnumType.STRING)
-    private NewsUserReviewStatusType newsUserReviewStatusType;
+    private ModeratorTypoReviewStatusType moderatorTypoReviewStatusType;
 
     @ManyToOne
     @JoinColumn(name = "moderator_id", referencedColumnName = "id")

@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.NewsUserReviewNote;
-import solvve.course.domain.NewsUserReviewStatusType;
+import solvve.course.domain.ModeratorTypoReviewStatusType;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.NewsUserReviewReviewNoteService;
@@ -99,7 +99,7 @@ public class NewsUserReviewReviewNoteControllerTest {
         create.setStartIndex(10);
         create.setEndIndex(50);
         create.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        create.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setNewsUserReviewId(newsUserReview.getId());
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
@@ -128,7 +128,7 @@ public class NewsUserReviewReviewNoteControllerTest {
         patchDTO.setStartIndex(10);
         patchDTO.setEndIndex(50);
         patchDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        patchDTO.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        patchDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patchDTO.setNewsUserReviewId(newsUserReview.getId());
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
@@ -168,7 +168,7 @@ public class NewsUserReviewReviewNoteControllerTest {
         putDTO.setStartIndex(10);
         putDTO.setEndIndex(50);
         putDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        putDTO.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        putDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         putDTO.setNewsUserReviewId(newsUserReview.getId());
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
@@ -196,7 +196,7 @@ public class NewsUserReviewReviewNoteControllerTest {
         newsUserReviewNoteReadDTO.setStartIndex(10);
         newsUserReviewNoteReadDTO.setEndIndex(50);
         newsUserReviewNoteReadDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        newsUserReviewNoteReadDTO.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        newsUserReviewNoteReadDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
 
         return newsUserReviewNoteReadDTO;
     }
@@ -204,7 +204,7 @@ public class NewsUserReviewReviewNoteControllerTest {
     private NewsUserReviewReadDTO createNewsUserReview() {
         NewsUserReviewReadDTO newsUserReviewReadDTO = new NewsUserReviewReadDTO();
         newsUserReviewReadDTO.setId(UUID.randomUUID());
-        newsUserReviewReadDTO.setNewsUserReviewStatusType(NewsUserReviewStatusType.IN_REVIEW);
+        newsUserReviewReadDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         newsUserReviewReadDTO.setPortalUserId(UUID.randomUUID());
         newsUserReviewReadDTO.setNewsId(UUID.randomUUID());
         newsUserReviewReadDTO.setModeratorId(UUID.randomUUID());

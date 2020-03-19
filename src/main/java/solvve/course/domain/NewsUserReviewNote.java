@@ -39,7 +39,7 @@ public class NewsUserReviewNote {
     private Integer endIndex;
 
     @Enumerated(EnumType.STRING)
-    private NewsUserReviewStatusType newsUserReviewStatusType;
+    private ModeratorTypoReviewStatusType moderatorTypoReviewStatusType;
 
     @ManyToOne
     @JoinColumn(name = "news_user_review_id", referencedColumnName = "id")

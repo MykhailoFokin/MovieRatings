@@ -55,4 +55,7 @@ public class Role {
     private Instant updatedAt;
 
     private Double averageRating;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
+    private Set<UserTypoRequest> userTypoRequests;
 }

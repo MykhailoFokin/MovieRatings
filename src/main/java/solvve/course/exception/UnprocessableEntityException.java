@@ -10,7 +10,7 @@ public class UnprocessableEntityException extends RuntimeException {
 
     public UnprocessableEntityException(Class entityClass, UUID id) {
 
-        super(String.format("Entity %s with id=%s is already fixed! Please reload the data!",
+        super(String.format("Entity %s with id=%s cannot be fixed! Please reload and take a look on the data!",
                 entityClass.getSimpleName(),
                 id));
     }
