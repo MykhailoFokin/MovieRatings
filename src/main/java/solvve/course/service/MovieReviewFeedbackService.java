@@ -25,23 +25,23 @@ public class MovieReviewFeedbackService {
     @Transactional(readOnly = true)
     public MovieReviewFeedbackReadDTO getMovieReviewFeedback(UUID id) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     public MovieReviewFeedbackReadDTO createMovieReviewFeedback(MovieReviewFeedbackCreateDTO create) {
-        MovieReviewFeedback movieReviewFeedback = translationService.toEntity(create);
+        MovieReviewFeedback movieReviewFeedback = translationService.translate(create, MovieReviewFeedback.class);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     public MovieReviewFeedbackReadDTO patchMovieReviewFeedback(UUID id, MovieReviewFeedbackPatchDTO patch) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewFeedbackRequired(id);
 
-        translationService.patchEntity(patch, movieReviewFeedback);
+        translationService.map(patch, movieReviewFeedback);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     public void deleteMovieReviewFeedback(UUID id) {
@@ -54,7 +54,7 @@ public class MovieReviewFeedbackService {
         translationService.updateEntity(put, movieReviewFeedback);
 
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     private MovieReviewFeedback getMovieReviewFeedbackRequired(UUID id) {

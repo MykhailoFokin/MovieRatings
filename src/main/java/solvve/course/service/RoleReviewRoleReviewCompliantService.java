@@ -32,25 +32,26 @@ public class RoleReviewRoleReviewCompliantService {
     @Transactional(readOnly = true)
     public List<RoleReviewCompliantReadDTO> getRoleReviewRoleReviewCompliant(UUID roleReviewId) {
         List<RoleReviewCompliant> roleReviewCompliants = getRoleReviewRoleReviewCompliantsRequired(roleReviewId);
-        return roleReviewCompliants.stream().map(translationService::toRead).collect(Collectors.toList());
+        return roleReviewCompliants.stream().map(e ->
+                translationService.translate(e, RoleReviewCompliantReadDTO.class)).collect(Collectors.toList());
     }
 
     public RoleReviewCompliantReadDTO createRoleReviewRoleReviewCompliant(UUID roleReviewId,
                                                                           RoleReviewCompliantCreateDTO create) {
-        RoleReviewCompliant roleReviewCompliant = translationService.toEntity(create);
+        RoleReviewCompliant roleReviewCompliant = translationService.translate(create, RoleReviewCompliant.class);
         roleReviewCompliant.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
 
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     public RoleReviewCompliantReadDTO patchRoleReviewRoleReviewCompliant(UUID roleReviewId, UUID id,
                                                                          RoleReviewCompliantPatchDTO patch) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewRoleReviewCompliantRequired(roleReviewId, id);
-        translationService.patchEntity(patch, roleReviewCompliant);
+        translationService.map(patch, roleReviewCompliant);
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
 
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     public void deleteRoleReviewRoleReviewCompliant(UUID roleReviewId, UUID id) {
@@ -63,7 +64,7 @@ public class RoleReviewRoleReviewCompliantService {
         translationService.updateEntity(put, roleReviewCompliant);
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
 
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     private RoleReviewCompliant getRoleReviewRoleReviewCompliantRequired(UUID roleReviewId, UUID id) {

@@ -25,23 +25,23 @@ public class NewsService {
     @Transactional(readOnly = true)
     public NewsReadDTO getNews(UUID id) {
         News news = getNewsRequired(id);
-        return translationService.toRead(news);
+        return translationService.translate(news, NewsReadDTO.class);
     }
 
     public NewsReadDTO createNews(NewsCreateDTO create) {
-        News news = translationService.toEntity(create);
+        News news = translationService.translate(create, News.class);
 
         news = newsRepository.save(news);
-        return translationService.toRead(news);
+        return translationService.translate(news, NewsReadDTO.class);
     }
 
     public NewsReadDTO patchNews(UUID id, NewsPatchDTO patch) {
         News news = getNewsRequired(id);
 
-        translationService.patchEntity(patch, news);
+        translationService.map(patch, news);
 
         news = newsRepository.save(news);
-        return translationService.toRead(news);
+        return translationService.translate(news, NewsReadDTO.class);
     }
 
     private News getNewsRequired(UUID id) {
@@ -60,6 +60,6 @@ public class NewsService {
         translationService.updateEntity(put, news);
 
         news = newsRepository.save(news);
-        return translationService.toRead(news);
+        return translationService.translate(news, NewsReadDTO.class);
     }
 }

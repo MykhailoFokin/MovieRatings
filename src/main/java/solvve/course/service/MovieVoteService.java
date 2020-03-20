@@ -24,23 +24,23 @@ public class MovieVoteService {
     @Transactional(readOnly = true)
     public MovieVoteReadDTO getMovieVote(UUID id) {
         MovieVote movieVote = getMovieVoteRequired(id);
-        return translationService.toRead(movieVote);
+        return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 
     public MovieVoteReadDTO createMovieVote(MovieVoteCreateDTO create) {
-        MovieVote movieVote = translationService.toEntity(create);
+        MovieVote movieVote = translationService.translate(create, MovieVote.class);
 
         movieVote = movieVoteRepository.save(movieVote);
-        return translationService.toRead(movieVote);
+        return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 
     public MovieVoteReadDTO patchMovieVote(UUID id, MovieVotePatchDTO patch) {
         MovieVote movieVote = getMovieVoteRequired(id);
 
-        translationService.patchEntity(patch, movieVote);
+        translationService.map(patch, movieVote);
 
         movieVote = movieVoteRepository.save(movieVote);
-        return translationService.toRead(movieVote);
+        return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 
     private MovieVote getMovieVoteRequired(UUID id) {
@@ -59,6 +59,6 @@ public class MovieVoteService {
         translationService.updateEntity(put, movieVote);
 
         movieVote = movieVoteRepository.save(movieVote);
-        return translationService.toRead(movieVote);
+        return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 }

@@ -31,23 +31,23 @@ public class MovieService {
     @Transactional(readOnly = true)
     public MovieReadDTO getMovie(UUID id) {
         Movie movie = getMovieRequired(id);
-        return translationService.toRead(movie);
+        return translationService.translate(movie, MovieReadDTO.class);
     }
 
     public MovieReadDTO createMovie(MovieCreateDTO create) {
-        Movie movie = translationService.toEntity(create);
+        Movie movie = translationService.translate(create, Movie.class);
 
         movie = movieRepository.save(movie);
-        return translationService.toRead(movie);
+        return translationService.translate(movie, MovieReadDTO.class);
     }
 
     public MovieReadDTO patchMovie(UUID id, MoviePatchDTO patch) {
         Movie movie = getMovieRequired(id);
 
-        translationService.patchEntity(patch, movie);
+        translationService.map(patch, movie);
 
         movie = movieRepository.save(movie);
-        return translationService.toRead(movie);
+        return translationService.translate(movie, MovieReadDTO.class);
     }
 
     public void deleteMovie(UUID id) {
@@ -60,12 +60,13 @@ public class MovieService {
         translationService.updateEntity(put, movie);
 
         movie = movieRepository.save(movie);
-        return translationService.toRead(movie);
+        return translationService.translate(movie, MovieReadDTO.class);
     }
 
-    public List<MovieReadExtendedDTO> getMovies(MovieFilter filter) {
+    public List<MovieReadDTO> getMovies(MovieFilter filter) {
         List<Movie> movies = movieRepository.findByFilter(filter);
-        return movies.stream().map(translationService::toReadExtended).collect(Collectors.toList());
+        return movies.stream().map(e -> translationService.translate(e, MovieReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

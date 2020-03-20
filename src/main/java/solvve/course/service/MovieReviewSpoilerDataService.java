@@ -34,25 +34,26 @@ public class MovieReviewSpoilerDataService {
                     throw new EntityNotFoundException(MovieSpoilerData.class, movieReviewId);
                 });
 
-        return movieSpoilerData.stream().map(translationService::toRead).collect(Collectors.toList());
+        return movieSpoilerData.stream().map(e -> translationService.translate(e, MovieSpoilerDataReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     public MovieSpoilerDataReadDTO createMovieReviewSpoilerData(UUID movieReviewId, MovieSpoilerDataCreateDTO create) {
-        MovieSpoilerData movieSpoilerData = translationService.toEntity(create);
+        MovieSpoilerData movieSpoilerData = translationService.translate(create, MovieSpoilerData.class);
         movieSpoilerData.setMovieReview(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
 
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     public MovieSpoilerDataReadDTO patchMovieReviewSpoilerData(UUID movieReviewId,
                                                                UUID id,
                                                                MovieSpoilerDataPatchDTO patch) {
         MovieSpoilerData movieSpoilerData = getMovieReviewSpoilerDataRequired(movieReviewId, id);
-        translationService.patchEntity(patch, movieSpoilerData);
+        translationService.map(patch, movieSpoilerData);
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
 
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     public void deleteMovieReviewSpoilerData(UUID movieReviewId, UUID id) {
@@ -65,7 +66,7 @@ public class MovieReviewSpoilerDataService {
         translationService.updateEntity(put, movieSpoilerData);
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
 
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     private MovieSpoilerData getMovieReviewSpoilerDataRequired(UUID movieReviewId, UUID id) {

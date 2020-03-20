@@ -1,0 +1,49 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create table user_typo_request" author="mykhailo">
+        <createTable tableName="user_typo_request">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name = "requester_id" type="uuid"/>
+            <column name = "moderator_id" type="uuid"/>
+            <column name = "moderator_typo_review_status_type" type="varchar(15)"/>
+            <column name = "fix_applied_date" type="datetime"/>
+            <column name = "source_text" type="varchar(1000)"/>
+            <column name = "proposed_text" type="varchar(1000)"/>
+            <column name = "approved_text" type="varchar(1000)"/>
+            <column name = "news_id" type="uuid"/>
+            <column name = "movie_id" type="uuid"/>
+            <column name = "role_id" type="uuid"/>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="drop news_user_review_status_type column to news_user_review" author="mykhailo">
+        <dropColumn tableName="news_user_review">
+            <column name="news_user_review_status_type"/>
+        </dropColumn>
+    </changeSet>
+    <changeSet id="drop news_user_review_status_type column to news_user_review_note" author="mykhailo">
+        <dropColumn tableName="news_user_review_note">
+            <column name="news_user_review_status_type"/>
+        </dropColumn>
+    </changeSet>
+    <changeSet id="add moderator_typo_review_status_type column to news_user_review" author="mykhailo">
+        <addColumn tableName="news_user_review">
+            <column name="moderator_typo_review_status_type" type="varchar(15)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add moderator_typo_review_status_type column to news_user_review_note" author="mykhailo">
+        <addColumn tableName="news_user_review_note">
+            <column name="moderator_typo_review_status_type" type="varchar(15)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

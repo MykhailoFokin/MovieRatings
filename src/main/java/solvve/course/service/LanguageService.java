@@ -25,23 +25,23 @@ public class LanguageService {
     @Transactional(readOnly = true)
     public LanguageReadDTO getLanguage(UUID id) {
         Language language = getLanguageRequired(id);
-        return translationService.toRead(language);
+        return translationService.translate(language, LanguageReadDTO.class);
     }
 
     public LanguageReadDTO createLanguage(LanguageCreateDTO create) {
-        Language language = translationService.toEntity(create);
+        Language language = translationService.translate(create, Language.class);
 
         language = languageRepository.save(language);
-        return translationService.toRead(language);
+        return translationService.translate(language, LanguageReadDTO.class);
     }
 
     public LanguageReadDTO patchLanguage(UUID id, LanguagePatchDTO patch) {
         Language language = getLanguageRequired(id);
 
-        translationService.patchEntity(patch, language);
+        translationService.map(patch, language);
 
         language = languageRepository.save(language);
-        return translationService.toRead(language);
+        return translationService.translate(language, LanguageReadDTO.class);
     }
 
     public void deleteLanguage(UUID id) {
@@ -54,7 +54,7 @@ public class LanguageService {
         translationService.updateEntity(put, language);
 
         language = languageRepository.save(language);
-        return translationService.toRead(language);
+        return translationService.translate(language, LanguageReadDTO.class);
     }
 
     private Language getLanguageRequired(UUID id) {

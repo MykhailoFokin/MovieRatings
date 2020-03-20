@@ -25,23 +25,23 @@ public class RoleReviewFeedbackService {
     @Transactional(readOnly = true)
     public RoleReviewFeedbackReadDTO getRoleReviewFeedback(UUID id) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewFeedbackRequired(id);
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     public RoleReviewFeedbackReadDTO createRoleReviewFeedback(RoleReviewFeedbackCreateDTO create) {
-        RoleReviewFeedback roleReviewFeedback = translationService.toEntity(create);
+        RoleReviewFeedback roleReviewFeedback = translationService.translate(create, RoleReviewFeedback.class);
 
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(UUID id, RoleReviewFeedbackPatchDTO patch) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewFeedbackRequired(id);
 
-        translationService.patchEntity(patch, roleReviewFeedback);
+        translationService.map(patch, roleReviewFeedback);
 
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     public void deleteRoleReviewFeedback(UUID id) {
@@ -54,7 +54,7 @@ public class RoleReviewFeedbackService {
         translationService.updateEntity(put, roleReviewFeedback);
 
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     private RoleReviewFeedback getRoleReviewFeedbackRequired(UUID id) {

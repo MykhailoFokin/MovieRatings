@@ -36,24 +36,25 @@ public class RoleReviewSpoilerDataService {
                     throw new EntityNotFoundException(RoleSpoilerData.class, roleReviewId);
                 });
 
-        return roleSpoilerDatas.stream().map(translationService::toRead).collect(Collectors.toList());
+        return roleSpoilerDatas.stream().map(e ->
+                translationService.translate(e, RoleSpoilerDataReadDTO.class)).collect(Collectors.toList());
     }
 
     public RoleSpoilerDataReadDTO createRoleReviewSpoilerData(UUID roleReviewId, RoleSpoilerDataCreateDTO create) {
-        RoleSpoilerData roleSpoilerData = translationService.toEntity(create);
+        RoleSpoilerData roleSpoilerData = translationService.translate(create, RoleSpoilerData.class);
         roleSpoilerData.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
 
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     public RoleSpoilerDataReadDTO patchRoleReviewSpoilerData(UUID roleReviewId, UUID id,
                                                              RoleSpoilerDataPatchDTO patch) {
         RoleSpoilerData roleSpoilerData = getRoleReviewSpoilerDataRequired(roleReviewId, id);
-        translationService.patchEntity(patch, roleSpoilerData);
+        translationService.map(patch, roleSpoilerData);
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
 
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     public void deleteRoleReviewSpoilerData(UUID roleReviewId, UUID id) {
@@ -65,7 +66,7 @@ public class RoleReviewSpoilerDataService {
         translationService.updateEntity(put, roleSpoilerData);
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
 
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     private RoleSpoilerData getRoleReviewSpoilerDataRequired(UUID roleReviewId, UUID id) {

@@ -97,7 +97,7 @@ public class RoleServiceTest {
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
                 "movie","person", "roleReviews",
-                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes","userTypoRequests");
         Assertions.assertThat(role.getPerson().getId()).isEqualTo(read.getPersonId());
     }
 
@@ -122,7 +122,7 @@ public class RoleServiceTest {
 
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(roleAfterUpdate,
                 "movie","person", "roleReviews",
-                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes","userTypoRequests");
     }
 
     @Test
@@ -159,7 +159,7 @@ public class RoleServiceTest {
         role = roleRepository.findById(read.getId()).get();
         Assertions.assertThat(role).isEqualToIgnoringGivenFields(read,
                 "movie","person", "roleReviews",
-                "roleReviewCompliants","roleReviewFeedbacks","roleVotes");
+                "roleReviewCompliants","roleReviewFeedbacks","roleVotes","userTypoRequests");
         Assertions.assertThat(role.getPerson().getId()).isEqualTo(read.getPersonId());
     }
 

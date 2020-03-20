@@ -2,25 +2,15 @@ package solvve.course.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class PortalUser {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class PortalUser extends AbstractEntity {
 
     private String login;
 
@@ -90,10 +80,4 @@ public class PortalUser {
 
     @OneToMany(mappedBy = "moderator", cascade = CascadeType.PERSIST)
     private Set<NewsUserReviewNote> newsUserReviewNotes = new HashSet<NewsUserReviewNote>();
-
-    @CreatedDate
-    private Instant createdAt;
-
-    @LastModifiedDate
-    private Instant updatedAt;
 }

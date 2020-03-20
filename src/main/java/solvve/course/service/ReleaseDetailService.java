@@ -25,23 +25,23 @@ public class ReleaseDetailService {
     @Transactional(readOnly = true)
     public ReleaseDetailReadDTO getReleaseDetails(UUID id) {
         ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
-        return translationService.toRead(releaseDetail);
+        return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 
     public ReleaseDetailReadDTO createReleaseDetails(ReleaseDetailCreateDTO create) {
-        ReleaseDetail releaseDetail = translationService.toEntity(create);
+        ReleaseDetail releaseDetail = translationService.translate(create, ReleaseDetail.class);
 
         releaseDetail = releaseDetailRepository.save(releaseDetail);
-        return translationService.toRead(releaseDetail);
+        return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 
     public ReleaseDetailReadDTO patchReleaseDetails(UUID id, ReleaseDetailPatchDTO patch) {
         ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
 
-        translationService.patchEntity(patch, releaseDetail);
+        translationService.map(patch, releaseDetail);
 
         releaseDetail = releaseDetailRepository.save(releaseDetail);
-        return translationService.toRead(releaseDetail);
+        return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 
     private ReleaseDetail getReleaseDetailsRequired(UUID id) {
@@ -60,6 +60,6 @@ public class ReleaseDetailService {
         translationService.updateEntity(put, releaseDetail);
 
         releaseDetail = releaseDetailRepository.save(releaseDetail);
-        return translationService.toRead(releaseDetail);
+        return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 }

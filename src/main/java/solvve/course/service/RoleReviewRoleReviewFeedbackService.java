@@ -32,25 +32,26 @@ public class RoleReviewRoleReviewFeedbackService {
     @Transactional(readOnly = true)
     public List<RoleReviewFeedbackReadDTO> getRoleReviewRoleReviewFeedback(UUID roleReviewId) {
         List<RoleReviewFeedback> roleReviewFeedbacks = getRoleReviewRoleReviewFeedbacksRequired(roleReviewId);
-        return roleReviewFeedbacks.stream().map(translationService::toRead).collect(Collectors.toList());
+        return roleReviewFeedbacks.stream().map(e ->
+                translationService.translate(e, RoleReviewFeedbackReadDTO.class)).collect(Collectors.toList());
     }
 
     public RoleReviewFeedbackReadDTO createRoleReviewRoleReviewFeedback(UUID roleReviewId,
                                                                         RoleReviewFeedbackCreateDTO create) {
-        RoleReviewFeedback roleReviewFeedback = translationService.toEntity(create);
+        RoleReviewFeedback roleReviewFeedback = translationService.translate(create, RoleReviewFeedback.class);
         roleReviewFeedback.setRoleReview(repositoryHelper.getReferenceIfExists(RoleReview.class, roleReviewId));
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
 
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     public RoleReviewFeedbackReadDTO patchRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id,
                                                                        RoleReviewFeedbackPatchDTO patch) {
         RoleReviewFeedback roleReviewFeedback = getRoleReviewRoleReviewFeedbackRequired(roleReviewId, id);
-        translationService.patchEntity(patch, roleReviewFeedback);
+        translationService.map(patch, roleReviewFeedback);
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
 
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     public void deleteRoleReviewRoleReviewFeedback(UUID roleReviewId, UUID id) {
@@ -63,7 +64,7 @@ public class RoleReviewRoleReviewFeedbackService {
         translationService.updateEntity(put, roleReviewFeedback);
         roleReviewFeedback = roleReviewFeedbackRepository.save(roleReviewFeedback);
 
-        return translationService.toRead(roleReviewFeedback);
+        return translationService.translate(roleReviewFeedback, RoleReviewFeedbackReadDTO.class);
     }
 
     private RoleReviewFeedback getRoleReviewRoleReviewFeedbackRequired(UUID roleReviewId, UUID id) {

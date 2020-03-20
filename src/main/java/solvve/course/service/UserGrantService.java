@@ -25,23 +25,23 @@ public class UserGrantService {
     @Transactional(readOnly = true)
     public UserGrantReadDTO getGrants(UUID id) {
         UserGrant userGrant = getGrantsRequired(id);
-        return translationService.toRead(userGrant);
+        return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 
     public UserGrantReadDTO createGrants(UserGrantCreateDTO create) {
-        UserGrant userGrant = translationService.toEntity(create);
+        UserGrant userGrant = translationService.translate(create, UserGrant.class);
 
         userGrant = userGrantRepository.save(userGrant);
-        return translationService.toRead(userGrant);
+        return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 
     public UserGrantReadDTO patchGrants(UUID id, UserGrantPatchDTO patch) {
         UserGrant userGrant = getGrantsRequired(id);
 
-        translationService.patchEntity(patch, userGrant);
+        translationService.map(patch, userGrant);
 
         userGrant = userGrantRepository.save(userGrant);
-        return translationService.toRead(userGrant);
+        return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 
     private UserGrant getGrantsRequired(UUID id) {
@@ -60,6 +60,6 @@ public class UserGrantService {
         translationService.updateEntity(put, userGrant);
 
         userGrant = userGrantRepository.save(userGrant);
-        return translationService.toRead(userGrant);
+        return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 }

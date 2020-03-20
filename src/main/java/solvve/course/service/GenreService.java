@@ -24,23 +24,23 @@ public class GenreService {
     @Transactional(readOnly = true)
     public GenreReadDTO getGenre(UUID id) {
         Genre genre = getGenreRequired(id);
-        return translationService.toRead(genre);
+        return translationService.translate(genre, GenreReadDTO.class);
     }
 
     public GenreReadDTO createGenre(GenreCreateDTO create) {
-        Genre genre = translationService.toEntity(create);
+        Genre genre = translationService.translate(create, Genre.class);
 
         genre = genreRepository.save(genre);
-        return translationService.toRead(genre);
+        return translationService.translate(genre, GenreReadDTO.class);
     }
 
     public GenreReadDTO patchGenre(UUID id, GenrePatchDTO patch) {
         Genre genre = getGenreRequired(id);
 
-        translationService.patchEntity(patch, genre);
+        translationService.map(patch, genre);
 
         genre = genreRepository.save(genre);
-        return translationService.toRead(genre);
+        return translationService.translate(genre, GenreReadDTO.class);
     }
 
     public void deleteGenre(UUID id) {
@@ -53,12 +53,13 @@ public class GenreService {
         translationService.updateEntity(put, genre);
 
         genre = genreRepository.save(genre);
-        return translationService.toRead(genre);
+        return translationService.translate(genre, GenreReadDTO.class);
     }
 
     public List<GenreReadDTO> getGenres(GenreFilter genreFilter) {
         List<Genre> genres = genreRepository.findByFilter(genreFilter);
-        return genres.stream().map(translationService::toRead).collect(Collectors.toList());
+        return genres.stream().map(e -> translationService.translate(e, GenreReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     private Genre getGenreRequired(UUID id) {

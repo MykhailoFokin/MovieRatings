@@ -25,23 +25,23 @@ public class NewsUserReviewNoteService {
     @Transactional(readOnly = true)
     public NewsUserReviewNoteReadDTO getNewsUserReviewNote(UUID id) {
         NewsUserReviewNote newsUserReviewNote = getNewsUserReviewNotesRequired(id);
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public NewsUserReviewNoteReadDTO createNewsUserReviewNote(NewsUserReviewNoteCreateDTO create) {
-        NewsUserReviewNote newsUserReviewNote = translationService.toEntity(create);
+        NewsUserReviewNote newsUserReviewNote = translationService.translate(create, NewsUserReviewNote.class);
 
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public NewsUserReviewNoteReadDTO patchNewsUserReviewNote(UUID id, NewsUserReviewNotePatchDTO patch) {
         NewsUserReviewNote newsUserReviewNote = getNewsUserReviewNotesRequired(id);
 
-        translationService.patchEntity(patch, newsUserReviewNote);
+        translationService.map(patch, newsUserReviewNote);
 
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public void deleteNewsUserReviewNote(UUID id) {
@@ -54,7 +54,7 @@ public class NewsUserReviewNoteService {
         translationService.updateEntity(put, newsUserReviewNote);
 
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     private NewsUserReviewNote getNewsUserReviewNotesRequired(UUID id) {

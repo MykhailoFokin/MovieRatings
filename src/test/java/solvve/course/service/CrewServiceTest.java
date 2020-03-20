@@ -84,12 +84,14 @@ public class CrewServiceTest {
         CrewReadDTO read = crewService.createCrew(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
-        Crew crew = crewRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(crew,
-                "movieId", "personId", "crewTypeId");
-        Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovie().getId());
-        Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPerson().getId());
-        Assertions.assertThat(read.getCrewTypeId()).isEqualToIgnoringGivenFields(crew.getCrewType().getId());
+        testObjectsFactory.inTransaction(() -> {
+            Crew crew = crewRepository.findById(read.getId()).get();
+            Assertions.assertThat(read).isEqualToIgnoringGivenFields(crew,
+                    "movieId", "personId", "crewTypeId");
+            Assertions.assertThat(read.getMovieId()).isEqualToIgnoringGivenFields(crew.getMovie().getId());
+            Assertions.assertThat(read.getPersonId()).isEqualToIgnoringGivenFields(crew.getPerson().getId());
+            Assertions.assertThat(read.getCrewTypeId()).isEqualToIgnoringGivenFields(crew.getCrewType().getId());
+        });
     }
 
     @Test
@@ -145,7 +147,8 @@ public class CrewServiceTest {
                     "person", "movie", "crewType");
             Assertions.assertThat(crew.getMovie()).isEqualToIgnoringGivenFields(crewAfterUpdate.getMovie(),
                     "genres","movieProdCountries","movieProdCompanies","movieProdLanguages",
-                    "crews","movieReview","movieReviewCompliants","movieReviewFeedbacks","movieVotes","releaseDetails");
+                    "crews","movieReview","movieReviewCompliants","movieReviewFeedbacks","movieVotes","releaseDetails",
+                    "userTypoRequests");
             Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewAfterUpdate.getCrewType(),
                     "crew");
             Assertions.assertThat(crew.getPerson()).isEqualToIgnoringGivenFields(crewAfterUpdate.getPerson(),

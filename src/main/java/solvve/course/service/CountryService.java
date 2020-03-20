@@ -24,28 +24,29 @@ public class CountryService {
     @Transactional(readOnly = true)
     public CountryReadDTO getCountries(UUID id) {
         Country country = getCountriesRequired(id);
-        return translationService.toRead(country);
+        return translationService.translate(country, CountryReadDTO.class);
     }
 
     public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
         List<Country> countries = countryRepository.findByFilter(countryFilter);
-        return countries.stream().map(translationService::toRead).collect(Collectors.toList());
+        return countries.stream().map(e -> translationService.translate(e, CountryReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     public CountryReadDTO createCountries(CountryCreateDTO create) {
-        Country country = translationService.toEntity(create);
+        Country country = translationService.translate(create, Country.class);
 
         country = countryRepository.save(country);
-        return translationService.toRead(country);
+        return translationService.translate(country, CountryReadDTO.class);
     }
 
     public CountryReadDTO patchCountries(UUID id, CountryPatchDTO patch) {
         Country country = getCountriesRequired(id);
 
-        translationService.patchEntity(patch, country);
+        translationService.map(patch, country);
 
         country = countryRepository.save(country);
-        return translationService.toRead(country);
+        return translationService.translate(country, CountryReadDTO.class);
     }
 
     public void deleteCountries(UUID id) {
@@ -58,7 +59,7 @@ public class CountryService {
         translationService.updateEntity(put, country);
 
         country = countryRepository.save(country);
-        return translationService.toRead(country);
+        return translationService.translate(country, CountryReadDTO.class);
     }
 
     private Country getCountriesRequired(UUID id) {

@@ -108,7 +108,7 @@ public class PortalUserNewsUserReviewNoteServiceTest {
         News newsAfterUpdate = newsRepository.findById(news.getId()).get();
 
         Assertions.assertThat(newsAfterUpdate.getDescription()).isEqualTo(sb.toString());
-        Assertions.assertThat(read.getModeratorId()).isEqualTo(portalUser2.getId());
+        Assertions.assertThat(read.getModeratorId()).isEqualTo(patch.getModeratorId());
         Assertions.assertThat(read.getModeratorTypoReviewStatusType()).isEqualTo(patch.getModeratorTypoReviewStatusType());
 
         Assert.assertFalse(getNewsUserReviewNotesWithSameIndexes(news.getId(), read.getModeratorTypoReviewStatusType()

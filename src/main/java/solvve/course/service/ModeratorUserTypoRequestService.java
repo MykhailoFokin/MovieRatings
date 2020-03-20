@@ -38,16 +38,17 @@ public class ModeratorUserTypoRequestService {
     @Transactional(readOnly = true)
     public List<UserTypoRequestReadDTO> getModeratorUserTypoRequests(UUID moderatorId) {
         List<UserTypoRequest> userTypoRequests = getUserTypoRequestsRequired(moderatorId);
-        return userTypoRequests.stream().map(translationService::toRead).collect(Collectors.toList());
+        return userTypoRequests.stream().map(userTypoRequest -> translationService.translate(userTypoRequest,
+                UserTypoRequestReadDTO.class)).collect(Collectors.toList());
     }
 
     public UserTypoRequestReadDTO patchUserTypoRequestByModerator(UUID moderatorId, UUID userTypoRequestId,
                                                           UserTypoRequestPatchDTO patch) {
         UserTypoRequest userTypoRequest = getUserTypoRequestRequired(userTypoRequestId);
 
-        translationService.patchEntity(patch, userTypoRequest);
+        translationService.map(patch, userTypoRequest);
 
-        return translationService.toRead(userTypoRequest);
+        return translationService.translate(userTypoRequest, UserTypoRequestReadDTO.class);
     }
 
     public UserTypoRequestReadDTO fixNewsTypo(UUID portalUserId, UUID userTypoRequestId,
@@ -77,7 +78,7 @@ public class ModeratorUserTypoRequestService {
 
         updateSameUserTypoRequestWithSameStatus(userTypoRequest);
 
-        return translationService.toRead(userTypoRequest);
+        return translationService.translate(userTypoRequest, UserTypoRequestReadDTO.class);
     }
 
     private List<UserTypoRequest> getUserTypoRequestsRequired(UUID moderatorId) {

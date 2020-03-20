@@ -25,23 +25,23 @@ public class RoleSpoilerDataService {
     @Transactional(readOnly = true)
     public RoleSpoilerDataReadDTO getRoleSpoilerData(UUID id) {
         RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     public RoleSpoilerDataReadDTO createRoleSpoilerData(RoleSpoilerDataCreateDTO create) {
-        RoleSpoilerData roleSpoilerData = translationService.toEntity(create);
+        RoleSpoilerData roleSpoilerData = translationService.translate(create, RoleSpoilerData.class);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     public RoleSpoilerDataReadDTO patchRoleSpoilerData(UUID id, RoleSpoilerDataPatchDTO patch) {
         RoleSpoilerData roleSpoilerData = getRoleSpoilerDataRequired(id);
 
-        translationService.patchEntity(patch, roleSpoilerData);
+        translationService.map(patch, roleSpoilerData);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     public void deleteRoleSpoilerData(UUID id) {
@@ -54,7 +54,7 @@ public class RoleSpoilerDataService {
         translationService.updateEntity(put, roleSpoilerData);
 
         roleSpoilerData = roleSpoilerDataRepository.save(roleSpoilerData);
-        return translationService.toRead(roleSpoilerData);
+        return translationService.translate(roleSpoilerData, RoleSpoilerDataReadDTO.class);
     }
 
     private RoleSpoilerData getRoleSpoilerDataRequired(UUID id) {

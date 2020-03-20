@@ -12,9 +12,12 @@ import java.time.Instant;
 @Entity
 public class UserTypoRequest extends AbstractEntity {
 
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "requester_id", referencedColumnName = "id", nullable = false)
     private PortalUser requester;
 
+    @ManyToOne
+    @JoinColumn(name = "moderator_id", referencedColumnName = "id")
     private PortalUser moderator;
 
     @NotNull

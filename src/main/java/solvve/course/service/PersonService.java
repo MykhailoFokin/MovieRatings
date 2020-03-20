@@ -25,23 +25,23 @@ public class PersonService {
     @Transactional(readOnly = true)
     public PersonReadDTO getPersons(UUID id) {
         Person person = getPersonsRequired(id);
-        return translationService.toRead(person);
+        return translationService.translate(person, PersonReadDTO.class);
     }
 
     public PersonReadDTO createPersons(PersonCreateDTO create) {
-        Person person = translationService.toEntity(create);
+        Person person = translationService.translate(create, Person.class);
 
         person = personRepository.save(person);
-        return translationService.toRead(person);
+        return translationService.translate(person, PersonReadDTO.class);
     }
 
     public PersonReadDTO patchPersons(UUID id, PersonPatchDTO patch) {
         Person person = getPersonsRequired(id);
 
-        translationService.patchEntity(patch, person);
+        translationService.map(patch, person);
 
         person = personRepository.save(person);
-        return translationService.toRead(person);
+        return translationService.translate(person, PersonReadDTO.class);
     }
 
     public void deletePersons(UUID id) {
@@ -54,7 +54,7 @@ public class PersonService {
         translationService.updateEntity(put, person);
 
         person = personRepository.save(person);
-        return translationService.toRead(person);
+        return translationService.translate(person, PersonReadDTO.class);
     }
 
     private Person getPersonsRequired(UUID id) {

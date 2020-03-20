@@ -2,23 +2,14 @@ package solvve.course.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.*;
 
 @Getter
 @Setter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Country {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Country extends AbstractEntity {
 
     private String name;
 
@@ -33,10 +24,4 @@ public class Country {
             joinColumns = {@JoinColumn(name = "country_id")},
             inverseJoinColumns = {@JoinColumn(name = "language_id")})
     private Set<Language> countryLanguages = new HashSet<Language>();
-
-    @CreatedDate
-    private Instant createdAt;
-
-    @LastModifiedDate
-    private Instant updatedAt;
 }

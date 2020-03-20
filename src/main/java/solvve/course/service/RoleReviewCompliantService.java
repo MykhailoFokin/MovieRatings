@@ -25,23 +25,23 @@ public class RoleReviewCompliantService {
     @Transactional(readOnly = true)
     public RoleReviewCompliantReadDTO getRoleReviewCompliant(UUID id) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     public RoleReviewCompliantReadDTO createRoleReviewCompliant(RoleReviewCompliantCreateDTO create) {
-        RoleReviewCompliant roleReviewCompliant = translationService.toEntity(create);
+        RoleReviewCompliant roleReviewCompliant = translationService.translate(create, RoleReviewCompliant.class);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     public RoleReviewCompliantReadDTO patchRoleReviewCompliant(UUID id, RoleReviewCompliantPatchDTO patch) {
         RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
 
-        translationService.patchEntity(patch, roleReviewCompliant);
+        translationService.map(patch, roleReviewCompliant);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     public void deleteRoleReviewCompliant(UUID id) {
@@ -54,7 +54,7 @@ public class RoleReviewCompliantService {
         translationService.updateEntity(put, roleReviewCompliant);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
-        return translationService.toRead(roleReviewCompliant);
+        return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
     private RoleReviewCompliant getRoleReviewCompliantRequired(UUID id) {

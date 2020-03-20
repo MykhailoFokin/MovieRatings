@@ -2,23 +2,13 @@ package solvve.course.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.Instant;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class RoleVote {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class RoleVote extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
@@ -30,10 +20,4 @@ public class RoleVote {
 
     @Enumerated(EnumType.ORDINAL)
     private UserVoteRatingType rating;
-
-    @CreatedDate
-    private Instant createdAt;
-
-    @LastModifiedDate
-    private Instant updatedAt;
 }

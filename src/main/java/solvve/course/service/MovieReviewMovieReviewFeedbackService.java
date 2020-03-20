@@ -32,25 +32,26 @@ public class MovieReviewMovieReviewFeedbackService {
     @Transactional(readOnly = true)
     public List<MovieReviewFeedbackReadDTO> getMovieReviewMovieReviewFeedback(UUID movieReviewId) {
         List<MovieReviewFeedback> movieReviewFeedbacks = getMovieReviewMovieReviewFeedbacksRequired(movieReviewId);
-        return movieReviewFeedbacks.stream().map(translationService::toRead).collect(Collectors.toList());
+        return movieReviewFeedbacks.stream().map(e ->
+                translationService.translate(e, MovieReviewFeedbackReadDTO.class)).collect(Collectors.toList());
     }
 
     public MovieReviewFeedbackReadDTO createMovieReviewMovieReviewFeedback(UUID movieReviewId,
                                                                            MovieReviewFeedbackCreateDTO create) {
-        MovieReviewFeedback movieReviewFeedback = translationService.toEntity(create);
+        MovieReviewFeedback movieReviewFeedback = translationService.translate(create, MovieReviewFeedback.class);
         movieReviewFeedback.setMovieReview(repositoryHelper.getReferenceIfExists(MovieReview.class, movieReviewId));
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
 
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     public MovieReviewFeedbackReadDTO patchMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id,
                                                                           MovieReviewFeedbackPatchDTO patch) {
         MovieReviewFeedback movieReviewFeedback = getMovieReviewMovieReviewFeedbackRequired(movieReviewId, id);
-        translationService.patchEntity(patch, movieReviewFeedback);
+        translationService.map(patch, movieReviewFeedback);
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
 
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     public void deleteMovieReviewMovieReviewFeedback(UUID movieReviewId, UUID id) {
@@ -63,7 +64,7 @@ public class MovieReviewMovieReviewFeedbackService {
         translationService.updateEntity(put, movieReviewFeedback);
         movieReviewFeedback = movieReviewFeedbackRepository.save(movieReviewFeedback);
 
-        return translationService.toRead(movieReviewFeedback);
+        return translationService.translate(movieReviewFeedback, MovieReviewFeedbackReadDTO.class);
     }
 
     private MovieReviewFeedback getMovieReviewMovieReviewFeedbackRequired(UUID movieReviewId, UUID id) {

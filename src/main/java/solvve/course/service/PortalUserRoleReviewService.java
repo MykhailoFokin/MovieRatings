@@ -32,25 +32,26 @@ public class PortalUserRoleReviewService {
     @Transactional(readOnly = true)
     public List<RoleReviewReadDTO> getPortalUserRoleReview(UUID portalUserId) {
         List<RoleReview> roleReviews = getPortalUserRoleReviewsRequired(portalUserId);
-        return roleReviews.stream().map(translationService::toRead).collect(Collectors.toList());
+        return roleReviews.stream().map(e ->
+                translationService.translate(e, RoleReviewReadDTO.class)).collect(Collectors.toList());
     }
 
     public RoleReviewReadDTO createPortalUserRoleReview(UUID portalUserId,
                                                         RoleReviewCreateDTO create) {
-        RoleReview roleReview = translationService.toEntity(create);
+        RoleReview roleReview = translationService.translate(create, RoleReview.class);
         roleReview.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, portalUserId));
         roleReview = roleReviewRepository.save(roleReview);
 
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     public RoleReviewReadDTO patchPortalUserRoleReview(UUID portalUserId, UUID id,
                                                        RoleReviewPatchDTO patch) {
         RoleReview roleReview = getPortalUserRoleReviewRequired(portalUserId, id);
-        translationService.patchEntity(patch, roleReview);
+        translationService.map(patch, roleReview);
         roleReview = roleReviewRepository.save(roleReview);
 
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     public void deletePortalUserRoleReview(UUID portalUserId, UUID id) {
@@ -63,7 +64,7 @@ public class PortalUserRoleReviewService {
         translationService.updateEntity(put, roleReview);
         roleReview = roleReviewRepository.save(roleReview);
 
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     private RoleReview getPortalUserRoleReviewRequired(UUID portalUserId, UUID id) {

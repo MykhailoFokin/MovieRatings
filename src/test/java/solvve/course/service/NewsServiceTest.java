@@ -88,7 +88,7 @@ public class NewsServiceTest {
 
         news = newsRepository.findById(read.getId()).get();
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
-                "newsUserReviews", "newsUserReviewNotes");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -113,7 +113,7 @@ public class NewsServiceTest {
         Assert.assertNotNull(newsAfterUpdate.getPublished());
 
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher",
-                "newsUserReviews", "newsUserReviewNotes");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 
@@ -147,7 +147,7 @@ public class NewsServiceTest {
 
         news = newsRepository.findById(read.getId()).get();
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
-                "newsUserReviews", "newsUserReviewNotes");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -172,7 +172,7 @@ public class NewsServiceTest {
         Assert.assertNull(newsAfterUpdate.getPublished());
 
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher", "topic","description",
-                "published", "updatedAt", "newsUserReviews", "newsUserReviewNotes");
+                "published", "updatedAt", "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 }

@@ -27,23 +27,23 @@ public class MovieReviewService {
         MovieReview movieReview = movieReviewRepository.findById(id).orElseThrow(() -> {
             throw new EntityNotFoundException(MovieReview.class, id);
         });
-        return translationService.toRead(movieReview);
+        return translationService.translate(movieReview, MovieReviewReadDTO.class);
     }
 
     public MovieReviewReadDTO createMovieReview(MovieReviewCreateDTO create) {
-        MovieReview movieReview = translationService.toEntity(create);
+        MovieReview movieReview = translationService.translate(create, MovieReview.class);
 
         movieReview = movieReviewRepository.save(movieReview);
-        return translationService.toRead(movieReview);
+        return translationService.translate(movieReview, MovieReviewReadDTO.class);
     }
 
     public MovieReviewReadDTO patchMovieReview(UUID id, MovieReviewPatchDTO patch) {
         MovieReview movieReview = getMovieReviewRequired(id);
 
-        translationService.patchEntity(patch, movieReview);
+        translationService.map(patch, movieReview);
 
         movieReview = movieReviewRepository.save(movieReview);
-        return translationService.toRead(movieReview);
+        return translationService.translate(movieReview, MovieReviewReadDTO.class);
     }
 
     public void deleteMovieReview(UUID id) {
@@ -56,7 +56,7 @@ public class MovieReviewService {
         translationService.updateEntity(put, movieReview);
 
         movieReview = movieReviewRepository.save(movieReview);
-        return translationService.toRead(movieReview);
+        return translationService.translate(movieReview, MovieReviewReadDTO.class);
     }
 
     private MovieReview getMovieReviewRequired(UUID id) {

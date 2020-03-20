@@ -32,23 +32,23 @@ public class RoleService {
     @Transactional(readOnly = true)
     public RoleReadDTO getRole(UUID id) {
         Role role = getRoleRequired(id);
-        return translationService.toRead(role);
+        return translationService.translate(role, RoleReadDTO.class);
     }
 
     public RoleReadDTO createRole(RoleCreateDTO create) {
-        Role role = translationService.toEntity(create);
+        Role role = translationService.translate(create, Role.class);
 
         role = roleRepository.save(role);
-        return translationService.toRead(role);
+        return translationService.translate(role, RoleReadDTO.class);
     }
 
     public RoleReadDTO patchRole(UUID id, RolePatchDTO patch) {
         Role role = getRoleRequired(id);
 
-        translationService.patchEntity(patch, role);
+        translationService.map(patch, role);
 
         role = roleRepository.save(role);
-        return translationService.toRead(role);
+        return translationService.translate(role, RoleReadDTO.class);
     }
 
     public void deleteRole(UUID id) {
@@ -61,7 +61,7 @@ public class RoleService {
         translationService.updateEntity(put, role);
 
         role = roleRepository.save(role);
-        return translationService.toRead(role);
+        return translationService.translate(role, RoleReadDTO.class);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

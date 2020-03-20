@@ -441,7 +441,7 @@ public class TestObjectsFactory {
                 .toInstant(ZoneOffset.UTC));
         create.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
                 .toInstant(ZoneOffset.UTC));
-        create.setStatus(VisitStatus.FINISHED);
+        create.setStatus(VisitStatus.SCHEDULED);
         return create;
     }
 

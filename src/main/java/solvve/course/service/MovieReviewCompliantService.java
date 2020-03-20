@@ -25,23 +25,23 @@ public class MovieReviewCompliantService {
     @Transactional(readOnly = true)
     public MovieReviewCompliantReadDTO getMovieReviewCompliant(UUID id) {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewCompliantRequired(id);
-        return translationService.toRead(movieReviewCompliant);
+        return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);
     }
 
     public MovieReviewCompliantReadDTO createMovieReviewCompliant(MovieReviewCompliantCreateDTO create) {
-        MovieReviewCompliant movieReviewCompliant = translationService.toEntity(create);
+        MovieReviewCompliant movieReviewCompliant = translationService.translate(create, MovieReviewCompliant.class);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
-        return translationService.toRead(movieReviewCompliant);
+        return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);
     }
 
     public MovieReviewCompliantReadDTO patchMovieReviewCompliant(UUID id, MovieReviewCompliantPatchDTO patch) {
         MovieReviewCompliant movieReviewCompliant = getMovieReviewCompliantRequired(id);
 
-        translationService.patchEntity(patch, movieReviewCompliant);
+        translationService.map(patch, movieReviewCompliant);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
-        return translationService.toRead(movieReviewCompliant);
+        return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);
     }
 
     public void deleteMovieReviewCompliant(UUID id) {
@@ -54,7 +54,7 @@ public class MovieReviewCompliantService {
         translationService.updateEntity(put, movieReviewCompliant);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
-        return translationService.toRead(movieReviewCompliant);
+        return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);
     }
 
     private MovieReviewCompliant getMovieReviewCompliantRequired(UUID id) {

@@ -24,23 +24,23 @@ public class MovieCompanyService {
     @Transactional(readOnly = true)
     public MovieCompanyReadDTO getMovieCompany(UUID id) {
         MovieCompany movieCompany = getMovieCompanyRequired(id);
-        return translationService.toRead(movieCompany);
+        return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
     public MovieCompanyReadDTO createMovieCompany(MovieCompanyCreateDTO create) {
-        MovieCompany movieCompany = translationService.toEntity(create);
+        MovieCompany movieCompany = translationService.translate(create, MovieCompany.class);
 
         movieCompany = movieCompanyRepository.save(movieCompany);
-        return translationService.toRead(movieCompany);
+        return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
     public MovieCompanyReadDTO patchMovieCompany(UUID id, MovieCompanyPatchDTO patch) {
         MovieCompany movieCompany = getMovieCompanyRequired(id);
 
-        translationService.patchEntity(patch, movieCompany);
+        translationService.map(patch, movieCompany);
 
         movieCompany = movieCompanyRepository.save(movieCompany);
-        return translationService.toRead(movieCompany);
+        return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
     public void deleteMovieCompany(UUID id) {
@@ -53,12 +53,13 @@ public class MovieCompanyService {
         translationService.updateEntity(put, movieCompany);
 
         movieCompany = movieCompanyRepository.save(movieCompany);
-        return translationService.toRead(movieCompany);
+        return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
     public List<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter) {
         List<MovieCompany> movieCompanies = movieCompanyRepository.findByFilter(filter);
-        return movieCompanies.stream().map(translationService::toRead).collect(Collectors.toList());
+        return movieCompanies.stream().map(e -> translationService.translate(e, MovieCompanyReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     private MovieCompany getMovieCompanyRequired(UUID id) {

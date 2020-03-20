@@ -24,23 +24,23 @@ public class CrewTypeService {
     @Transactional(readOnly = true)
     public CrewTypeReadDTO getCrewType(UUID id) {
         CrewType crewType = getCrewTypeRequired(id);
-        return translationService.toRead(crewType);
+        return translationService.translate(crewType, CrewTypeReadDTO.class);
     }
 
     public CrewTypeReadDTO createCrewType(CrewTypeCreateDTO create) {
-        CrewType crewType = translationService.toEntity(create);
+        CrewType crewType = translationService.translate(create, CrewType.class);
 
         crewType = crewTypeRepository.save(crewType);
-        return translationService.toRead(crewType);
+        return translationService.translate(crewType, CrewTypeReadDTO.class);
     }
 
     public CrewTypeReadDTO patchCrewType(UUID id, CrewTypePatchDTO patch) {
         CrewType crewType = getCrewTypeRequired(id);
 
-        translationService.patchEntity(patch, crewType);
+        translationService.map(patch, crewType);
 
         crewType = crewTypeRepository.save(crewType);
-        return translationService.toRead(crewType);
+        return translationService.translate(crewType, CrewTypeReadDTO.class);
     }
 
     public void deleteCrewType(UUID id) {
@@ -53,12 +53,13 @@ public class CrewTypeService {
         translationService.updateEntity(put, crewType);
 
         crewType = crewTypeRepository.save(crewType);
-        return translationService.toRead(crewType);
+        return translationService.translate(crewType, CrewTypeReadDTO.class);
     }
 
     public List<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter) {
         List<CrewType> crewTypes = crewTypeRepository.findByFilter(filter);
-        return crewTypes.stream().map(translationService::toRead).collect(Collectors.toList());
+        return crewTypes.stream().map(e -> translationService.translate(e, CrewTypeReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     private CrewType getCrewTypeRequired(UUID id) {

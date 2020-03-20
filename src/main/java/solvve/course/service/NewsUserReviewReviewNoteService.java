@@ -29,27 +29,28 @@ public class NewsUserReviewReviewNoteService {
     @Transactional(readOnly = true)
     public List<NewsUserReviewNoteReadDTO> getNewsUserReviewUserReviewNote(UUID newsId, UUID newsUserReviewId) {
         List<NewsUserReviewNote> newsUserReviewNotes = getNewsUserReviewReviewNotesRequired(newsId, newsUserReviewId);
-        return newsUserReviewNotes.stream().map(translationService::toRead).collect(Collectors.toList());
+        return newsUserReviewNotes.stream().map(e ->
+                translationService.translate(e, NewsUserReviewNoteReadDTO.class)).collect(Collectors.toList());
     }
 
     public NewsUserReviewNoteReadDTO createNewsUserReviewReviewNote(UUID newsId, UUID newsUserReviewId,
                                                                          NewsUserReviewNoteCreateDTO create) {
-        NewsUserReviewNote newsUserReviewNote = translationService.toEntity(create);
+        NewsUserReviewNote newsUserReviewNote = translationService.translate(create, NewsUserReviewNote.class);
         newsUserReviewNote.setNewsUserReview(repositoryHelper.getReferenceIfExists(NewsUserReview.class,
                 newsUserReviewId));
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
 
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public NewsUserReviewNoteReadDTO patchNewsUserReviewReviewNote(UUID newsId, UUID newsUserReviewId, UUID id,
                                                                         NewsUserReviewNotePatchDTO patch) {
         NewsUserReviewNote newsUserReviewNote = getNewsUserReviewReviewNoteRequired(newsId, newsUserReviewId, id);
 
-        translationService.patchEntity(patch, newsUserReviewNote);
+        translationService.map(patch, newsUserReviewNote);
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
 
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public void deleteNewsUserReviewReviewNote(UUID newsId, UUID newsUserReviewId, UUID id) {
@@ -63,7 +64,7 @@ public class NewsUserReviewReviewNoteService {
         translationService.updateEntity(put, newsUserReviewNote);
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
 
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     private NewsUserReviewNote getNewsUserReviewReviewNoteRequired(UUID newsId, UUID newsUserReviewId, UUID id) {

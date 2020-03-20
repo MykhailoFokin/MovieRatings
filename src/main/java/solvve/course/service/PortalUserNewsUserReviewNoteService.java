@@ -42,7 +42,8 @@ public class PortalUserNewsUserReviewNoteService {
     @Transactional(readOnly = true)
     public List<NewsUserReviewNoteReadDTO> getModeratorUserReviewNotes(UUID moderatorId) {
         List<NewsUserReviewNote> newsUserReviewNotes = getNewsUserReviewNotesRequired(moderatorId);
-        return newsUserReviewNotes.stream().map(translationService::toRead).collect(Collectors.toList());
+        return newsUserReviewNotes.stream().map(e ->
+                translationService.translate(e, NewsUserReviewNoteReadDTO.class)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -50,11 +51,13 @@ public class PortalUserNewsUserReviewNoteService {
                                                                    NewsUserReviewNotePatchDTO patch) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
         NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
-
+        /*if (patch.getModeratorId() != null) {
+            newsUserReviewNote.setModerator(null);
+        }*/
         checkAlreadyFixedUserReviewNote(newsUserReviewNote.getModeratorTypoReviewStatusType(),
                 patch.getModeratorTypoReviewStatusType(), newsUserReviewNoteId);
 
-        translationService.patchEntity(patch, newsUserReviewNote);
+        translationService.map(patch, newsUserReviewNote);
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
         UUID newsUserReviewId = newsUserReviewNote.getNewsUserReview().getId();
 
@@ -74,7 +77,7 @@ public class PortalUserNewsUserReviewNoteService {
 
         updateSameNotesWithSameStatus(newsUserReviewNote);
 
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     public NewsUserReviewNoteReadDTO updatePortalUserNewsUserReviewNote(UUID portalUserId, UUID newsUserReviewNoteId,
@@ -104,7 +107,7 @@ public class PortalUserNewsUserReviewNoteService {
 
         updateSameNotesWithSameStatus(newsUserReviewNote);
 
-        return translationService.toRead(newsUserReviewNote);
+        return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
     private List<NewsUserReviewNote> getNewsUserReviewNotesRequired(UUID moderatorId) {

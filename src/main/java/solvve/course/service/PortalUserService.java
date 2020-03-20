@@ -22,23 +22,23 @@ public class PortalUserService {
     @Transactional(readOnly = true)
     public PortalUserReadDTO getPortalUser(UUID id) {
         PortalUser portalUser = getPortalUserRequired(id);
-        return translationService.toRead(portalUser);
+        return translationService.translate(portalUser, PortalUserReadDTO.class);
     }
 
     public PortalUserReadDTO createPortalUser(PortalUserCreateDTO create) {
-        PortalUser portalUser = translationService.toEntity(create);
+        PortalUser portalUser = translationService.translate(create, PortalUser.class);
 
         portalUser = portalUserRepository.save(portalUser);
-        return translationService.toRead(portalUser);
+        return translationService.translate(portalUser, PortalUserReadDTO.class);
     }
 
     public PortalUserReadDTO patchPortalUser(UUID id, PortalUserPatchDTO patch) {
         PortalUser portalUser = getPortalUserRequired(id);
 
-        translationService.patchEntity(patch, portalUser);
+        translationService.map(patch, portalUser);
 
         portalUser = portalUserRepository.save(portalUser);
-        return translationService.toRead(portalUser);
+        return translationService.translate(portalUser, PortalUserReadDTO.class);
     }
 
     private PortalUser getPortalUserRequired(UUID id) {
@@ -57,6 +57,6 @@ public class PortalUserService {
         translationService.updateEntity(put, portalUser);
 
         portalUser = portalUserRepository.save(portalUser);
-        return translationService.toRead(portalUser);
+        return translationService.translate(portalUser, PortalUserReadDTO.class);
     }
 }

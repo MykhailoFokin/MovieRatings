@@ -21,11 +21,13 @@ public class PortalUserMovieService {
 
     public List<MovieReadDTO> getPortalUserMovies(UUID portalUserId, Instant startFrom, Instant startTo) {
         return movieRepository.findPortalUserTouchedMoviesInGivenInterval(portalUserId,
-                startFrom, startTo).stream().map(translationService::toRead).collect(Collectors.toList());
+                startFrom, startTo).stream().map(e ->
+                translationService.translate(e, MovieReadDTO.class)).collect(Collectors.toList());
     }
 
     public List<MovieReadDTO> getPortalUserRecommendedMovies(UUID portalUserId) {
         return movieRepository.findPortalUserRecommendedMovies(portalUserId)
-                .stream().map(translationService::toRead).collect(Collectors.toList());
+                .stream().map(e ->
+                        translationService.translate(e, MovieReadDTO.class)).collect(Collectors.toList());
     }
 }

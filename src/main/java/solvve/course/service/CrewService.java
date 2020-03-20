@@ -24,23 +24,23 @@ public class CrewService {
     @Transactional(readOnly = true)
     public CrewReadExtendedDTO getCrew(UUID id) {
         Crew crew = getCrewRequired(id);
-        return translationService.toReadExtended(crew);
+        return translationService.translate(crew, CrewReadExtendedDTO.class);
     }
 
     public CrewReadDTO createCrew(CrewCreateDTO create) {
-        Crew crew = translationService.toEntity(create);
+        Crew crew = translationService.translate(create, Crew.class);
 
         crew = crewRepository.save(crew);
-        return translationService.toRead(crew);
+        return translationService.translate(crew, CrewReadDTO.class);
     }
 
     public CrewReadDTO patchCrew(UUID id, CrewPatchDTO patch) {
         Crew crew = getCrewRequired(id);
 
-        translationService.patchEntity(patch, crew);
+        translationService.map(patch, crew);
 
         crew = crewRepository.save(crew);
-        return translationService.toRead(crew);
+        return translationService.translate(crew, CrewReadDTO.class);
     }
 
     public void deleteCrew(UUID id) {
@@ -53,12 +53,12 @@ public class CrewService {
         translationService.updateEntity(put, crew);
 
         crew = crewRepository.save(crew);
-        return translationService.toRead(crew);
+        return translationService.translate(crew, CrewReadDTO.class);
     }
 
     public List<CrewReadDTO> getCrews(CrewFilter filter) {
         List<Crew> crews = crewRepository.findByFilter(filter);
-        return crews.stream().map(translationService::toRead).collect(Collectors.toList());
+        return crews.stream().map(e -> translationService.translate(e, CrewReadDTO.class)).collect(Collectors.toList());
     }
 
     private Crew getCrewRequired(UUID id) {

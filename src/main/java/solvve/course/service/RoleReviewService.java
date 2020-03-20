@@ -25,23 +25,23 @@ public class RoleReviewService {
     @Transactional(readOnly = true)
     public RoleReviewReadDTO getRoleReview(UUID id) {
         RoleReview roleReview = getRoleReviewRequired(id);
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     public RoleReviewReadDTO createRoleReview(RoleReviewCreateDTO create) {
-        RoleReview roleReview = translationService.toEntity(create);
+        RoleReview roleReview = translationService.translate(create, RoleReview.class);
 
         roleReview = roleReviewRepository.save(roleReview);
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     public RoleReviewReadDTO patchRoleReview(UUID id, RoleReviewPatchDTO patch) {
         RoleReview roleReview = getRoleReviewRequired(id);
 
-        translationService.patchEntity(patch, roleReview);
+        translationService.map(patch, roleReview);
 
         roleReview = roleReviewRepository.save(roleReview);
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     public void deleteRoleReview(UUID id) {
@@ -54,7 +54,7 @@ public class RoleReviewService {
         translationService.updateEntity(put, roleReview);
 
         roleReview = roleReviewRepository.save(roleReview);
-        return translationService.toRead(roleReview);
+        return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
     private RoleReview getRoleReviewRequired(UUID id) {

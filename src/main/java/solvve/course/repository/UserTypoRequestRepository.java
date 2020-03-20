@@ -26,7 +26,7 @@ public interface UserTypoRequestRepository extends CrudRepository<UserTypoReques
                                                                             List<ModeratorTypoReviewStatusType>
                                                                                     moderatorTypoReviewStatusTypes);
 
-    @Query("select r.id from UserTypoRequest r where r.movie.id = movieId and r.sourceText = :sourceText"
+    @Query("select r.id from UserTypoRequest r where r.movie.id = :movieId and r.sourceText = :sourceText"
             + " and moderatorTypoReviewStatusType in (:moderatorTypoReviewStatusTypes)"
             + " order by r.createdAt asc")
     List<UUID> findUserTypoRequestsOnMovieRequiredAttentionBySourceText(UUID movieId, String sourceText,

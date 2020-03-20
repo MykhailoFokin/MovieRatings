@@ -25,23 +25,23 @@ public class NewsUserReviewService {
     @Transactional(readOnly = true)
     public NewsUserReviewReadDTO getNewsUserReview(UUID id) {
         NewsUserReview newsUserReview = getNewsUserReviewsRequired(id);
-        return translationService.toRead(newsUserReview);
+        return translationService.translate(newsUserReview, NewsUserReviewReadDTO.class);
     }
 
     public NewsUserReviewReadDTO createNewsUserReview(NewsUserReviewCreateDTO create) {
-        NewsUserReview newsUserReview = translationService.toEntity(create);
+        NewsUserReview newsUserReview = translationService.translate(create, NewsUserReview.class);
 
         newsUserReview = newsUserReviewRepository.save(newsUserReview);
-        return translationService.toRead(newsUserReview);
+        return translationService.translate(newsUserReview, NewsUserReviewReadDTO.class);
     }
 
     public NewsUserReviewReadDTO patchNewsUserReview(UUID id, NewsUserReviewPatchDTO patch) {
         NewsUserReview newsUserReview = getNewsUserReviewsRequired(id);
 
-        translationService.patchEntity(patch, newsUserReview);
+        translationService.map(patch, newsUserReview);
 
         newsUserReview = newsUserReviewRepository.save(newsUserReview);
-        return translationService.toRead(newsUserReview);
+        return translationService.translate(newsUserReview, NewsUserReviewReadDTO.class);
     }
 
     public void deleteNewsUserReview(UUID id) {
@@ -54,7 +54,7 @@ public class NewsUserReviewService {
         translationService.updateEntity(put, newsUserReview);
 
         newsUserReview = newsUserReviewRepository.save(newsUserReview);
-        return translationService.toRead(newsUserReview);
+        return translationService.translate(newsUserReview, NewsUserReviewReadDTO.class);
     }
 
     private NewsUserReview getNewsUserReviewsRequired(UUID id) {

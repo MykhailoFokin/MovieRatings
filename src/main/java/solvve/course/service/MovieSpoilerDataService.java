@@ -25,23 +25,23 @@ public class MovieSpoilerDataService {
     @Transactional(readOnly = true)
     public MovieSpoilerDataReadDTO getMovieSpoilerData(UUID id) {
         MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     public MovieSpoilerDataReadDTO createMovieSpoilerData(MovieSpoilerDataCreateDTO create) {
-        MovieSpoilerData movieSpoilerData = translationService.toEntity(create);
+        MovieSpoilerData movieSpoilerData = translationService.translate(create, MovieSpoilerData.class);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(UUID id, MovieSpoilerDataPatchDTO patch) {
         MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
 
-        translationService.patchEntity(patch, movieSpoilerData);
+        translationService.map(patch, movieSpoilerData);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     public void deleteMovieSpoilerData(UUID id) {
@@ -54,7 +54,7 @@ public class MovieSpoilerDataService {
         translationService.updateEntity(put, movieSpoilerData);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
-        return translationService.toRead(movieSpoilerData);
+        return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
     private MovieSpoilerData getMovieSpoilerDataRequired(UUID id) {

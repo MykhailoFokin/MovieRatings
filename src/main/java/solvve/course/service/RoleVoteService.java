@@ -25,23 +25,23 @@ public class RoleVoteService {
     @Transactional(readOnly = true)
     public RoleVoteReadDTO getRoleVote(UUID id) {
         RoleVote roleVote = getRoleVoteRequired(id);
-        return translationService.toRead(roleVote);
+        return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 
     public RoleVoteReadDTO createRoleVote(RoleVoteCreateDTO create) {
-        RoleVote roleVote = translationService.toEntity(create);
+        RoleVote roleVote = translationService.translate(create, RoleVote.class);
 
         roleVote = roleVoteRepository.save(roleVote);
-        return translationService.toRead(roleVote);
+        return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 
     public RoleVoteReadDTO patchRoleVote(UUID id, RoleVotePatchDTO patch) {
         RoleVote roleVote = getRoleVoteRequired(id);
 
-        translationService.patchEntity(patch, roleVote);
+        translationService.map(patch, roleVote);
 
         roleVote = roleVoteRepository.save(roleVote);
-        return translationService.toRead(roleVote);
+        return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 
     private RoleVote getRoleVoteRequired(UUID id) {
@@ -60,6 +60,6 @@ public class RoleVoteService {
         translationService.updateEntity(put, roleVote);
 
         roleVote = roleVoteRepository.save(roleVote);
-        return translationService.toRead(roleVote);
+        return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 }

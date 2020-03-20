@@ -24,28 +24,29 @@ public class CompanyDetailsService {
     @Transactional(readOnly = true)
     public CompanyDetailsReadDTO getCompanyDetails(UUID id) {
         CompanyDetails companyDetails = getCompanyDetailsRequired(id);
-        return translationService.toRead(companyDetails);
+        return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
     public List<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter) {
         List<CompanyDetails> companyDetails = companyDetailsRepository.findByFilter(filter);
-        return companyDetails.stream().map(translationService::toRead).collect(Collectors.toList());
+        return companyDetails.stream().map(e -> translationService.translate(e, CompanyDetailsReadDTO.class))
+                .collect(Collectors.toList());
     }
 
     public CompanyDetailsReadDTO createCompanyDetails(CompanyDetailsCreateDTO create) {
-        CompanyDetails companyDetails = translationService.toEntity(create);
+        CompanyDetails companyDetails = translationService.translate(create, CompanyDetails.class);
 
         companyDetails = companyDetailsRepository.save(companyDetails);
-        return translationService.toRead(companyDetails);
+        return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
     public CompanyDetailsReadDTO patchCompanyDetails(UUID id, CompanyDetailsPatchDTO patch) {
         CompanyDetails companyDetails = getCompanyDetailsRequired(id);
 
-        translationService.patchEntity(patch, companyDetails);
+        translationService.map(patch, companyDetails);
 
         companyDetails = companyDetailsRepository.save(companyDetails);
-        return translationService.toRead(companyDetails);
+        return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
     public void deleteCompanyDetails(UUID id) {
@@ -58,7 +59,7 @@ public class CompanyDetailsService {
         translationService.updateEntity(put, companyDetails);
 
         companyDetails = companyDetailsRepository.save(companyDetails);
-        return translationService.toRead(companyDetails);
+        return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
     private CompanyDetails getCompanyDetailsRequired(UUID id) {

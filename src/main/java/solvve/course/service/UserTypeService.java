@@ -25,23 +25,23 @@ public class UserTypeService {
     @Transactional(readOnly = true)
     public UserTypeReadDTO getUserTypes(UUID id) {
         UserType userType = getUserTypesRequired(id);
-        return translationService.toRead(userType);
+        return translationService.translate(userType, UserTypeReadDTO.class);
     }
 
     public UserTypeReadDTO createUserTypes(UserTypeCreateDTO create) {
-        UserType userType = translationService.toEntity(create);
+        UserType userType = translationService.translate(create, UserType.class);
 
         userType = userTypeRepository.save(userType);
-        return translationService.toRead(userType);
+        return translationService.translate(userType, UserTypeReadDTO.class);
     }
 
     public UserTypeReadDTO patchUserTypes(UUID id, UserTypePatchDTO patch) {
         UserType userType = getUserTypesRequired(id);
 
-        translationService.patchEntity(patch, userType);
+        translationService.map(patch, userType);
 
         userType = userTypeRepository.save(userType);
-        return translationService.toRead(userType);
+        return translationService.translate(userType, UserTypeReadDTO.class);
     }
 
     public void deleteUserTypes(UUID id) {
@@ -54,7 +54,7 @@ public class UserTypeService {
         translationService.updateEntity(put, userType);
 
         userType = userTypeRepository.save(userType);
-        return translationService.toRead(userType);
+        return translationService.translate(userType, UserTypeReadDTO.class);
     }
 
     private UserType getUserTypesRequired(UUID id) {
