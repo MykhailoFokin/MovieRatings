@@ -68,13 +68,6 @@ public class TranslationService {
         );
     }
 
-    private void configureForXXX(Configuration c) {
-        c.beanOfClass(AbstractEntity.class).setIdentifierProperty("moderatorId");
-        c.beanOfClass(AbstractEntity.class).setBeanFinder(
-                (beanClass, id) -> repositoryHelper.getReferenceIfExists(beanClass, (UUID) id)
-        );
-    }
-
     private void configureForCompanyDetail(Configuration c) {
         c.beanOfClass(CompanyDetailsPatchDTO.class).translationTo(CompanyDetails.class).mapOnlyNotNullProperties();
     }
@@ -94,6 +87,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("crewTypeId").translatesTo("crewType.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(CrewPatchDTO.class).translationTo(Crew.class);
+        fromPatchToEntity.srcProperty("personId").translatesTo("person.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("crewTypeId").translatesTo("crewType.id");
         c.beanOfClass(CrewPatchDTO.class).translationTo(Crew.class).mapOnlyNotNullProperties();
     }
 
@@ -108,6 +106,8 @@ public class TranslationService {
         Configuration.Translation fromCreateToEntity = c.beanOfClass(GenreCreateDTO.class).translationTo(Genre.class);
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
 
+        Configuration.Translation fromPatchToEntity = c.beanOfClass(GenrePatchDTO.class).translationTo(Genre.class);
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
         c.beanOfClass(GenrePatchDTO.class).translationTo(Genre.class).mapOnlyNotNullProperties();
     }
 
@@ -127,6 +127,9 @@ public class TranslationService {
                 c.beanOfClass(MovieCompanyCreateDTO.class).translationTo(MovieCompany.class);
         fromCreateToEntity.srcProperty("companyDetailsId").translatesTo("companyDetails.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieCompanyPatchDTO.class).translationTo(MovieCompany.class);
+        fromPatchToEntity.srcProperty("companyDetailsId").translatesTo("companyDetails.id");
         c.beanOfClass(MovieCompanyPatchDTO.class).translationTo(MovieCompany.class).mapOnlyNotNullProperties();
     }
 
@@ -142,6 +145,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieReviewPatchDTO.class).translationTo(MovieReview.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
         c.beanOfClass(MovieReviewPatchDTO.class).translationTo(MovieReview.class).mapOnlyNotNullProperties();
     }
 
@@ -160,6 +168,12 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
         fromCreateToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieReviewCompliantPatchDTO.class).translationTo(MovieReviewCompliant.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
         c.beanOfClass(MovieReviewCompliantPatchDTO.class)
                 .translationTo(MovieReviewCompliant.class).mapOnlyNotNullProperties();
     }
@@ -177,6 +191,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieReviewFeedbackPatchDTO.class).translationTo(MovieReviewFeedback.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
         c.beanOfClass(MovieReviewFeedbackPatchDTO.class)
                 .translationTo(MovieReviewFeedback.class).mapOnlyNotNullProperties();
     }
@@ -190,6 +209,9 @@ public class TranslationService {
                 c.beanOfClass(MovieSpoilerDataCreateDTO.class).translationTo(MovieSpoilerData.class);
         fromCreateToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieSpoilerDataPatchDTO.class).translationTo(MovieSpoilerData.class);
+        fromPatchToEntity.srcProperty("movieReviewId").translatesTo("movieReview.id");
         c.beanOfClass(MovieSpoilerDataPatchDTO.class).translationTo(MovieSpoilerData.class).mapOnlyNotNullProperties();
     }
 
@@ -203,6 +225,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(MovieVotePatchDTO.class).translationTo(MovieVote.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
         c.beanOfClass(MovieVotePatchDTO.class).translationTo(MovieVote.class).mapOnlyNotNullProperties();
     }
 
@@ -214,6 +240,9 @@ public class TranslationService {
                 c.beanOfClass(NewsCreateDTO.class).translationTo(News.class);
         fromCreateToEntity.srcProperty("publisherId").translatesTo("publisher.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(NewsPatchDTO.class).translationTo(News.class);
+        fromPatchToEntity.srcProperty("publisherId").translatesTo("publisher.id");
         c.beanOfClass(NewsPatchDTO.class).translationTo(News.class).mapOnlyNotNullProperties();
     }
 
@@ -229,6 +258,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("newsId").translatesTo("news.id");
         fromCreateToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(NewsUserReviewPatchDTO.class).translationTo(NewsUserReview.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("newsId").translatesTo("news.id");
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
         c.beanOfClass(NewsUserReviewPatchDTO.class).translationTo(NewsUserReview.class).mapOnlyNotNullProperties();
     }
 
@@ -247,7 +281,9 @@ public class TranslationService {
 
         Configuration.Translation fromPatchToEntity =
                 c.beanOfClass(NewsUserReviewNotePatchDTO.class).translationTo(NewsUserReviewNote.class);
+        fromPatchToEntity.srcProperty("newsUserReviewId").translatesTo("newsUserReview.id");
         fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
+        fromPatchToEntity.srcProperty("newsId").translatesTo("news.id");
         c.beanOfClass(NewsUserReviewNotePatchDTO.class)
                 .translationTo(NewsUserReviewNote.class).mapOnlyNotNullProperties();
     }
@@ -265,6 +301,9 @@ public class TranslationService {
                 c.beanOfClass(PortalUserCreateDTO.class).translationTo(PortalUser.class);
         fromCreateToEntity.srcProperty("userTypeId").translatesTo("userType.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(PortalUserPatchDTO.class).translationTo(PortalUser.class);
+        fromPatchToEntity.srcProperty("userTypeId").translatesTo("userType.id");
         c.beanOfClass(PortalUserPatchDTO.class).translationTo(PortalUser.class).mapOnlyNotNullProperties();
     }
 
@@ -278,6 +317,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("countryId").translatesTo("country.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(ReleaseDetailPatchDTO.class).translationTo(ReleaseDetail.class);
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("countryId").translatesTo("country.id");
         c.beanOfClass(ReleaseDetailPatchDTO.class).translationTo(ReleaseDetail.class).mapOnlyNotNullProperties();
     }
 
@@ -291,6 +334,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("personId").translatesTo("person.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RolePatchDTO.class).translationTo(Role.class);
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
+        fromPatchToEntity.srcProperty("personId").translatesTo("person.id");
         c.beanOfClass(RolePatchDTO.class).translationTo(Role.class).mapOnlyNotNullProperties();
     }
 
@@ -306,6 +353,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("roleId").translatesTo("role.id");
         fromCreateToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RoleReviewPatchDTO.class).translationTo(RoleReview.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("roleId").translatesTo("role.id");
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
         c.beanOfClass(RoleReviewPatchDTO.class).translationTo(RoleReview.class).mapOnlyNotNullProperties();
     }
 
@@ -324,6 +376,12 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
         fromCreateToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RoleReviewCompliantPatchDTO.class).translationTo(RoleReviewCompliant.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("roleId").translatesTo("role.id");
+        fromPatchToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
         c.beanOfClass(RoleReviewCompliantPatchDTO.class)
                 .translationTo(RoleReviewCompliant.class).mapOnlyNotNullProperties();
     }
@@ -341,6 +399,11 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("roleId").translatesTo("role.id");
         fromCreateToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RoleReviewFeedbackPatchDTO.class).translationTo(RoleReviewFeedback.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("roleId").translatesTo("role.id");
+        fromPatchToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
         c.beanOfClass(RoleReviewFeedbackPatchDTO.class)
                 .translationTo(RoleReviewFeedback.class).mapOnlyNotNullProperties();
     }
@@ -353,6 +416,9 @@ public class TranslationService {
                 c.beanOfClass(RoleSpoilerDataCreateDTO.class).translationTo(RoleSpoilerData.class);
         fromCreateToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RoleSpoilerDataPatchDTO.class).translationTo(RoleSpoilerData.class);
+        fromPatchToEntity.srcProperty("roleReviewId").translatesTo("roleReview.id");
         c.beanOfClass(RoleSpoilerDataPatchDTO.class).translationTo(RoleSpoilerData.class).mapOnlyNotNullProperties();
     }
 
@@ -366,6 +432,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
         fromCreateToEntity.srcProperty("roleId").translatesTo("role.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(RoleVotePatchDTO.class).translationTo(RoleVote.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("roleId").translatesTo("role.id");
         c.beanOfClass(RoleVotePatchDTO.class).translationTo(RoleVote.class).mapOnlyNotNullProperties();
     }
 
@@ -379,6 +449,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("userTypeId").translatesTo("userType.id");
         fromCreateToEntity.srcProperty("grantedById").translatesTo("grantedBy.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(UserGrantPatchDTO.class).translationTo(UserGrant.class);
+        fromPatchToEntity.srcProperty("userTypeId").translatesTo("userType.id");
+        fromPatchToEntity.srcProperty("grantedById").translatesTo("grantedBy.id");
         c.beanOfClass(UserGrantPatchDTO.class).translationTo(UserGrant.class).mapOnlyNotNullProperties();
     }
 
@@ -390,6 +464,9 @@ public class TranslationService {
                 c.beanOfClass(UserTypeCreateDTO.class).translationTo(UserType.class);
         fromCreateToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(UserTypePatchDTO.class).translationTo(UserType.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
         c.beanOfClass(UserTypePatchDTO.class).translationTo(UserType.class).mapOnlyNotNullProperties();
     }
 
@@ -419,6 +496,9 @@ public class TranslationService {
                 c.beanOfClass(VisitCreateDTO.class).translationTo(Visit.class);
         fromCreateToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(VisitPatchDTO.class).translationTo(Visit.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
         c.beanOfClass(VisitPatchDTO.class).translationTo(Visit.class).mapOnlyNotNullProperties();
     }
 

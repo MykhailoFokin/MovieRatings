@@ -51,9 +51,9 @@ public class PortalUserNewsUserReviewNoteService {
                                                                    NewsUserReviewNotePatchDTO patch) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
         NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
-        /*if (patch.getModeratorId() != null) {
+        if (patch.getModeratorId() != null) {
             newsUserReviewNote.setModerator(null);
-        }*/
+        }
         checkAlreadyFixedUserReviewNote(newsUserReviewNote.getModeratorTypoReviewStatusType(),
                 patch.getModeratorTypoReviewStatusType(), newsUserReviewNoteId);
 

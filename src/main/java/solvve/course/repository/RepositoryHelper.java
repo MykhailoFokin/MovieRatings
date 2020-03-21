@@ -31,7 +31,8 @@ public class RepositoryHelper {
     }
 
     public <E> boolean validateIfExistsNotNewsUserReviewStatus(Class<E> entityClass, UUID id,
-                                                               ModeratorTypoReviewStatusType moderatorTypoReviewStatusType) {
+                                                               ModeratorTypoReviewStatusType
+                                                                       moderatorTypoReviewStatusType) {
         Query query = entityManager.createQuery("select count(e) from " + entityClass.getSimpleName()
                 + " e where e.id = :id and e.moderatorTypoReviewStatusType != :moderatorTypoReviewStatusType");
         query.setParameter("id", id);

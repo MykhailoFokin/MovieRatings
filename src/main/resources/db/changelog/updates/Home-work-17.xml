@@ -45,5 +45,17 @@
             <column name="moderator_typo_review_status_type" type="varchar(15)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="create table notification" author="mykhailo">
+        <createTable tableName="notification">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name = "message" type="varchar(1000)"/>
+            <column name = "source_entity" type="varchar(255)"/>
+            <column name = "entity_identifier" type="varchar(50)"/>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
 
 </databaseChangeLog>

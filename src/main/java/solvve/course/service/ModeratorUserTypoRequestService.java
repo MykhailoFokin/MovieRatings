@@ -62,10 +62,10 @@ public class ModeratorUserTypoRequestService {
         if (userTypoRequest.getNews() != null) {
             fixNewsByUserTypoRequest(userTypoRequest.getNews().getId(), userTypoRequest.getSourceText(),
                     put.getApprovedText());
-        } else if (userTypoRequest.getMovie() != null ) {
+        } else if (userTypoRequest.getMovie() != null) {
             fixMovieByUserTypoRequest(userTypoRequest.getMovie().getId(), userTypoRequest.getSourceText(),
                     put.getApprovedText());
-        } else if (userTypoRequest.getRole() != null ) {
+        } else if (userTypoRequest.getRole() != null) {
             fixRoleByUserTypoRequest(userTypoRequest.getRole().getId(), userTypoRequest.getSourceText(),
                     put.getApprovedText());
         } else {
@@ -110,13 +110,13 @@ public class ModeratorUserTypoRequestService {
                             userTypoRequest.getNews().getId(),
                             userTypoRequest.getSourceText(),
                             List.of(ModeratorTypoReviewStatusType.NEED_TO_FIX));
-        } else if (userTypoRequest.getMovie() != null ) {
+        } else if (userTypoRequest.getMovie() != null) {
             userTypoRequestsIds =
                     userTypoRequestRepository.findUserTypoRequestsOnMovieRequiredAttentionBySourceText(
                             userTypoRequest.getMovie().getId(),
                             userTypoRequest.getSourceText(),
                             List.of(ModeratorTypoReviewStatusType.NEED_TO_FIX));
-        } else if (userTypoRequest.getRole() != null ) {
+        } else if (userTypoRequest.getRole() != null) {
             userTypoRequestsIds =
                     userTypoRequestRepository.findUserTypoRequestsOnRoleRequiredAttentionBySourceText(
                             userTypoRequest.getRole().getId(),
