@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import solvve.course.event.VisitStatusChangedEvent;
 import solvve.course.service.CustomerNotificationService;
 
-@Async
 @Slf4j
 @Component
 public class NotifyCustomerOnFinishVisitListener {
@@ -16,6 +15,7 @@ public class NotifyCustomerOnFinishVisitListener {
     @Autowired
     private CustomerNotificationService customerNotificationService;
 
+    @Async
     @EventListener(condition = "#event.newStatus == T(solvve.course.domain.VisitStatus).FINISHED")
     public void onEvent(VisitStatusChangedEvent event) {
         log.info("handling {}", event);

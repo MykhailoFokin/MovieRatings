@@ -8,6 +8,7 @@ import solvve.course.dto.RoleReviewFeedbackPutDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
 import solvve.course.service.RoleReviewFeedbackService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,8 @@ public class RoleReviewFeedbackController {
     }
 
     @PostMapping
-    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@RequestBody RoleReviewFeedbackCreateDTO createDTO) {
+    public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@RequestBody
+                                                                  @Valid RoleReviewFeedbackCreateDTO createDTO) {
         return roleReviewFeedback.createRoleReviewFeedback(createDTO);
     }
 
@@ -40,7 +42,7 @@ public class RoleReviewFeedbackController {
 
     @PutMapping("/{id}")
     public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID id,
-                                                           @RequestBody RoleReviewFeedbackPutDTO put) {
+                                                           @RequestBody @Valid RoleReviewFeedbackPutDTO put) {
         return roleReviewFeedback.updateRoleReviewFeedback(id, put);
     }
 }

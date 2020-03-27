@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CompanyDetails;
@@ -8,9 +10,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CompanyDetailsRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CompanyDetailsService {
@@ -27,10 +27,9 @@ public class CompanyDetailsService {
         return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
-    public List<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter) {
-        List<CompanyDetails> companyDetails = companyDetailsRepository.findByFilter(filter);
-        return companyDetails.stream().map(e -> translationService.translate(e, CompanyDetailsReadDTO.class))
-                .collect(Collectors.toList());
+    public PageResult<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter, Pageable pageable) {
+        Page<CompanyDetails> companyDetails = companyDetailsRepository.findByFilter(filter, pageable);
+        return translationService.toPageResult(companyDetails, CompanyDetailsReadDTO.class);
     }
 
     public CompanyDetailsReadDTO createCompanyDetails(CompanyDetailsCreateDTO create) {

@@ -1,11 +1,11 @@
 package solvve.course.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeFilter;
 
-import java.util.List;
-
 public interface CrewTypeRepositoryCustom {
 
-    List<CrewType> findByFilter(CrewTypeFilter filter);
+    Page<CrewType> findByFilter(CrewTypeFilter filter, Pageable pageable);
 }

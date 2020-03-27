@@ -7,6 +7,8 @@ import solvve.course.dto.MoviePatchDTO;
 import solvve.course.dto.MoviePutDTO;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.service.MovieService;
+
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -22,12 +24,12 @@ public class MovieController {
     }
 
     @PostMapping
-    public MovieReadDTO createMovie(@RequestBody MovieCreateDTO createDTO) {
+    public MovieReadDTO createMovie(@RequestBody @Valid MovieCreateDTO createDTO) {
         return movieService.createMovie(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReadDTO patchMovie(@PathVariable UUID id, @RequestBody MoviePatchDTO patch) {
+    public MovieReadDTO patchMovie(@PathVariable UUID id, @RequestBody @Valid MoviePatchDTO patch) {
         return movieService.patchMovie(id, patch);
     }
 
@@ -37,7 +39,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody MoviePutDTO put) {
+    public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody @Valid MoviePutDTO put) {
         return movieService.updateMovie(id, put);
     }
 }

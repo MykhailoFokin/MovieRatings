@@ -2,37 +2,20 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from role_review_compliant",
-        "delete from role_review",
-        "delete from portal_user",
-        "delete from user_type",
-        "delete from role",
-        "delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class RoleReviewCompliantRepositoryTest {
+public class RoleReviewCompliantRepositoryTest extends BaseTest {
 
     @Autowired
     private RoleReviewCompliantRepository roleReviewCompliantRepository;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
@@ -113,5 +96,11 @@ public class RoleReviewCompliantRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveRoleReviewCompliantValidation() {
+        RoleReviewCompliant entity = new RoleReviewCompliant();
+        roleReviewCompliantRepository.save(entity);
     }
 }

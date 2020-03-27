@@ -8,6 +8,7 @@ import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
 import solvve.course.service.RoleReviewService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,12 @@ public class RoleReviewController {
     }
 
     @PostMapping
-    public RoleReviewReadDTO createRoleReview(@RequestBody RoleReviewCreateDTO createDTO) {
+    public RoleReviewReadDTO createRoleReview(@RequestBody @Valid RoleReviewCreateDTO createDTO) {
         return roleReviewService.createRoleReview(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReviewReadDTO patchRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPatchDTO patch) {
+    public RoleReviewReadDTO patchRoleReview(@PathVariable UUID id, @RequestBody @Valid RoleReviewPatchDTO patch) {
         return roleReviewService.patchRoleReview(id, patch);
     }
 
@@ -38,7 +39,7 @@ public class RoleReviewController {
     }
 
     @PutMapping("/{id}")
-    public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody RoleReviewPutDTO put) {
+    public RoleReviewReadDTO putRoleReview(@PathVariable UUID id, @RequestBody @Valid RoleReviewPutDTO put) {
         return roleReviewService.updateRoleReview(id, put);
     }
 }

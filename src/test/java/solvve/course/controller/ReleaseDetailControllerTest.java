@@ -1,24 +1,20 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.ReleaseDetail;
 import solvve.course.dto.ReleaseDetailCreateDTO;
 import solvve.course.dto.ReleaseDetailPatchDTO;
 import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.ReleaseDetailService;
 
 import java.time.LocalDate;
@@ -28,16 +24,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = ReleaseDetailController.class)
-@ActiveProfiles("test")
-public class ReleaseDetailControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class ReleaseDetailControllerTest extends BaseControllerTest {
 
     @MockBean
     private ReleaseDetailService releaseDetailService;
@@ -95,8 +83,12 @@ public class ReleaseDetailControllerTest {
 
         ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
         create.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
+        create.setCountryId(UUID.randomUUID());
+        create.setMovieId(UUID.randomUUID());
 
         ReleaseDetailReadDTO read = createReleaseDetailRead();
+        read.setCountryId(create.getCountryId());
+        read.setMovieId(create.getMovieId());
 
         Mockito.when(releaseDetailService.createReleaseDetails(create)).thenReturn(read);
 
@@ -144,8 +136,12 @@ public class ReleaseDetailControllerTest {
 
         ReleaseDetailPutDTO putDTO = new ReleaseDetailPutDTO();
         putDTO.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
+        putDTO.setMovieId(UUID.randomUUID());
+        putDTO.setCountryId(UUID.randomUUID());
 
         ReleaseDetailReadDTO read = createReleaseDetailRead();
+        read.setMovieId(putDTO.getMovieId());
+        read.setCountryId(putDTO.getCountryId());
 
         Mockito.when(releaseDetailService.updateReleaseDetails(read.getId(),putDTO)).thenReturn(read);
 
@@ -157,5 +153,34 @@ public class ReleaseDetailControllerTest {
 
         ReleaseDetailReadDTO actualReleaseDetail = objectMapper.readValue(resultJson, ReleaseDetailReadDTO.class);
         Assert.assertEquals(read, actualReleaseDetail);
+    }
+
+    @Test
+    public void testCreateReleaseDetailValidationFailed() throws Exception {
+        ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/releasedetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(releaseDetailService, Mockito.never()).createReleaseDetails(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutReleaseDetailValidationFailed() throws Exception {
+        ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/releasedetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(releaseDetailService, Mockito.never()).updateReleaseDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

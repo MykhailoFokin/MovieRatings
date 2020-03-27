@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieReview;
 import solvve.course.domain.MovieReviewFeedback;
@@ -19,30 +15,17 @@ import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewFeedbackRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.List;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_review_feedback",
-        " delete from movie_review",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieReviewMovieReviewFeedbackServiceTest {
+public class MovieReviewMovieReviewFeedbackServiceTest extends BaseTest {
 
     @Autowired
     private MovieReviewFeedbackRepository movieReviewFeedbackRepository;
 
     @Autowired
     private MovieReviewMovieReviewFeedbackService movieReviewMovieReviewFeedbackService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetMovieReviewFeedback() {

@@ -1,22 +1,21 @@
 package solvve.course.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.CompanyDetails;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.CompanyDetailsService;
 
 import java.time.LocalDate;
@@ -26,16 +25,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = CompanyDetailsController.class)
-@ActiveProfiles("test")
-public class CompanyDetailsControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @MockBean
     private CompanyDetailsService companyDetailsService;
@@ -160,15 +151,316 @@ public class CompanyDetailsControllerTest {
         CompanyDetailsFilter companyDetailsFilter = new CompanyDetailsFilter();
         companyDetailsFilter.setName("Director");
         CompanyDetailsReadDTO read = createCompanyDetailsRead();
-        List<CompanyDetailsReadDTO> expectedResult = List.of(read);
-        Mockito.when(companyDetailsService.getCompanyDetails(companyDetailsFilter)).thenReturn(expectedResult);
+        PageResult<CompanyDetailsReadDTO> resultPage = new PageResult<>();
+        resultPage.setData(List.of(read));
+        Mockito.when(companyDetailsService.getCompanyDetails(companyDetailsFilter, PageRequest.of(0, defaultPageSize)))
+                .thenReturn(resultPage);
 
         String resultJson = mvc.perform(get("/api/v1/companydetails")
                 .param("name", companyDetailsFilter.getName().toString()))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<CompanyDetailsReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        PageResult<CompanyDetailsReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
         });
-        Assert.assertEquals(expectedResult, actualResult);
+        Assert.assertEquals(resultPage, actualResult);
+    }
+
+    @Test
+    public void testCreateCompanyDetailValidationFailed() throws Exception {
+        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/companydetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).createCompanyDetails(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailValidationFailed() throws Exception {
+        CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/companydetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).updateCompanyDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailsCheckLimitBorders() throws Exception {
+
+        CompanyDetailsPutDTO putDTO = new CompanyDetailsPutDTO();
+        putDTO.setName("D");
+        putDTO.setOverview("T");
+        putDTO.setYearOfFoundation(LocalDate.now());
+
+        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+
+        Mockito.when(companyDetailsService.updateCompanyDetails(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/companydetails/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CompanyDetailsReadDTO actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assert.assertEquals(read, actualCompanyDetails);
+
+        // Check upper border
+        putDTO.setName(StringUtils.repeat("*", 255));
+        putDTO.setOverview(StringUtils.repeat("*", 1000));
+        putDTO.setYearOfFoundation(LocalDate.now());
+
+        resultJson = mvc.perform(put("/api/v1/companydetails/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assert.assertEquals(read, actualCompanyDetails);
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
+        put.setName("");
+        put.setOverview("");
+
+        String resultJson = mvc.perform(put("/api/v1/companydetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).updateCompanyDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
+        put.setName(StringUtils.repeat("*", 256));
+        put.setOverview(StringUtils.repeat("*", 1001));
+
+        String resultJson = mvc.perform(put("/api/v1/companydetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).updateCompanyDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        create.setName("");
+        create.setOverview("");
+
+        String resultJson = mvc.perform(post("/api/v1/companydetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).createCompanyDetails(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        create.setName(StringUtils.repeat("*", 256));
+        create.setOverview(StringUtils.repeat("*", 1001));
+
+
+        String resultJson = mvc.perform(post("/api/v1/companydetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).createCompanyDetails(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailsCheckStingBorders() throws Exception {
+
+        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        create.setName("D");
+        create.setOverview("T");
+        create.setYearOfFoundation(LocalDate.now());
+
+        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+
+        Mockito.when(companyDetailsService.createCompanyDetails(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/companydetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CompanyDetailsReadDTO actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assertions.assertThat(actualCompanyDetails).isEqualToComparingFieldByField(read);
+
+        create.setName(StringUtils.repeat("*", 255));
+        create.setOverview(StringUtils.repeat("*", 1000));
+        create.setYearOfFoundation(LocalDate.now());
+
+        resultJson = mvc.perform(post("/api/v1/companydetails")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assertions.assertThat(actualCompanyDetails).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCompanyDetailsCheckStringBorders() throws Exception {
+
+        CompanyDetailsPatchDTO patchDTO = new CompanyDetailsPatchDTO();
+        patchDTO.setName("D");
+        patchDTO.setOverview("T");
+        patchDTO.setYearOfFoundation(LocalDate.now());
+
+        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+
+        Mockito.when(companyDetailsService.patchCompanyDetails(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/companydetails/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CompanyDetailsReadDTO actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assert.assertEquals(read, actualCompanyDetails);
+
+        patchDTO.setName(StringUtils.repeat("*", 255));
+        patchDTO.setOverview(StringUtils.repeat("*", 1000));
+
+        resultJson = mvc.perform(patch("/api/v1/companydetails/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCompanyDetails = objectMapper.readValue(resultJson, CompanyDetailsReadDTO.class);
+        Assert.assertEquals(read, actualCompanyDetails);
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        CompanyDetailsPatchDTO patch = new CompanyDetailsPatchDTO();
+        patch.setName("");
+        patch.setOverview("");
+
+        String resultJson = mvc.perform(patch("/api/v1/companydetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).updateCompanyDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        CompanyDetailsPatchDTO patch = new CompanyDetailsPatchDTO();
+        patch.setName(StringUtils.repeat("*", 256));
+        patch.setOverview(StringUtils.repeat("*", 1001));
+
+        String resultJson = mvc.perform(patch("/api/v1/companydetails/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(companyDetailsService, Mockito.never()).updateCompanyDetails(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testGetCompanyDetailsWithPagingAndSorting() throws Exception {
+        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        read.setName("Director");
+        CompanyDetailsFilter filter = new CompanyDetailsFilter();
+        filter.setName(read.getName());
+
+        int page = 1;
+        int size = 25;
+
+        PageResult<CompanyDetailsReadDTO> resultPage = new PageResult<>();
+        resultPage.setPage(page);
+        resultPage.setPageSize(size);
+        resultPage.setTotalElements(100);
+        resultPage.setTotalPages(4);
+        resultPage.setData(List.of(read));
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Mockito.when(companyDetailsService.getCompanyDetails(filter, pageRequest)).thenReturn(resultPage);
+
+        String resultJson = mvc.perform(get("/api/v1/companydetails")
+                .param("name", filter.getName())
+                .param("page", Integer.toString(page))
+                .param("size", Integer.toString(size))
+                .param("sort", "updatedAt,desc"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PageResult<CompanyDetailsReadDTO> actualPage = objectMapper.readValue(resultJson,
+                new TypeReference<PageResult<CompanyDetailsReadDTO>>() {
+                });
+        Assert.assertEquals(resultPage, actualPage);
+    }
+
+    @Test
+    public void testGetCompanyDetailsWithBigPage() throws Exception {
+        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsFilter filter = new CompanyDetailsFilter();
+
+        int page = 0;
+        int size = 99999;
+
+        PageResult<CompanyDetailsReadDTO> resultPage = new PageResult<>();
+        resultPage.setPage(page);
+        resultPage.setPageSize(size);
+        resultPage.setTotalElements(100);
+        resultPage.setTotalPages(4);
+        resultPage.setData(List.of(read));
+
+        PageRequest pageRequest = PageRequest.of(page, maxPageSize);
+        Mockito.when(companyDetailsService.getCompanyDetails(filter, pageRequest)).thenReturn(resultPage);
+
+        String resultJson = mvc.perform(get("/api/v1/companydetails")
+                .param("page", Integer.toString(page))
+                .param("size", Integer.toString(size)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PageResult<CompanyDetailsReadDTO> actualPage = objectMapper.readValue(resultJson,
+                new TypeReference<PageResult<CompanyDetailsReadDTO>>() {
+                });
+        Assert.assertEquals(resultPage, actualPage);
     }
 }

@@ -4,17 +4,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.MovieFilter;
 import solvve.course.service.MovieService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,34 +19,20 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from movie_prod_countries",
-        "delete from movie_prod_companies",
-        "delete from movie_prod_languages",
-        "delete from language",
-        "delete from genre",
-        "delete from movie",
-        "delete from country",
-        "delete from movie_company",
-        "delete from company_details"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class MovieRepositoryTest {
+public class MovieRepositoryTest extends BaseTest {
 
     @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Autowired
     private MovieService movieService;
 
     @Test
     public void testSave() {
-        Set<Country> sc = testObjectsFactory.createCountrySet();
+        Set<Country> sc = testObjectsFactory.createCountries();
         Movie m = new Movie();
+        m.setTitle("Movie");
+        m.setYear((short) 2010);
         m.setMovieProdCountries(sc);
         m = movieRepository.save(m);
         assertNotNull(m.getId());
@@ -561,10 +542,8 @@ public class MovieRepositoryTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setCompanyTypes(List.of(MovieProductionType.PRODUCTION_COMPANIES));
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(m1.getId(), m3.getId());
-        });
+        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+                .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
     @Test
@@ -711,5 +690,11 @@ public class MovieRepositoryTest {
         testObjectsFactory.inTransaction(()-> {
             Assert.assertEquals(expectedIdsOfMovies, movieRepository.getIdsOfMovies().collect(Collectors.toSet()));
         });
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveMovieValidation() {
+        Movie entity = new Movie();
+        movieRepository.save(entity);
     }
 }

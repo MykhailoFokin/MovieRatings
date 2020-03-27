@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
@@ -8,9 +10,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CountryService {
@@ -27,10 +27,9 @@ public class CountryService {
         return translationService.translate(country, CountryReadDTO.class);
     }
 
-    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
-        List<Country> countries = countryRepository.findByFilter(countryFilter);
-        return countries.stream().map(e -> translationService.translate(e, CountryReadDTO.class))
-                .collect(Collectors.toList());
+    public PageResult<CountryReadDTO> getCountries(CountryFilter countryFilter, Pageable pageable) {
+        Page<Country> countries = countryRepository.findByFilter(countryFilter, pageable);
+        return translationService.toPageResult(countries, CountryReadDTO.class);
     }
 
     public CountryReadDTO createCountries(CountryCreateDTO create) {

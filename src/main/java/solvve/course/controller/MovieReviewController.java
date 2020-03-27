@@ -8,6 +8,7 @@ import solvve.course.dto.MovieReviewPutDTO;
 import solvve.course.dto.MovieReviewReadDTO;
 import solvve.course.service.MovieReviewService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,12 @@ public class MovieReviewController {
     }
 
     @PostMapping
-    public MovieReviewReadDTO createMovieReview(@RequestBody MovieReviewCreateDTO createDTO) {
+    public MovieReviewReadDTO createMovieReview(@RequestBody @Valid MovieReviewCreateDTO createDTO) {
         return movieReviewService.createMovieReview(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public MovieReviewReadDTO patchMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPatchDTO patch) {
+    public MovieReviewReadDTO patchMovieReview(@PathVariable UUID id, @RequestBody @Valid MovieReviewPatchDTO patch) {
         return movieReviewService.patchMovieReview(id, patch);
     }
 
@@ -38,7 +39,7 @@ public class MovieReviewController {
     }
 
     @PutMapping("/{id}")
-    public MovieReviewReadDTO putMovieReview(@PathVariable UUID id, @RequestBody MovieReviewPutDTO put) {
+    public MovieReviewReadDTO putMovieReview(@PathVariable UUID id, @RequestBody @Valid MovieReviewPutDTO put) {
         return movieReviewService.updateMovieReview(id, put);
     }
 }

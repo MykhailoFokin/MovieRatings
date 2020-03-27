@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Genre;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieGenreType;
@@ -22,13 +18,7 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from genre",
-        "delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class GenreServiceTest {
+public class GenreServiceTest extends BaseTest {
 
     @Autowired
     private GenreRepository genreRepository;
@@ -36,19 +26,14 @@ public class GenreServiceTest {
     @Autowired
     private GenreService genreService;
 
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
-
     @Test
     public void testGetCountries() {
         Movie movie = testObjectsFactory.createMovie();
         Genre genre = testObjectsFactory.createGenre(movie);
 
-        testObjectsFactory.inTransaction(() -> {
-            GenreReadDTO readDTO = genreService.getGenre(genre.getId());
-            Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(genre, "movieId");
-            Assertions.assertThat(readDTO.getMovieId()).isEqualTo(genre.getMovie().getId());
-        });
+        GenreReadDTO readDTO = genreService.getGenre(genre.getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(genre, "movieId");
+        Assertions.assertThat(readDTO.getMovieId()).isEqualTo(genre.getMovie().getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -160,13 +145,13 @@ public class GenreServiceTest {
         GenrePutDTO put = new GenrePutDTO();
         GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
         Assert.assertNotNull(read.getMovieId());
 
         testObjectsFactory.inTransaction(() -> {
             Genre genreAfterUpdate = genreRepository.findById(read.getId()).get();
 
-            Assert.assertNull(genreAfterUpdate.getName());
+            Assert.assertNotNull(genreAfterUpdate.getName());
             Assert.assertNotNull(genreAfterUpdate.getMovie());
         });
     }

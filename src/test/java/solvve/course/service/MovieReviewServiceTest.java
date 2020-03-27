@@ -3,38 +3,22 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_review",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieReviewServiceTest {
+public class MovieReviewServiceTest extends BaseTest {
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
 
     @Autowired
     private MovieReviewService movieReviewService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetMovieReview() {
@@ -187,7 +171,7 @@ public class MovieReviewServiceTest {
 
         Assert.assertNotNull(read.getPortalUserId());
         Assert.assertNotNull(read.getMovieId());
-        Assert.assertNull(read.getTextReview());
+        Assert.assertNotNull(read.getTextReview());
         Assert.assertNull(read.getModeratorId());
         Assert.assertNull(read.getModeratedStatus());
 
@@ -195,7 +179,7 @@ public class MovieReviewServiceTest {
 
         Assert.assertNotNull(movieReviewAfterUpdate.getPortalUser());
         Assert.assertNotNull(movieReviewAfterUpdate.getMovie());
-        Assert.assertNull(movieReviewAfterUpdate.getTextReview());
+        Assert.assertNotNull(movieReviewAfterUpdate.getTextReview());
         Assert.assertNull(movieReviewAfterUpdate.getModerator());
         Assert.assertNull(movieReviewAfterUpdate.getModeratedStatus());
     }

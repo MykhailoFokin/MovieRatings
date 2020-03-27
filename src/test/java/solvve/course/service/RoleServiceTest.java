@@ -1,15 +1,10 @@
 package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
-import org.hibernate.LazyInitializationException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.RoleCreateDTO;
 import solvve.course.dto.RolePatchDTO;
@@ -17,29 +12,16 @@ import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from role_vote",
-        "delete from portal_user",
-        "delete from role",
-        "delete from movie",
-        " delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class RoleServiceTest {
+public class RoleServiceTest extends BaseTest {
 
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetRole() {
@@ -173,14 +155,14 @@ public class RoleServiceTest {
         RoleReadDTO read = roleService.updateRole(role.getId(), put);
 
         Assert.assertNull(read.getTitle());
-        Assert.assertNull(read.getRoleType());
+        Assert.assertNotNull(read.getRoleType());
         Assert.assertNull(read.getDescription());
 
         testObjectsFactory.inTransaction(() -> {
             Role roleAfterUpdate = roleRepository.findById(read.getId()).get();
 
             Assert.assertNull(roleAfterUpdate.getTitle());
-            Assert.assertNull(roleAfterUpdate.getRoleType());
+            Assert.assertNotNull(roleAfterUpdate.getRoleType());
             Assert.assertNull(roleAfterUpdate.getDescription());
 
             Assertions.assertThat(role).isEqualToComparingOnlyGivenFields(roleAfterUpdate,"id");

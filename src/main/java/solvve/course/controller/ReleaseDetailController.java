@@ -8,6 +8,7 @@ import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
 import solvve.course.service.ReleaseDetailService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,13 @@ public class ReleaseDetailController {
     }
 
     @PostMapping
-    public ReleaseDetailReadDTO createReleaseDetails(@RequestBody ReleaseDetailCreateDTO createDTO) {
+    public ReleaseDetailReadDTO createReleaseDetails(@RequestBody @Valid ReleaseDetailCreateDTO createDTO) {
         return releaseDetailService.createReleaseDetails(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public ReleaseDetailReadDTO patchReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPatchDTO patch) {
+    public ReleaseDetailReadDTO patchReleaseDetails(@PathVariable UUID id,
+                                                    @RequestBody ReleaseDetailPatchDTO patch) {
         return releaseDetailService.patchReleaseDetails(id, patch);
     }
 
@@ -38,7 +40,7 @@ public class ReleaseDetailController {
     }
 
     @PutMapping("/{id}")
-    public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody ReleaseDetailPutDTO put) {
+    public ReleaseDetailReadDTO putReleaseDetails(@PathVariable UUID id, @RequestBody @Valid ReleaseDetailPutDTO put) {
         return releaseDetailService.updateReleaseDetails(id, put);
     }
 }

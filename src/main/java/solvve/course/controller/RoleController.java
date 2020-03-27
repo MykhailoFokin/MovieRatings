@@ -7,6 +7,8 @@ import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.service.RoleService;
+
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -22,12 +24,12 @@ public class RoleController {
     }
 
     @PostMapping
-    public RoleReadDTO createRole(@RequestBody RoleCreateDTO createDTO) {
+    public RoleReadDTO createRole(@RequestBody @Valid RoleCreateDTO createDTO) {
         return roleService.createRole(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public RoleReadDTO patchRole(@PathVariable UUID id, @RequestBody RolePatchDTO patch) {
+    public RoleReadDTO patchRole(@PathVariable UUID id, @RequestBody @Valid RolePatchDTO patch) {
         return roleService.patchRole(id, patch);
     }
 
@@ -37,7 +39,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody RolePutDTO put) {
+    public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody @Valid RolePutDTO put) {
         return roleService.updateRole(id, put);
     }
 }

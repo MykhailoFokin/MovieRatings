@@ -2,14 +2,10 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
@@ -17,21 +13,10 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static solvve.course.domain.UserVoteRatingType.R2;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from movie_vote",
-        "delete from movie",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class MovieVoteRepositoryTest {
+public class MovieVoteRepositoryTest extends BaseTest {
 
     @Autowired
     private MovieVoteRepository movieVoteRepository;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
@@ -42,6 +27,7 @@ public class MovieVoteRepositoryTest {
         MovieVote r = new MovieVote();
         r.setMovie(movie);
         r.setPortalUser(portalUser);
+        r.setRating(UserVoteRatingType.R9);
         r = movieVoteRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieVoteRepository.findById(r.getId()).isPresent());
@@ -109,5 +95,11 @@ public class MovieVoteRepositoryTest {
         testObjectsFactory.createMovieVote(portalUser2, movie, UserVoteRatingType.R9);
 
         Assert.assertEquals(7.0, movieVoteRepository.calcAverageMarkOfMovie(movie.getId()), Double.MIN_NORMAL);
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveMovieVoteValidation() {
+        MovieVote entity = new MovieVote();
+        movieVoteRepository.save(entity);
     }
 }

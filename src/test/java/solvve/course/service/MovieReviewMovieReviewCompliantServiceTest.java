@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
@@ -17,30 +13,17 @@ import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewCompliantRepository;
 import solvve.course.repository.PortalUserRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.List;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_review_compliant",
-        " delete from movie_review",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieReviewMovieReviewCompliantServiceTest {
+public class MovieReviewMovieReviewCompliantServiceTest extends BaseTest {
 
     @Autowired
     private MovieReviewCompliantRepository movieReviewCompliantRepository;
 
     @Autowired
     private MovieReviewMovieReviewCompliantService movieReviewMovieReviewCompliantService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Autowired
     private PortalUserRepository portalUserRepository;

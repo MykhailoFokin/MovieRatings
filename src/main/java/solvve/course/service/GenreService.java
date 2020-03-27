@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Genre;
@@ -8,9 +10,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.GenreRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class GenreService {
@@ -56,10 +56,9 @@ public class GenreService {
         return translationService.translate(genre, GenreReadDTO.class);
     }
 
-    public List<GenreReadDTO> getGenres(GenreFilter genreFilter) {
-        List<Genre> genres = genreRepository.findByFilter(genreFilter);
-        return genres.stream().map(e -> translationService.translate(e, GenreReadDTO.class))
-                .collect(Collectors.toList());
+    public PageResult<GenreReadDTO> getGenres(GenreFilter genreFilter, Pageable pageable) {
+        Page<Genre> genres = genreRepository.findByFilter(genreFilter, pageable);
+        return translationService.toPageResult(genres, GenreReadDTO.class);
     }
 
     private Genre getGenreRequired(UUID id) {

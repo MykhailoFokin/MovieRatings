@@ -3,14 +3,9 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Language;
-import solvve.course.domain.LanguageType;
 import solvve.course.dto.LanguageCreateDTO;
 import solvve.course.dto.LanguagePatchDTO;
 import solvve.course.dto.LanguagePutDTO;
@@ -21,20 +16,13 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = "delete from language", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class LanguageServiceTest {
+public class LanguageServiceTest extends BaseTest {
 
     @Autowired
     private LanguageRepository languageRepository;
 
     @Autowired
     private LanguageService languageService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetLanguage() {
@@ -124,11 +112,11 @@ public class LanguageServiceTest {
         LanguagePutDTO put = new LanguagePutDTO();
         LanguageReadDTO read = languageService.updateLanguage(language.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
 
         Language languageAfterUpdate = languageRepository.findById(read.getId()).get();
 
-        Assert.assertNull(languageAfterUpdate.getName());
+        Assert.assertNotNull(languageAfterUpdate.getName());
 
         Assertions.assertThat(read).isEqualToIgnoringGivenFields(languageAfterUpdate,
                 "movies", "countries");

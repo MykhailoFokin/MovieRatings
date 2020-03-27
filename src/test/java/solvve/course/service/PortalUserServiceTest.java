@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserConfidenceType;
 import solvve.course.domain.UserType;
@@ -22,22 +18,13 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from portal_user",
-        " delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class PortalUserServiceTest {
+public class PortalUserServiceTest extends BaseTest {
 
     @Autowired
     private PortalUserRepository portalUserRepository;
 
     @Autowired
     private PortalUserService portalUserService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetPortalUsers() {
@@ -184,7 +171,7 @@ public class PortalUserServiceTest {
         Assert.assertNull(read.getSurname());
         Assert.assertNull(read.getName());
         Assert.assertNull(read.getMiddleName());
-        Assert.assertNull(read.getLogin());
+        Assert.assertNotNull(read.getLogin());
         Assert.assertNull(read.getUserConfidence());
 
         PortalUser portalUserAfterUpdate = portalUserRepository.findById(read.getId()).get();
@@ -193,7 +180,7 @@ public class PortalUserServiceTest {
         Assert.assertNull(portalUserAfterUpdate.getSurname());
         Assert.assertNull(portalUserAfterUpdate.getName());
         Assert.assertNull(portalUserAfterUpdate.getMiddleName());
-        Assert.assertNull(portalUserAfterUpdate.getLogin());
+        Assert.assertNotNull(portalUserAfterUpdate.getLogin());
         Assert.assertNull(portalUserAfterUpdate.getUserConfidence());
     }
 }

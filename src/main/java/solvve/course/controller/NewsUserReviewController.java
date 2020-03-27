@@ -8,6 +8,7 @@ import solvve.course.dto.NewsUserReviewPutDTO;
 import solvve.course.dto.NewsUserReviewReadDTO;
 import solvve.course.service.NewsUserReviewService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,13 @@ public class NewsUserReviewController {
     }
 
     @PostMapping
-    public NewsUserReviewReadDTO createNewsUserReview(@RequestBody NewsUserReviewCreateDTO createDTO) {
+    public NewsUserReviewReadDTO createNewsUserReview(@RequestBody @Valid NewsUserReviewCreateDTO createDTO) {
         return newsUserReviewService.createNewsUserReview(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public NewsUserReviewReadDTO patchNewsUserReview(@PathVariable UUID id, @RequestBody NewsUserReviewPatchDTO patch) {
+    public NewsUserReviewReadDTO patchNewsUserReview(@PathVariable UUID id,
+                                                     @RequestBody NewsUserReviewPatchDTO patch) {
         return newsUserReviewService.patchNewsUserReview(id, patch);
     }
 
@@ -38,7 +40,8 @@ public class NewsUserReviewController {
     }
 
     @PutMapping("/{id}")
-    public NewsUserReviewReadDTO putNewsUserReview(@PathVariable UUID id, @RequestBody NewsUserReviewPutDTO put) {
+    public NewsUserReviewReadDTO putNewsUserReview(@PathVariable UUID id,
+                                                   @RequestBody @Valid NewsUserReviewPutDTO put) {
         return newsUserReviewService.updateNewsUserReview(id, put);
     }
 }

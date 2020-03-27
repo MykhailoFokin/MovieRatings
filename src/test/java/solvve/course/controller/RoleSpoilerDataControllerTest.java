@@ -1,24 +1,18 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleSpoilerData;
-import solvve.course.dto.RoleSpoilerDataCreateDTO;
-import solvve.course.dto.RoleSpoilerDataPatchDTO;
-import solvve.course.dto.RoleSpoilerDataPutDTO;
-import solvve.course.dto.RoleSpoilerDataReadDTO;
+import solvve.course.dto.*;
+import solvve.course.exception.ControllerValidationException;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.RoleSpoilerDataService;
 
 import java.util.UUID;
@@ -26,16 +20,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = RoleSpoilerDataController.class)
-@ActiveProfiles("test")
-public class RoleSpoilerDataControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class RoleSpoilerDataControllerTest extends BaseControllerTest {
 
     @MockBean
     private RoleSpoilerDataService roleSpoilerDataService;
@@ -95,8 +81,10 @@ public class RoleSpoilerDataControllerTest {
         RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
         create.setStartIndex(100);
         create.setEndIndex(150);
+        create.setRoleReviewId(UUID.randomUUID());
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead();
+        read.setRoleReviewId(create.getRoleReviewId());
 
         Mockito.when(roleSpoilerDataService.createRoleSpoilerData(create)).thenReturn(read);
 
@@ -148,8 +136,10 @@ public class RoleSpoilerDataControllerTest {
         RoleSpoilerDataPutDTO putDTO = new RoleSpoilerDataPutDTO();
         putDTO.setStartIndex(100);
         putDTO.setEndIndex(150);
+        putDTO.setRoleReviewId(UUID.randomUUID());
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead();
+        read.setRoleReviewId(putDTO.getRoleReviewId());
 
         Mockito.when(roleSpoilerDataService.updateRoleSpoilerData(read.getId(),putDTO)).thenReturn(read);
 
@@ -162,5 +152,98 @@ public class RoleSpoilerDataControllerTest {
         RoleSpoilerDataReadDTO actualRoleSpoilerData =
                 objectMapper.readValue(resultJson, RoleSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualRoleSpoilerData);
+    }
+
+    @Test
+    public void testCreateRoleSpoilerDataValidationFailed() throws Exception {
+        RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/rolespoilerdata")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleSpoilerDataService, Mockito.never()).createRoleSpoilerData(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutRoleSpoilerDataValidationFailed() throws Exception {
+        RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/rolespoilerdata/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleSpoilerDataService, Mockito.never()).updateRoleSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateRoleSpoilerDataWrongIndexes() throws Exception {
+        RoleSpoilerDataCreateDTO roleSpoilerDataCreate = new RoleSpoilerDataCreateDTO();
+        roleSpoilerDataCreate.setRoleReviewId(UUID.randomUUID());
+        roleSpoilerDataCreate.setStartIndex(100);
+        roleSpoilerDataCreate.setEndIndex(10);
+
+        String resultJson = mvc.perform(post("/api/v1//rolespoilerdata")
+                .content(objectMapper.writeValueAsString(roleSpoilerDataCreate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(roleSpoilerDataService, Mockito.never()).createRoleSpoilerData(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchRoleSpoilerDataWrongIndexes() throws Exception {
+        RoleSpoilerDataPatchDTO roleSpoilerDataPatch = new RoleSpoilerDataPatchDTO();
+        roleSpoilerDataPatch.setRoleReviewId(UUID.randomUUID());
+        roleSpoilerDataPatch.setStartIndex(100);
+        roleSpoilerDataPatch.setEndIndex(10);
+
+        String resultJson = mvc.perform(patch("/api/v1/rolespoilerdata/{id}",
+                roleSpoilerDataPatch.getRoleReviewId())
+                .content(objectMapper.writeValueAsString(roleSpoilerDataPatch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(roleSpoilerDataService, Mockito.never()).patchRoleSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutRoleSpoilerDataWrongIndexes() throws Exception {
+        RoleSpoilerDataPutDTO roleSpoilerDataPut = new RoleSpoilerDataPutDTO();
+        roleSpoilerDataPut.setRoleReviewId(UUID.randomUUID());
+        roleSpoilerDataPut.setStartIndex(100);
+        roleSpoilerDataPut.setEndIndex(10);
+
+        String resultJson = mvc.perform(put("/api/v1/rolespoilerdata/{id}",
+                UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(roleSpoilerDataPut))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(roleSpoilerDataService, Mockito.never()).updateRoleSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

@@ -17,7 +17,7 @@ public class RoleExtendedDTO {
 
     private String description;
 
-    private Person personId;
+    private Person person;
 
     private UUID movieId;
 

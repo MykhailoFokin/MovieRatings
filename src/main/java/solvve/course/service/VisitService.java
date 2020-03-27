@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Visit;
@@ -9,9 +11,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.VisitRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class VisitService {
@@ -58,10 +58,9 @@ public class VisitService {
         return translationService.translate(visit, VisitReadDTO.class);
     }
 
-    public List<VisitReadDTO> getVisits(VisitFilter filter) {
-        List<Visit> visits = visitRepository.findByFilter(filter);
-        return visits.stream().map(e ->
-                translationService.translate(e, VisitReadDTO.class)).collect(Collectors.toList());
+    public PageResult<VisitReadDTO> getVisits(VisitFilter filter, Pageable pageable) {
+        Page<Visit> visits = visitRepository.findByFilter(filter, pageable);
+        return translationService.toPageResult(visits, VisitReadDTO.class);
     }
 
     private Visit getVisitRequired(UUID id) {

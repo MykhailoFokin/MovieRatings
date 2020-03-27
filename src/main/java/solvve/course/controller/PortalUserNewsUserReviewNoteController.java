@@ -8,6 +8,7 @@ import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
 import solvve.course.service.PortalUserNewsUserReviewNoteService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class PortalUserNewsUserReviewNoteController {
     @PatchMapping("/{id}")
     public NewsUserReviewNoteReadDTO patchNewsUserReviewNote(@PathVariable UUID portalUserId,
                                                              @PathVariable UUID newsUserReviewNoteId,
-                                                             @RequestBody NewsUserReviewNotePatchDTO patch) {
+                                                             @RequestBody @Valid NewsUserReviewNotePatchDTO patch) {
         return portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUserId,
                 newsUserReviewNoteId, patch);
     }
@@ -34,7 +35,7 @@ public class PortalUserNewsUserReviewNoteController {
     @PutMapping("/{id}")
     public NewsUserReviewNoteReadDTO putNewsUserReviewNote(@PathVariable UUID portalUserId,
                                                            @PathVariable UUID newsUserReviewNoteId,
-                                                           @RequestBody NewsUserReviewNotePutDTO put) {
+                                                           @RequestBody @Valid NewsUserReviewNotePutDTO put) {
         return portalUserNewsUserReviewNoteService.updatePortalUserNewsUserReviewNote(portalUserId,
                 newsUserReviewNoteId, put);
     }

@@ -8,6 +8,7 @@ import solvve.course.dto.PortalUserPutDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.service.PortalUserService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,12 @@ public class PortalUserController {
     }
 
     @PostMapping
-    public PortalUserReadDTO createPortalUser(@RequestBody PortalUserCreateDTO createDTO) {
+    public PortalUserReadDTO createPortalUser(@RequestBody @Valid PortalUserCreateDTO createDTO) {
         return portalUserService.createPortalUser(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public PortalUserReadDTO patchPortalUser(@PathVariable UUID id, @RequestBody PortalUserPatchDTO patch) {
+    public PortalUserReadDTO patchPortalUser(@PathVariable UUID id, @RequestBody @Valid PortalUserPatchDTO patch) {
         return portalUserService.patchPortalUser(id, patch);
     }
 
@@ -38,7 +39,7 @@ public class PortalUserController {
     }
 
     @PutMapping("/{id}")
-    public PortalUserReadDTO putPortalUser(@PathVariable UUID id, @RequestBody PortalUserPutDTO put) {
+    public PortalUserReadDTO putPortalUser(@PathVariable UUID id, @RequestBody @Valid PortalUserPutDTO put) {
         return portalUserService.updatePortalUser(id, put);
     }
 }

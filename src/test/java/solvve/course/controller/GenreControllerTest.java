@@ -1,23 +1,21 @@
 package solvve.course.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Genre;
 import solvve.course.domain.MovieGenreType;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.GenreService;
 
 import java.util.List;
@@ -26,16 +24,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = GenreController.class)
-@ActiveProfiles("test")
-public class GenreControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class GenreControllerTest extends BaseControllerTest {
 
     @MockBean
     private GenreService genreService;
@@ -86,6 +76,7 @@ public class GenreControllerTest {
 
         GenreCreateDTO create = new GenreCreateDTO();
         create.setName(MovieGenreType.ACTION);
+        create.setMovieId(UUID.randomUUID());
 
         GenreReadDTO read = createGenresRead();
 
@@ -135,8 +126,10 @@ public class GenreControllerTest {
 
         GenrePutDTO putDTO = new GenrePutDTO();
         putDTO.setName(MovieGenreType.ACTION);
+        putDTO.setMovieId(UUID.randomUUID());
 
         GenreReadDTO read = createGenresRead();
+        read.setMovieId(putDTO.getMovieId());
 
         Mockito.when(genreService.updateGenre(read.getId(),putDTO)).thenReturn(read);
 
@@ -157,16 +150,79 @@ public class GenreControllerTest {
 
         GenreReadDTO read = new GenreReadDTO();
         read.setName(MovieGenreType.ADVENTURE);
-        List<GenreReadDTO> expectedResult = List.of(read);
-        Mockito.when(genreService.getGenres(genreFilter)).thenReturn(expectedResult);
+        PageResult<GenreReadDTO> resultPage = new PageResult<>();
+        resultPage.setData(List.of(read));
+        Mockito.when(genreService.getGenres(genreFilter, PageRequest.of(0, defaultPageSize))).thenReturn(resultPage);
 
         String resultJson = mvc.perform(get("/api/v1/genres")
                 .param("genres", "ADVENTURE"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<GenreReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        PageResult<GenreReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
         });
-        Assert.assertEquals(expectedResult, actualResult);
+        Assert.assertEquals(resultPage, actualResult);
+    }
+
+    @Test
+    public void testCreateGenreValidationFailed() throws Exception {
+        GenreCreateDTO create = new GenreCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/genres")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(genreService, Mockito.never()).createGenre(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutGenreValidationFailed() throws Exception {
+        GenrePutDTO put = new GenrePutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/genres/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(genreService, Mockito.never()).updateGenre(ArgumentMatchers.any(), ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testGetGenresWithPagingAndSorting() throws Exception {
+        GenreReadDTO read = createGenresRead();
+        read.setMovieId(UUID.randomUUID());
+        GenreFilter filter = new GenreFilter();
+        filter.setMovieId(read.getMovieId());
+
+        int page = 1;
+        int size = 25;
+
+        PageResult<GenreReadDTO> resultPage = new PageResult<>();
+        resultPage.setPage(page);
+        resultPage.setPageSize(size);
+        resultPage.setTotalElements(100);
+        resultPage.setTotalPages(4);
+        resultPage.setData(List.of(read));
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Mockito.when(genreService.getGenres(filter, pageRequest)).thenReturn(resultPage);
+
+        String resultJson = mvc.perform(get("/api/v1/genres")
+                .param("movieId", filter.getMovieId().toString())
+                .param("page", Integer.toString(page))
+                .param("size", Integer.toString(size))
+                .param("sort", "updatedAt,desc"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PageResult<GenreReadDTO> actualPage = objectMapper.readValue(resultJson,
+                new TypeReference<PageResult<GenreReadDTO>>() {
+                });
+        Assert.assertEquals(resultPage, actualPage);
     }
 
     private GenreReadDTO createGenresRead() {

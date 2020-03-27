@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.NewsUserReviewNoteCreateDTO;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
@@ -16,29 +12,16 @@ import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsUserReviewNoteRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from news_user_review_note",
-        "delete from news_user_review",
-        "delete from news",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class NewsUserReviewNoteServiceTest {
+public class NewsUserReviewNoteServiceTest extends BaseTest {
 
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
 
     @Autowired
     private NewsUserReviewNoteService newsUserReviewNoteService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetNewsUserReviewNote() {
@@ -110,7 +93,8 @@ public class NewsUserReviewNoteServiceTest {
         patch.setApprovedText("ApprText");
         patch.setSourceText("Ich reise viel");
         patch.setNewsId(news.getId());
-        NewsUserReviewNoteReadDTO read = newsUserReviewNoteService.patchNewsUserReviewNote(newsUserReviewNote.getId(), patch);
+        NewsUserReviewNoteReadDTO read =
+                newsUserReviewNoteService.patchNewsUserReviewNote(newsUserReviewNote.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
@@ -133,7 +117,8 @@ public class NewsUserReviewNoteServiceTest {
                 ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
-        NewsUserReviewNoteReadDTO read = newsUserReviewNoteService.patchNewsUserReviewNote(newsUserReviewNote.getId(), patch);
+        NewsUserReviewNoteReadDTO read =
+                newsUserReviewNoteService.patchNewsUserReviewNote(newsUserReviewNote.getId(), patch);
 
         Assert.assertNotNull(read.getNewsUserReviewId());
         Assert.assertNotNull(read.getStartIndex());
@@ -200,7 +185,8 @@ public class NewsUserReviewNoteServiceTest {
         put.setApprovedText("ApprText");
         put.setSourceText("Ich reise viel");
         put.setNewsId(news.getId());
-        NewsUserReviewNoteReadDTO read = newsUserReviewNoteService.updateNewsUserReviewNote(newsUserReviewNote.getId(), put);
+        NewsUserReviewNoteReadDTO read =
+                newsUserReviewNoteService.updateNewsUserReviewNote(newsUserReviewNote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
@@ -223,10 +209,11 @@ public class NewsUserReviewNoteServiceTest {
                 ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
         NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
-        NewsUserReviewNoteReadDTO read = newsUserReviewNoteService.updateNewsUserReviewNote(newsUserReviewNote.getId(), put);
+        NewsUserReviewNoteReadDTO read =
+                newsUserReviewNoteService.updateNewsUserReviewNote(newsUserReviewNote.getId(), put);
 
         Assert.assertNull(read.getModeratorId());
-        Assert.assertNull(read.getProposedText());
+        Assert.assertNotNull(read.getProposedText());
         Assert.assertNotNull(read.getStartIndex());
         Assert.assertNotNull(read.getEndIndex());
         Assert.assertNotNull(read.getNewsUserReviewId());
@@ -234,11 +221,12 @@ public class NewsUserReviewNoteServiceTest {
 
         testObjectsFactory.inTransaction(() -> {
 
-            NewsUserReviewNote newsUserReviewNoteAfterUpdate = newsUserReviewNoteRepository.findById(read.getId()).get();
+            NewsUserReviewNote newsUserReviewNoteAfterUpdate =
+                    newsUserReviewNoteRepository.findById(read.getId()).get();
 
             Assert.assertNull(newsUserReviewNoteAfterUpdate.getModerator());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getNewsUserReview().getId());
-            Assert.assertNull(newsUserReviewNoteAfterUpdate.getProposedText());
+            Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getProposedText());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getStartIndex());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getEndIndex());
             Assert.assertNotNull(newsUserReviewNoteAfterUpdate.getModeratorTypoReviewStatusType());

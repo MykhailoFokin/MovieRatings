@@ -1,19 +1,13 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Language;
 import solvve.course.domain.LanguageType;
 import solvve.course.dto.LanguageCreateDTO;
@@ -21,24 +15,16 @@ import solvve.course.dto.LanguagePatchDTO;
 import solvve.course.dto.LanguagePutDTO;
 import solvve.course.dto.LanguageReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.LanguageService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = LanguageController.class)
-@ActiveProfiles("test")
-public class LanguageControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class LanguageControllerTest extends BaseControllerTest {
 
     @MockBean
     private LanguageService languageService;
@@ -159,5 +145,33 @@ public class LanguageControllerTest {
 
         LanguageReadDTO actualLanguage = objectMapper.readValue(resultJson, LanguageReadDTO.class);
         Assert.assertEquals(read, actualLanguage);
+    }
+
+    @Test
+    public void testCreateLanguageValidationFailed() throws Exception {
+        LanguageCreateDTO create = new LanguageCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/languages")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(languageService, Mockito.never()).createLanguage(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutLanguageValidationFailed() throws Exception {
+        LanguagePutDTO put = new LanguagePutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/languages/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(languageService, Mockito.never()).updateLanguage(ArgumentMatchers.any(), ArgumentMatchers.any());
     }
 }

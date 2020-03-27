@@ -2,12 +2,14 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
 import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.service.MovieReviewSpoilerDataService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +28,9 @@ public class MovieReviewSpoilerDataController {
 
     @PostMapping
     public MovieSpoilerDataReadDTO createMovieSpoilerData(@PathVariable UUID movieReviewId,
-                                                          @RequestBody MovieSpoilerDataCreateDTO createDTO) {
+                                                          @RequestBody @Valid MovieSpoilerDataCreateDTO createDTO) {
+        ControllerValidationUtil.validateLessThan(createDTO.getStartIndex(), createDTO.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.createMovieReviewSpoilerData(movieReviewId, createDTO);
     }
 
@@ -34,6 +38,8 @@ public class MovieReviewSpoilerDataController {
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID movieReviewId,
                                                          @PathVariable (value = "id") UUID id,
                                                          @RequestBody MovieSpoilerDataPatchDTO patch) {
+        ControllerValidationUtil.validateLessThan(patch.getStartIndex(), patch.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.patchMovieReviewSpoilerData(movieReviewId, id, patch);
     }
 
@@ -46,7 +52,9 @@ public class MovieReviewSpoilerDataController {
     @PutMapping("/{id}")
     public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID movieReviewId,
                                                        @PathVariable (value = "id") UUID id,
-                                                       @RequestBody MovieSpoilerDataPutDTO put) {
+                                                       @RequestBody @Valid MovieSpoilerDataPutDTO put) {
+        ControllerValidationUtil.validateLessThan(put.getStartIndex(), put.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.updateMovieReviewSpoilerData(movieReviewId, id, put);
     }
 }

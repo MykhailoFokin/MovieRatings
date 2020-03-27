@@ -8,6 +8,7 @@ import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.service.PersonService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,12 @@ public class PersonController {
     }
 
     @PostMapping
-    public PersonReadDTO createPersons(@RequestBody PersonCreateDTO createDTO) {
+    public PersonReadDTO createPersons(@RequestBody @Valid PersonCreateDTO createDTO) {
         return personService.createPersons(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public PersonReadDTO patchPersons(@PathVariable UUID id, @RequestBody PersonPatchDTO patch) {
+    public PersonReadDTO patchPersons(@PathVariable UUID id, @RequestBody @Valid PersonPatchDTO patch) {
         return personService.patchPersons(id, patch);
     }
 
@@ -38,7 +39,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody PersonPutDTO put) {
+    public PersonReadDTO putPersons(@PathVariable UUID id, @RequestBody @Valid PersonPutDTO put) {
         return personService.updatePersons(id, put);
     }
 }

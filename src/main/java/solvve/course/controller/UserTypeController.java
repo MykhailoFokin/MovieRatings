@@ -8,6 +8,7 @@ import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.service.UserTypeService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class UserTypeController {
     }
 
     @PostMapping
-    public UserTypeReadDTO createUserTypes(@RequestBody UserTypeCreateDTO createDTO) {
+    public UserTypeReadDTO createUserTypes(@RequestBody @Valid UserTypeCreateDTO createDTO) {
         return userTypeService.createUserTypes(createDTO);
     }
 
@@ -38,7 +39,7 @@ public class UserTypeController {
     }
 
     @PutMapping("/{id}")
-    public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody UserTypePutDTO put) {
+    public UserTypeReadDTO putUserTypes(@PathVariable UUID id, @RequestBody @Valid UserTypePutDTO put) {
         return userTypeService.updateUserTypes(id, put);
     }
 }

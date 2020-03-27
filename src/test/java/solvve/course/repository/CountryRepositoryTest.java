@@ -3,34 +3,23 @@ package solvve.course.repository;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.Country;
 import solvve.course.domain.Movie;
 import solvve.course.dto.CountryFilter;
 import solvve.course.service.CountryService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from movie_prod_countries",
-        "delete from movie",
-        "delete from country"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class CountryRepositoryTest {
+public class CountryRepositoryTest extends BaseTest {
 
     @Autowired
     private CountryRepository countryRepository;
@@ -41,13 +30,11 @@ public class CountryRepositoryTest {
     @Autowired
     private CountryService countryService;
 
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
-
     @Test
     public void testSave() {
         Movie m = new Movie();
         m.setTitle("New movie");
+        m.setYear((short) 2010);
         m = movieRepository.save(m);
         Set<Movie> ms = new HashSet<>();
         ms.add(m);
@@ -66,7 +53,8 @@ public class CountryRepositoryTest {
         Country c3 = testObjectsFactory.createCountry("Poland");
 
         CountryFilter filter = new CountryFilter();
-        Assertions.assertThat(countryService.getCountries(filter)).extracting("Id")
+        Assertions.assertThat(countryService.getCountries(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(c1.getId(),c2.getId(),c3.getId());
     }
 
@@ -78,7 +66,8 @@ public class CountryRepositoryTest {
 
         CountryFilter filter = new CountryFilter();
         filter.setNames(Set.of(c1.getName(), c2.getName()));
-        Assertions.assertThat(countryService.getCountries(filter)).extracting("Name")
+        Assertions.assertThat(countryService.getCountries(filter, Pageable.unpaged()).getData())
+                .extracting("Name")
                 .containsExactlyInAnyOrder(c1.getName(),c2.getName());
     }
 
@@ -122,5 +111,11 @@ public class CountryRepositoryTest {
         Instant updatedAtAfterReload = country.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveCountryValidation() {
+        Country entity = new Country();
+        countryRepository.save(entity);
     }
 }

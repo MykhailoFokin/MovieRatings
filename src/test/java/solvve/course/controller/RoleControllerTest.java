@@ -1,18 +1,14 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Role;
 import solvve.course.domain.RoleType;
 import solvve.course.dto.RoleCreateDTO;
@@ -20,6 +16,7 @@ import solvve.course.dto.RolePatchDTO;
 import solvve.course.dto.RolePutDTO;
 import solvve.course.dto.RoleReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.RoleService;
 
 import java.util.UUID;
@@ -27,16 +24,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = RoleController.class)
-@ActiveProfiles("test")
-public class RoleControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class RoleControllerTest extends BaseControllerTest {
 
     @MockBean
     private RoleService roleService;
@@ -98,8 +87,10 @@ public class RoleControllerTest {
         create.setTitle("Actor");
         create.setRoleType(RoleType.LEAD);
         create.setDescription("Description test");
+        create.setMovieId(UUID.randomUUID());
 
         RoleReadDTO read = createRoleRead();
+        read.setMovieId(create.getMovieId());
 
         Mockito.when(roleService.createRole(create)).thenReturn(read);
 
@@ -151,6 +142,59 @@ public class RoleControllerTest {
         putDTO.setTitle("Role Test");
         putDTO.setRoleType(RoleType.LEAD);
         putDTO.setDescription("Description test");
+        putDTO.setMovieId(UUID.randomUUID());
+
+        RoleReadDTO read = createRoleRead();
+        read.setMovieId(putDTO.getMovieId());
+
+        Mockito.when(roleService.updateRole(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/roles/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
+    }
+
+    @Test
+    public void testCreateRoleValidationFailed() throws Exception {
+        RoleCreateDTO create = new RoleCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/roles")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).createRole(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutRoleValidationFailed() throws Exception {
+        RolePutDTO put = new RolePutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/roles/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).updateRole(ArgumentMatchers.any(), ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutRoleCheckLimitBorders() throws Exception {
+
+        RolePutDTO putDTO = new RolePutDTO();
+        putDTO.setTitle(StringUtils.repeat("*", 1));
+        putDTO.setRoleType(RoleType.LEAD);
+        putDTO.setDescription(StringUtils.repeat("*", 1));
+        putDTO.setMovieId(UUID.randomUUID());
 
         RoleReadDTO read = createRoleRead();
 
@@ -164,5 +208,197 @@ public class RoleControllerTest {
 
         RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
         Assert.assertEquals(read, actualRole);
+
+        // Check upper border
+        putDTO.setTitle(StringUtils.repeat("*", 255));
+        putDTO.setRoleType(RoleType.LEAD);
+        putDTO.setDescription(StringUtils.repeat("*", 1000));
+
+        resultJson = mvc.perform(put("/api/v1/roles/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        RolePutDTO put = new RolePutDTO();
+        put.setTitle("");
+        put.setRoleType(RoleType.LEAD);
+        put.setDescription("");
+
+        String resultJson = mvc.perform(put("/api/v1/roles/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).updateRole(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        RolePutDTO put = new RolePutDTO();
+        put.setTitle(StringUtils.repeat("*", 256));
+        put.setRoleType(RoleType.LEAD);
+        put.setDescription(StringUtils.repeat("*", 1001));
+
+        String resultJson = mvc.perform(put("/api/v1/roles/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).updateRole(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        RoleCreateDTO create = new RoleCreateDTO();
+        create.setTitle("");
+        create.setRoleType(RoleType.LEAD);
+        create.setDescription("");
+
+        String resultJson = mvc.perform(post("/api/v1/roles")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).createRole(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        RoleCreateDTO create = new RoleCreateDTO();
+        create.setTitle(StringUtils.repeat("*", 256));
+        create.setRoleType(RoleType.LEAD);
+        create.setDescription(StringUtils.repeat("*", 1001));
+
+
+        String resultJson = mvc.perform(post("/api/v1/roles")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).createRole(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateRoleCheckStingBorders() throws Exception {
+
+        RoleCreateDTO create = new RoleCreateDTO();
+        create.setTitle(StringUtils.repeat("*", 1));
+        create.setRoleType(RoleType.LEAD);
+        create.setDescription(StringUtils.repeat("*", 1));
+        create.setMovieId(UUID.randomUUID());
+
+        RoleReadDTO read = createRoleRead();
+
+        Mockito.when(roleService.createRole(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/roles")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assertions.assertThat(actualRole).isEqualToComparingFieldByField(read);
+
+        create.setTitle(StringUtils.repeat("*", 255));
+        create.setRoleType(RoleType.LEAD);
+        create.setDescription(StringUtils.repeat("*", 1000));
+
+        resultJson = mvc.perform(post("/api/v1/roles")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assertions.assertThat(actualRole).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchRoleCheckStringBorders() throws Exception {
+
+        RolePatchDTO patchDTO = new RolePatchDTO();
+        patchDTO.setTitle(StringUtils.repeat("*", 1));
+        patchDTO.setRoleType(RoleType.LEAD);
+        patchDTO.setDescription(StringUtils.repeat("*", 1));
+
+        RoleReadDTO read = createRoleRead();
+
+        Mockito.when(roleService.patchRole(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/roles/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        RoleReadDTO actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
+
+        patchDTO.setTitle(StringUtils.repeat("*", 255));
+        patchDTO.setRoleType(RoleType.LEAD);
+        patchDTO.setDescription(StringUtils.repeat("*", 1000));
+
+        resultJson = mvc.perform(patch("/api/v1/roles/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualRole = objectMapper.readValue(resultJson, RoleReadDTO.class);
+        Assert.assertEquals(read, actualRole);
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        RolePatchDTO patch = new RolePatchDTO();
+        patch.setTitle("");
+        patch.setRoleType(RoleType.LEAD);
+        patch.setDescription("");
+
+        String resultJson = mvc.perform(patch("/api/v1/roles/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).patchRole(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        RolePatchDTO patch = new RolePatchDTO();
+        patch.setTitle(StringUtils.repeat("*", 256));
+        patch.setRoleType(RoleType.LEAD);
+        patch.setDescription(StringUtils.repeat("*", 1001));
+
+        String resultJson = mvc.perform(patch("/api/v1/roles/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleService, Mockito.never()).patchRole(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

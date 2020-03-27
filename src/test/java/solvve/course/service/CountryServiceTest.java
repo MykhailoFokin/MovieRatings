@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Country;
 import solvve.course.dto.CountryCreateDTO;
 import solvve.course.dto.CountryPatchDTO;
@@ -20,20 +16,13 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = "delete from country", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class CountryServiceTest {
+public class CountryServiceTest extends BaseTest {
 
     @Autowired
     private CountryRepository countryRepository;
 
     @Autowired
     private CountryService countryService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetCountries() {
@@ -135,12 +124,12 @@ public class CountryServiceTest {
         CountryPutDTO put = new CountryPutDTO();
         CountryReadDTO read = countryService.updateCountries(country.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
 
         testObjectsFactory.inTransaction(() -> {
             Country countryAfterUpdate = countryRepository.findById(read.getId()).get();
 
-            Assert.assertNull(countryAfterUpdate.getName());
+            Assert.assertNotNull(countryAfterUpdate.getName());
         });
     }
 }

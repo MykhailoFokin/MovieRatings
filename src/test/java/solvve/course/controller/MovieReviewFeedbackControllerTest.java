@@ -1,24 +1,20 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.MovieReviewFeedbackCreateDTO;
 import solvve.course.dto.MovieReviewFeedbackPatchDTO;
 import solvve.course.dto.MovieReviewFeedbackPutDTO;
 import solvve.course.dto.MovieReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.MovieReviewFeedbackService;
 
 import java.util.UUID;
@@ -26,16 +22,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = MovieReviewFeedbackController.class)
-@ActiveProfiles("test")
-public class MovieReviewFeedbackControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
 
     @MockBean
     private MovieReviewFeedbackService movieReviewFeedbackService;
@@ -96,8 +84,14 @@ public class MovieReviewFeedbackControllerTest {
 
         MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
         create.setIsLiked(true);
+        create.setPortalUserId(UUID.randomUUID());
+        create.setMovieReviewId(UUID.randomUUID());
+        create.setMovieId(UUID.randomUUID());
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
+        read.setPortalUserId(create.getPortalUserId());
+        read.setMovieReviewId(create.getMovieReviewId());
+        read.setMovieId(create.getMovieId());
 
         Mockito.when(movieReviewFeedbackService.createMovieReviewFeedback(create)).thenReturn(read);
 
@@ -147,8 +141,14 @@ public class MovieReviewFeedbackControllerTest {
 
         MovieReviewFeedbackPutDTO putDTO = new MovieReviewFeedbackPutDTO();
         putDTO.setIsLiked(true);
+        putDTO.setMovieId(UUID.randomUUID());
+        putDTO.setPortalUserId(UUID.randomUUID());
+        putDTO.setMovieReviewId(UUID.randomUUID());
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
+        read.setPortalUserId(putDTO.getPortalUserId());
+        read.setMovieId(putDTO.getMovieId());
+        read.setMovieReviewId(putDTO.getMovieReviewId());
 
         Mockito.when(movieReviewFeedbackService.updateMovieReviewFeedback(read.getId(),putDTO)).thenReturn(read);
 
@@ -161,5 +161,34 @@ public class MovieReviewFeedbackControllerTest {
         MovieReviewFeedbackReadDTO actualMovieReviewFeedback = objectMapper
                 .readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualMovieReviewFeedback);
+    }
+
+    @Test
+    public void testCreateMovieReviewFeedbackValidationFailed() throws Exception {
+        MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/moviereviewfeedbacks")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(movieReviewFeedbackService, Mockito.never()).createMovieReviewFeedback(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutMovieReviewFeedbackValidationFailed() throws Exception {
+        MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/moviereviewfeedbacks/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(movieReviewFeedbackService, Mockito.never()).updateMovieReviewFeedback(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

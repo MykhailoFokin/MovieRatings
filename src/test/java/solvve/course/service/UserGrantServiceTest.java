@@ -3,37 +3,22 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.UserGrantRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from user_grant",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class UserGrantServiceTest {
+public class UserGrantServiceTest extends BaseTest {
 
     @Autowired
     private UserGrantRepository userGrantRepository;
 
     @Autowired
     private UserGrantService userGrantService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetGrants() {
@@ -171,15 +156,15 @@ public class UserGrantServiceTest {
         UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 
         Assert.assertNotNull(read.getUserTypeId());
-        Assert.assertNull(read.getObjectName());
-        Assert.assertNull(read.getUserPermission());
+        Assert.assertNotNull(read.getObjectName());
+        Assert.assertNotNull(read.getUserPermission());
         Assert.assertNotNull(read.getGrantedById());
 
         UserGrant userGrantAfterUpdate = userGrantRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(userGrantAfterUpdate.getUserType().getId());
-        Assert.assertNull(userGrantAfterUpdate.getObjectName());
-        Assert.assertNull(userGrantAfterUpdate.getUserPermission());
+        Assert.assertNotNull(userGrantAfterUpdate.getObjectName());
+        Assert.assertNotNull(userGrantAfterUpdate.getUserPermission());
         Assert.assertNotNull(userGrantAfterUpdate.getGrantedBy().getId());
 
         Assertions.assertThat(userGrant).isEqualToComparingOnlyGivenFields(userGrantAfterUpdate, "id");

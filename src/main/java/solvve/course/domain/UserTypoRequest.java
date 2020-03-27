@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 
 @Getter
@@ -32,6 +33,7 @@ public class UserTypoRequest extends AbstractEntity {
     @NotNull
     private String proposedText;
 
+    @Size(min = 1, max = 1000)
     private String approvedText;
 
     @ManyToOne

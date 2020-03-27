@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Person;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
@@ -16,24 +12,16 @@ import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = "delete from person", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class PersonServiceTest {
+public class PersonServiceTest extends BaseTest {
 
     @Autowired
     private PersonRepository personRepository;
 
     @Autowired
     private PersonService personService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetPersons() {
@@ -133,14 +121,14 @@ public class PersonServiceTest {
         PersonPutDTO put = new PersonPutDTO();
         PersonReadDTO read = personService.updatePersons(person.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
         Assert.assertNull(read.getSurname());
         Assert.assertNull(read.getMiddleName());
 
         testObjectsFactory.inTransaction(() -> {
             Person personAfterUpdate = personRepository.findById(read.getId()).get();
 
-            Assert.assertNull(personAfterUpdate.getName());
+            Assert.assertNotNull(personAfterUpdate.getName());
             Assert.assertNull(personAfterUpdate.getSurname());
             Assert.assertNull(personAfterUpdate.getMiddleName());
 

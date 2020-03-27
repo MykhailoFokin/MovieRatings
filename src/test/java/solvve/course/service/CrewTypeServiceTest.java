@@ -1,15 +1,10 @@
 package solvve.course.service;
 
-import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
@@ -21,20 +16,13 @@ import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = "delete from crew_type", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class CrewTypeServiceTest {
+public class CrewTypeServiceTest extends BaseTest {
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;
 
     @Autowired
     private CrewTypeService crewTypeService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetCrewType() {
@@ -124,10 +112,10 @@ public class CrewTypeServiceTest {
         CrewTypePutDTO put = new CrewTypePutDTO();
         CrewTypeReadDTO read = crewTypeService.updateCrewType(crewType.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
 
         CrewType crewTypeAfterUpdate = crewTypeRepository.findById(read.getId()).get();
 
-        Assert.assertNull(crewTypeAfterUpdate.getName());
+        Assert.assertNotNull(crewTypeAfterUpdate.getName());
     }
 }

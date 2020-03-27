@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -12,6 +13,7 @@ import java.util.Set;
 public class UserType extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private UserGroupType userGroup;
 
     @OneToMany(mappedBy = "userType", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

@@ -2,12 +2,14 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
 import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.service.MovieSpoilerDataService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,13 +25,17 @@ public class MovieSpoilerDataController {
     }
 
     @PostMapping
-    public MovieSpoilerDataReadDTO createMovieSpoilerData(@RequestBody MovieSpoilerDataCreateDTO createDTO) {
+    public MovieSpoilerDataReadDTO createMovieSpoilerData(@RequestBody @Valid MovieSpoilerDataCreateDTO createDTO) {
+        ControllerValidationUtil.validateLessThan(createDTO.getStartIndex(), createDTO.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.createMovieSpoilerData(createDTO);
     }
 
     @PatchMapping("/{id}")
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id,
                                                          @RequestBody MovieSpoilerDataPatchDTO patch) {
+        ControllerValidationUtil.validateLessThan(patch.getStartIndex(), patch.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.patchMovieSpoilerData(id, patch);
     }
 
@@ -40,7 +46,9 @@ public class MovieSpoilerDataController {
 
     @PutMapping("/{id}")
     public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id,
-                                                       @RequestBody MovieSpoilerDataPutDTO put) {
+                                                       @RequestBody @Valid MovieSpoilerDataPutDTO put) {
+        ControllerValidationUtil.validateLessThan(put.getStartIndex(), put.getEndIndex(),
+                "startIndex", "endIndex");
         return movieSpoilerDataService.updateMovieSpoilerData(id, put);
     }
 }

@@ -3,33 +3,21 @@ package solvve.course.repository;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.Genre;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieGenreType;
 import solvve.course.dto.GenreFilter;
 import solvve.course.service.GenreService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from genre",
-        "delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class GenreRepositoryTest {
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
+public class GenreRepositoryTest extends BaseTest {
 
     @Autowired
     private GenreService genreService;
@@ -48,7 +36,8 @@ public class GenreRepositoryTest {
         Genre g4 = testObjectsFactory.createGenre(m3, MovieGenreType.DRAMA);
 
         GenreFilter filter = new GenreFilter();
-        Assertions.assertThat(genreService.getGenres(filter)).extracting("Id")
+        Assertions.assertThat(genreService.getGenres(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(g1.getId(),g2.getId(),g3.getId(),g4.getId());
     }
 
@@ -64,7 +53,8 @@ public class GenreRepositoryTest {
 
         GenreFilter filter = new GenreFilter();
         filter.setMovieId(m1.getId());
-        Assertions.assertThat(genreService.getGenres(filter)).extracting("Id")
+        Assertions.assertThat(genreService.getGenres(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(g1.getId(),g2.getId());
     }
 
@@ -80,7 +70,8 @@ public class GenreRepositoryTest {
 
         GenreFilter filter = new GenreFilter();
         filter.setGenres(List.of(MovieGenreType.HISTORICAL, MovieGenreType.WAR));
-        Assertions.assertThat(genreService.getGenres(filter)).extracting("Id")
+        Assertions.assertThat(genreService.getGenres(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(g2.getId(),g3.getId());
     }
 
@@ -97,7 +88,8 @@ public class GenreRepositoryTest {
         GenreFilter filter = new GenreFilter();
         filter.setMovieId(m3.getId());
         filter.setGenres(List.of(MovieGenreType.WAR, MovieGenreType.DRAMA));
-        Assertions.assertThat(genreService.getGenres(filter)).extracting("Id")
+        Assertions.assertThat(genreService.getGenres(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(g3.getId(),g4.getId());
     }
 
@@ -172,5 +164,11 @@ public class GenreRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveGenreValidation() {
+        Genre entity = new Genre();
+        genreRepository.save(entity);
     }
 }

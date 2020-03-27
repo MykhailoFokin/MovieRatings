@@ -2,17 +2,12 @@ package solvve.course.service;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.assertj.core.api.Assertions;
 import java.util.UUID;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import solvve.course.BaseTest;
 import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
@@ -23,24 +18,13 @@ import solvve.course.repository.CrewRepository;
 import solvve.course.repository.CrewTypeRepository;
 import solvve.course.utils.TestObjectsFactory;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from crew",
-        "delete from movie",
-        "delete from crew_type",
-        "delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class CrewServiceTest {
+public class CrewServiceTest extends BaseTest {
 
     @Autowired
     private CrewRepository crewRepository;
 
     @Autowired
     private CrewService crewService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -55,14 +39,12 @@ public class CrewServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        testObjectsFactory.inTransaction(() -> {
-            CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
-            Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew,
-                    "movieId", "personId", "crewTypeId","person", "movie", "crewType");
-            Assertions.assertThat(readDTO.getMovie().getId()).isEqualToIgnoringGivenFields(movie.getId());
-            Assertions.assertThat(readDTO.getPerson().getId()).isEqualToIgnoringGivenFields(person.getId());
-            Assertions.assertThat(readDTO.getCrewType().getId()).isEqualToIgnoringGivenFields(crewType.getId());
-        });
+        CrewReadExtendedDTO readDTO = crewService.getCrew(crew.getId());
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(crew,
+                "movieId", "personId", "crewTypeId","person", "movie", "crewType");
+        Assertions.assertThat(readDTO.getMovie().getId()).isEqualToIgnoringGivenFields(movie.getId());
+        Assertions.assertThat(readDTO.getPerson().getId()).isEqualToIgnoringGivenFields(person.getId());
+        Assertions.assertThat(readDTO.getCrewType().getId()).isEqualToIgnoringGivenFields(crewType.getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -163,10 +145,8 @@ public class CrewServiceTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        testObjectsFactory.inTransaction(() -> {
-            crewService.deleteCrew(crew.getId());
-            Assert.assertFalse(crewRepository.existsById(crew.getId()));
-        });
+        crewService.deleteCrew(crew.getId());
+        Assert.assertFalse(crewRepository.existsById(crew.getId()));
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -214,7 +194,7 @@ public class CrewServiceTest {
 
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getPersonId());
-        Assert.assertNull(read.getCrewTypeId());
+        Assert.assertNotNull(read.getCrewTypeId());
         Assert.assertNull(read.getDescription());
 
         testObjectsFactory.inTransaction(() -> {
@@ -222,7 +202,7 @@ public class CrewServiceTest {
 
             Assert.assertNotNull(crewAfterUpdate.getMovie());
             Assert.assertNotNull(crewAfterUpdate.getPerson());
-            Assert.assertNull(crewAfterUpdate.getCrewType());
+            Assert.assertNotNull(crewAfterUpdate.getCrewType());
             Assert.assertNull(crewAfterUpdate.getDescription());
 
             Assertions.assertThat(crew).isEqualToIgnoringGivenFields(crewAfterUpdate,

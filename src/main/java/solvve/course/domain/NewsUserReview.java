@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -13,10 +14,12 @@ public class NewsUserReview extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "portal_user_id", referencedColumnName = "id")
+    @NotNull
     private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(name = "news_id", referencedColumnName = "id")
+    @NotNull
     private News news;
 
     @Enumerated(EnumType.STRING)

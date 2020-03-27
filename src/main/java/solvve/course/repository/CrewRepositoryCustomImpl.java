@@ -1,11 +1,15 @@
 package solvve.course.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import solvve.course.domain.Crew;
 import solvve.course.dto.CrewFilter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 import java.util.List;
 
 public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
@@ -14,9 +18,26 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<Crew> findByFilter(CrewFilter filter) {
+    public Page<Crew> findByFilter(CrewFilter filter, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
         sb.append("select c from Crew c where 1=1");
+        Query query = createQueryApplyingFilter(filter, pageable.getSort(), sb);
+        applyPaging(query, pageable);
+
+        List<Crew> data = query.getResultList();
+
+        long count = getCountOfCrews(filter);
+        return new PageImpl<>(data, pageable, count);
+    }
+
+    private long getCountOfCrews(CrewFilter filter) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select count(c) from Crew c where 1=1");
+        Query query = createQueryApplyingFilter(filter, null, sb);
+        return ((Number) query.getResultList().get(0)).longValue();
+    }
+
+    private Query createQueryApplyingFilter(CrewFilter filter, Sort sort, StringBuilder sb) {
         if (filter.getPersonId() != null) {
             sb.append(" and c.person.id = :personId");
         }
@@ -41,7 +62,14 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
         if (filter.getDescriptions() != null) {
             sb.append(" and c.description in (:descriptions)");
         }
-        TypedQuery<Crew> query = entityManager.createQuery(sb.toString(), Crew.class);
+        if (sort != null && sort.isSorted()) {
+            sb.append(" order by ");
+            for (Sort.Order order : sort.toList()) {
+                sb.append("v.").append(order.getProperty()).append(" ").append(order.getDirection());
+            }
+        }
+
+        Query query = entityManager.createQuery(sb.toString());
 
         if (filter.getPersonId() != null) {
             query.setParameter("personId", filter.getPersonId());
@@ -68,6 +96,13 @@ public class CrewRepositoryCustomImpl implements CrewRepositoryCustom {
             query.setParameter("descriptions", filter.getDescriptions());
         }
 
-        return query.getResultList();
+        return query;
+    }
+
+    private void applyPaging(Query query, Pageable pageable) {
+        if (pageable.isPaged()) {
+            query.setMaxResults(pageable.getPageSize());
+            query.setFirstResult((int) pageable.getOffset());
+        }
     }
 }

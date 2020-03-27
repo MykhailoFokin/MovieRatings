@@ -8,6 +8,7 @@ import solvve.course.dto.UserGrantPutDTO;
 import solvve.course.dto.UserGrantReadDTO;
 import solvve.course.service.UserGrantService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,12 +24,12 @@ public class UserGrantController {
     }
 
     @PostMapping
-    public UserGrantReadDTO createGrants(@RequestBody UserGrantCreateDTO createDTO) {
+    public UserGrantReadDTO createGrants(@RequestBody @Valid UserGrantCreateDTO createDTO) {
         return userGrantService.createGrants(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public UserGrantReadDTO patchGrants(@PathVariable UUID id, @RequestBody UserGrantPatchDTO patch) {
+    public UserGrantReadDTO patchGrants(@PathVariable UUID id, @RequestBody @Valid UserGrantPatchDTO patch) {
         return userGrantService.patchGrants(id, patch);
     }
 
@@ -38,7 +39,7 @@ public class UserGrantController {
     }
 
     @PutMapping("/{id}")
-    public UserGrantReadDTO putGrants(@PathVariable UUID id, @RequestBody UserGrantPutDTO put) {
+    public UserGrantReadDTO putGrants(@PathVariable UUID id, @RequestBody @Valid UserGrantPutDTO put) {
         return userGrantService.updateGrants(id, put);
     }
 }

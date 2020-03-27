@@ -13,12 +13,13 @@ public class CustomerNotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public void notifyOnVisitStatusChangedToFinished(UUID visitId) {
+    public Notification notifyOnVisitStatusChangedToFinished(UUID visitId) {
 
         Notification notification = new Notification();
         notification.setEntityIdentifier(visitId.toString());
         notification.setMessage("Your visit status changed to FINISHED");
         notification.setSourceEntity("visit");
-        notificationRepository.save(notification);
+        notification = notificationRepository.save(notification);
+        return notification;
     }
 }

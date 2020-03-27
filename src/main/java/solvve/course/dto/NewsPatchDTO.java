@@ -2,6 +2,7 @@ package solvve.course.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -12,7 +13,9 @@ public class NewsPatchDTO {
 
     private Instant published;
 
+    @Size(min = 1, max = 255)
     private String topic;
 
+    @Size(min = 1, max = 1000)
     private String description;
 }

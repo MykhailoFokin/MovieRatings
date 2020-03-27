@@ -3,31 +3,20 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.VisitRepository;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.util.Arrays;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from visit",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class VisitServiceTest {
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
+public class VisitServiceTest extends BaseTest {
 
     @Autowired
     private VisitService visitService;
@@ -142,16 +131,36 @@ public class VisitServiceTest {
         VisitPutDTO put = new VisitPutDTO();
         VisitReadDTO read = visitService.updateVisit(visit.getId(), put);
 
-        Assert.assertNull(read.getStartAt());
-        Assert.assertNull(read.getFinishAt());
+        Assert.assertNotNull(read.getStartAt());
+        Assert.assertNotNull(read.getFinishAt());
         Assert.assertNull(read.getStatus());
 
         Visit visitAfterUpdate = visitRepository.findById(read.getId()).get();
 
-        Assert.assertNull(visitAfterUpdate.getStartAt());
-        Assert.assertNull(visitAfterUpdate.getFinishAt());
+        Assert.assertNotNull(visitAfterUpdate.getStartAt());
+        Assert.assertNotNull(visitAfterUpdate.getFinishAt());
         Assert.assertNull(visitAfterUpdate.getStatus());
 
         Assertions.assertThat(visit).isEqualToComparingOnlyGivenFields(visitAfterUpdate, "id");
+    }
+
+    @Test
+    public void testGetVisitsWithEmptyFilterWithPagingAndSorting() {
+        PortalUser portalUser1 = testObjectsFactory.createPortalUser();
+        PortalUser portalUser2 = testObjectsFactory.createPortalUser();
+
+        Visit visit1 = testObjectsFactory.createVisit(portalUser1, VisitStatus.FINISHED,
+                testObjectsFactory.createInstant(9));
+        Visit visit2 = testObjectsFactory.createVisit(portalUser1, VisitStatus.FINISHED,
+                testObjectsFactory.createInstant(10));
+        testObjectsFactory.createVisit(portalUser2, VisitStatus.FINISHED,
+                testObjectsFactory.createInstant(11));
+        testObjectsFactory.createVisit(portalUser2, VisitStatus.FINISHED,
+                testObjectsFactory.createInstant(12));
+
+        VisitFilter filter = new VisitFilter();
+        PageRequest pageRequest = PageRequest.of(1,2, Sort.by(Sort.Direction.DESC, "startAt"));
+        Assertions.assertThat(visitService.getVisits(filter, pageRequest).getData()).extracting("id")
+                .isEqualTo((Arrays.asList(visit2.getId(), visit1.getId())));
     }
 }

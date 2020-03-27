@@ -1,22 +1,18 @@
 package solvve.course.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.RoleReviewFeedback;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.RoleReviewRoleReviewFeedbackService;
 
 import java.util.List;
@@ -25,16 +21,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = RoleReviewRoleReviewFeedbackController.class)
-@ActiveProfiles("test")
-public class RoleReviewRoleReviewFeedbackControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class RoleReviewRoleReviewFeedbackControllerTest extends BaseControllerTest {
 
     @MockBean
     private RoleReviewRoleReviewFeedbackService roleReviewFeedbackService;
@@ -109,8 +97,12 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
         create.setIsLiked(true);
         create.setRoleReviewId(roleReviewReadDTO.getId());
+        create.setRoleId(UUID.randomUUID());
+        create.setPortalUserId(UUID.randomUUID());
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
+        read.setRoleId(create.getRoleId());
+        read.setPortalUserId(UUID.randomUUID());
 
         Mockito.when(roleReviewFeedbackService.createRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
                 create)).thenReturn(read);
@@ -170,8 +162,12 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         RoleReviewFeedbackPutDTO putDTO = new RoleReviewFeedbackPutDTO();
         putDTO.setIsLiked(true);
         putDTO.setRoleReviewId(roleReviewReadDTO.getId());
+        putDTO.setRoleId(UUID.randomUUID());
+        putDTO.setPortalUserId(UUID.randomUUID());
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
+        read.setRoleId(putDTO.getRoleId());
+        read.setPortalUserId(putDTO.getPortalUserId());
 
         Mockito.when(roleReviewFeedbackService.updateRoleReviewRoleReviewFeedback(roleReviewReadDTO.getId(),
                 read.getId(),putDTO)).thenReturn(read);
@@ -186,5 +182,38 @@ public class RoleReviewRoleReviewFeedbackControllerTest {
         RoleReviewFeedbackReadDTO actualRoleReviewRoleReviewFeedback = objectMapper
                 .readValue(resultJson, RoleReviewFeedbackReadDTO.class);
         Assert.assertEquals(read, actualRoleReviewRoleReviewFeedback);
+    }
+
+    @Test
+    public void testCreateRoleReviewFeedbackValidationFailed() throws Exception {
+        RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks",
+                UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleReviewFeedbackService,
+                Mockito.never()).createRoleReviewRoleReviewFeedback(ArgumentMatchers.any(), ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutRoleReviewFeedbackValidationFailed() throws Exception {
+        RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/role-reviews/{roleReviewId}/role-review-feedbacks/{id}",
+                UUID.randomUUID(), UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(roleReviewFeedbackService,
+                Mockito.never()).updateRoleReviewRoleReviewFeedback(ArgumentMatchers.any(), ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

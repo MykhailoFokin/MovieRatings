@@ -3,44 +3,27 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
 import solvve.course.exception.UnprocessableEntityException;
 import solvve.course.repository.NewsRepository;
 import solvve.course.repository.NewsUserReviewNoteRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from news_user_review_note",
-        "delete from news_user_review",
-        "delete from news",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class PortalUserNewsUserReviewNoteServiceTest {
+public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
 
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
 
     @Autowired
     private PortalUserNewsUserReviewNoteService portalUserNewsUserReviewNoteService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Autowired
     private NewsRepository newsRepository;
@@ -109,7 +92,8 @@ public class PortalUserNewsUserReviewNoteServiceTest {
 
         Assertions.assertThat(newsAfterUpdate.getDescription()).isEqualTo(sb.toString());
         Assertions.assertThat(read.getModeratorId()).isEqualTo(patch.getModeratorId());
-        Assertions.assertThat(read.getModeratorTypoReviewStatusType()).isEqualTo(patch.getModeratorTypoReviewStatusType());
+        Assertions.assertThat(read.getModeratorTypoReviewStatusType())
+                .isEqualTo(patch.getModeratorTypoReviewStatusType());
 
         Assert.assertFalse(getNewsUserReviewNotesWithSameIndexes(news.getId(), read.getModeratorTypoReviewStatusType()
                 , List.of(newsUserReviewNote2.getId(), newsUserReviewNote3.getId())));
@@ -131,7 +115,8 @@ public class PortalUserNewsUserReviewNoteServiceTest {
         patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
         patch.setApprovedText("new approved text");
 
-        Assertions.assertThatThrownBy(()-> portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUser.getId(),
+        Assertions.assertThatThrownBy(()->
+                portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUser.getId(),
                 newsUserReviewNote.getId(), patch)).isInstanceOf(UnprocessableEntityException.class);
     }
 

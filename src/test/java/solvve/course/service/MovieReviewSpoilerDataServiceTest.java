@@ -3,12 +3,8 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieReview;
 import solvve.course.domain.MovieSpoilerData;
@@ -19,30 +15,17 @@ import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieSpoilerDataRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.List;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_spoiler_data",
-        " delete from movie_review",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieReviewSpoilerDataServiceTest {
+public class MovieReviewSpoilerDataServiceTest extends BaseTest {
 
     @Autowired
     private MovieSpoilerDataRepository movieSpoilerDataRepository;
 
     @Autowired
     private MovieReviewSpoilerDataService movieReviewSpoilerDataService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetMovieSpoilerData() {

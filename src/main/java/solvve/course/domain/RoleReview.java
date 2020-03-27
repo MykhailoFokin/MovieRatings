@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Getter
@@ -13,12 +15,15 @@ public class RoleReview extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @NotNull
     private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @NotNull
     private Role role;
 
+    @Size(min = 1, max = 1000)
     private String textReview;
 
     @Enumerated(EnumType.STRING)

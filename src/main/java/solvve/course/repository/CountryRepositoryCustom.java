@@ -1,11 +1,11 @@
 package solvve.course.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import solvve.course.domain.Country;
 import solvve.course.dto.CountryFilter;
 
-import java.util.List;
-
 public interface CountryRepositoryCustom {
 
-    List<Country> findByFilter(CountryFilter filter);
+    Page<Country> findByFilter(CountryFilter filter, Pageable pageable);
 }

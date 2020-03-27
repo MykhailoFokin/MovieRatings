@@ -8,6 +8,7 @@ import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
 import solvve.course.service.NewsUserReviewReviewNoteService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,8 @@ public class NewsUserReviewReviewNoteController {
     @PostMapping
     public NewsUserReviewNoteReadDTO createNewsUserReviewNote(@PathVariable UUID newsId,
                                                               @PathVariable UUID newsReviewId,
-                                                              @RequestBody NewsUserReviewNoteCreateDTO createDTO) {
+                                                              @RequestBody
+                                                                  @Valid NewsUserReviewNoteCreateDTO createDTO) {
         return newsUserReviewReviewNoteService.createNewsUserReviewReviewNote(newsId, newsReviewId, createDTO);
     }
 
@@ -35,7 +37,7 @@ public class NewsUserReviewReviewNoteController {
     public NewsUserReviewNoteReadDTO patchNewsUserReviewNote(@PathVariable UUID newsId,
                                                              @PathVariable UUID newsReviewId,
                                                              @PathVariable (value = "id") UUID id,
-                                                             @RequestBody NewsUserReviewNotePatchDTO patch) {
+                                                             @RequestBody @Valid NewsUserReviewNotePatchDTO patch) {
         return newsUserReviewReviewNoteService.patchNewsUserReviewReviewNote(newsId, newsReviewId, id, patch);
     }
 
@@ -50,7 +52,7 @@ public class NewsUserReviewReviewNoteController {
     public NewsUserReviewNoteReadDTO putNewsUserReviewNote(@PathVariable UUID newsId,
                                                            @PathVariable UUID newsReviewId,
                                                            @PathVariable (value = "id") UUID id,
-                                                           @RequestBody NewsUserReviewNotePutDTO put) {
+                                                           @RequestBody @Valid NewsUserReviewNotePutDTO put) {
         return newsUserReviewReviewNoteService.updateNewsUserReviewReviewNote(newsId, newsReviewId, id, put);
     }
 }

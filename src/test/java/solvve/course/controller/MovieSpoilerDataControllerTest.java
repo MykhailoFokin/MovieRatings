@@ -1,24 +1,21 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.MovieSpoilerData;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
 import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
+import solvve.course.exception.ControllerValidationException;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.MovieSpoilerDataService;
 
 import java.util.UUID;
@@ -26,16 +23,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = MovieSpoilerDataController.class)
-@ActiveProfiles("test")
-public class MovieSpoilerDataControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class MovieSpoilerDataControllerTest extends BaseControllerTest {
 
     @MockBean
     private MovieSpoilerDataService movieSpoilerDataService;
@@ -97,8 +86,10 @@ public class MovieSpoilerDataControllerTest {
         MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
         create.setStartIndex(100);
         create.setEndIndex(150);
+        create.setMovieReviewId(UUID.randomUUID());
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead();
+        read.setMovieReviewId(create.getMovieReviewId());
 
         Mockito.when(movieSpoilerDataService.createMovieSpoilerData(create)).thenReturn(read);
 
@@ -150,8 +141,10 @@ public class MovieSpoilerDataControllerTest {
         MovieSpoilerDataPutDTO putDTO = new MovieSpoilerDataPutDTO();
         putDTO.setStartIndex(100);
         putDTO.setEndIndex(150);
+        putDTO.setMovieReviewId(UUID.randomUUID());
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead();
+        read.setMovieReviewId(putDTO.getMovieReviewId());
 
         Mockito.when(movieSpoilerDataService.updateMovieSpoilerData(read.getId(),putDTO)).thenReturn(read);
 
@@ -164,5 +157,98 @@ public class MovieSpoilerDataControllerTest {
         MovieSpoilerDataReadDTO actualMovieSpoilerData = objectMapper
                 .readValue(resultJson, MovieSpoilerDataReadDTO.class);
         Assert.assertEquals(read, actualMovieSpoilerData);
+    }
+
+    @Test
+    public void testCreateMovieSpoilerDataValidationFailed() throws Exception {
+        MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/moviespoilerdata")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(movieSpoilerDataService, Mockito.never()).createMovieSpoilerData(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutMovieSpoilerDataValidationFailed() throws Exception {
+        MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/moviespoilerdata/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(movieSpoilerDataService, Mockito.never()).updateMovieSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateMovieSpoilerDataWrongIndexes() throws Exception {
+        MovieSpoilerDataCreateDTO movieSpoilerDataCreate = new MovieSpoilerDataCreateDTO();
+        movieSpoilerDataCreate.setMovieReviewId(UUID.randomUUID());
+        movieSpoilerDataCreate.setStartIndex(100);
+        movieSpoilerDataCreate.setEndIndex(10);
+
+        String resultJson = mvc.perform(post("/api/v1//moviespoilerdata")
+                .content(objectMapper.writeValueAsString(movieSpoilerDataCreate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(movieSpoilerDataService, Mockito.never()).createMovieSpoilerData(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchMovieSpoilerDataWrongIndexes() throws Exception {
+        MovieSpoilerDataPatchDTO movieSpoilerDataPatch = new MovieSpoilerDataPatchDTO();
+        movieSpoilerDataPatch.setMovieReviewId(UUID.randomUUID());
+        movieSpoilerDataPatch.setStartIndex(100);
+        movieSpoilerDataPatch.setEndIndex(10);
+
+        String resultJson = mvc.perform(patch("/api/v1/moviespoilerdata/{id}",
+                UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(movieSpoilerDataPatch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(movieSpoilerDataService, Mockito.never()).patchMovieSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutMovieSpoilerDataWrongIndexes() throws Exception {
+        MovieSpoilerDataPutDTO movieSpoilerDataPut = new MovieSpoilerDataPutDTO();
+        movieSpoilerDataPut.setMovieReviewId(UUID.randomUUID());
+        movieSpoilerDataPut.setStartIndex(100);
+        movieSpoilerDataPut.setEndIndex(10);
+
+        String resultJson = mvc.perform(put("/api/v1//moviespoilerdata/{id}",
+                UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(movieSpoilerDataPut))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn().getResponse().getContentAsString();
+
+        ErrorInfo errorInfo = objectMapper.readValue(resultJson, ErrorInfo.class);
+        Assert.assertTrue(errorInfo.getMessage().contains("startIndex"));
+        Assert.assertTrue(errorInfo.getMessage().contains("endIndex"));
+        Assert.assertEquals(ControllerValidationException.class, errorInfo.getExceptionClass());
+
+        Mockito.verify(movieSpoilerDataService, Mockito.never()).updateMovieSpoilerData(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

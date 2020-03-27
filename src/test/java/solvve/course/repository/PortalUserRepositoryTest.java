@@ -2,35 +2,21 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.PortalUser;
-import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class PortalUserRepositoryTest {
+public class PortalUserRepositoryTest extends BaseTest {
 
     @Autowired
     private PortalUserRepository portalUserRepository;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
@@ -38,6 +24,7 @@ public class PortalUserRepositoryTest {
 
         PortalUser r = new PortalUser();
         r.setUserType(userType);
+        r.setLogin("Login");
         r = portalUserRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(portalUserRepository.findById(r.getId()).isPresent());
@@ -83,5 +70,11 @@ public class PortalUserRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSavePortalUserValidation() {
+        PortalUser entity = new PortalUser();
+        portalUserRepository.save(entity);
     }
 }

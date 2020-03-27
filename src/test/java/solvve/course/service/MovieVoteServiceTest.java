@@ -3,38 +3,22 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieVoteRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_vote",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieVoteServiceTest {
+public class MovieVoteServiceTest extends BaseTest {
 
     @Autowired
     private MovieVoteRepository movieVoteRepository;
 
     @Autowired
     private MovieVoteService movieVoteService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetMovieVote() {
@@ -166,13 +150,13 @@ public class MovieVoteServiceTest {
 
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getPortalUserId());
-        Assert.assertNull(read.getRating());
+        Assert.assertNotNull(read.getRating());
 
         MovieVote movieVoteAfterUpdate = movieVoteRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(movieVoteAfterUpdate.getMovie().getId());
         Assert.assertNotNull(movieVoteAfterUpdate.getPortalUser().getId());
-        Assert.assertNull(movieVoteAfterUpdate.getRating());
+        Assert.assertNotNull(movieVoteAfterUpdate.getRating());
 
         Assertions.assertThat(movieVote).isEqualToComparingOnlyGivenFields(movieVoteAfterUpdate, "id");
         Assertions.assertThat(movieVote.getMovie().getId()).isEqualTo(movieVoteAfterUpdate.getMovie().getId());

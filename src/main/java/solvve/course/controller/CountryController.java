@@ -1,11 +1,12 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.CountryService;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -21,17 +22,17 @@ public class CountryController {
     }
 
     @GetMapping
-    public List<CountryReadDTO> getCountries(CountryFilter countryFilter) {
-        return countryService.getCountries(countryFilter);
+    public PageResult<CountryReadDTO> getCountries(CountryFilter countryFilter, Pageable pageable) {
+        return countryService.getCountries(countryFilter, pageable);
     }
 
     @PostMapping
-    public CountryReadDTO createCountries(@RequestBody CountryCreateDTO createDTO) {
+    public CountryReadDTO createCountries(@RequestBody @Valid CountryCreateDTO createDTO) {
         return countryService.createCountries(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public CountryReadDTO patchCountries(@PathVariable UUID id, @RequestBody CountryPatchDTO patch) {
+    public CountryReadDTO patchCountries(@PathVariable UUID id, @RequestBody @Valid CountryPatchDTO patch) {
         return countryService.patchCountries(id, patch);
     }
 
@@ -41,7 +42,7 @@ public class CountryController {
     }
 
     @PutMapping("/{id}")
-    public CountryReadDTO putCountries(@PathVariable UUID id, @RequestBody CountryPutDTO put) {
+    public CountryReadDTO putCountries(@PathVariable UUID id, @RequestBody @Valid CountryPutDTO put) {
         return countryService.updateCountries(id, put);
     }
 }

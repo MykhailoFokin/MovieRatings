@@ -2,43 +2,27 @@ package solvve.course.repository;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.VisitFilter;
 import solvve.course.service.VisitService;
-import solvve.course.utils.TestObjectsFactory;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from visit",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class VisitRepositoryTest {
+public class VisitRepositoryTest extends BaseTest {
 
     @Autowired
     private VisitRepository visitRepository;
 
     @Autowired
     private VisitService visitService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetMasterVisits() {
@@ -91,7 +75,7 @@ public class VisitRepositoryTest {
         Visit v3 = testObjectsFactory.createVisit(p2, VisitStatus.SCHEDULED);
 
         VisitFilter filter = new VisitFilter();
-        Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
+        Assertions.assertThat(visitService.getVisits(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(v1.getId(),v2.getId(),v3.getId());
     }
 
@@ -106,7 +90,7 @@ public class VisitRepositoryTest {
 
         VisitFilter filter = new VisitFilter();
         filter.setPortalUserId(p1.getId());
-        Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
+        Assertions.assertThat(visitService.getVisits(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(v1.getId(),v2.getId());
     }
 
@@ -121,7 +105,7 @@ public class VisitRepositoryTest {
 
         VisitFilter filter = new VisitFilter();
         filter.setStatuses(Set.of(VisitStatus.CANCELLED, VisitStatus.FINISHED));
-        Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
+        Assertions.assertThat(visitService.getVisits(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(v2.getId(),v3.getId());
     }
 
@@ -137,7 +121,7 @@ public class VisitRepositoryTest {
         VisitFilter filter = new VisitFilter();
         filter.setStartAtFrom(testObjectsFactory.createInstant(9));
         filter.setStartAtTo(testObjectsFactory.createInstant(13));
-        Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
+        Assertions.assertThat(visitService.getVisits(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(v1.getId(),v3.getId());
     }
 
@@ -155,7 +139,13 @@ public class VisitRepositoryTest {
         filter.setStartAtFrom(testObjectsFactory.createInstant(9));
         filter.setStartAtTo(testObjectsFactory.createInstant(13));
         filter.setStatuses(Set.of(VisitStatus.SCHEDULED));
-        Assertions.assertThat(visitService.getVisits(filter)).extracting("Id")
+        Assertions.assertThat(visitService.getVisits(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(v1.getId());
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveVisitValidation() {
+        Visit entity = new Visit();
+        visitRepository.save(entity);
     }
 }

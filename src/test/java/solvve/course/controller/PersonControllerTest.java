@@ -1,24 +1,21 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Person;
 import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
 import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.PersonService;
 
 import java.util.UUID;
@@ -26,16 +23,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = PersonController.class)
-@ActiveProfiles("test")
-public class PersonControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class PersonControllerTest extends BaseControllerTest {
 
     @MockBean
     private PersonService personService;
@@ -163,5 +152,246 @@ public class PersonControllerTest {
 
         PersonReadDTO actualPersons = objectMapper.readValue(resultJson, PersonReadDTO.class);
         Assert.assertEquals(read, actualPersons);
+    }
+
+    @Test
+    public void testCreatePersonValidationFailed() throws Exception {
+        PersonCreateDTO create = new PersonCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/persons")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).createPersons(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutPersonValidationFailed() throws Exception {
+        PersonPutDTO put = new PersonPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/persons/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).updatePersons(ArgumentMatchers.any(), ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutPersonCheckLimitBorders() throws Exception {
+
+        PersonPutDTO putDTO = new PersonPutDTO();
+        putDTO.setSurname("S");
+        putDTO.setName("N");
+        putDTO.setMiddleName("M");
+
+        PersonReadDTO read = createPersonsRead();
+
+        Mockito.when(personService.updatePersons(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PersonReadDTO actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assert.assertEquals(read, actualPerson);
+
+        // Check upper border
+        putDTO.setSurname(StringUtils.repeat("*", 255));
+        putDTO.setName(StringUtils.repeat("*", 255));
+        putDTO.setMiddleName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(put("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assert.assertEquals(read, actualPerson);
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        PersonPutDTO put = new PersonPutDTO();
+        put.setSurname("");
+        put.setName("");
+        put.setMiddleName("");
+
+        String resultJson = mvc.perform(put("/api/v1/persons/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).updatePersons(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        PersonPutDTO put = new PersonPutDTO();
+        put.setSurname(StringUtils.repeat("*", 256));
+        put.setName(StringUtils.repeat("*", 256));
+        put.setMiddleName(StringUtils.repeat("*", 256));
+
+        String resultJson = mvc.perform(put("/api/v1/persons/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).updatePersons(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        PersonCreateDTO create = new PersonCreateDTO();
+        create.setSurname("");
+        create.setName("");
+        create.setMiddleName("");
+
+        String resultJson = mvc.perform(post("/api/v1/persons")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).createPersons(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        PersonCreateDTO create = new PersonCreateDTO();
+        create.setSurname(StringUtils.repeat("*", 256));
+        create.setName(StringUtils.repeat("*", 256));
+        create.setMiddleName(StringUtils.repeat("*", 256));
+
+
+        String resultJson = mvc.perform(post("/api/v1/persons")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).createPersons(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreatePersonCheckStingBorders() throws Exception {
+
+        PersonCreateDTO create = new PersonCreateDTO();
+        create.setSurname(StringUtils.repeat("*", 1));
+        create.setName(StringUtils.repeat("*", 1));
+        create.setMiddleName(StringUtils.repeat("*", 1));
+
+        PersonReadDTO read = createPersonsRead();
+
+        Mockito.when(personService.createPersons(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/persons")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PersonReadDTO actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assertions.assertThat(actualPerson).isEqualToComparingFieldByField(read);
+
+        create.setSurname(StringUtils.repeat("*", 255));
+        create.setName(StringUtils.repeat("*", 255));
+        create.setMiddleName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(post("/api/v1/persons")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assertions.assertThat(actualPerson).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchPersonCheckStringBorders() throws Exception {
+
+        PersonPatchDTO patchDTO = new PersonPatchDTO();
+        patchDTO.setSurname(StringUtils.repeat("*", 1));
+        patchDTO.setName(StringUtils.repeat("*", 1));
+        patchDTO.setMiddleName(StringUtils.repeat("*", 1));
+
+        PersonReadDTO read = createPersonsRead();
+
+        Mockito.when(personService.patchPersons(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PersonReadDTO actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assert.assertEquals(read, actualPerson);
+
+        patchDTO.setSurname(StringUtils.repeat("*", 255));
+        patchDTO.setName(StringUtils.repeat("*", 255));
+        patchDTO.setMiddleName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(patch("/api/v1/persons/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualPerson = objectMapper.readValue(resultJson, PersonReadDTO.class);
+        Assert.assertEquals(read, actualPerson);
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        PersonPatchDTO patch = new PersonPatchDTO();
+        patch.setSurname("");
+        patch.setName("");
+        patch.setMiddleName("");
+
+        String resultJson = mvc.perform(patch("/api/v1/persons/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).patchPersons(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        PersonPatchDTO patch = new PersonPatchDTO();
+        patch.setSurname(StringUtils.repeat("*", 256));
+        patch.setName(StringUtils.repeat("*", 256));
+        patch.setMiddleName(StringUtils.repeat("*", 256));
+
+        String resultJson = mvc.perform(patch("/api/v1/persons/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(personService, Mockito.never()).patchPersons(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

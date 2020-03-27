@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -14,10 +16,13 @@ public class Crew extends AbstractEntity {
     private Person person;
 
     @ManyToOne
+    @NotNull
     private Movie movie;
 
     @OneToOne
+    @NotNull
     private CrewType crewType;
 
+    @Size(min = 1, max = 1000)
     private String description;
 }

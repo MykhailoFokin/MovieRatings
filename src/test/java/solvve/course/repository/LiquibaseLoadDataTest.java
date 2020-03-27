@@ -1,31 +1,13 @@
 package solvve.course.repository;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
 @TestPropertySource(properties = "spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml")
-@Sql(statements = {"delete from visit"
-        ,"delete from news","delete from movie_review_compliant",
-        "delete from movie_review_feedback","delete from movie_spoiler_data","delete from movie_vote",
-        "delete from movie_review","delete from genre","delete from crew_type","delete from crew",
-        "delete from movie_company","delete from role_review_compliant","delete from role_review_feedback",
-        "delete from role_vote","delete from role_spoiler_data","delete from role_review","delete from role",
-        "delete from user_grant","delete from person","delete from country",
-        "delete from company_details","delete from portal_user","delete from user_type", "delete from language",
-        "delete from release_detail","delete from movie"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class LiquibaseLoadDataTest {
+public class LiquibaseLoadDataTest extends BaseTest {
 
     @Autowired
     private CountryRepository countryRepository;

@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieCompany;
@@ -8,9 +10,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieCompanyRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieCompanyService {
@@ -56,10 +56,9 @@ public class MovieCompanyService {
         return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
-    public List<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter) {
-        List<MovieCompany> movieCompanies = movieCompanyRepository.findByFilter(filter);
-        return movieCompanies.stream().map(e -> translationService.translate(e, MovieCompanyReadDTO.class))
-                .collect(Collectors.toList());
+    public PageResult<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter, Pageable pageable) {
+        Page<MovieCompany> movieCompanies = movieCompanyRepository.findByFilter(filter, pageable);
+        return translationService.toPageResult(movieCompanies, MovieCompanyReadDTO.class);
     }
 
     private MovieCompany getMovieCompanyRequired(UUID id) {

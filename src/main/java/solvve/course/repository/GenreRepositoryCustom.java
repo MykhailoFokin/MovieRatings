@@ -1,11 +1,11 @@
 package solvve.course.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import solvve.course.domain.Genre;
 import solvve.course.dto.GenreFilter;
 
-import java.util.List;
-
 public interface GenreRepositoryCustom {
 
-    List<Genre> findByFilter(GenreFilter genreFilter);
+    Page<Genre> findByFilter(GenreFilter genreFilter, Pageable pageable);
 }

@@ -1,11 +1,12 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.CompanyDetailsService;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -21,13 +22,13 @@ public class CompanyDetailsController {
     }
 
     @PostMapping
-    public CompanyDetailsReadDTO createCompanyDetails(@RequestBody CompanyDetailsCreateDTO createDTO) {
+    public CompanyDetailsReadDTO createCompanyDetails(@RequestBody @Valid CompanyDetailsCreateDTO createDTO) {
         return companyDetailsService.createCompanyDetails(createDTO);
     }
 
     @PatchMapping("/{id}")
     public CompanyDetailsReadDTO patchCompanyDetails(@PathVariable UUID id,
-                                                     @RequestBody CompanyDetailsPatchDTO patch) {
+                                                     @RequestBody @Valid CompanyDetailsPatchDTO patch) {
         return companyDetailsService.patchCompanyDetails(id, patch);
     }
 
@@ -37,12 +38,13 @@ public class CompanyDetailsController {
     }
 
     @PutMapping("/{id}")
-    public CompanyDetailsReadDTO putCompanyDetails(@PathVariable UUID id, @RequestBody CompanyDetailsPutDTO put) {
+    public CompanyDetailsReadDTO putCompanyDetails(@PathVariable UUID id,
+                                                   @RequestBody @Valid CompanyDetailsPutDTO put) {
         return companyDetailsService.updateCompanyDetails(id, put);
     }
 
     @GetMapping
-    public List<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter) {
-        return companyDetailsService.getCompanyDetails(filter);
+    public PageResult<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter, Pageable pageable) {
+        return companyDetailsService.getCompanyDetails(filter, pageable);
     }
 }

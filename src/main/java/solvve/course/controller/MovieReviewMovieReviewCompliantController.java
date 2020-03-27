@@ -8,6 +8,7 @@ import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.service.MovieReviewMovieReviewCompliantService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class MovieReviewMovieReviewCompliantController {
     @PostMapping
     public MovieReviewCompliantReadDTO createMovieReviewCompliant(
             @PathVariable UUID movieReviewId,
-            @RequestBody MovieReviewCompliantCreateDTO createDTO) {
+            @RequestBody @Valid MovieReviewCompliantCreateDTO createDTO) {
         return movieReviewCompliantService.createMovieReviewMovieReviewCompliant(movieReviewId, createDTO);
     }
 
@@ -35,7 +36,7 @@ public class MovieReviewMovieReviewCompliantController {
     public MovieReviewCompliantReadDTO patchMovieReviewCompliant(
             @PathVariable UUID movieReviewId,
             @PathVariable (value = "id") UUID id,
-            @RequestBody MovieReviewCompliantPatchDTO patch) {
+            @RequestBody @Valid MovieReviewCompliantPatchDTO patch) {
         return movieReviewCompliantService.patchMovieReviewMovieReviewCompliant(movieReviewId, id, patch);
     }
 
@@ -49,7 +50,7 @@ public class MovieReviewMovieReviewCompliantController {
     public MovieReviewCompliantReadDTO putMovieReviewCompliant(
             @PathVariable UUID movieReviewId,
             @PathVariable (value = "id") UUID id,
-            @RequestBody MovieReviewCompliantPutDTO put) {
+            @RequestBody @Valid MovieReviewCompliantPutDTO put) {
         return movieReviewCompliantService.updateMovieReviewMovieReviewCompliant(movieReviewId, id, put);
     }
 }

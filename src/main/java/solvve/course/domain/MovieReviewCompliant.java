@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -12,16 +14,20 @@ public class MovieReviewCompliant extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @NotNull
     private PortalUser portalUser;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @NotNull
     private Movie movie;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @NotNull
     private MovieReview movieReview;
 
+    @Size(min = 1, max = 1000)
     private String description;
 
     @Enumerated(EnumType.STRING)

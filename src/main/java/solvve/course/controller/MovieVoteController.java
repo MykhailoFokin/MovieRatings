@@ -8,6 +8,7 @@ import solvve.course.dto.MovieVotePutDTO;
 import solvve.course.dto.MovieVoteReadDTO;
 import solvve.course.service.MovieVoteService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class MovieVoteController {
     }
 
     @PostMapping
-    public MovieVoteReadDTO createMovieVote(@RequestBody MovieVoteCreateDTO createDTO) {
+    public MovieVoteReadDTO createMovieVote(@RequestBody @Valid MovieVoteCreateDTO createDTO) {
         return movieVoteService.createMovieVote(createDTO);
     }
 
@@ -38,7 +39,7 @@ public class MovieVoteController {
     }
 
     @PutMapping("/{id}")
-    public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody MovieVotePutDTO put) {
+    public MovieVoteReadDTO putMovieVote(@PathVariable UUID id, @RequestBody @Valid MovieVotePutDTO put) {
         return movieVoteService.updateMovieVote(id, put);
     }
 }

@@ -2,35 +2,25 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.Person;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = "delete from person", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class PersonRepositoryTest {
+public class PersonRepositoryTest extends BaseTest {
 
     @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
-
     @Test
     public void testSave() {
         Person r = new Person();
+        r.setName("Name");
         r = personRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(personRepository.findById(r.getId()).isPresent());
@@ -76,5 +66,11 @@ public class PersonRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSavePersonValidation() {
+        Person entity = new Person();
+        personRepository.save(entity);
     }
 }

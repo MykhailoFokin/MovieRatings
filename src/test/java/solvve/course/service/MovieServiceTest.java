@@ -2,13 +2,8 @@ package solvve.course.service;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.MovieCreateDTO;
 import solvve.course.dto.MoviePatchDTO;
@@ -17,20 +12,11 @@ import solvve.course.dto.MovieReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieRepository;
 import org.assertj.core.api.Assertions;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.Set;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_prod_countries",
-        "delete from movie_vote",
-        "delete from movie",
-        "delete from country",
-        "delete from portal_user"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class MovieServiceTest {
+public class MovieServiceTest extends BaseTest {
 
     @Autowired
     private MovieRepository movieRepository;
@@ -38,12 +24,9 @@ public class MovieServiceTest {
     @Autowired
     private MovieService movieService;
 
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
-
     @Test
     public void testGetMovie() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         MovieReadDTO readDTO = movieService.getMovie(movie.getId());
@@ -67,7 +50,7 @@ public class MovieServiceTest {
 
     @Test
     public void testPatchMovie() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePatchDTO patch = testObjectsFactory.createMoviePatchDTO();
@@ -84,7 +67,7 @@ public class MovieServiceTest {
 
     @Test
     public void testPatchMovieEmptyPatch() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePatchDTO patch = new MoviePatchDTO();
@@ -122,7 +105,7 @@ public class MovieServiceTest {
 
     @Test
     public void testDeleteMovie() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         movieService.deleteMovie(movie.getId());
@@ -136,7 +119,7 @@ public class MovieServiceTest {
 
     @Test
     public void testPutMovie() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePutDTO put = testObjectsFactory.createMoviePutDTO();
@@ -153,14 +136,14 @@ public class MovieServiceTest {
 
     @Test
     public void testPutMovieEmptyPut() {
-        Set<Country> countries = testObjectsFactory.createCountrySet();
+        Set<Country> countries = testObjectsFactory.createCountries();
         Movie movie = testObjectsFactory.createMovie(countries);
 
         MoviePutDTO put = new MoviePutDTO();
         MovieReadDTO read = movieService.updateMovie(movie.getId(), put);
 
-        Assert.assertNull(read.getTitle());
-        Assert.assertNull(read.getYear());
+        Assert.assertNotNull(read.getTitle());
+        Assert.assertNotNull(read.getYear());
         Assert.assertNull(read.getAspectRatio());
         Assert.assertNull(read.getCamera());
         Assert.assertNull(read.getColour());
@@ -172,8 +155,8 @@ public class MovieServiceTest {
 
         Movie movieAfterUpdate = movieRepository.findById(read.getId()).get();
 
-        Assert.assertNull(movieAfterUpdate.getTitle());
-        Assert.assertNull(movieAfterUpdate.getYear());
+        Assert.assertNotNull(movieAfterUpdate.getTitle());
+        Assert.assertNotNull(movieAfterUpdate.getYear());
         Assert.assertNull(movieAfterUpdate.getAspectRatio());
         Assert.assertNull(movieAfterUpdate.getCamera());
         Assert.assertNull(movieAfterUpdate.getColour());

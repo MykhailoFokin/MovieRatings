@@ -1,23 +1,22 @@
 package solvve.course.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.Country;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.CountryService;
 
 import java.util.List;
@@ -27,16 +26,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = CountryController.class)
-@ActiveProfiles("test")
-public class CountryControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class CountryControllerTest extends BaseControllerTest {
 
     @MockBean
     private CountryService countryService;
@@ -158,16 +149,270 @@ public class CountryControllerTest {
 
         CountryReadDTO read = new CountryReadDTO();
         read.setName("Ukraine");
-        List<CountryReadDTO> expectedResult = List.of(read);
-        Mockito.when(countryService.getCountries(countryFilter)).thenReturn(expectedResult);
+
+        PageResult<CountryReadDTO> resultPage = new PageResult<>();
+        resultPage.setData(List.of(read));
+        Mockito.when(countryService.getCountries(countryFilter, PageRequest.of(0, defaultPageSize)))
+                .thenReturn(resultPage);
 
         String resultJson = mvc.perform(get("/api/v1/countries")
                 .param("names", "Ukraine"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<CountryReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
+        PageResult<CountryReadDTO> actualResult = objectMapper.readValue(resultJson, new TypeReference<>() {
         });
-        Assert.assertEquals(expectedResult, actualResult);
+        Assert.assertEquals(resultPage, actualResult);
+    }
+
+    @Test
+    public void testCreateCountryValidationFailed() throws Exception {
+        CountryCreateDTO create = new CountryCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/countries")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).createCountries(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCountryValidationFailed() throws Exception {
+        CountryPutDTO put = new CountryPutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/countries/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).updateCountries(ArgumentMatchers.any(), ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCountryCheckLimitBorders() throws Exception {
+
+        CountryPutDTO putDTO = new CountryPutDTO();
+        putDTO.setName("D");
+
+        CountryReadDTO read = createCountriesRead();
+
+        Mockito.when(countryService.updateCountries(read.getId(),putDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(put("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CountryReadDTO actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assert.assertEquals(read, actualCountry);
+
+        // Check upper border
+        putDTO.setName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(put("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(putDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assert.assertEquals(read, actualCountry);
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        CountryPutDTO put = new CountryPutDTO();
+        put.setName("");
+
+        String resultJson = mvc.perform(put("/api/v1/countries/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).updateCountries(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        CountryPutDTO put = new CountryPutDTO();
+        put.setName(StringUtils.repeat("*", 256));
+
+        String resultJson = mvc.perform(put("/api/v1/countries/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).updateCountries(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
+        CountryCreateDTO create = new CountryCreateDTO();
+        create.setName("");
+
+        String resultJson = mvc.perform(post("/api/v1/countries")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).createCountries(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
+        CountryCreateDTO create = new CountryCreateDTO();
+        create.setName(StringUtils.repeat("*", 256));
+
+
+        String resultJson = mvc.perform(post("/api/v1/countries")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).createCountries(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testCreateCountryCheckStingBorders() throws Exception {
+
+        CountryCreateDTO create = new CountryCreateDTO();
+        create.setName("D");
+
+        CountryReadDTO read = createCountriesRead();
+
+        Mockito.when(countryService.createCountries(create)).thenReturn(read);
+
+        String resultJson = mvc.perform(post("/api/v1/countries")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CountryReadDTO actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assertions.assertThat(actualCountry).isEqualToComparingFieldByField(read);
+
+        create.setName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(post("/api/v1/countries")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assertions.assertThat(actualCountry).isEqualToComparingFieldByField(read);
+    }
+
+    @Test
+    public void testPatchCountryCheckStringBorders() throws Exception {
+
+        CountryPatchDTO patchDTO = new CountryPatchDTO();
+        patchDTO.setName("D");
+
+        CountryReadDTO read = createCountriesRead();
+
+        Mockito.when(countryService.patchCountries(read.getId(),patchDTO)).thenReturn(read);
+
+        String resultJson = mvc.perform(patch("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        CountryReadDTO actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assert.assertEquals(read, actualCountry);
+
+        patchDTO.setName(StringUtils.repeat("*", 255));
+
+        resultJson = mvc.perform(patch("/api/v1/countries/{id}", read.getId().toString())
+                .content(objectMapper.writeValueAsString(patchDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        actualCountry = objectMapper.readValue(resultJson, CountryReadDTO.class);
+        Assert.assertEquals(read, actualCountry);
+    }
+
+    @Test
+    public void testPatchCountryDescriptionEmptyValidationFailed() throws Exception {
+        CountryPatchDTO patch = new CountryPatchDTO();
+        patch.setName("");
+
+        String resultJson = mvc.perform(patch("/api/v1/countries/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).patchCountries(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPatchCountryDescriptionLimitValidationFailed() throws Exception {
+        CountryPatchDTO patch = new CountryPatchDTO();
+        patch.setName(StringUtils.repeat("*", 256));
+
+        String resultJson = mvc.perform(patch("/api/v1/countries/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(patch))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(countryService, Mockito.never()).patchCountries(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testGetCountryWithPagingAndSorting() throws Exception {
+        CountryReadDTO read = createCountriesRead();
+        read.setName("XXX");
+        CountryFilter filter = new CountryFilter();
+        filter.setNames(Set.of(read.getName()));
+
+        int page = 1;
+        int size = 25;
+
+        PageResult<CountryReadDTO> resultPage = new PageResult<>();
+        resultPage.setPage(page);
+        resultPage.setPageSize(size);
+        resultPage.setTotalElements(100);
+        resultPage.setTotalPages(4);
+        resultPage.setData(List.of(read));
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Mockito.when(countryService.getCountries(filter, pageRequest)).thenReturn(resultPage);
+
+        String resultJson = mvc.perform(get("/api/v1/countries")
+                .param("names", "XXX")
+                .param("page", Integer.toString(page))
+                .param("size", Integer.toString(size))
+                .param("sort", "updatedAt,desc"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        PageResult<CountryReadDTO> actualPage = objectMapper.readValue(resultJson,
+                new TypeReference<PageResult<CountryReadDTO>>() {
+                });
+        Assert.assertEquals(resultPage, actualPage);
     }
 
     private CountryReadDTO createCountriesRead() {

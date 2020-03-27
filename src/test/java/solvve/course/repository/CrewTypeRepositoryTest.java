@@ -3,20 +3,16 @@ package solvve.course.repository;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.dto.CrewTypeFilter;
 import solvve.course.service.CrewTypeService;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,24 +20,13 @@ import java.util.List;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = {"delete from crew",
-        "delete from movie",
-        "delete from crew_type",
-        "delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class CrewTypeRepositoryTest {
+public class CrewTypeRepositoryTest extends BaseTest {
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;
 
     @Autowired
     private CrewTypeService crewTypeService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
@@ -68,10 +53,9 @@ public class CrewTypeRepositoryTest {
         testObjectsFactory.createCrew(p, ct3, m);
 
         CrewTypeFilter filter = new CrewTypeFilter();
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                .containsExactlyInAnyOrder(ct1.getId(), ct2.getId(), ct3.getId());
-        });
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
+            .containsExactlyInAnyOrder(ct1.getId(), ct2.getId(), ct3.getId());
     }
 
     @Test
@@ -87,10 +71,9 @@ public class CrewTypeRepositoryTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setName("Type1");
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(ct1.getId());
-        });
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
+                .containsExactlyInAnyOrder(ct1.getId());
     }
 
     @Test
@@ -106,10 +89,9 @@ public class CrewTypeRepositoryTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setCrewId(c2.getId());
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(ct2.getId());
-        });
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
+                .containsExactlyInAnyOrder(ct2.getId());
     }
 
     @Test
@@ -120,7 +102,8 @@ public class CrewTypeRepositoryTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setNames(List.of("Type1", "Type2"));
-        Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
                 .containsExactlyInAnyOrder(ct1.getId(), ct2.getId());
     }
 
@@ -137,10 +120,9 @@ public class CrewTypeRepositoryTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setCrewIds(List.of(c2.getId(), c3.getId()));
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(ct3.getId(), ct2.getId());
-        });
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
+                .containsExactlyInAnyOrder(ct3.getId(), ct2.getId());
     }
 
     @Test
@@ -159,10 +141,9 @@ public class CrewTypeRepositoryTest {
         filter.setCrewId(c2.getId());
         filter.setCrewIds(List.of(c2.getId(), c1.getId()));
         filter.setNames(List.of("Type1", "Test", "Type2"));
-        testObjectsFactory.inTransaction(() -> {
-            Assertions.assertThat(crewTypeService.getCrewTypes(filter)).extracting("Id")
-                    .containsExactlyInAnyOrder(ct2.getId());
-        });
+        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
+                .extracting("Id")
+                .containsExactlyInAnyOrder(ct2.getId());
     }
 
     @Test
@@ -205,5 +186,11 @@ public class CrewTypeRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveCrewTypeValidation() {
+        CrewType entity = new CrewType();
+        crewTypeRepository.save(entity);
     }
 }

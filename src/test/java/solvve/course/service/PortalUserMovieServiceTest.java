@@ -2,32 +2,14 @@ package solvve.course.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.repository.MovieReviewFeedbackRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_review_feedback",
-        "delete from movie_review_compliant",
-        "delete from movie_review",
-        "delete from movie",
-        "delete from portal_user",
-        "delete from user_type"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class PortalUserMovieServiceTest {
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
+public class PortalUserMovieServiceTest extends BaseTest {
 
     @Autowired
     private MovieReviewFeedbackRepository movieReviewFeedbackRepository;

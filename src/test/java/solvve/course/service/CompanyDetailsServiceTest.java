@@ -3,38 +3,26 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import solvve.course.BaseTest;
 import solvve.course.domain.CompanyDetails;
-import solvve.course.dto.CompanyDetailsCreateDTO;
-import solvve.course.dto.CompanyDetailsPatchDTO;
-import solvve.course.dto.CompanyDetailsPutDTO;
-import solvve.course.dto.CompanyDetailsReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CompanyDetailsRepository;
-import solvve.course.utils.TestObjectsFactory;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from movie_company", "delete from company_details"}, executionPhase =
-        Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class CompanyDetailsServiceTest {
+public class CompanyDetailsServiceTest extends BaseTest {
 
     @Autowired
     private CompanyDetailsRepository companyDetailsRepository;
 
     @Autowired
     private CompanyDetailsService companyDetailsService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetCompanyDetails() {
@@ -132,16 +120,33 @@ public class CompanyDetailsServiceTest {
         CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
         CompanyDetailsReadDTO read = companyDetailsService.updateCompanyDetails(companyDetails.getId(), put);
 
-        Assert.assertNull(read.getName());
+        Assert.assertNotNull(read.getName());
         Assert.assertNull(read.getOverview());
         Assert.assertNull(read.getYearOfFoundation());
 
         testObjectsFactory.inTransaction(() -> {
             CompanyDetails companyDetailsAfterUpdate = companyDetailsRepository.findById(read.getId()).get();
 
-            Assert.assertNull(companyDetailsAfterUpdate.getName());
+            Assert.assertNotNull(companyDetailsAfterUpdate.getName());
             Assert.assertNull(companyDetailsAfterUpdate.getOverview());
             Assert.assertNull(companyDetailsAfterUpdate.getYearOfFoundation());
         });
+    }
+
+    @Test
+    public void testGetVisitsWithEmptyFilterWithPagingAndSorting() {
+        testObjectsFactory.createCompanyDetails("Paramaount",
+                "Overview1", LocalDate.of(2011, 12, 31));
+        CompanyDetails c2 = testObjectsFactory.createCompanyDetails("20CenturyFox",
+                "Overview1", LocalDate.of(2002, 12, 31));
+        testObjectsFactory.createCompanyDetails("Paramaount",
+                "Overview2", LocalDate.of(2010, 12, 31));
+        CompanyDetails c4 = testObjectsFactory.createCompanyDetails("20CenturyFox",
+                "Overview3", LocalDate.of(2004, 12, 31));
+
+        CompanyDetailsFilter filter = new CompanyDetailsFilter();
+        PageRequest pageRequest = PageRequest.of(1,2, Sort.by(Sort.Direction.DESC, "yearOfFoundation"));
+        Assertions.assertThat(companyDetailsService.getCompanyDetails(filter, pageRequest).getData()).extracting("id")
+                .isEqualTo((Arrays.asList(c4.getId(), c2.getId())));
     }
 }

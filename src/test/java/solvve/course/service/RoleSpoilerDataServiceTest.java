@@ -3,41 +3,22 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from role_spoiler_data",
-        " delete from role_review",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from role",
-        " delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class RoleSpoilerDataServiceTest {
+public class RoleSpoilerDataServiceTest extends BaseTest {
 
     @Autowired
     private RoleSpoilerDataRepository roleSpoilerDataRepository;
 
     @Autowired
     private RoleSpoilerDataService roleSpoilerDataService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetRoleSpoilerData() {

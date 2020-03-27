@@ -5,12 +5,14 @@ import org.bitbucket.brunneng.ot.Configuration;
 import org.bitbucket.brunneng.ot.ObjectTranslator;
 import org.bitbucket.brunneng.ot.exceptions.TranslationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.repository.*;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -523,7 +525,9 @@ public class TranslationService {
     }
 
     public void updateEntity(CompanyDetailsPutDTO put, CompanyDetails companyDetails) {
-        companyDetails.setName(put.getName());
+        if (put.getName() != null) {
+            companyDetails.setName(put.getName());
+        }
         companyDetails.setOverview(put.getOverview());
         companyDetails.setYearOfFoundation(put.getYearOfFoundation());
     }
@@ -532,8 +536,12 @@ public class TranslationService {
         if (put.getPortalUserId() != null) {
             visit.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPortalUserId()));
         }
-        visit.setStartAt(put.getStartAt());
-        visit.setFinishAt(put.getFinishAt());
+        if (put.getStartAt() != null) {
+            visit.setStartAt(put.getStartAt());
+        }
+        if (put.getFinishAt() != null) {
+            visit.setFinishAt(put.getFinishAt());
+        }
         visit.setStatus(put.getStatus());
     }
 
@@ -546,40 +554,50 @@ public class TranslationService {
         }
         if (put.getCrewTypeId() != null) {
             crew.setCrewType(repositoryHelper.getReferenceIfExists(CrewType.class, put.getCrewTypeId()));
-        } else {
-            crew.setCrewType(null);
         }
         crew.setDescription(put.getDescription());
     }
 
     public void updateEntity(CountryPutDTO put, Country country) {
-        country.setName(put.getName());
+        if (put.getName() != null) {
+            country.setName(put.getName());
+        }
     }
 
     public void updateEntity(CrewTypePutDTO put, CrewType crewType) {
-        crewType.setName(put.getName());
+        if (put.getName() != null) {
+            crewType.setName(put.getName());
+        }
     }
 
     public void updateEntity(GenrePutDTO put, Genre genre) {
         if (put.getMovieId() != null) {
             genre.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
-        genre.setName(put.getName());
+        if (put.getName() != null) {
+            genre.setName(put.getName());
+        }
     }
 
     public void updateEntity(UserGrantPutDTO put, UserGrant userGrant) {
         if (put.getUserTypeId() != null) {
             userGrant.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
         }
-        userGrant.setObjectName(put.getObjectName());
-        userGrant.setUserPermission(put.getUserPermission());
+        if (put.getObjectName() != null) {
+            userGrant.setObjectName(put.getObjectName());
+        }
+        if (put.getUserPermission() != null) {
+            userGrant.setUserPermission(put.getUserPermission());
+        }
         if (put.getGrantedById() != null) {
             userGrant.setGrantedBy(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getGrantedById()));
         }
     }
 
     public void updateEntity(LanguagePutDTO put, Language language) {
-        language.setName(put.getName());
+        if (put.getName() != null) {
+            language.setName(put.getName());
+        }
     }
 
     public void updateEntity(MovieCompanyPutDTO put, MovieCompany movieCompany) {
@@ -635,7 +653,9 @@ public class TranslationService {
         if (put.getMovieId() != null) {
             movieReview.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
-        movieReview.setTextReview(put.getTextReview());
+        if (put.getTextReview() != null) {
+            movieReview.setTextReview(put.getTextReview());
+        }
         movieReview.setModeratedStatus(put.getModeratedStatus());
         if (put.getModeratorId() != null) {
             movieReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
@@ -645,8 +665,6 @@ public class TranslationService {
     }
 
     public void updateEntity(MoviePutDTO put, Movie movie) {
-        movie.setTitle(put.getTitle());
-        movie.setYear(put.getYear());
         movie.setDescription(put.getDescription());
         movie.setSoundMix(put.getSoundMix());
         movie.setColour(put.getColour());
@@ -673,7 +691,9 @@ public class TranslationService {
         if (put.getMovieId() != null) {
             movieVote.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
         }
-        movieVote.setRating(put.getRating());
+        if (put.getRating() != null) {
+            movieVote.setRating(put.getRating());
+        }
     }
 
     public void updateEntity(NewsPutDTO put, News news) {
@@ -681,18 +701,26 @@ public class TranslationService {
             news.setPublisher(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getPublisherId()));
         }
         news.setPublished(put.getPublished());
-        news.setTopic(put.getTopic());
-        news.setDescription(put.getDescription());
+        if (put.getTopic() != null) {
+            news.setTopic(put.getTopic());
+        }
+        if (put.getDescription() != null) {
+            news.setDescription(put.getDescription());
+        }
     }
 
     public void updateEntity(PersonPutDTO put, Person person) {
-        person.setName(put.getName());
+        if (put.getName() != null) {
+            person.setName(put.getName());
+        }
         person.setMiddleName(put.getMiddleName());
         person.setSurname(put.getSurname());
     }
 
     public void updateEntity(PortalUserPutDTO put, PortalUser portalUser) {
-        portalUser.setLogin(put.getLogin());
+        if (put.getLogin() != null) {
+            portalUser.setLogin(put.getLogin());
+        }
         portalUser.setSurname(put.getSurname());
         portalUser.setName(put.getName());
         portalUser.setMiddleName(put.getMiddleName());
@@ -767,7 +795,9 @@ public class TranslationService {
 
     public void updateEntity(RolePutDTO put, Role role) {
         role.setTitle(put.getTitle());
-        role.setRoleType(put.getRoleType());
+        if (put.getRoleType() != null) {
+            role.setRoleType(put.getRoleType());
+        }
         role.setDescription(put.getDescription());
         if (put.getPersonId() != null) {
             role.setPerson(repositoryHelper.getReferenceIfExists(Person.class, put.getPersonId()));
@@ -795,11 +825,15 @@ public class TranslationService {
         if (put.getRoleId() != null) {
             roleVote.setRole(repositoryHelper.getReferenceIfExists(Role.class, put.getRoleId()));
         }
-        roleVote.setRating(put.getRating());
+        if (put.getRating() != null) {
+            roleVote.setRating(put.getRating());
+        }
     }
 
     public void updateEntity(UserTypePutDTO put, UserType userType) {
-        userType.setUserGroup(put.getUserGroup());
+        if (put.getUserGroup() != null) {
+            userType.setUserGroup(put.getUserGroup());
+        }
     }
 
     public void updateEntity(NewsUserReviewPutDTO put, NewsUserReview newsUserReview) {
@@ -833,7 +867,9 @@ public class TranslationService {
         if (put.getEndIndex() != null) {
             newsUserReviewNote.setEndIndex(put.getEndIndex());
         }
-        newsUserReviewNote.setProposedText(put.getProposedText());
+        if (put.getProposedText() != null) {
+            newsUserReviewNote.setProposedText(put.getProposedText());
+        }
         if (put.getModeratorTypoReviewStatusType() != null) {
             newsUserReviewNote.setModeratorTypoReviewStatusType(put.getModeratorTypoReviewStatusType());
         }
@@ -860,5 +896,15 @@ public class TranslationService {
         if (put.getFixAppliedDate() != null) {
             userTypoRequest.setFixAppliedDate(put.getFixAppliedDate());
         }
+    }
+
+    public <E, T> PageResult<T> toPageResult(Page<E> page, Class<T> dtoType) {
+        PageResult<T> res = new PageResult<>();
+        res.setPage(page.getNumber());
+        res.setPageSize(page.getSize());
+        res.setTotalPages(page.getTotalPages());
+        res.setTotalElements(page.getTotalElements());
+        res.setData(page.getContent().stream().map(e -> translate(e, dtoType)).collect(Collectors.toList()));
+        return res;
     }
 }

@@ -2,33 +2,22 @@ package solvve.course.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import solvve.course.BaseTest;
 import solvve.course.domain.Movie;
 import solvve.course.domain.MovieReview;
 import solvve.course.domain.PortalUser;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.time.Instant;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Sql(statements = "delete from movie_review", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@ActiveProfiles("test")
-public class MovieReviewRepositoryTest {
+public class MovieReviewRepositoryTest extends BaseTest {
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testSave() {
@@ -38,6 +27,7 @@ public class MovieReviewRepositoryTest {
         r.setPortalUser(portalUser);
         r.setMovie(movie);
         r.setModerator(portalUser);
+        r.setTextReview("Review");
         r = movieReviewRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(movieReviewRepository.findById(r.getId()).isPresent());
@@ -51,6 +41,7 @@ public class MovieReviewRepositoryTest {
         entity.setPortalUser(portalUser);
         entity.setMovie(movie);
         entity.setModerator(portalUser);
+        entity.setTextReview("Review");
         entity = movieReviewRepository.save(entity);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
@@ -70,6 +61,7 @@ public class MovieReviewRepositoryTest {
         entity.setPortalUser(portalUser);
         entity.setMovie(movie);
         entity.setModerator(portalUser);
+        entity.setTextReview("Review");
         entity = movieReviewRepository.save(entity);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -89,6 +81,7 @@ public class MovieReviewRepositoryTest {
         entity.setPortalUser(portalUser);
         entity.setMovie(movie);
         entity.setModerator(portalUser);
+        entity.setTextReview("Review");
         entity = movieReviewRepository.save(entity);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
@@ -101,5 +94,11 @@ public class MovieReviewRepositoryTest {
         Instant updatedAtAfterReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testSaveMovieReviewValidation() {
+        MovieReview entity = new MovieReview();
+        movieReviewRepository.save(entity);
     }
 }

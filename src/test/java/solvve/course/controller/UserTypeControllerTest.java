@@ -1,18 +1,13 @@
 package solvve.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
 import solvve.course.dto.UserTypeCreateDTO;
@@ -20,6 +15,7 @@ import solvve.course.dto.UserTypePatchDTO;
 import solvve.course.dto.UserTypePutDTO;
 import solvve.course.dto.UserTypeReadDTO;
 import solvve.course.exception.EntityNotFoundException;
+import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.UserTypeService;
 
 import java.util.UUID;
@@ -27,16 +23,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = UserTypeController.class)
-@ActiveProfiles("test")
-public class UserTypeControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class UserTypeControllerTest extends BaseControllerTest {
 
     @MockBean
     private UserTypeService userTypeService;
@@ -156,5 +144,34 @@ public class UserTypeControllerTest {
 
         UserTypeReadDTO actualUserTypes = objectMapper.readValue(resultJson, UserTypeReadDTO.class);
         Assert.assertEquals(read, actualUserTypes);
+    }
+
+    @Test
+    public void testCreateUserTypeValidationFailed() throws Exception {
+        UserTypeCreateDTO create = new UserTypeCreateDTO();
+
+        String resultJson = mvc.perform(post("/api/v1/usertypes")
+                .content(objectMapper.writeValueAsString(create))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(userTypeService, Mockito.never()).createUserTypes(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testPutUserTypeValidationFailed() throws Exception {
+        UserTypePutDTO put = new UserTypePutDTO();
+
+        String resultJson = mvc.perform(put("/api/v1/usertypes/{id}", UUID.randomUUID())
+                .content(objectMapper.writeValueAsString(put))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        objectMapper.readValue(resultJson, ErrorInfo.class);
+        Mockito.verify(userTypeService, Mockito.never()).updateUserTypes(ArgumentMatchers.any(),
+                ArgumentMatchers.any());
     }
 }

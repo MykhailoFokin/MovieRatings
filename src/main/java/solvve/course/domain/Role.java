@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Getter
@@ -14,12 +16,15 @@ public class Role extends AbstractEntity {
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private RoleType roleType;
 
+    @Size(min = 1, max = 1000)
     private String description;
 
     @OneToOne
     @JoinColumn
+    @NotNull
     private Movie movie;
 
     @OneToOne

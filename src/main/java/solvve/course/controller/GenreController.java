@@ -1,11 +1,12 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.GenreService;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +22,7 @@ public class GenreController {
     }
 
     @PostMapping
-    public GenreReadDTO createGenre(@RequestBody GenreCreateDTO createDTO) {
+    public GenreReadDTO createGenre(@RequestBody @Valid GenreCreateDTO createDTO) {
         return genreService.createGenre(createDTO);
     }
 
@@ -36,12 +37,12 @@ public class GenreController {
     }
 
     @PutMapping("/{id}")
-    public GenreReadDTO putGenre(@PathVariable UUID id, @RequestBody GenrePutDTO put) {
+    public GenreReadDTO putGenre(@PathVariable UUID id, @RequestBody @Valid GenrePutDTO put) {
         return genreService.updateGenre(id, put);
     }
 
     @GetMapping
-    public List<GenreReadDTO> getGenres(GenreFilter genreFilter) {
-        return genreService.getGenres(genreFilter);
+    public PageResult<GenreReadDTO> getGenres(GenreFilter genreFilter, Pageable pageable) {
+        return genreService.getGenres(genreFilter, pageable);
     }
 }

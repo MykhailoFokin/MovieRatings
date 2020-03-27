@@ -1,6 +1,8 @@
 package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
@@ -8,9 +10,7 @@ import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CrewService {
@@ -56,9 +56,9 @@ public class CrewService {
         return translationService.translate(crew, CrewReadDTO.class);
     }
 
-    public List<CrewReadDTO> getCrews(CrewFilter filter) {
-        List<Crew> crews = crewRepository.findByFilter(filter);
-        return crews.stream().map(e -> translationService.translate(e, CrewReadDTO.class)).collect(Collectors.toList());
+    public PageResult<CrewReadDTO> getCrews(CrewFilter filter, Pageable pageable) {
+        Page<Crew> crews = crewRepository.findByFilter(filter, pageable);
+        return translationService.toPageResult(crews, CrewReadDTO.class);
     }
 
     private Crew getCrewRequired(UUID id) {

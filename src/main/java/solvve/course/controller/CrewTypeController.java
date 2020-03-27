@@ -1,11 +1,12 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.CrewTypeService;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -21,12 +22,12 @@ public class CrewTypeController {
     }
 
     @PostMapping
-    public CrewTypeReadDTO createCrewType(@RequestBody CrewTypeCreateDTO createDTO) {
+    public CrewTypeReadDTO createCrewType(@RequestBody @Valid CrewTypeCreateDTO createDTO) {
         return crewTypeService.createCrewType(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public CrewTypeReadDTO patchCrewType(@PathVariable UUID id, @RequestBody CrewTypePatchDTO patch) {
+    public CrewTypeReadDTO patchCrewType(@PathVariable UUID id, @RequestBody @Valid CrewTypePatchDTO patch) {
         return crewTypeService.patchCrewType(id, patch);
     }
 
@@ -36,12 +37,12 @@ public class CrewTypeController {
     }
 
     @PutMapping("/{id}")
-    public CrewTypeReadDTO putCrewType(@PathVariable UUID id, @RequestBody CrewTypePutDTO put) {
+    public CrewTypeReadDTO putCrewType(@PathVariable UUID id, @RequestBody @Valid CrewTypePutDTO put) {
         return crewTypeService.updateCrewType(id, put);
     }
 
     @GetMapping
-    public List<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter) {
-        return crewTypeService.getCrewTypes(filter);
+    public PageResult<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter, Pageable pageable) {
+        return crewTypeService.getCrewTypes(filter, pageable);
     }
 }

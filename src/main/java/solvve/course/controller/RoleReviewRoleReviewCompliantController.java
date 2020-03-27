@@ -8,6 +8,7 @@ import solvve.course.dto.RoleReviewCompliantPutDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
 import solvve.course.service.RoleReviewRoleReviewCompliantService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class RoleReviewRoleReviewCompliantController {
     @PostMapping
     public RoleReviewCompliantReadDTO createRoleReviewCompliant(
             @PathVariable UUID roleReviewId,
-            @RequestBody RoleReviewCompliantCreateDTO createDTO) {
+            @RequestBody @Valid RoleReviewCompliantCreateDTO createDTO) {
         return roleReviewCompliantService.createRoleReviewRoleReviewCompliant(roleReviewId, createDTO);
     }
 
@@ -35,7 +36,7 @@ public class RoleReviewRoleReviewCompliantController {
     public RoleReviewCompliantReadDTO patchRoleReviewCompliant(
             @PathVariable UUID roleReviewId,
             @PathVariable (value = "id") UUID id,
-            @RequestBody RoleReviewCompliantPatchDTO patch) {
+            @RequestBody @Valid RoleReviewCompliantPatchDTO patch) {
         return roleReviewCompliantService.patchRoleReviewRoleReviewCompliant(roleReviewId, id, patch);
     }
 
@@ -48,7 +49,7 @@ public class RoleReviewRoleReviewCompliantController {
     @PutMapping("/{id}")
     public RoleReviewCompliantReadDTO putRoleReviewCompliant(@PathVariable UUID roleReviewId,
                                                              @PathVariable (value = "id") UUID id,
-                                                             @RequestBody RoleReviewCompliantPutDTO put) {
+                                                             @RequestBody @Valid RoleReviewCompliantPutDTO put) {
         return roleReviewCompliantService.updateRoleReviewRoleReviewCompliant(roleReviewId, id, put);
     }
 }

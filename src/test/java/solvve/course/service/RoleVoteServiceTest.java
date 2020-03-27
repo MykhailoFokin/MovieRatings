@@ -3,39 +3,22 @@ package solvve.course.service;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.*;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(statements = {"delete from role_vote",
-        " delete from portal_user",
-        " delete from user_type",
-        " delete from role",
-        " delete from person"},
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class RoleVoteServiceTest {
+public class RoleVoteServiceTest extends BaseTest {
 
     @Autowired
     private RoleVoteRepository roleVoteRepository;
 
     @Autowired
     private RoleVoteService roleVoteService;
-
-    @Autowired
-    private TestObjectsFactory testObjectsFactory;
 
     @Test
     public void testGetRoleVote() {
@@ -182,13 +165,13 @@ public class RoleVoteServiceTest {
 
         Assert.assertNotNull(read.getRoleId());
         Assert.assertNotNull(read.getPortalUserId());
-        Assert.assertNull(read.getRating());
+        Assert.assertNotNull(read.getRating());
 
         RoleVote roleVoteAfterUpdate = roleVoteRepository.findById(read.getId()).get();
 
         Assert.assertNotNull(roleVoteAfterUpdate.getRole().getId());
         Assert.assertNotNull(roleVoteAfterUpdate.getPortalUser().getId());
-        Assert.assertNull(roleVoteAfterUpdate.getRating());
+        Assert.assertNotNull(roleVoteAfterUpdate.getRating());
 
         Assertions.assertThat(roleVote).isEqualToComparingOnlyGivenFields(roleVoteAfterUpdate,
                 "id");

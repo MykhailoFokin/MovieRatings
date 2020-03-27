@@ -8,6 +8,7 @@ import solvve.course.dto.LanguagePutDTO;
 import solvve.course.dto.LanguageReadDTO;
 import solvve.course.service.LanguageService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class LanguageController {
     }
 
     @PostMapping
-    public LanguageReadDTO createLanguage(@RequestBody LanguageCreateDTO createDTO) {
+    public LanguageReadDTO createLanguage(@RequestBody @Valid LanguageCreateDTO createDTO) {
         return languageService.createLanguage(createDTO);
     }
 
@@ -38,7 +39,7 @@ public class LanguageController {
     }
 
     @PutMapping("/{id}")
-    public LanguageReadDTO putLanguage(@PathVariable UUID id, @RequestBody LanguagePutDTO put) {
+    public LanguageReadDTO putLanguage(@PathVariable UUID id, @RequestBody @Valid LanguagePutDTO put) {
         return languageService.updateLanguage(id, put);
     }
 }

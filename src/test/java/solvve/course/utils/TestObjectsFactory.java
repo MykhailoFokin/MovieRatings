@@ -157,7 +157,7 @@ public class TestObjectsFactory {
         return movieRepository.save(movie);
     }
 
-    public Set<Country> createCountrySet() {
+    public Set<Country> createCountries() {
         Country c = new Country();
         c.setName("C1");
         c = countryRepository.save(c);
@@ -210,8 +210,6 @@ public class TestObjectsFactory {
 
     public MoviePutDTO createMoviePutDTO() {
         MoviePutDTO put = new MoviePutDTO();
-        put.setTitle("Movie Test");
-        put.setYear((short) 2019);
         put.setAspectRatio("1:10");
         put.setCamera("Panasonic");
         put.setColour("Black");
@@ -715,6 +713,7 @@ public class TestObjectsFactory {
         userGrant.setUserType(userType);
         userGrant.setObjectName("ObjectName");
         userGrant.setGrantedBy(grantedBy);
+        userGrant.setUserPermission(UserPermType.READ);
         return userGrantRepository.save(userGrant);
     }
 
@@ -740,8 +739,8 @@ public class TestObjectsFactory {
 
     public NewsUserReviewNote createNewsUserReviewNote(PortalUser moderator, NewsUserReview newsUserReview,
                                                        Integer startIndex, Integer endIndex, String proposedText,
-                                                       ModeratorTypoReviewStatusType moderatorTypoReviewStatusType, News news,
-                                                       String sourceText) {
+                                                       ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
+                                                       News news, String sourceText) {
         NewsUserReviewNote newsUserReviewNote = new NewsUserReviewNote();
         newsUserReviewNote.setModerator(moderator);
         newsUserReviewNote.setNewsUserReview(newsUserReview);

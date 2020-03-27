@@ -8,6 +8,7 @@ import solvve.course.dto.RoleVotePutDTO;
 import solvve.course.dto.RoleVoteReadDTO;
 import solvve.course.service.RoleVoteService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class RoleVoteController {
     }
 
     @PostMapping
-    public RoleVoteReadDTO createRoleVote(@RequestBody RoleVoteCreateDTO createDTO) {
+    public RoleVoteReadDTO createRoleVote(@RequestBody @Valid RoleVoteCreateDTO createDTO) {
         return roleVoteService.createRoleVote(createDTO);
     }
 
@@ -38,7 +39,7 @@ public class RoleVoteController {
     }
 
     @PutMapping("/{id}")
-    public RoleVoteReadDTO putRoleVote(@PathVariable UUID id, @RequestBody RoleVotePutDTO put) {
+    public RoleVoteReadDTO putRoleVote(@PathVariable UUID id, @RequestBody @Valid RoleVotePutDTO put) {
         return roleVoteService.updateRoleVote(id, put);
     }
 }

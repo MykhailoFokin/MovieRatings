@@ -1,11 +1,12 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.dto.*;
 import solvve.course.service.CrewService;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -21,12 +22,12 @@ public class CrewController {
     }
 
     @PostMapping
-    public CrewReadDTO createCrew(@RequestBody CrewCreateDTO createDTO) {
+    public CrewReadDTO createCrew(@RequestBody @Valid CrewCreateDTO createDTO) {
         return crewService.createCrew(createDTO);
     }
 
     @PatchMapping("/{id}")
-    public CrewReadDTO patchCrew(@PathVariable UUID id, @RequestBody CrewPatchDTO patch) {
+    public CrewReadDTO patchCrew(@PathVariable UUID id, @RequestBody @Valid CrewPatchDTO patch) {
         return crewService.patchCrew(id, patch);
     }
 
@@ -36,12 +37,12 @@ public class CrewController {
     }
 
     @PutMapping("/{id}")
-    public CrewReadDTO putCrew(@PathVariable UUID id, @RequestBody CrewPutDTO put) {
+    public CrewReadDTO putCrew(@PathVariable UUID id, @RequestBody @Valid CrewPutDTO put) {
         return crewService.updateCrew(id, put);
     }
 
     @GetMapping
-    public List<CrewReadDTO> getCrews(CrewFilter filter) {
-        return crewService.getCrews(filter);
+    public PageResult<CrewReadDTO> getCrews(CrewFilter filter, Pageable pageable) {
+        return crewService.getCrews(filter, pageable);
     }
 }
