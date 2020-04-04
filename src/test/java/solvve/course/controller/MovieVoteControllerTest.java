@@ -29,16 +29,9 @@ public class MovieVoteControllerTest extends BaseControllerTest {
     @MockBean
     private MovieVoteService movieVoteService;
 
-    private MovieVoteReadDTO createMovieVoteRead() {
-        MovieVoteReadDTO movieVote = new MovieVoteReadDTO();
-        movieVote.setId(UUID.randomUUID());
-        movieVote.setRating(UserVoteRatingType.R9);
-        return movieVote;
-    }
-
     @Test
     public void testGetMovieVote() throws Exception {
-        MovieVoteReadDTO movieVote = createMovieVoteRead();
+        MovieVoteReadDTO movieVote = generateObject(MovieVoteReadDTO.class);
 
         Mockito.when(movieVoteService.getMovieVote(movieVote.getId())).thenReturn(movieVote);
 
@@ -80,14 +73,9 @@ public class MovieVoteControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieVote() throws Exception {
 
-        MovieVoteCreateDTO create = new MovieVoteCreateDTO();
-        create.setRating(UserVoteRatingType.R9);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        MovieVoteCreateDTO create = generateObject(MovieVoteCreateDTO.class);
 
-        MovieVoteReadDTO read = createMovieVoteRead();
-        read.setMovieId(create.getMovieId());
-        read.setPortalUserId(create.getPortalUserId());
+        MovieVoteReadDTO read = generateObject(MovieVoteReadDTO.class);
 
         Mockito.when(movieVoteService.createMovieVote(create)).thenReturn(read);
 
@@ -104,10 +92,9 @@ public class MovieVoteControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieVote() throws Exception {
 
-        MovieVotePatchDTO patchDTO = new MovieVotePatchDTO();
-        patchDTO.setRating(UserVoteRatingType.R9);
+        MovieVotePatchDTO patchDTO = generateObject(MovieVotePatchDTO.class);
 
-        MovieVoteReadDTO read = createMovieVoteRead();
+        MovieVoteReadDTO read = generateObject(MovieVoteReadDTO.class);
 
         Mockito.when(movieVoteService.patchMovieVote(read.getId(),patchDTO)).thenReturn(read);
 
@@ -133,14 +120,9 @@ public class MovieVoteControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieVote() throws Exception {
 
-        MovieVotePutDTO putDTO = new MovieVotePutDTO();
-        putDTO.setRating(UserVoteRatingType.R9);
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setMovieId(UUID.randomUUID());
+        MovieVotePutDTO putDTO = generateObject(MovieVotePutDTO.class);
 
-        MovieVoteReadDTO read = createMovieVoteRead();
-        read.setPortalUserId(putDTO.getPortalUserId());
-        read.setMovieId(putDTO.getMovieId());
+        MovieVoteReadDTO read = generateObject(MovieVoteReadDTO.class);
 
         Mockito.when(movieVoteService.updateMovieVote(read.getId(),putDTO)).thenReturn(read);
 

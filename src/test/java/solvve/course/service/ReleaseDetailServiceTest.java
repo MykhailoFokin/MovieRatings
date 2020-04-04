@@ -53,10 +53,9 @@ public class ReleaseDetailServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Country country = testObjectsFactory.createCountry();
 
-        ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
+        ReleaseDetailCreateDTO create = testObjectsFactory.createReleaseDetailCreateDTO();
         create.setMovieId(movie.getId());
         create.setCountryId(country.getId());
-        create.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.createReleaseDetails(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -75,10 +74,9 @@ public class ReleaseDetailServiceTest extends BaseTest {
         Country country = testObjectsFactory.createCountry();
         ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
-        ReleaseDetailPatchDTO patch = new ReleaseDetailPatchDTO();
+        ReleaseDetailPatchDTO patch = testObjectsFactory.createReleaseDetailPatchDTO();
         patch.setMovieId(movie.getId());
         patch.setCountryId(country.getId());
-        patch.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.patchReleaseDetails(releaseDetail.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -136,10 +134,9 @@ public class ReleaseDetailServiceTest extends BaseTest {
         Country country = testObjectsFactory.createCountry();
         ReleaseDetail releaseDetail = testObjectsFactory.createReleaseDetail(movie, country);
 
-        ReleaseDetailPutDTO put = new ReleaseDetailPutDTO();
+        ReleaseDetailPutDTO put = testObjectsFactory.createReleaseDetailPutDTO();
         put.setMovieId(movie.getId());
         put.setCountryId(country.getId());
-        put.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         ReleaseDetailReadDTO read = releaseDetailService.updateReleaseDetails(releaseDetail.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

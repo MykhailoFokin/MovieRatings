@@ -29,7 +29,7 @@ public class MovieReviewMovieReviewFeedbackControllerTest extends BaseController
 
     @Test
     public void testGetMovieReviewMovieReviewFeedback() throws Exception {
-        MovieReviewReadDTO movieReview = createMovieReview();
+        MovieReviewReadDTO movieReview = generateObject(MovieReviewReadDTO.class);
         List<MovieReviewFeedbackReadDTO> movieReviewFeedbackReadDTO =
                 List.of(createMovieReviewFeedbackRead(movieReview.getId()));
 
@@ -78,12 +78,8 @@ public class MovieReviewMovieReviewFeedbackControllerTest extends BaseController
     @Test
     public void testCreateMovieReviewMovieReviewFeedback() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
-        create.setIsLiked(true);
-        create.setMovieReviewId(movieReviewReadDTO.getId());
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieReviewFeedbackCreateDTO create = generateObject(MovieReviewFeedbackCreateDTO.class);
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead(movieReviewReadDTO.getId());
         read.setPortalUserId(create.getPortalUserId());
@@ -107,9 +103,8 @@ public class MovieReviewMovieReviewFeedbackControllerTest extends BaseController
     @Test
     public void testPatchMovieReviewMovieReviewFeedback() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieReviewFeedbackPatchDTO patchDTO = new MovieReviewFeedbackPatchDTO();
-        patchDTO.setIsLiked(true);
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieReviewFeedbackPatchDTO patchDTO = generateObject(MovieReviewFeedbackPatchDTO.class);
         patchDTO.setMovieReviewId(movieReviewReadDTO.getId());
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead(movieReviewReadDTO.getId());
@@ -143,12 +138,9 @@ public class MovieReviewMovieReviewFeedbackControllerTest extends BaseController
     @Test
     public void testPutMovieReviewMovieReviewFeedback() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieReviewFeedbackPutDTO putDTO = new MovieReviewFeedbackPutDTO();
-        putDTO.setIsLiked(true);
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieReviewFeedbackPutDTO putDTO = generateObject(MovieReviewFeedbackPutDTO.class);
         putDTO.setMovieReviewId(movieReviewReadDTO.getId());
-        putDTO.setMovieId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
 
         MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead(movieReviewReadDTO.getId());
         read.setMovieId(putDTO.getMovieId());
@@ -203,17 +195,8 @@ public class MovieReviewMovieReviewFeedbackControllerTest extends BaseController
     }
 
     private MovieReviewFeedbackReadDTO createMovieReviewFeedbackRead(UUID movieReviewId) {
-        MovieReviewFeedbackReadDTO movieReviewFeedback = new MovieReviewFeedbackReadDTO();
-        movieReviewFeedback.setId(UUID.randomUUID());
-        movieReviewFeedback.setIsLiked(true);
+        MovieReviewFeedbackReadDTO movieReviewFeedback = generateObject(MovieReviewFeedbackReadDTO.class);
         movieReviewFeedback.setMovieReviewId(movieReviewId);
         return movieReviewFeedback;
-    }
-
-    private MovieReviewReadDTO createMovieReview() {
-        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setTextReview("Review");
-        return movieReview;
     }
 }

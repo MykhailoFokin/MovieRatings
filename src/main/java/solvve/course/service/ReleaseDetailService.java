@@ -8,23 +8,19 @@ import solvve.course.dto.ReleaseDetailCreateDTO;
 import solvve.course.dto.ReleaseDetailPatchDTO;
 import solvve.course.dto.ReleaseDetailPutDTO;
 import solvve.course.dto.ReleaseDetailReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.ReleaseDetailRepository;
 
 import java.util.UUID;
 
 @Service
-public class ReleaseDetailService {
+public class ReleaseDetailService extends AbstractService {
 
     @Autowired
     private ReleaseDetailRepository releaseDetailRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public ReleaseDetailReadDTO getReleaseDetails(UUID id) {
-        ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
+        ReleaseDetail releaseDetail = repositoryHelper.getByIdRequired(ReleaseDetail.class, id);
         return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class ReleaseDetailService {
     }
 
     public ReleaseDetailReadDTO patchReleaseDetails(UUID id, ReleaseDetailPatchDTO patch) {
-        ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
+        ReleaseDetail releaseDetail = repositoryHelper.getByIdRequired(ReleaseDetail.class, id);
 
         translationService.map(patch, releaseDetail);
 
@@ -44,18 +40,12 @@ public class ReleaseDetailService {
         return translationService.translate(releaseDetail, ReleaseDetailReadDTO.class);
     }
 
-    private ReleaseDetail getReleaseDetailsRequired(UUID id) {
-        return releaseDetailRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(ReleaseDetail.class, id);
-        });
-    }
-
     public void deleteReleaseDetails(UUID id) {
-        releaseDetailRepository.delete(getReleaseDetailsRequired(id));
+        releaseDetailRepository.delete(repositoryHelper.getByIdRequired(ReleaseDetail.class, id));
     }
 
     public ReleaseDetailReadDTO updateReleaseDetails(UUID id, ReleaseDetailPutDTO put) {
-        ReleaseDetail releaseDetail = getReleaseDetailsRequired(id);
+        ReleaseDetail releaseDetail = repositoryHelper.getByIdRequired(ReleaseDetail.class, id);
 
         translationService.updateEntity(put, releaseDetail);
 

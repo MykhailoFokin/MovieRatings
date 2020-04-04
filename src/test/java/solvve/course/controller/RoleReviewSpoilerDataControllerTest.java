@@ -29,24 +29,14 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
     private RoleReviewSpoilerDataService roleSpoilerDataService;
 
     private RoleSpoilerDataReadDTO createRoleSpoilerDataRead(UUID roleReviewId) {
-        RoleSpoilerDataReadDTO roleSpoilerData = new RoleSpoilerDataReadDTO();
-        roleSpoilerData.setId(UUID.randomUUID());
-        roleSpoilerData.setStartIndex(100);
-        roleSpoilerData.setEndIndex(150);
+        RoleSpoilerDataReadDTO roleSpoilerData = generateObject(RoleSpoilerDataReadDTO.class);
         roleSpoilerData.setRoleReviewId(roleReviewId);
         return roleSpoilerData;
     }
 
-    private RoleReviewReadDTO createRoleReview() {
-        RoleReviewReadDTO roleReview = new RoleReviewReadDTO();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setTextReview("Review");
-        return roleReview;
-    }
-
     @Test
     public void testGetRoleSpoilerData() throws Exception {
-        RoleReviewReadDTO roleReview = createRoleReview();
+        RoleReviewReadDTO roleReview = generateObject(RoleReviewReadDTO.class);
         List<RoleSpoilerDataReadDTO> roleSpoilerData = List.of(createRoleSpoilerDataRead(roleReview.getId()));
 
         Mockito.when(roleSpoilerDataService.getRoleReviewSpoilerData(roleReview.getId()))
@@ -82,10 +72,9 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleSpoilerData() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
-        create.setStartIndex(100);
-        create.setEndIndex(150);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleSpoilerDataCreateDTO create = generateObject(RoleSpoilerDataCreateDTO.class);
+        create.setStartIndex(1);
         create.setRoleReviewId(roleReviewReadDTO.getId());
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead(roleReviewReadDTO.getId());
@@ -108,10 +97,9 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleSpoilerData() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleSpoilerDataPatchDTO patchDTO = new RoleSpoilerDataPatchDTO();
-        patchDTO.setStartIndex(100);
-        patchDTO.setEndIndex(150);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleSpoilerDataPatchDTO patchDTO = generateObject(RoleSpoilerDataPatchDTO.class);
+        patchDTO.setStartIndex(1);
         patchDTO.setRoleReviewId(roleReviewReadDTO.getId());
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead(roleReviewReadDTO.getId());
@@ -144,10 +132,9 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleSpoilerData() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleSpoilerDataPutDTO putDTO = new RoleSpoilerDataPutDTO();
-        putDTO.setStartIndex(100);
-        putDTO.setEndIndex(150);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleSpoilerDataPutDTO putDTO = generateObject(RoleSpoilerDataPutDTO.class);
+        putDTO.setStartIndex(1);
         putDTO.setRoleReviewId(roleReviewReadDTO.getId());
 
         RoleSpoilerDataReadDTO read = createRoleSpoilerDataRead(roleReviewReadDTO.getId());
@@ -201,8 +188,7 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateRoleSpoilerDataWrongIndexes() throws Exception {
-        RoleSpoilerDataCreateDTO roleSpoilerDataCreate = new RoleSpoilerDataCreateDTO();
-        roleSpoilerDataCreate.setRoleReviewId(UUID.randomUUID());
+        RoleSpoilerDataCreateDTO roleSpoilerDataCreate = generateObject(RoleSpoilerDataCreateDTO.class);
         roleSpoilerDataCreate.setStartIndex(100);
         roleSpoilerDataCreate.setEndIndex(10);
 
@@ -223,8 +209,7 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchRoleSpoilerDataWrongIndexes() throws Exception {
-        RoleSpoilerDataPatchDTO roleSpoilerDataPatch = new RoleSpoilerDataPatchDTO();
-        roleSpoilerDataPatch.setRoleReviewId(UUID.randomUUID());
+        RoleSpoilerDataPatchDTO roleSpoilerDataPatch = generateObject(RoleSpoilerDataPatchDTO.class);
         roleSpoilerDataPatch.setStartIndex(100);
         roleSpoilerDataPatch.setEndIndex(10);
 
@@ -245,8 +230,7 @@ public class RoleReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutRoleSpoilerDataWrongIndexes() throws Exception {
-        RoleSpoilerDataPutDTO roleSpoilerDataPut = new RoleSpoilerDataPutDTO();
-        roleSpoilerDataPut.setRoleReviewId(UUID.randomUUID());
+        RoleSpoilerDataPutDTO roleSpoilerDataPut = generateObject(RoleSpoilerDataPutDTO.class);
         roleSpoilerDataPut.setStartIndex(100);
         roleSpoilerDataPut.setEndIndex(10);
 

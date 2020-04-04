@@ -43,10 +43,9 @@ public class MovieVoteServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         Movie movie = testObjectsFactory.createMovie();
 
-        MovieVoteCreateDTO create = new MovieVoteCreateDTO();
+        MovieVoteCreateDTO create = testObjectsFactory.createMovieVoteCreateDTO();
         create.setMovieId(movie.getId());
         create.setPortalUserId(portalUser.getId());
-        create.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.createMovieVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -63,10 +62,9 @@ public class MovieVoteServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         MovieVote movieVote = testObjectsFactory.createMovieVote(portalUser, movie);
 
-        MovieVotePatchDTO patch = new MovieVotePatchDTO();
+        MovieVotePatchDTO patch = testObjectsFactory.createMovieVotePatchDTO();
         patch.setMovieId(movie.getId());
         patch.setPortalUserId(portalUser.getId());
-        patch.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.patchMovieVote(movieVote.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -124,10 +122,9 @@ public class MovieVoteServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         MovieVote movieVote = testObjectsFactory.createMovieVote(portalUser, movie);
 
-        MovieVotePutDTO put = new MovieVotePutDTO();
+        MovieVotePutDTO put = testObjectsFactory.createMovieVotePutDTO();
         put.setMovieId(movie.getId());
         put.setPortalUserId(portalUser.getId());
-        put.setRating(UserVoteRatingType.R9);
         MovieVoteReadDTO read = movieVoteService.updateMovieVote(movieVote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

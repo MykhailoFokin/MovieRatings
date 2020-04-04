@@ -47,10 +47,9 @@ public class RoleVoteServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person, movie);
 
-        RoleVoteCreateDTO create = new RoleVoteCreateDTO();
+        RoleVoteCreateDTO create = testObjectsFactory.createRoleVoteCreateDTO();
         create.setRoleId(role.getId());
         create.setPortalUserId(portalUser.getId());
-        create.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.createRoleVote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -69,10 +68,9 @@ public class RoleVoteServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
-        RoleVotePatchDTO patch = new RoleVotePatchDTO();
+        RoleVotePatchDTO patch = testObjectsFactory.createRoleVotePatchDTO();
         patch.setRoleId(role.getId());
         patch.setPortalUserId(portalUser.getId());
-        patch.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.patchRoleVote(roleVote.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -137,10 +135,9 @@ public class RoleVoteServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person, movie);
         RoleVote roleVote = testObjectsFactory.createRoleVote(portalUser, role);
 
-        RoleVotePutDTO put = new RoleVotePutDTO();
+        RoleVotePutDTO put = testObjectsFactory.createRoleVotePutDTO();
         put.setRoleId(role.getId());
         put.setPortalUserId(portalUser.getId());
-        put.setRating(UserVoteRatingType.R9);
         RoleVoteReadDTO read = roleVoteService.updateRoleVote(roleVote.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

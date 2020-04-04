@@ -48,10 +48,8 @@ public class RoleSpoilerDataServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
-        RoleSpoilerDataCreateDTO create = new RoleSpoilerDataCreateDTO();
+        RoleSpoilerDataCreateDTO create = testObjectsFactory.createRoleSpoilerDataCreateDTO();
         create.setRoleReviewId(roleReview.getId());
-        create.setStartIndex(100);
-        create.setEndIndex(150);
 
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.createRoleSpoilerData(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -71,10 +69,8 @@ public class RoleSpoilerDataServiceTest extends BaseTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
-        RoleSpoilerDataPatchDTO patch = new RoleSpoilerDataPatchDTO();
+        RoleSpoilerDataPatchDTO patch = testObjectsFactory.createRoleSpoilerDataPatchDTO();
         patch.setRoleReviewId(roleReview.getId());
-        patch.setStartIndex(100);
-        patch.setEndIndex(150);
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.patchRoleSpoilerData(roleSpoilerData.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -140,10 +136,8 @@ public class RoleSpoilerDataServiceTest extends BaseTest {
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
         RoleSpoilerData roleSpoilerData = testObjectsFactory.createRoleSpoilerData(roleReview);
 
-        RoleSpoilerDataPutDTO put = new RoleSpoilerDataPutDTO();
+        RoleSpoilerDataPutDTO put = testObjectsFactory.createRoleSpoilerDataPutDTO();
         put.setRoleReviewId(roleReview.getId());
-        put.setStartIndex(100);
-        put.setEndIndex(150);
         RoleSpoilerDataReadDTO read = roleSpoilerDataService.updateRoleSpoilerData(roleSpoilerData.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

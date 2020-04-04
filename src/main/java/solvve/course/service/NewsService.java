@@ -8,23 +8,19 @@ import solvve.course.dto.NewsCreateDTO;
 import solvve.course.dto.NewsPatchDTO;
 import solvve.course.dto.NewsPutDTO;
 import solvve.course.dto.NewsReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsRepository;
 
 import java.util.UUID;
 
 @Service
-public class NewsService {
+public class NewsService extends AbstractService {
 
     @Autowired
     private NewsRepository newsRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public NewsReadDTO getNews(UUID id) {
-        News news = getNewsRequired(id);
+        News news = repositoryHelper.getByIdRequired(News.class, id);
         return translationService.translate(news, NewsReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class NewsService {
     }
 
     public NewsReadDTO patchNews(UUID id, NewsPatchDTO patch) {
-        News news = getNewsRequired(id);
+        News news = repositoryHelper.getByIdRequired(News.class, id);
 
         translationService.map(patch, news);
 
@@ -44,18 +40,12 @@ public class NewsService {
         return translationService.translate(news, NewsReadDTO.class);
     }
 
-    private News getNewsRequired(UUID id) {
-        return newsRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(News.class, id);
-        });
-    }
-
     public void deleteNews(UUID id) {
-        newsRepository.delete(getNewsRequired(id));
+        newsRepository.delete(repositoryHelper.getByIdRequired(News.class, id));
     }
 
     public NewsReadDTO updateNews(UUID id, NewsPutDTO put) {
-        News news = getNewsRequired(id);
+        News news = repositoryHelper.getByIdRequired(News.class, id);
 
         translationService.updateEntity(put, news);
 

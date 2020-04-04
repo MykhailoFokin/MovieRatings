@@ -30,18 +30,9 @@ public class NewsControllerTest extends BaseControllerTest {
     @MockBean
     private NewsService newsService;
 
-    private NewsReadDTO createNewsRead() {
-        NewsReadDTO news = new NewsReadDTO();
-        news.setId(UUID.randomUUID());
-        news.setTopic("Main_News");
-        news.setDescription("Our main news are absent today!");
-        news.setPublished(Instant.now());
-        return news;
-    }
-
     @Test
     public void testGetNews() throws Exception {
-        NewsReadDTO news = createNewsRead();
+        NewsReadDTO news = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.getNews(news.getId())).thenReturn(news);
 
@@ -83,12 +74,9 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testCreateNews() throws Exception {
 
-        NewsCreateDTO create = new NewsCreateDTO();
-        create.setTopic("Main_News");
-        create.setDescription("Our main news are absent today!");
-        create.setPublished(Instant.now());
+        NewsCreateDTO create = generateObject(NewsCreateDTO.class);
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.createNews(create)).thenReturn(read);
 
@@ -105,12 +93,9 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testPatchNews() throws Exception {
 
-        NewsPatchDTO patchDTO = new NewsPatchDTO();
-        patchDTO.setTopic("Main_News");
-        patchDTO.setDescription("Our main news are absent today!");
-        patchDTO.setPublished(Instant.now());
+        NewsPatchDTO patchDTO = generateObject(NewsPatchDTO.class);
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.patchNews(read.getId(),patchDTO)).thenReturn(read);
 
@@ -136,12 +121,9 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testPutNews() throws Exception {
 
-        NewsPutDTO putDTO = new NewsPutDTO();
-        putDTO.setTopic("Main_News");
-        putDTO.setDescription("Our main news are absent today!");
-        putDTO.setPublished(Instant.now());
+        NewsPutDTO putDTO = generateObject(NewsPutDTO.class);
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.updateNews(read.getId(),putDTO)).thenReturn(read);
 
@@ -186,12 +168,10 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testPutNewsCheckLimitBorders() throws Exception {
 
-        NewsPutDTO putDTO = new NewsPutDTO();
+        NewsPutDTO putDTO = generateObject(NewsPutDTO.class);
         putDTO.setDescription("D");
-        putDTO.setTopic("Main_News");
-        putDTO.setPublished(Instant.now());
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.updateNews(read.getId(),putDTO)).thenReturn(read);
 
@@ -206,8 +186,6 @@ public class NewsControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setDescription(StringUtils.repeat("*", 1000));
-        putDTO.setTopic("Main_News");
-        putDTO.setPublished(Instant.now());
 
         resultJson = mvc.perform(put("/api/v1/news/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -221,10 +199,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsPutDTO put = new NewsPutDTO();
+        NewsPutDTO put = generateObject(NewsPutDTO.class);
         put.setDescription("");
-        put.setTopic("Main_News");
-        put.setPublished(Instant.now());
 
         String resultJson = mvc.perform(put("/api/v1/news/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -239,10 +215,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsPutDTO put = new NewsPutDTO();
+        NewsPutDTO put = generateObject(NewsPutDTO.class);
         put.setDescription(StringUtils.repeat("*", 1001));
-        put.setTopic("Main_News");
-        put.setPublished(Instant.now());
 
         String resultJson = mvc.perform(put("/api/v1/news/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -257,10 +231,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsCreateDTO create = new NewsCreateDTO();
+        NewsCreateDTO create = generateObject(NewsCreateDTO.class);
         create.setDescription("");
-        create.setTopic("Main_News");
-        create.setPublished(Instant.now());
 
         String resultJson = mvc.perform(post("/api/v1/news")
                 .content(objectMapper.writeValueAsString(create))
@@ -274,11 +246,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsCreateDTO create = new NewsCreateDTO();
+        NewsCreateDTO create = generateObject(NewsCreateDTO.class);
         create.setDescription(StringUtils.repeat("*", 1001));
-        create.setTopic("Main_News");
-        create.setPublished(Instant.now());
-
 
         String resultJson = mvc.perform(post("/api/v1/news")
                 .content(objectMapper.writeValueAsString(create))
@@ -293,12 +262,10 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testCreateNewsCheckStingBorders() throws Exception {
 
-        NewsCreateDTO create = new NewsCreateDTO();
+        NewsCreateDTO create = generateObject(NewsCreateDTO.class);
         create.setDescription("D");
-        create.setTopic("Main_News");
-        create.setPublished(Instant.now());
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.createNews(create)).thenReturn(read);
 
@@ -312,8 +279,6 @@ public class NewsControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualNews).isEqualToComparingFieldByField(read);
 
         create.setDescription(StringUtils.repeat("*", 1000));
-        create.setTopic("Main_News");
-        create.setPublished(Instant.now());
 
         resultJson = mvc.perform(post("/api/v1/news")
                 .content(objectMapper.writeValueAsString(create))
@@ -328,12 +293,10 @@ public class NewsControllerTest extends BaseControllerTest {
     @Test
     public void testPatchNewsCheckStringBorders() throws Exception {
 
-        NewsPatchDTO patchDTO = new NewsPatchDTO();
+        NewsPatchDTO patchDTO = generateObject(NewsPatchDTO.class);
         patchDTO.setDescription("D");
-        patchDTO.setTopic("Main_News");
-        patchDTO.setPublished(Instant.now());
 
-        NewsReadDTO read = createNewsRead();
+        NewsReadDTO read = generateObject(NewsReadDTO.class);
 
         Mockito.when(newsService.patchNews(read.getId(),patchDTO)).thenReturn(read);
 
@@ -347,8 +310,6 @@ public class NewsControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualNews);
 
         patchDTO.setDescription(StringUtils.repeat("*", 1000));
-        patchDTO.setTopic("Main_News");
-        patchDTO.setPublished(Instant.now());
 
         resultJson = mvc.perform(patch("/api/v1/news/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -362,10 +323,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsPatchDTO patch = new NewsPatchDTO();
+        NewsPatchDTO patch = generateObject(NewsPatchDTO.class);
         patch.setDescription("");
-        patch.setTopic("Main_News");
-        patch.setPublished(Instant.now());
 
         String resultJson = mvc.perform(patch("/api/v1/news/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -380,10 +339,8 @@ public class NewsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsPatchDTO patch = new NewsPatchDTO();
+        NewsPatchDTO patch = generateObject(NewsPatchDTO.class);
         patch.setDescription(StringUtils.repeat("*", 1001));
-        patch.setTopic("Main_News");
-        patch.setPublished(Instant.now());
 
         String resultJson = mvc.perform(patch("/api/v1/news/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))

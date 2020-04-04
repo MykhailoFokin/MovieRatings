@@ -8,23 +8,16 @@ import solvve.course.domain.NewsUserReviewNote;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsUserReviewNoteRepository;
-import solvve.course.repository.RepositoryHelper;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class NewsUserReviewReviewNoteService {
-
-    @Autowired
-    private TranslationService translationService;
+public class NewsUserReviewReviewNoteService extends AbstractService {
 
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<NewsUserReviewNoteReadDTO> getNewsUserReviewUserReviewNote(UUID newsId, UUID newsUserReviewId) {

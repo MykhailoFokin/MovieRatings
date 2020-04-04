@@ -48,15 +48,10 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
+        NewsUserReviewNoteCreateDTO create = testObjectsFactory.createNewsUserReviewNoteCreateDTO();
         create.setNewsUserReviewId(newsUserReview.getId());
-        create.setStartIndex(10);
-        create.setEndIndex(50);
-        create.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setModeratorId(portalUser.getId());
         create.setNewsId(news.getId());
-        create.setSourceText("Ich reise viel");
 
         NewsUserReviewNoteReadDTO read =
                 newsUserReviewReviewNoteService.createNewsUserReviewReviewNote(news.getId(), newsUserReview.getId()
@@ -81,16 +76,10 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
                 ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
-        NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
+        NewsUserReviewNotePatchDTO patch = testObjectsFactory.createNewsUserReviewNotePatchDTO();
         patch.setNewsUserReviewId(newsUserReview.getId());
-        patch.setStartIndex(10);
-        patch.setEndIndex(50);
-        patch.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patch.setModeratorId(portalUser.getId());
-        patch.setSourceText("Ich reise viel");
         patch.setNewsId(news.getId());
-        patch.setApprovedText("ApprText");
         NewsUserReviewNoteReadDTO read =
                 newsUserReviewReviewNoteService.patchNewsUserReviewReviewNote(news.getId(), newsUserReview.getId(),
                         newsUserReviewNote.getId(), patch);
@@ -183,16 +172,10 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
                 ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
-        NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
+        NewsUserReviewNotePutDTO put = testObjectsFactory.createNewsUserReviewNotePutDTO();
         put.setNewsUserReviewId(newsUserReview.getId());
-        put.setStartIndex(10);
-        put.setEndIndex(50);
-        put.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         put.setModeratorId(portalUser.getId());
-        put.setSourceText("Ich reise viel");
         put.setNewsId(news.getId());
-        put.setApprovedText("ApprText");
         NewsUserReviewNoteReadDTO read =
                 newsUserReviewReviewNoteService.updateNewsUserReviewReviewNote(news.getId(), newsUserReview.getId(),
                         newsUserReviewNote.getId(), put);

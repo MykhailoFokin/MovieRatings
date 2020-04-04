@@ -38,10 +38,7 @@ public class PersonServiceTest extends BaseTest {
 
     @Test
     public void testCreatePersons() {
-        PersonCreateDTO create = new PersonCreateDTO();
-        create.setSurname("Surname");
-        create.setName("Name");
-        create.setMiddleName("MiddleName");
+        PersonCreateDTO create = testObjectsFactory.createPersonCreateDTO();
         PersonReadDTO read = personService.createPersons(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -53,10 +50,7 @@ public class PersonServiceTest extends BaseTest {
     public void testPatchPersons() {
         Person person = testObjectsFactory.createPerson();
 
-        PersonPatchDTO patch = new PersonPatchDTO();
-        patch.setSurname("Surname");
-        patch.setName("Name");
-        patch.setMiddleName("MiddleName");
+        PersonPatchDTO patch = testObjectsFactory.createPersonPatchDTO();
         PersonReadDTO read = personService.patchPersons(person.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -102,10 +96,7 @@ public class PersonServiceTest extends BaseTest {
     public void testPutPersons() {
         Person person = testObjectsFactory.createPerson();
 
-        PersonPutDTO put = new PersonPutDTO();
-        put.setSurname("Surname");
-        put.setName("Name");
-        put.setMiddleName("MiddleName");
+        PersonPutDTO put = testObjectsFactory.createPersonPutDTO();
         PersonReadDTO read = personService.updatePersons(person.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

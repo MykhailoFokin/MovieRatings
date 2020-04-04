@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class RoleService {
+public class RoleService extends AbstractService {
 
     @Autowired
     private RoleRepository roleRepository;
@@ -26,12 +26,9 @@ public class RoleService {
     @Autowired
     private RoleVoteRepository roleVoteRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public RoleReadDTO getRole(UUID id) {
-        Role role = getRoleRequired(id);
+        Role role = repositoryHelper.getByIdRequired(Role.class, id);
         return translationService.translate(role, RoleReadDTO.class);
     }
 
@@ -43,7 +40,7 @@ public class RoleService {
     }
 
     public RoleReadDTO patchRole(UUID id, RolePatchDTO patch) {
-        Role role = getRoleRequired(id);
+        Role role = repositoryHelper.getByIdRequired(Role.class, id);
 
         translationService.map(patch, role);
 
@@ -52,11 +49,11 @@ public class RoleService {
     }
 
     public void deleteRole(UUID id) {
-        roleRepository.delete(getRoleRequired(id));
+        roleRepository.delete(repositoryHelper.getByIdRequired(Role.class, id));
     }
 
     public RoleReadDTO updateRole(UUID id, RolePutDTO put) {
-        Role role = getRoleRequired(id);
+        Role role = repositoryHelper.getByIdRequired(Role.class, id);
 
         translationService.updateEntity(put, role);
 
@@ -74,11 +71,5 @@ public class RoleService {
                 role.getAverageRating(), averageRating);
         role.setAverageRating(averageRating);
         roleRepository.save(role);
-    }
-
-    private Role getRoleRequired(UUID id) {
-        return roleRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Role.class, id);
-        });
     }
 }

@@ -31,17 +31,9 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @MockBean
     private MovieCompanyService movieCompanyService;
 
-    private MovieCompanyReadDTO createMovieCompanyRead() {
-        MovieCompanyReadDTO movieCompany = new MovieCompanyReadDTO();
-        movieCompany.setId(UUID.randomUUID());
-        movieCompany.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        movieCompany.setDescription("Test");
-        return movieCompany;
-    }
-
     @Test
     public void testGetMovieCompany() throws Exception {
-        MovieCompanyReadDTO movieCompany = createMovieCompanyRead();
+        MovieCompanyReadDTO movieCompany = generateObject(MovieCompanyReadDTO.class);
 
         Mockito.when(movieCompanyService.getMovieCompany(movieCompany.getId())).thenReturn(movieCompany);
 
@@ -73,12 +65,9 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieCompany() throws Exception {
 
-        MovieCompanyCreateDTO create = new MovieCompanyCreateDTO();
-        create.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        create.setDescription("Test");
-        create.setCompanyDetailsId(UUID.randomUUID());
+        MovieCompanyCreateDTO create = generateObject(MovieCompanyCreateDTO.class);
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
         read.setCompanyDetailsId(create.getCompanyDetailsId());
 
         Mockito.when(movieCompanyService.createMovieCompany(create)).thenReturn(read);
@@ -96,11 +85,9 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieCompany() throws Exception {
 
-        MovieCompanyPatchDTO patchDTO = new MovieCompanyPatchDTO();
-        patchDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        patchDTO.setDescription("Test");
+        MovieCompanyPatchDTO patchDTO = generateObject(MovieCompanyPatchDTO.class);
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
 
         Mockito.when(movieCompanyService.patchMovieCompany(read.getId(),patchDTO)).thenReturn(read);
 
@@ -126,12 +113,9 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieCompany() throws Exception {
 
-        MovieCompanyPutDTO putDTO = new MovieCompanyPutDTO();
-        putDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        putDTO.setDescription("Test");
-        putDTO.setCompanyDetailsId(UUID.randomUUID());
+        MovieCompanyPutDTO putDTO = generateObject(MovieCompanyPutDTO.class);
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
         read.setCompanyDetailsId(putDTO.getCompanyDetailsId());
 
         Mockito.when(movieCompanyService.updateMovieCompany(read.getId(),putDTO)).thenReturn(read);
@@ -152,7 +136,7 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
         movieCompanyFilter.setCompanyDetailsId(UUID.randomUUID());
         movieCompanyFilter.setMovieProductionTypes(List.of(MovieProductionType.PRODUCTION_COMPANIES));
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
         PageResult<MovieCompanyReadDTO> resultPage = new PageResult<>();
         resultPage.setData(List.of(read));
         Mockito.when(movieCompanyService.getMovieCompanies(movieCompanyFilter, PageRequest.of(0, defaultPageSize)))
@@ -200,12 +184,10 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieCompanyCheckLimitBorders() throws Exception {
 
-        MovieCompanyPutDTO putDTO = new MovieCompanyPutDTO();
+        MovieCompanyPutDTO putDTO = generateObject(MovieCompanyPutDTO.class);
         putDTO.setDescription("D");
-        putDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        putDTO.setCompanyDetailsId(UUID.randomUUID());
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
 
         Mockito.when(movieCompanyService.updateMovieCompany(read.getId(),putDTO)).thenReturn(read);
 
@@ -220,8 +202,6 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setDescription(StringUtils.repeat("*", 1000));
-        putDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        putDTO.setCompanyDetailsId(UUID.randomUUID());
 
         resultJson = mvc.perform(put("/api/v1/moviecompanies/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -235,10 +215,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieCompanyPutDTO put = new MovieCompanyPutDTO();
+        MovieCompanyPutDTO put =generateObject(MovieCompanyPutDTO.class);
         put.setDescription("");
-        put.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        put.setCompanyDetailsId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/moviecompanies/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -253,10 +231,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieCompanyPutDTO put = new MovieCompanyPutDTO();
+        MovieCompanyPutDTO put = generateObject(MovieCompanyPutDTO.class);
         put.setDescription(StringUtils.repeat("*", 1001));
-        put.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        put.setCompanyDetailsId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/moviecompanies/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -271,10 +247,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieCompanyCreateDTO create = new MovieCompanyCreateDTO();
+        MovieCompanyCreateDTO create = generateObject(MovieCompanyCreateDTO.class);
         create.setDescription("");
-        create.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        create.setCompanyDetailsId(UUID.randomUUID());
 
         String resultJson = mvc.perform(post("/api/v1/moviecompanies")
                 .content(objectMapper.writeValueAsString(create))
@@ -288,11 +262,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieCompanyCreateDTO create = new MovieCompanyCreateDTO();
+        MovieCompanyCreateDTO create = generateObject(MovieCompanyCreateDTO.class);
         create.setDescription(StringUtils.repeat("*", 1001));
-        create.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        create.setCompanyDetailsId(UUID.randomUUID());
-
 
         String resultJson = mvc.perform(post("/api/v1/moviecompanies")
                 .content(objectMapper.writeValueAsString(create))
@@ -307,12 +278,10 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieCompanyCheckStingBorders() throws Exception {
 
-        MovieCompanyCreateDTO create = new MovieCompanyCreateDTO();
+        MovieCompanyCreateDTO create = generateObject(MovieCompanyCreateDTO.class);
         create.setDescription("D");
-        create.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        create.setCompanyDetailsId(UUID.randomUUID());
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
 
         Mockito.when(movieCompanyService.createMovieCompany(create)).thenReturn(read);
 
@@ -326,8 +295,6 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualMovieCompany).isEqualToComparingFieldByField(read);
 
         create.setDescription(StringUtils.repeat("*", 1000));
-        create.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        create.setCompanyDetailsId(UUID.randomUUID());
 
         resultJson = mvc.perform(post("/api/v1/moviecompanies")
                 .content(objectMapper.writeValueAsString(create))
@@ -342,12 +309,10 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieCompanyCheckStringBorders() throws Exception {
 
-        MovieCompanyPatchDTO patchDTO = new MovieCompanyPatchDTO();
+        MovieCompanyPatchDTO patchDTO = generateObject(MovieCompanyPatchDTO.class);
         patchDTO.setDescription("D");
-        patchDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        patchDTO.setCompanyDetailsId(UUID.randomUUID());
 
-        MovieCompanyReadDTO read = createMovieCompanyRead();
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
 
         Mockito.when(movieCompanyService.patchMovieCompany(read.getId(),patchDTO)).thenReturn(read);
 
@@ -361,8 +326,6 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualMovieCompany);
 
         patchDTO.setDescription(StringUtils.repeat("*", 1000));
-        patchDTO.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        patchDTO.setCompanyDetailsId(UUID.randomUUID());
 
         resultJson = mvc.perform(patch("/api/v1/moviecompanies/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -376,10 +339,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchMovieCompanyDescriptionEmptyValidationFailed() throws Exception {
-        MovieCompanyPatchDTO patch = new MovieCompanyPatchDTO();
+        MovieCompanyPatchDTO patch = generateObject(MovieCompanyPatchDTO.class);
         patch.setDescription("");
-        patch.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        patch.setCompanyDetailsId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/moviecompanies/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -394,10 +355,8 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchMovieCompanyDescriptionLimitValidationFailed() throws Exception {
-        MovieCompanyPatchDTO patch = new MovieCompanyPatchDTO();
+        MovieCompanyPatchDTO patch = generateObject(MovieCompanyPatchDTO.class);
         patch.setDescription(StringUtils.repeat("*", 1001));
-        patch.setMovieProductionType(MovieProductionType.PRODUCTION_COMPANIES);
-        patch.setCompanyDetailsId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/moviecompanies/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -412,8 +371,7 @@ public class MovieCompanyControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetMovieCompaniesWithPagingAndSorting() throws Exception {
-        MovieCompanyReadDTO read = createMovieCompanyRead();
-        read.setCompanyDetailsId(UUID.randomUUID());
+        MovieCompanyReadDTO read = generateObject(MovieCompanyReadDTO.class);
         MovieCompanyFilter filter = new MovieCompanyFilter();
         filter.setCompanyDetailsId(read.getCompanyDetailsId());
 

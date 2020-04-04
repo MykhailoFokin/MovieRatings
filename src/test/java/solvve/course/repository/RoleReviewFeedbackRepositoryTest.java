@@ -88,9 +88,12 @@ public class RoleReviewFeedbackRepositoryTest extends BaseTest {
 
         entity.setIsLiked(false);
         roleReviewFeedbackRepository.save(entity);
-        entity = roleReviewFeedbackRepository.findById(entity.getId()).get();
+        entity.setIsLiked(true);
+        roleReviewFeedbackRepository.save(entity);
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        RoleReviewFeedback roleReviewFeedback = roleReviewFeedbackRepository.findById(entity.getId()).get();
+
+        Instant updatedAtAfterReload = roleReviewFeedback.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }

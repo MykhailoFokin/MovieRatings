@@ -30,16 +30,9 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @MockBean
     private CrewTypeService crewTypeService;
 
-    private CrewTypeReadDTO createCrewTypeRead() {
-        CrewTypeReadDTO crewType = new CrewTypeReadDTO();
-        crewType.setId(UUID.randomUUID());
-        crewType.setName("Director");
-        return crewType;
-    }
-
     @Test
     public void testGetCrewType() throws Exception {
-        CrewTypeReadDTO crewType = createCrewTypeRead();
+        CrewTypeReadDTO crewType = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.getCrewType(crewType.getId())).thenReturn(crewType);
 
@@ -82,10 +75,9 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCrewType() throws Exception {
 
-        CrewTypeCreateDTO create = new CrewTypeCreateDTO();
-        create.setName("Director");
+        CrewTypeCreateDTO create = generateObject(CrewTypeCreateDTO.class);
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.createCrewType(create)).thenReturn(read);
 
@@ -102,10 +94,9 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCrewType() throws Exception {
 
-        CrewTypePatchDTO patchDTO = new CrewTypePatchDTO();
-        patchDTO.setName("Director");
+        CrewTypePatchDTO patchDTO = generateObject(CrewTypePatchDTO.class);
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.patchCrewType(read.getId(),patchDTO)).thenReturn(read);
 
@@ -131,10 +122,9 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPutCrewType() throws Exception {
 
-        CrewTypePutDTO putDTO = new CrewTypePutDTO();
-        putDTO.setName("Director");
+        CrewTypePutDTO putDTO = generateObject(CrewTypePutDTO.class);
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.updateCrewType(read.getId(),putDTO)).thenReturn(read);
 
@@ -153,7 +143,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
         CrewTypeFilter crewTypeFilter = new CrewTypeFilter();
         crewTypeFilter.setName("Director");
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
         PageResult<CrewTypeReadDTO> resultPage = new PageResult<>();
         resultPage.setData(List.of(read));
         Mockito.when(crewTypeService.getCrewTypes(crewTypeFilter, PageRequest.of(0, defaultPageSize)))
@@ -199,10 +189,10 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPutCrewTypeCheckLimitBorders() throws Exception {
 
-        CrewTypePutDTO putDTO = new CrewTypePutDTO();
+        CrewTypePutDTO putDTO = generateObject(CrewTypePutDTO.class);
         putDTO.setName("D");
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.updateCrewType(read.getId(),putDTO)).thenReturn(read);
 
@@ -230,7 +220,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CrewTypePutDTO put = new CrewTypePutDTO();
+        CrewTypePutDTO put = generateObject(CrewTypePutDTO.class);
         put.setName("");
 
         String resultJson = mvc.perform(put("/api/v1/crewtypes/{id}", UUID.randomUUID())
@@ -246,7 +236,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CrewTypePutDTO put = new CrewTypePutDTO();
+        CrewTypePutDTO put = generateObject(CrewTypePutDTO.class);
         put.setName(StringUtils.repeat("*", 256));
 
         String resultJson = mvc.perform(put("/api/v1/crewtypes/{id}", UUID.randomUUID())
@@ -262,7 +252,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CrewTypeCreateDTO create = new CrewTypeCreateDTO();
+        CrewTypeCreateDTO create = generateObject(CrewTypeCreateDTO.class);
         create.setName("");
 
         String resultJson = mvc.perform(post("/api/v1/crewtypes")
@@ -277,7 +267,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CrewTypeCreateDTO create = new CrewTypeCreateDTO();
+        CrewTypeCreateDTO create = generateObject(CrewTypeCreateDTO.class);
         create.setName(StringUtils.repeat("*", 256));
 
 
@@ -294,10 +284,10 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCrewTypeCheckStingBorders() throws Exception {
 
-        CrewTypeCreateDTO create = new CrewTypeCreateDTO();
+        CrewTypeCreateDTO create = generateObject(CrewTypeCreateDTO.class);
         create.setName("D");
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.createCrewType(create)).thenReturn(read);
 
@@ -325,10 +315,10 @@ public class CrewTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCrewTypeCheckStringBorders() throws Exception {
 
-        CrewTypePatchDTO patchDTO = new CrewTypePatchDTO();
+        CrewTypePatchDTO patchDTO = generateObject(CrewTypePatchDTO.class);
         patchDTO.setName("D");
 
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
 
         Mockito.when(crewTypeService.patchCrewType(read.getId(),patchDTO)).thenReturn(read);
 
@@ -355,7 +345,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCrewTypeDescriptionEmptyValidationFailed() throws Exception {
-        CrewTypePatchDTO patch = new CrewTypePatchDTO();
+        CrewTypePatchDTO patch = generateObject(CrewTypePatchDTO.class);
         patch.setName("");
 
         String resultJson = mvc.perform(patch("/api/v1/crewtypes/{id}", UUID.randomUUID())
@@ -371,7 +361,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCrewTypeDescriptionLimitValidationFailed() throws Exception {
-        CrewTypePatchDTO patch = new CrewTypePatchDTO();
+        CrewTypePatchDTO patch = generateObject(CrewTypePatchDTO.class);
         patch.setName(StringUtils.repeat("*", 256));
 
         String resultJson = mvc.perform(patch("/api/v1/crewtypes/{id}", UUID.randomUUID())
@@ -387,7 +377,7 @@ public class CrewTypeControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetCrewTypesWithPagingAndSorting() throws Exception {
-        CrewTypeReadDTO read = createCrewTypeRead();
+        CrewTypeReadDTO read = generateObject(CrewTypeReadDTO.class);
         read.setName("XXX");
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setName(read.getName());

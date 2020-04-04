@@ -29,18 +29,9 @@ public class PersonControllerTest extends BaseControllerTest {
     @MockBean
     private PersonService personService;
 
-    private PersonReadDTO createPersonsRead() {
-        PersonReadDTO persons = new PersonReadDTO();
-        persons.setId(UUID.randomUUID());
-        persons.setSurname("Surname");
-        persons.setName("Name");
-        persons.setMiddleName("MiddleName");
-        return persons;
-    }
-
     @Test
     public void testGetPersons() throws Exception {
-        PersonReadDTO persons = createPersonsRead();
+        PersonReadDTO persons = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.getPersons(persons.getId())).thenReturn(persons);
 
@@ -82,12 +73,9 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testCreatePersons() throws Exception {
 
-        PersonCreateDTO create = new PersonCreateDTO();
-        create.setSurname("Surname");
-        create.setName("Name");
-        create.setMiddleName("MiddleName");
+        PersonCreateDTO create = generateObject(PersonCreateDTO.class);
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.createPersons(create)).thenReturn(read);
 
@@ -104,12 +92,9 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testPatchPersons() throws Exception {
 
-        PersonPatchDTO patchDTO = new PersonPatchDTO();
-        patchDTO.setSurname("Surname");
-        patchDTO.setName("Name");
-        patchDTO.setMiddleName("MiddleName");
+        PersonPatchDTO patchDTO = generateObject(PersonPatchDTO.class);
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.patchPersons(read.getId(),patchDTO)).thenReturn(read);
 
@@ -135,12 +120,9 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testPutPersons() throws Exception {
 
-        PersonPutDTO putDTO = new PersonPutDTO();
-        putDTO.setSurname("Surname");
-        putDTO.setName("Name");
-        putDTO.setMiddleName("MiddleName");
+        PersonPutDTO putDTO = generateObject(PersonPutDTO.class);
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.updatePersons(read.getId(),putDTO)).thenReturn(read);
 
@@ -185,12 +167,12 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testPutPersonCheckLimitBorders() throws Exception {
 
-        PersonPutDTO putDTO = new PersonPutDTO();
+        PersonPutDTO putDTO = generateObject(PersonPutDTO.class);
         putDTO.setSurname("S");
         putDTO.setName("N");
         putDTO.setMiddleName("M");
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.updatePersons(read.getId(),putDTO)).thenReturn(read);
 
@@ -220,7 +202,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PersonPutDTO put = new PersonPutDTO();
+        PersonPutDTO put = generateObject(PersonPutDTO.class);
         put.setSurname("");
         put.setName("");
         put.setMiddleName("");
@@ -238,7 +220,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PersonPutDTO put = new PersonPutDTO();
+        PersonPutDTO put = generateObject(PersonPutDTO.class);
         put.setSurname(StringUtils.repeat("*", 256));
         put.setName(StringUtils.repeat("*", 256));
         put.setMiddleName(StringUtils.repeat("*", 256));
@@ -256,7 +238,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PersonCreateDTO create = new PersonCreateDTO();
+        PersonCreateDTO create = generateObject(PersonCreateDTO.class);
         create.setSurname("");
         create.setName("");
         create.setMiddleName("");
@@ -273,7 +255,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PersonCreateDTO create = new PersonCreateDTO();
+        PersonCreateDTO create = generateObject(PersonCreateDTO.class);
         create.setSurname(StringUtils.repeat("*", 256));
         create.setName(StringUtils.repeat("*", 256));
         create.setMiddleName(StringUtils.repeat("*", 256));
@@ -292,12 +274,12 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testCreatePersonCheckStingBorders() throws Exception {
 
-        PersonCreateDTO create = new PersonCreateDTO();
+        PersonCreateDTO create = generateObject(PersonCreateDTO.class);
         create.setSurname(StringUtils.repeat("*", 1));
         create.setName(StringUtils.repeat("*", 1));
         create.setMiddleName(StringUtils.repeat("*", 1));
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.createPersons(create)).thenReturn(read);
 
@@ -327,12 +309,12 @@ public class PersonControllerTest extends BaseControllerTest {
     @Test
     public void testPatchPersonCheckStringBorders() throws Exception {
 
-        PersonPatchDTO patchDTO = new PersonPatchDTO();
+        PersonPatchDTO patchDTO = generateObject(PersonPatchDTO.class);
         patchDTO.setSurname(StringUtils.repeat("*", 1));
         patchDTO.setName(StringUtils.repeat("*", 1));
         patchDTO.setMiddleName(StringUtils.repeat("*", 1));
 
-        PersonReadDTO read = createPersonsRead();
+        PersonReadDTO read = generateObject(PersonReadDTO.class);
 
         Mockito.when(personService.patchPersons(read.getId(),patchDTO)).thenReturn(read);
 
@@ -361,7 +343,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PersonPatchDTO patch = new PersonPatchDTO();
+        PersonPatchDTO patch = generateObject(PersonPatchDTO.class);
         patch.setSurname("");
         patch.setName("");
         patch.setMiddleName("");
@@ -379,7 +361,7 @@ public class PersonControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PersonPatchDTO patch = new PersonPatchDTO();
+        PersonPatchDTO patch = generateObject(PersonPatchDTO.class);
         patch.setSurname(StringUtils.repeat("*", 256));
         patch.setName(StringUtils.repeat("*", 256));
         patch.setMiddleName(StringUtils.repeat("*", 256));

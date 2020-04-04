@@ -31,7 +31,7 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetNewsUserReviewReviewNote() throws Exception {
-        NewsUserReviewReadDTO newsUserReview = createNewsUserReview();
+        NewsUserReviewReadDTO newsUserReview = generateObject(NewsUserReviewReadDTO.class);
         List<NewsUserReviewNoteReadDTO> newsUserReviewNoteReadDTO =
                 List.of(createNewsUserReviewNoteRead(newsUserReview.getId()));
 
@@ -84,15 +84,9 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testCreateNewsUserReviewReviewNote() throws Exception {
 
-        NewsUserReviewReadDTO newsUserReview = createNewsUserReview();
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
-        create.setStartIndex(10);
-        create.setEndIndex(50);
-        create.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
+        NewsUserReviewReadDTO newsUserReview = generateObject(NewsUserReviewReadDTO.class);
+        NewsUserReviewNoteCreateDTO create = generateObject(NewsUserReviewNoteCreateDTO.class);
         create.setNewsUserReviewId(newsUserReview.getId());
-        create.setNewsId(UUID.randomUUID());
-        create.setSourceText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
         read.setNewsId(create.getNewsId());
@@ -118,12 +112,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieReviewNewsUserReviewNote() throws Exception {
 
-        NewsUserReviewReadDTO newsUserReview = createNewsUserReview();
-        NewsUserReviewNotePatchDTO patchDTO = new NewsUserReviewNotePatchDTO();
-        patchDTO.setStartIndex(10);
-        patchDTO.setEndIndex(50);
-        patchDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        patchDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
+        NewsUserReviewReadDTO newsUserReview = generateObject(NewsUserReviewReadDTO.class);
+        NewsUserReviewNotePatchDTO patchDTO = generateObject(NewsUserReviewNotePatchDTO.class);
         patchDTO.setNewsUserReviewId(newsUserReview.getId());
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
@@ -158,15 +148,9 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieReviewNewsUserReviewNote() throws Exception {
 
-        NewsUserReviewReadDTO newsUserReview = createNewsUserReview();
-        NewsUserReviewNotePutDTO putDTO = new NewsUserReviewNotePutDTO();
-        putDTO.setStartIndex(10);
-        putDTO.setEndIndex(50);
-        putDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        putDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
+        NewsUserReviewReadDTO newsUserReview = generateObject(NewsUserReviewReadDTO.class);
+        NewsUserReviewNotePutDTO putDTO = generateObject(NewsUserReviewNotePutDTO.class);
         putDTO.setNewsUserReviewId(newsUserReview.getId());
-        putDTO.setNewsId(UUID.randomUUID());
-        putDTO.setSourceText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
 
         NewsUserReviewNoteReadDTO read = createNewsUserReviewNoteRead(newsUserReview.getId());
         read.setNewsId(putDTO.getNewsId());
@@ -228,13 +212,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testPutNewsUserReviewNoteCheckLimitBorders() throws Exception {
 
-        NewsUserReviewNotePutDTO putDTO = new NewsUserReviewNotePutDTO();
-        putDTO.setStartIndex(10);
-        putDTO.setEndIndex(50);
+        NewsUserReviewNotePutDTO putDTO = generateObject(NewsUserReviewNotePutDTO.class);
         putDTO.setProposedText("I");
-        putDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        putDTO.setNewsUserReviewId(UUID.randomUUID());
-        putDTO.setNewsId(UUID.randomUUID());
         putDTO.setSourceText("I");
         putDTO.setApprovedText("I");
 
@@ -256,10 +235,7 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualNewsUserReviewNote);
 
         // Check upper border
-        putDTO.setStartIndex(10);
-        putDTO.setEndIndex(50);
         putDTO.setProposedText(StringUtils.repeat("*", 1000));
-        putDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         putDTO.setSourceText(StringUtils.repeat("*", 1000));
         putDTO.setApprovedText(StringUtils.repeat("*", 1000));
 
@@ -277,13 +253,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
-        put.setStartIndex(10);
-        put.setEndIndex(50);
+        NewsUserReviewNotePutDTO put = generateObject(NewsUserReviewNotePutDTO.class);
         put.setProposedText("");
-        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        put.setNewsUserReviewId(UUID.randomUUID());
-        put.setNewsId(UUID.randomUUID());
         put.setSourceText("");
         put.setApprovedText("");
 
@@ -303,13 +274,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
-        put.setStartIndex(10);
-        put.setEndIndex(50);
+        NewsUserReviewNotePutDTO put = generateObject(NewsUserReviewNotePutDTO.class);
         put.setProposedText(StringUtils.repeat("*", 1001));
-        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        put.setNewsUserReviewId(UUID.randomUUID());
-        put.setNewsId(UUID.randomUUID());
         put.setSourceText(StringUtils.repeat("*", 1001));
         put.setApprovedText(StringUtils.repeat("*", 1001));
 
@@ -329,13 +295,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
-        create.setStartIndex(10);
-        create.setEndIndex(50);
+        NewsUserReviewNoteCreateDTO create = generateObject(NewsUserReviewNoteCreateDTO.class);
         create.setProposedText("");
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        create.setNewsUserReviewId(UUID.randomUUID());
-        create.setNewsId(UUID.randomUUID());
         create.setSourceText("");
         create.setApprovedText("");
 
@@ -355,13 +316,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
-        create.setStartIndex(10);
-        create.setEndIndex(50);
+        NewsUserReviewNoteCreateDTO create = generateObject(NewsUserReviewNoteCreateDTO.class);
         create.setProposedText(StringUtils.repeat("*", 1001));
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        create.setNewsUserReviewId(UUID.randomUUID());
-        create.setNewsId(UUID.randomUUID());
         create.setSourceText(StringUtils.repeat("*", 1001));
         create.setApprovedText(StringUtils.repeat("*", 1001));
 
@@ -383,13 +339,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testCreateNewsUserReviewNoteCheckStingBorders() throws Exception {
 
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
-        create.setStartIndex(10);
-        create.setEndIndex(50);
+        NewsUserReviewNoteCreateDTO create = generateObject(NewsUserReviewNoteCreateDTO.class);
         create.setProposedText(StringUtils.repeat("*", 1));
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        create.setNewsUserReviewId(UUID.randomUUID());
-        create.setNewsId(UUID.randomUUID());
         create.setSourceText(StringUtils.repeat("*", 1));
         create.setApprovedText(StringUtils.repeat("*", 1));
 
@@ -410,10 +361,7 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
                 objectMapper.readValue(resultJson, NewsUserReviewNoteReadDTO.class);
         Assertions.assertThat(actualNewsUserReviewNote).isEqualToComparingFieldByField(read);
 
-        create.setStartIndex(10);
-        create.setEndIndex(50);
         create.setProposedText(StringUtils.repeat("*", 1000));
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setSourceText(StringUtils.repeat("*", 1000));
         create.setApprovedText(StringUtils.repeat("*", 1000));
 
@@ -432,13 +380,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     @Test
     public void testPatchNewsUserReviewNoteCheckStringBorders() throws Exception {
 
-        NewsUserReviewNotePatchDTO patchDTO = new NewsUserReviewNotePatchDTO();
-        patchDTO.setStartIndex(10);
-        patchDTO.setEndIndex(50);
+        NewsUserReviewNotePatchDTO patchDTO = generateObject(NewsUserReviewNotePatchDTO.class);
         patchDTO.setProposedText(StringUtils.repeat("*", 1));
-        patchDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        patchDTO.setNewsUserReviewId(UUID.randomUUID());
-        patchDTO.setNewsId(UUID.randomUUID());
         patchDTO.setSourceText(StringUtils.repeat("*", 1));
         patchDTO.setApprovedText(StringUtils.repeat("*", 1));
 
@@ -459,10 +402,7 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
                 objectMapper.readValue(resultJson, NewsUserReviewNoteReadDTO.class);
         Assert.assertEquals(read, actualNewsUserReviewNote);
 
-        patchDTO.setStartIndex(10);
-        patchDTO.setEndIndex(50);
         patchDTO.setProposedText(StringUtils.repeat("*", 1000));
-        patchDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patchDTO.setSourceText(StringUtils.repeat("*", 1000));
         patchDTO.setApprovedText(StringUtils.repeat("*", 1000));
 
@@ -480,13 +420,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
-        patch.setStartIndex(10);
-        patch.setEndIndex(50);
+        NewsUserReviewNotePatchDTO patch = generateObject(NewsUserReviewNotePatchDTO.class);
         patch.setProposedText("");
-        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        patch.setNewsUserReviewId(UUID.randomUUID());
-        patch.setNewsId(UUID.randomUUID());
         patch.setSourceText("");
         patch.setApprovedText("");
 
@@ -506,13 +441,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
-        patch.setStartIndex(10);
-        patch.setEndIndex(50);
+        NewsUserReviewNotePatchDTO patch = generateObject(NewsUserReviewNotePatchDTO.class);
         patch.setProposedText(StringUtils.repeat("*", 1001));
-        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        patch.setNewsUserReviewId(UUID.randomUUID());
-        patch.setNewsId(UUID.randomUUID());
         patch.setSourceText(StringUtils.repeat("*", 1001));
         patch.setApprovedText(StringUtils.repeat("*", 1001));
 
@@ -531,24 +461,8 @@ public class NewsUserReviewReviewNoteControllerTest extends BaseControllerTest {
     }
 
     private NewsUserReviewNoteReadDTO createNewsUserReviewNoteRead(UUID newsUserReviewId) {
-        NewsUserReviewNoteReadDTO newsUserReviewNoteReadDTO = new NewsUserReviewNoteReadDTO();
-        newsUserReviewNoteReadDTO.setId(UUID.randomUUID());
+        NewsUserReviewNoteReadDTO newsUserReviewNoteReadDTO = generateObject(NewsUserReviewNoteReadDTO.class);
         newsUserReviewNoteReadDTO.setNewsUserReviewId(newsUserReviewId);
-        newsUserReviewNoteReadDTO.setStartIndex(10);
-        newsUserReviewNoteReadDTO.setEndIndex(50);
-        newsUserReviewNoteReadDTO.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        newsUserReviewNoteReadDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-
         return newsUserReviewNoteReadDTO;
-    }
-
-    private NewsUserReviewReadDTO createNewsUserReview() {
-        NewsUserReviewReadDTO newsUserReviewReadDTO = new NewsUserReviewReadDTO();
-        newsUserReviewReadDTO.setId(UUID.randomUUID());
-        newsUserReviewReadDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
-        newsUserReviewReadDTO.setPortalUserId(UUID.randomUUID());
-        newsUserReviewReadDTO.setNewsId(UUID.randomUUID());
-        newsUserReviewReadDTO.setModeratorId(UUID.randomUUID());
-        return newsUserReviewReadDTO;
     }
 }

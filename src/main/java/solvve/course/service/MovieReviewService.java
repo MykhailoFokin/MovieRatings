@@ -14,13 +14,10 @@ import solvve.course.repository.MovieReviewRepository;
 import java.util.UUID;
 
 @Service
-public class MovieReviewService {
+public class MovieReviewService extends AbstractService {
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
-
-    @Autowired
-    private TranslationService translationService;
 
     @Transactional(readOnly = true)
     public MovieReviewReadDTO getMovieReview(UUID id) {
@@ -38,7 +35,7 @@ public class MovieReviewService {
     }
 
     public MovieReviewReadDTO patchMovieReview(UUID id, MovieReviewPatchDTO patch) {
-        MovieReview movieReview = getMovieReviewRequired(id);
+        MovieReview movieReview = repositoryHelper.getByIdRequired(MovieReview.class, id);
 
         translationService.map(patch, movieReview);
 
@@ -47,21 +44,15 @@ public class MovieReviewService {
     }
 
     public void deleteMovieReview(UUID id) {
-        movieReviewRepository.delete(getMovieReviewRequired(id));
+        movieReviewRepository.delete(repositoryHelper.getByIdRequired(MovieReview.class, id));
     }
 
     public MovieReviewReadDTO updateMovieReview(UUID id, MovieReviewPutDTO put) {
-        MovieReview movieReview = getMovieReviewRequired(id);
+        MovieReview movieReview = repositoryHelper.getByIdRequired(MovieReview.class, id);
 
         translationService.updateEntity(put, movieReview);
 
         movieReview = movieReviewRepository.save(movieReview);
         return translationService.translate(movieReview, MovieReviewReadDTO.class);
-    }
-
-    private MovieReview getMovieReviewRequired(UUID id) {
-        return movieReviewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieReview.class, id);
-        });
     }
 }

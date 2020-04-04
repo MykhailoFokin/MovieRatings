@@ -44,10 +44,8 @@ public class MovieSpoilerDataServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
+        MovieSpoilerDataCreateDTO create = testObjectsFactory.createMovieSpoilerDataCreateDTO();
         create.setMovieReviewId(movieReview.getId());
-        create.setStartIndex(100);
-        create.setEndIndex(150);
 
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.createMovieSpoilerData(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -65,10 +63,8 @@ public class MovieSpoilerDataServiceTest extends BaseTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
         MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
-        MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
+        MovieSpoilerDataPatchDTO patch = testObjectsFactory.createMovieSpoilerDataPatchDTO();
         patch.setMovieReviewId(movieReview.getId());
-        patch.setStartIndex(100);
-        patch.setEndIndex(150);
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.patchMovieSpoilerData(movieSpoilerData.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -128,10 +124,8 @@ public class MovieSpoilerDataServiceTest extends BaseTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
         MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
-        MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
+        MovieSpoilerDataPutDTO put = testObjectsFactory.createMovieSpoilerDataPutDTO();
         put.setMovieReviewId(movieReview.getId());
-        put.setStartIndex(100);
-        put.setEndIndex(150);
         MovieSpoilerDataReadDTO read = movieSpoilerDataService.updateMovieSpoilerData(movieSpoilerData.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

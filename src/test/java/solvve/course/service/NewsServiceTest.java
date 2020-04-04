@@ -42,11 +42,8 @@ public class NewsServiceTest extends BaseTest {
     public void testCreateNews() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
 
-        NewsCreateDTO create = new NewsCreateDTO();
+        NewsCreateDTO create = testObjectsFactory.createNewsCreateDTO();
         create.setPublisherId(portalUser.getId());
-        create.setTopic("Main_News");
-        create.setDescription("Our main news are absent today!");
-        create.setPublished(testObjectsFactory.createInstant(9));
         NewsReadDTO read = newsService.createNews(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -60,11 +57,8 @@ public class NewsServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
 
-        NewsPatchDTO patch = new NewsPatchDTO();
+        NewsPatchDTO patch = testObjectsFactory.createNewsPatchDTO();
         patch.setPublisherId(portalUser.getId());
-        patch.setTopic("Main_News");
-        patch.setDescription("Our main news are absent today!");
-        patch.setPublished(testObjectsFactory.createInstant(9));
         NewsReadDTO read = newsService.patchNews(news.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -119,11 +113,8 @@ public class NewsServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
 
-        NewsPutDTO put = new NewsPutDTO();
+        NewsPutDTO put = testObjectsFactory.createNewsPutDTO();
         put.setPublisherId(portalUser.getId());
-        put.setTopic("Main_News");
-        put.setDescription("Our main news are absent today!");
-        put.setPublished(testObjectsFactory.createInstant(9));
         NewsReadDTO read = newsService.updateNews(news.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

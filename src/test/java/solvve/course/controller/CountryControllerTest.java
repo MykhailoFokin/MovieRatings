@@ -34,7 +34,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetCountries() throws Exception {
-        CountryReadDTO countries = createCountriesRead();
+        CountryReadDTO countries = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.getCountries(countries.getId())).thenReturn(countries);
 
@@ -76,10 +76,9 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCountries() throws Exception {
 
-        CountryCreateDTO create = new CountryCreateDTO();
-        create.setName("Laplandia");
+        CountryCreateDTO create = generateObject(CountryCreateDTO.class);
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.createCountries(create)).thenReturn(read);
 
@@ -96,10 +95,9 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCountries() throws Exception {
 
-        CountryPatchDTO patchDTO = new CountryPatchDTO();
-        patchDTO.setName("Laplandia");
+        CountryPatchDTO patchDTO = generateObject(CountryPatchDTO.class);
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.patchCountries(read.getId(),patchDTO)).thenReturn(read);
 
@@ -125,10 +123,9 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testPutCountries() throws Exception {
 
-        CountryPutDTO putDTO = new CountryPutDTO();
-        putDTO.setName("Laplandia");
+        CountryPutDTO putDTO = generateObject(CountryPutDTO.class);
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.updateCountries(read.getId(),putDTO)).thenReturn(read);
 
@@ -147,7 +144,7 @@ public class CountryControllerTest extends BaseControllerTest {
         CountryFilter countryFilter = new CountryFilter();
         countryFilter.setNames(Set.of("Ukraine"));
 
-        CountryReadDTO read = new CountryReadDTO();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
         read.setName("Ukraine");
 
         PageResult<CountryReadDTO> resultPage = new PageResult<>();
@@ -195,10 +192,10 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testPutCountryCheckLimitBorders() throws Exception {
 
-        CountryPutDTO putDTO = new CountryPutDTO();
+        CountryPutDTO putDTO = generateObject(CountryPutDTO.class);
         putDTO.setName("D");
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.updateCountries(read.getId(),putDTO)).thenReturn(read);
 
@@ -226,7 +223,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CountryPutDTO put = new CountryPutDTO();
+        CountryPutDTO put = generateObject(CountryPutDTO.class);
         put.setName("");
 
         String resultJson = mvc.perform(put("/api/v1/countries/{id}", UUID.randomUUID())
@@ -242,7 +239,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CountryPutDTO put = new CountryPutDTO();
+        CountryPutDTO put = generateObject(CountryPutDTO.class);
         put.setName(StringUtils.repeat("*", 256));
 
         String resultJson = mvc.perform(put("/api/v1/countries/{id}", UUID.randomUUID())
@@ -258,7 +255,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CountryCreateDTO create = new CountryCreateDTO();
+        CountryCreateDTO create = generateObject(CountryCreateDTO.class);
         create.setName("");
 
         String resultJson = mvc.perform(post("/api/v1/countries")
@@ -273,7 +270,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CountryCreateDTO create = new CountryCreateDTO();
+        CountryCreateDTO create = generateObject(CountryCreateDTO.class);
         create.setName(StringUtils.repeat("*", 256));
 
 
@@ -290,10 +287,10 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCountryCheckStingBorders() throws Exception {
 
-        CountryCreateDTO create = new CountryCreateDTO();
+        CountryCreateDTO create = generateObject(CountryCreateDTO.class);
         create.setName("D");
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.createCountries(create)).thenReturn(read);
 
@@ -321,10 +318,10 @@ public class CountryControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCountryCheckStringBorders() throws Exception {
 
-        CountryPatchDTO patchDTO = new CountryPatchDTO();
+        CountryPatchDTO patchDTO = generateObject(CountryPatchDTO.class);
         patchDTO.setName("D");
 
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = generateObject(CountryReadDTO.class);
 
         Mockito.when(countryService.patchCountries(read.getId(),patchDTO)).thenReturn(read);
 
@@ -351,7 +348,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCountryDescriptionEmptyValidationFailed() throws Exception {
-        CountryPatchDTO patch = new CountryPatchDTO();
+        CountryPatchDTO patch = generateObject(CountryPatchDTO.class);
         patch.setName("");
 
         String resultJson = mvc.perform(patch("/api/v1/countries/{id}", UUID.randomUUID())
@@ -367,7 +364,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCountryDescriptionLimitValidationFailed() throws Exception {
-        CountryPatchDTO patch = new CountryPatchDTO();
+        CountryPatchDTO patch = generateObject(CountryPatchDTO.class);
         patch.setName(StringUtils.repeat("*", 256));
 
         String resultJson = mvc.perform(patch("/api/v1/countries/{id}", UUID.randomUUID())
@@ -383,7 +380,7 @@ public class CountryControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetCountryWithPagingAndSorting() throws Exception {
-        CountryReadDTO read = createCountriesRead();
+        CountryReadDTO read = new CountryReadDTO();
         read.setName("XXX");
         CountryFilter filter = new CountryFilter();
         filter.setNames(Set.of(read.getName()));
@@ -413,12 +410,5 @@ public class CountryControllerTest extends BaseControllerTest {
                 new TypeReference<PageResult<CountryReadDTO>>() {
                 });
         Assert.assertEquals(resultPage, actualPage);
-    }
-
-    private CountryReadDTO createCountriesRead() {
-        CountryReadDTO countries = new CountryReadDTO();
-        countries.setId(UUID.randomUUID());
-        countries.setName("Laplandia");
-        return countries;
     }
 }

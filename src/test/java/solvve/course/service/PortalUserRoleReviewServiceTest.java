@@ -48,11 +48,9 @@ public class PortalUserRoleReviewServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
 
-        RoleReviewCreateDTO create = new RoleReviewCreateDTO();
+        RoleReviewCreateDTO create = testObjectsFactory.createRoleReviewCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setRoleId(role.getId());
-        create.setTextReview("This role can be described as junk.");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         create.setModeratorId(portalUser.getId());
 
         RoleReviewReadDTO read = portalUserRoleReviewService.createPortalUserRoleReview(portalUser.getId(), create);
@@ -77,11 +75,9 @@ public class PortalUserRoleReviewServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
-        RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
+        RoleReviewPatchDTO patch = testObjectsFactory.createRoleReviewPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setRoleId(role.getId());
-        patch.setTextReview("This role can be described as junk.");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
         RoleReviewReadDTO read = portalUserRoleReviewService.patchPortalUserRoleReview(portalUser.getId(),
                 roleReview.getId(),
@@ -160,11 +156,9 @@ public class PortalUserRoleReviewServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
-        RoleReviewPutDTO put = new RoleReviewPutDTO();
+        RoleReviewPutDTO put = testObjectsFactory.createRoleReviewPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setRoleId(role.getId());
-        put.setTextReview("This role can be described as junk.");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         RoleReviewReadDTO read = portalUserRoleReviewService.updatePortalUserRoleReview(portalUser.getId(),
                 roleReview.getId()

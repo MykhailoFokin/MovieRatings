@@ -8,23 +8,19 @@ import solvve.course.dto.RoleReviewCompliantCreateDTO;
 import solvve.course.dto.RoleReviewCompliantPatchDTO;
 import solvve.course.dto.RoleReviewCompliantPutDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleReviewCompliantRepository;
 
 import java.util.UUID;
 
 @Service
-public class RoleReviewCompliantService {
+public class RoleReviewCompliantService extends AbstractService {
 
     @Autowired
     private RoleReviewCompliantRepository roleReviewCompliantRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public RoleReviewCompliantReadDTO getRoleReviewCompliant(UUID id) {
-        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
+        RoleReviewCompliant roleReviewCompliant = repositoryHelper.getByIdRequired(RoleReviewCompliant.class, id);
         return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class RoleReviewCompliantService {
     }
 
     public RoleReviewCompliantReadDTO patchRoleReviewCompliant(UUID id, RoleReviewCompliantPatchDTO patch) {
-        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
+        RoleReviewCompliant roleReviewCompliant = repositoryHelper.getByIdRequired(RoleReviewCompliant.class, id);
 
         translationService.map(patch, roleReviewCompliant);
 
@@ -45,21 +41,15 @@ public class RoleReviewCompliantService {
     }
 
     public void deleteRoleReviewCompliant(UUID id) {
-        roleReviewCompliantRepository.delete(getRoleReviewCompliantRequired(id));
+        roleReviewCompliantRepository.delete(repositoryHelper.getByIdRequired(RoleReviewCompliant.class, id));
     }
 
     public RoleReviewCompliantReadDTO updateRoleReviewCompliant(UUID id, RoleReviewCompliantPutDTO put) {
-        RoleReviewCompliant roleReviewCompliant = getRoleReviewCompliantRequired(id);
+        RoleReviewCompliant roleReviewCompliant = repositoryHelper.getByIdRequired(RoleReviewCompliant.class, id);
 
         translationService.updateEntity(put, roleReviewCompliant);
 
         roleReviewCompliant = roleReviewCompliantRepository.save(roleReviewCompliant);
         return translationService.translate(roleReviewCompliant, RoleReviewCompliantReadDTO.class);
-    }
-
-    private RoleReviewCompliant getRoleReviewCompliantRequired(UUID id) {
-        return roleReviewCompliantRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleReviewCompliant.class, id);
-        });
     }
 }

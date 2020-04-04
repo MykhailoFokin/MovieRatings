@@ -18,6 +18,4 @@ public class VisitCreateDTO {
 
     @NotNull
     private Instant finishAt;
-
-    private VisitStatus status;
 }

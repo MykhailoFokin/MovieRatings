@@ -15,13 +15,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ModeratorUserTypoRequestService {
+public class ModeratorUserTypoRequestService extends AbstractService {
 
     @Autowired
     private UserTypoRequestRepository userTypoRequestRepository;
-
-    @Autowired
-    private TranslationService translationService;
 
     @Autowired
     private NewsRepository newsRepository;
@@ -32,9 +29,6 @@ public class ModeratorUserTypoRequestService {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private RepositoryHelper repositoryHelper;
-
     @Transactional(readOnly = true)
     public List<UserTypoRequestReadDTO> getModeratorUserTypoRequests(UUID moderatorId) {
         List<UserTypoRequest> userTypoRequests = getUserTypoRequestsRequired(moderatorId);
@@ -44,7 +38,7 @@ public class ModeratorUserTypoRequestService {
 
     public UserTypoRequestReadDTO patchUserTypoRequestByModerator(UUID moderatorId, UUID userTypoRequestId,
                                                           UserTypoRequestPatchDTO patch) {
-        UserTypoRequest userTypoRequest = getUserTypoRequestRequired(userTypoRequestId);
+        UserTypoRequest userTypoRequest = repositoryHelper.getByIdRequired(UserTypoRequest.class, userTypoRequestId);
 
         translationService.map(patch, userTypoRequest);
 
@@ -54,7 +48,7 @@ public class ModeratorUserTypoRequestService {
     public UserTypoRequestReadDTO fixNewsTypo(UUID portalUserId, UUID userTypoRequestId,
                                                                     UserTypoRequestPutDTO put) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
-        UserTypoRequest userTypoRequest = getUserTypoRequestRequired(userTypoRequestId);
+        UserTypoRequest userTypoRequest = repositoryHelper.getByIdRequired(UserTypoRequest.class, userTypoRequestId);
 
         checkAlreadyFixedUserTypoRequest(userTypoRequest.getModeratorTypoReviewStatusType(),
                 put.getModeratorTypoReviewStatusType(), userTypoRequestId);
@@ -84,13 +78,6 @@ public class ModeratorUserTypoRequestService {
     private List<UserTypoRequest> getUserTypoRequestsRequired(UUID moderatorId) {
         return userTypoRequestRepository.findUserTypoRequestsByModeratorOrRequiredAttention(moderatorId,
                 List.of(ModeratorTypoReviewStatusType.IN_REVIEW, ModeratorTypoReviewStatusType.NEED_TO_FIX));
-    }
-
-    private UserTypoRequest getUserTypoRequestRequired(UUID id) {
-        return userTypoRequestRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new EntityNotFoundException(UserTypoRequest.class, id);
-                });
     }
 
     private void checkAlreadyFixedUserTypoRequest(ModeratorTypoReviewStatusType entityModeratorTypoReviewStatusType,

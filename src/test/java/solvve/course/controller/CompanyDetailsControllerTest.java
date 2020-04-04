@@ -31,18 +31,9 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @MockBean
     private CompanyDetailsService companyDetailsService;
 
-    private CompanyDetailsReadDTO createCompanyDetailsRead() {
-        CompanyDetailsReadDTO companyDetails = new CompanyDetailsReadDTO();
-        companyDetails.setId(UUID.randomUUID());
-        companyDetails.setName("Director");
-        companyDetails.setOverview("Test");
-        companyDetails.setYearOfFoundation(LocalDate.of(2020,01,01));
-        return companyDetails;
-    }
-
     @Test
     public void testGetCompanyDetails() throws Exception {
-        CompanyDetailsReadDTO companyDetails = createCompanyDetailsRead();
+        CompanyDetailsReadDTO companyDetails = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.getCompanyDetails(companyDetails.getId())).thenReturn(companyDetails);
 
@@ -74,12 +65,9 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCompanyDetails() throws Exception {
 
-        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
-        create.setName("Director");
-        create.setOverview("Test");
-        create.setYearOfFoundation(LocalDate.now());
+        CompanyDetailsCreateDTO create = generateObject(CompanyDetailsCreateDTO.class);
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.createCompanyDetails(create)).thenReturn(read);
 
@@ -96,12 +84,9 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCompanyDetails() throws Exception {
 
-        CompanyDetailsPatchDTO patchDTO = new CompanyDetailsPatchDTO();
-        patchDTO.setName("Director");
-        patchDTO.setOverview("Test");
-        patchDTO.setYearOfFoundation(LocalDate.now());
+        CompanyDetailsPatchDTO patchDTO = generateObject(CompanyDetailsPatchDTO.class);
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.patchCompanyDetails(read.getId(),patchDTO)).thenReturn(read);
 
@@ -127,12 +112,9 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testPutCompanyDetails() throws Exception {
 
-        CompanyDetailsPutDTO putDTO = new CompanyDetailsPutDTO();
-        putDTO.setName("Director");
-        putDTO.setOverview("Test");
-        putDTO.setYearOfFoundation(LocalDate.now());
+        CompanyDetailsPutDTO putDTO = generateObject(CompanyDetailsPutDTO.class);
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.updateCompanyDetails(read.getId(),putDTO)).thenReturn(read);
 
@@ -150,7 +132,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     public void testGetCompanyDetailsFitler() throws Exception {
         CompanyDetailsFilter companyDetailsFilter = new CompanyDetailsFilter();
         companyDetailsFilter.setName("Director");
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
         PageResult<CompanyDetailsReadDTO> resultPage = new PageResult<>();
         resultPage.setData(List.of(read));
         Mockito.when(companyDetailsService.getCompanyDetails(companyDetailsFilter, PageRequest.of(0, defaultPageSize)))
@@ -197,12 +179,11 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testPutCompanyDetailsCheckLimitBorders() throws Exception {
 
-        CompanyDetailsPutDTO putDTO = new CompanyDetailsPutDTO();
+        CompanyDetailsPutDTO putDTO = generateObject(CompanyDetailsPutDTO.class);
         putDTO.setName("D");
         putDTO.setOverview("T");
-        putDTO.setYearOfFoundation(LocalDate.now());
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.updateCompanyDetails(read.getId(),putDTO)).thenReturn(read);
 
@@ -232,7 +213,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
+        CompanyDetailsPutDTO put = generateObject(CompanyDetailsPutDTO.class);
         put.setName("");
         put.setOverview("");
 
@@ -249,7 +230,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CompanyDetailsPutDTO put = new CompanyDetailsPutDTO();
+        CompanyDetailsPutDTO put = generateObject(CompanyDetailsPutDTO.class);
         put.setName(StringUtils.repeat("*", 256));
         put.setOverview(StringUtils.repeat("*", 1001));
 
@@ -266,7 +247,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        CompanyDetailsCreateDTO create = generateObject(CompanyDetailsCreateDTO.class);
         create.setName("");
         create.setOverview("");
 
@@ -282,7 +263,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        CompanyDetailsCreateDTO create = generateObject(CompanyDetailsCreateDTO.class);
         create.setName(StringUtils.repeat("*", 256));
         create.setOverview(StringUtils.repeat("*", 1001));
 
@@ -300,12 +281,11 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testCreateCompanyDetailsCheckStingBorders() throws Exception {
 
-        CompanyDetailsCreateDTO create = new CompanyDetailsCreateDTO();
+        CompanyDetailsCreateDTO create = generateObject(CompanyDetailsCreateDTO.class);
         create.setName("D");
         create.setOverview("T");
-        create.setYearOfFoundation(LocalDate.now());
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.createCompanyDetails(create)).thenReturn(read);
 
@@ -320,7 +300,6 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
         create.setName(StringUtils.repeat("*", 255));
         create.setOverview(StringUtils.repeat("*", 1000));
-        create.setYearOfFoundation(LocalDate.now());
 
         resultJson = mvc.perform(post("/api/v1/companydetails")
                 .content(objectMapper.writeValueAsString(create))
@@ -335,12 +314,11 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
     @Test
     public void testPatchCompanyDetailsCheckStringBorders() throws Exception {
 
-        CompanyDetailsPatchDTO patchDTO = new CompanyDetailsPatchDTO();
+        CompanyDetailsPatchDTO patchDTO = generateObject(CompanyDetailsPatchDTO.class);
         patchDTO.setName("D");
         patchDTO.setOverview("T");
-        patchDTO.setYearOfFoundation(LocalDate.now());
 
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
 
         Mockito.when(companyDetailsService.patchCompanyDetails(read.getId(),patchDTO)).thenReturn(read);
 
@@ -368,7 +346,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        CompanyDetailsPatchDTO patch = new CompanyDetailsPatchDTO();
+        CompanyDetailsPatchDTO patch = generateObject(CompanyDetailsPatchDTO.class);
         patch.setName("");
         patch.setOverview("");
 
@@ -385,7 +363,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        CompanyDetailsPatchDTO patch = new CompanyDetailsPatchDTO();
+        CompanyDetailsPatchDTO patch = generateObject(CompanyDetailsPatchDTO.class);
         patch.setName(StringUtils.repeat("*", 256));
         patch.setOverview(StringUtils.repeat("*", 1001));
 
@@ -402,8 +380,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetCompanyDetailsWithPagingAndSorting() throws Exception {
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
-        read.setName("Director");
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
         CompanyDetailsFilter filter = new CompanyDetailsFilter();
         filter.setName(read.getName());
 
@@ -436,7 +413,7 @@ public class CompanyDetailsControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetCompanyDetailsWithBigPage() throws Exception {
-        CompanyDetailsReadDTO read = createCompanyDetailsRead();
+        CompanyDetailsReadDTO read = generateObject(CompanyDetailsReadDTO.class);
         CompanyDetailsFilter filter = new CompanyDetailsFilter();
 
         int page = 0;

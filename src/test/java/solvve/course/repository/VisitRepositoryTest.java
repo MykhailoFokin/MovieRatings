@@ -35,7 +35,7 @@ public class VisitRepositoryTest extends BaseTest {
 
         List<Visit> res = visitRepository.findByPortalUserIdAndStatusOrderByStartAtAsc(p1.getId(),
                 VisitStatus.SCHEDULED);
-        Assertions.assertThat(res).extracting(Visit::getId).isEqualTo(Arrays.asList(v1.getId(), v2.getId()));
+        Assertions.assertThat(res).extracting(Visit::getId).isEqualTo(Arrays.asList(v2.getId(), v1.getId()));
     }
 
     @Test

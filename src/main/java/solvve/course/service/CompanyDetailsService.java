@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CompanyDetails;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CompanyDetailsRepository;
 
 import java.util.UUID;
 
 @Service
-public class CompanyDetailsService {
+public class CompanyDetailsService extends AbstractService {
 
     @Autowired
     private CompanyDetailsRepository companyDetailsRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public CompanyDetailsReadDTO getCompanyDetails(UUID id) {
-        CompanyDetails companyDetails = getCompanyDetailsRequired(id);
+        CompanyDetails companyDetails = repositoryHelper.getByIdRequired(CompanyDetails.class, id);
         return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
     }
 
@@ -40,7 +36,7 @@ public class CompanyDetailsService {
     }
 
     public CompanyDetailsReadDTO patchCompanyDetails(UUID id, CompanyDetailsPatchDTO patch) {
-        CompanyDetails companyDetails = getCompanyDetailsRequired(id);
+        CompanyDetails companyDetails = repositoryHelper.getByIdRequired(CompanyDetails.class, id);
 
         translationService.map(patch, companyDetails);
 
@@ -49,21 +45,15 @@ public class CompanyDetailsService {
     }
 
     public void deleteCompanyDetails(UUID id) {
-        companyDetailsRepository.delete(getCompanyDetailsRequired(id));
+        companyDetailsRepository.delete(repositoryHelper.getByIdRequired(CompanyDetails.class, id));
     }
 
     public CompanyDetailsReadDTO updateCompanyDetails(UUID id, CompanyDetailsPutDTO put) {
-        CompanyDetails companyDetails = getCompanyDetailsRequired(id);
+        CompanyDetails companyDetails = repositoryHelper.getByIdRequired(CompanyDetails.class, id);
 
         translationService.updateEntity(put, companyDetails);
 
         companyDetails = companyDetailsRepository.save(companyDetails);
         return translationService.translate(companyDetails, CompanyDetailsReadDTO.class);
-    }
-
-    private CompanyDetails getCompanyDetailsRequired(UUID id) {
-        return companyDetailsRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(CompanyDetails.class, id);
-        });
     }
 }

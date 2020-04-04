@@ -39,8 +39,7 @@ public class CountryServiceTest extends BaseTest {
 
     @Test
     public void testCreateCountries() {
-        CountryCreateDTO create = new CountryCreateDTO();
-        create.setName("Ukraine");
+        CountryCreateDTO create = testObjectsFactory.createCountryCreateDTO();
         CountryReadDTO read = countryService.createCountries(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -54,8 +53,7 @@ public class CountryServiceTest extends BaseTest {
     public void testPatchCountries() {
         Country country = testObjectsFactory.createCountry();
 
-        CountryPatchDTO patch = new CountryPatchDTO();
-        patch.setName("Ukraine");
+        CountryPatchDTO patch = testObjectsFactory.createCountryPatchDTO();
         CountryReadDTO read = countryService.patchCountries(country.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToIgnoringGivenFields(read,"movies",
@@ -103,8 +101,7 @@ public class CountryServiceTest extends BaseTest {
     public void testPutCountries() {
         Country country = testObjectsFactory.createCountry();
 
-        CountryPutDTO put = new CountryPutDTO();
-        put.setName("Ukraine");
+        CountryPutDTO put = testObjectsFactory.createCountryPutDTO();
         CountryReadDTO read = countryService.updateCountries(country.getId(), put);
 
         Assertions.assertThat(put).isEqualToIgnoringGivenFields(read,"movies",

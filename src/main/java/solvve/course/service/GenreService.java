@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Genre;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.GenreRepository;
 
 import java.util.UUID;
 
 @Service
-public class GenreService {
+public class GenreService extends AbstractService {
 
     @Autowired
     private GenreRepository genreRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public GenreReadDTO getGenre(UUID id) {
-        Genre genre = getGenreRequired(id);
+        Genre genre = repositoryHelper.getByIdRequired(Genre.class, id);
         return translationService.translate(genre, GenreReadDTO.class);
     }
 
@@ -35,7 +31,7 @@ public class GenreService {
     }
 
     public GenreReadDTO patchGenre(UUID id, GenrePatchDTO patch) {
-        Genre genre = getGenreRequired(id);
+        Genre genre = repositoryHelper.getByIdRequired(Genre.class, id);
 
         translationService.map(patch, genre);
 
@@ -44,11 +40,11 @@ public class GenreService {
     }
 
     public void deleteGenre(UUID id) {
-        genreRepository.delete(getGenreRequired(id));
+        genreRepository.delete(repositoryHelper.getByIdRequired(Genre.class, id));
     }
 
     public GenreReadDTO updateGenre(UUID id, GenrePutDTO put) {
-        Genre genre = getGenreRequired(id);
+        Genre genre = repositoryHelper.getByIdRequired(Genre.class, id);
 
         translationService.updateEntity(put, genre);
 
@@ -59,11 +55,5 @@ public class GenreService {
     public PageResult<GenreReadDTO> getGenres(GenreFilter genreFilter, Pageable pageable) {
         Page<Genre> genres = genreRepository.findByFilter(genreFilter, pageable);
         return translationService.toPageResult(genres, GenreReadDTO.class);
-    }
-
-    private Genre getGenreRequired(UUID id) {
-        return genreRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Genre.class, id);
-        });
     }
 }

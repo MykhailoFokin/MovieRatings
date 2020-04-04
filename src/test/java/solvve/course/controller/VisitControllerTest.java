@@ -35,22 +35,9 @@ public class VisitControllerTest extends BaseControllerTest {
     @MockBean
     private VisitService visitService;
 
-    private VisitReadDTO createVisitRead() {
-        VisitReadDTO visit = new VisitReadDTO();
-        visit.setId(UUID.randomUUID());
-        visit.setStartAt(Instant.now());
-        visit.setFinishAt(Instant.now());
-        visit.setStatus(VisitStatus.FINISHED);
-        return visit;
-    }
-
     @Test
     public void testGetVisit() throws Exception {
-        VisitReadExtendedDTO visit = new VisitReadExtendedDTO();
-        visit.setId(UUID.randomUUID());
-        visit.setStartAt(Instant.now());
-        visit.setFinishAt(Instant.now());
-        visit.setStatus(VisitStatus.FINISHED);
+        VisitReadExtendedDTO visit = generateObject(VisitReadExtendedDTO.class);
 
         Mockito.when(visitService.getVisit(visit.getId())).thenReturn(visit);
 
@@ -92,13 +79,10 @@ public class VisitControllerTest extends BaseControllerTest {
     @Test
     public void testCreateVisit() throws Exception {
 
-        VisitCreateDTO create = new VisitCreateDTO();
-        create.setStartAt(Instant.now());
-        create.setFinishAt(Instant.now().plusSeconds(10));
-        create.setStatus(VisitStatus.FINISHED);
-        create.setPortalUserId(UUID.randomUUID());
+        VisitCreateDTO create = generateObject(VisitCreateDTO.class);
+        create.setFinishAt(create.getStartAt().plusSeconds(10));
 
-        VisitReadDTO read = createVisitRead();
+        VisitReadDTO read = generateObject(VisitReadDTO.class);
         read.setPortalUserId(create.getPortalUserId());
 
         Mockito.when(visitService.createVisit(create)).thenReturn(read);
@@ -116,12 +100,10 @@ public class VisitControllerTest extends BaseControllerTest {
     @Test
     public void testPatchVisit() throws Exception {
 
-        VisitPatchDTO patchDTO = new VisitPatchDTO();
-        patchDTO.setStartAt(Instant.now());
-        patchDTO.setFinishAt(Instant.now().plusSeconds(10));
-        patchDTO.setStatus(VisitStatus.FINISHED);
+        VisitPatchDTO patchDTO = generateObject(VisitPatchDTO.class);
+        patchDTO.setFinishAt(patchDTO.getStartAt().plusSeconds(10));
 
-        VisitReadDTO read = createVisitRead();
+        VisitReadDTO read = generateObject(VisitReadDTO.class);
 
         Mockito.when(visitService.patchVisit(read.getId(),patchDTO)).thenReturn(read);
 
@@ -147,13 +129,9 @@ public class VisitControllerTest extends BaseControllerTest {
     @Test
     public void testPutVisit() throws Exception {
 
-        VisitPutDTO putDTO = new VisitPutDTO();
-        putDTO.setStartAt(Instant.now());
-        putDTO.setFinishAt(Instant.now().plusSeconds(10));
-        putDTO.setStatus(VisitStatus.FINISHED);
-        putDTO.setPortalUserId(UUID.randomUUID());
+        VisitPutDTO putDTO = generateObject(VisitPutDTO.class);
 
-        VisitReadDTO read = createVisitRead();
+        VisitReadDTO read = generateObject(VisitReadDTO.class);
         read.setPortalUserId(putDTO.getPortalUserId());
 
         Mockito.when(visitService.updateVisit(read.getId(),putDTO)).thenReturn(read);
@@ -289,7 +267,7 @@ public class VisitControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetVisitsWithPagingAndSorting() throws Exception {
-        VisitReadDTO read = createVisitRead();
+        VisitReadDTO read = generateObject(VisitReadDTO.class);
         read.setPortalUserId(UUID.randomUUID());
         VisitFilter visitFilter = new VisitFilter();
         visitFilter.setPortalUserId(read.getPortalUserId());

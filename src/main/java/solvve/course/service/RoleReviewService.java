@@ -8,23 +8,19 @@ import solvve.course.dto.RoleReviewCreateDTO;
 import solvve.course.dto.RoleReviewPatchDTO;
 import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleReviewRepository;
 
 import java.util.UUID;
 
 @Service
-public class RoleReviewService {
+public class RoleReviewService extends AbstractService {
 
     @Autowired
     private RoleReviewRepository roleReviewRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public RoleReviewReadDTO getRoleReview(UUID id) {
-        RoleReview roleReview = getRoleReviewRequired(id);
+        RoleReview roleReview = repositoryHelper.getByIdRequired(RoleReview.class, id);
         return translationService.translate(roleReview, RoleReviewReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class RoleReviewService {
     }
 
     public RoleReviewReadDTO patchRoleReview(UUID id, RoleReviewPatchDTO patch) {
-        RoleReview roleReview = getRoleReviewRequired(id);
+        RoleReview roleReview = repositoryHelper.getByIdRequired(RoleReview.class, id);
 
         translationService.map(patch, roleReview);
 
@@ -45,21 +41,15 @@ public class RoleReviewService {
     }
 
     public void deleteRoleReview(UUID id) {
-        roleReviewRepository.delete(getRoleReviewRequired(id));
+        roleReviewRepository.delete(repositoryHelper.getByIdRequired(RoleReview.class, id));
     }
 
     public RoleReviewReadDTO updateRoleReview(UUID id, RoleReviewPutDTO put) {
-        RoleReview roleReview = getRoleReviewRequired(id);
+        RoleReview roleReview = repositoryHelper.getByIdRequired(RoleReview.class, id);
 
         translationService.updateEntity(put, roleReview);
 
         roleReview = roleReviewRepository.save(roleReview);
         return translationService.translate(roleReview, RoleReviewReadDTO.class);
-    }
-
-    private RoleReview getRoleReviewRequired(UUID id) {
-        return roleReviewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleReview.class, id);
-        });
     }
 }

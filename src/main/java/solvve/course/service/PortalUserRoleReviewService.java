@@ -10,7 +10,6 @@ import solvve.course.dto.RoleReviewPatchDTO;
 import solvve.course.dto.RoleReviewPutDTO;
 import solvve.course.dto.RoleReviewReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleReviewRepository;
 
 import java.util.List;
@@ -18,16 +17,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class PortalUserRoleReviewService {
-
-    @Autowired
-    private TranslationService translationService;
+public class PortalUserRoleReviewService extends AbstractService {
 
     @Autowired
     private RoleReviewRepository roleReviewRepository;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<RoleReviewReadDTO> getPortalUserRoleReview(UUID portalUserId) {

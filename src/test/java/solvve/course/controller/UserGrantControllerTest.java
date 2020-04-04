@@ -30,17 +30,9 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @MockBean
     private UserGrantService userGrantService;
 
-    private UserGrantReadDTO createGrantsRead() {
-        UserGrantReadDTO grants = new UserGrantReadDTO();
-        grants.setId(UUID.randomUUID());
-        grants.setObjectName("Movie");
-        grants.setUserPermission(UserPermType.READ);
-        return grants;
-    }
-
     @Test
     public void testGetGrants() throws Exception {
-        UserGrantReadDTO grants = createGrantsRead();
+        UserGrantReadDTO grants = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.getGrants(grants.getId())).thenReturn(grants);
 
@@ -83,12 +75,9 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testCreateGrants() throws Exception {
 
-        UserGrantCreateDTO create = new UserGrantCreateDTO();
-        create.setObjectName("Movie");
-        create.setUserPermission(UserPermType.READ);
-        create.setUserTypeId(UUID.randomUUID());
+        UserGrantCreateDTO create = generateObject(UserGrantCreateDTO.class);
 
-        UserGrantReadDTO read = createGrantsRead();
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.createGrants(create)).thenReturn(read);
 
@@ -105,11 +94,9 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testPatchGrants() throws Exception {
 
-        UserGrantPatchDTO patchDTO = new UserGrantPatchDTO();
-        patchDTO.setObjectName("Movie");
-        patchDTO.setUserPermission(UserPermType.READ);
+        UserGrantPatchDTO patchDTO = generateObject(UserGrantPatchDTO.class);
 
-        UserGrantReadDTO read = createGrantsRead();
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.patchGrants(read.getId(),patchDTO)).thenReturn(read);
 
@@ -135,13 +122,9 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testPutGrants() throws Exception {
 
-        UserGrantPutDTO putDTO = new UserGrantPutDTO();
-        putDTO.setObjectName("Movie");
-        putDTO.setUserPermission(UserPermType.READ);
-        putDTO.setUserTypeId(UUID.randomUUID());
+        UserGrantPutDTO putDTO = generateObject(UserGrantPutDTO.class);
 
-        UserGrantReadDTO read = createGrantsRead();
-        read.setUserTypeId(putDTO.getUserTypeId());
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.updateGrants(read.getId(),putDTO)).thenReturn(read);
 
@@ -186,12 +169,10 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testPutUserGrantCheckLimitBorders() throws Exception {
 
-        UserGrantPutDTO putDTO = new UserGrantPutDTO();
+        UserGrantPutDTO putDTO = generateObject(UserGrantPutDTO.class);
         putDTO.setObjectName("M");
-        putDTO.setUserPermission(UserPermType.READ);
-        putDTO.setUserTypeId(UUID.randomUUID());
 
-        UserGrantReadDTO read = createGrantsRead();
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.updateGrants(read.getId(),putDTO)).thenReturn(read);
 
@@ -206,8 +187,6 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setObjectName(StringUtils.repeat("*", 255));
-        putDTO.setUserPermission(UserPermType.READ);
-        putDTO.setUserTypeId(UUID.randomUUID());
 
         resultJson = mvc.perform(put("/api/v1/usergrants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -221,9 +200,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        UserGrantPutDTO put = new UserGrantPutDTO();
+        UserGrantPutDTO put = generateObject(UserGrantPutDTO.class);
         put.setObjectName("");
-        put.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(put("/api/v1/usergrants/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -238,9 +216,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        UserGrantPutDTO put = new UserGrantPutDTO();
+        UserGrantPutDTO put = generateObject(UserGrantPutDTO.class);
         put.setObjectName(StringUtils.repeat("*", 256));
-        put.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(put("/api/v1/usergrants/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -255,9 +232,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        UserGrantCreateDTO create = new UserGrantCreateDTO();
+        UserGrantCreateDTO create = generateObject(UserGrantCreateDTO.class);
         create.setObjectName("");
-        create.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(post("/api/v1/usergrants")
                 .content(objectMapper.writeValueAsString(create))
@@ -271,9 +247,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        UserGrantCreateDTO create = new UserGrantCreateDTO();
+        UserGrantCreateDTO create = generateObject(UserGrantCreateDTO.class);
         create.setObjectName(StringUtils.repeat("*", 256));
-        create.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(post("/api/v1/usergrants")
                 .content(objectMapper.writeValueAsString(create))
@@ -288,12 +263,10 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testCreateUserGrantCheckStingBorders() throws Exception {
 
-        UserGrantCreateDTO create = new UserGrantCreateDTO();
+        UserGrantCreateDTO create = generateObject(UserGrantCreateDTO.class);
         create.setObjectName(StringUtils.repeat("*", 1));
-        create.setUserPermission(UserPermType.READ);
-        create.setUserTypeId(UUID.randomUUID());
 
-        UserGrantReadDTO read = createGrantsRead();
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.createGrants(create)).thenReturn(read);
 
@@ -307,7 +280,6 @@ public class UserGrantControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualUserGrant).isEqualToComparingFieldByField(read);
 
         create.setObjectName(StringUtils.repeat("*", 255));
-        create.setUserPermission(UserPermType.READ);
 
         resultJson = mvc.perform(post("/api/v1/usergrants")
                 .content(objectMapper.writeValueAsString(create))
@@ -322,11 +294,10 @@ public class UserGrantControllerTest extends BaseControllerTest {
     @Test
     public void testPatchUserGrantCheckStringBorders() throws Exception {
 
-        UserGrantPatchDTO patchDTO = new UserGrantPatchDTO();
+        UserGrantPatchDTO patchDTO = generateObject(UserGrantPatchDTO.class);
         patchDTO.setObjectName(StringUtils.repeat("*", 1));
-        patchDTO.setUserPermission(UserPermType.READ);
 
-        UserGrantReadDTO read = createGrantsRead();
+        UserGrantReadDTO read = generateObject(UserGrantReadDTO.class);
 
         Mockito.when(userGrantService.patchGrants(read.getId(),patchDTO)).thenReturn(read);
 
@@ -340,7 +311,6 @@ public class UserGrantControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualUserGrant);
 
         patchDTO.setObjectName(StringUtils.repeat("*", 255));
-        patchDTO.setUserPermission(UserPermType.READ);
 
         resultJson = mvc.perform(patch("/api/v1/usergrants/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -354,9 +324,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        UserGrantPatchDTO patch = new UserGrantPatchDTO();
+        UserGrantPatchDTO patch = generateObject(UserGrantPatchDTO.class);
         patch.setObjectName("");
-        patch.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(patch("/api/v1/usergrants/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -371,9 +340,8 @@ public class UserGrantControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        UserGrantPatchDTO patch = new UserGrantPatchDTO();
+        UserGrantPatchDTO patch = generateObject(UserGrantPatchDTO.class);
         patch.setObjectName(StringUtils.repeat("*", 256));
-        patch.setUserPermission(UserPermType.READ);
 
         String resultJson = mvc.perform(patch("/api/v1/usergrants/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))

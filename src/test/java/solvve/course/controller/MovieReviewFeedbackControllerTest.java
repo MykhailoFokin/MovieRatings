@@ -28,16 +28,9 @@ public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
     @MockBean
     private MovieReviewFeedbackService movieReviewFeedbackService;
 
-    private MovieReviewFeedbackReadDTO createMovieReviewFeedbackRead() {
-        MovieReviewFeedbackReadDTO movieReviewFeedback = new MovieReviewFeedbackReadDTO();
-        movieReviewFeedback.setId(UUID.randomUUID());
-        movieReviewFeedback.setIsLiked(true);
-        return movieReviewFeedback;
-    }
-
     @Test
     public void testGetMovieReviewFeedback() throws Exception {
-        MovieReviewFeedbackReadDTO movieReviewFeedback = createMovieReviewFeedbackRead();
+        MovieReviewFeedbackReadDTO movieReviewFeedback = generateObject(MovieReviewFeedbackReadDTO.class);
 
         Mockito.when(movieReviewFeedbackService.getMovieReviewFeedback(movieReviewFeedback.getId()))
                 .thenReturn(movieReviewFeedback);
@@ -82,16 +75,9 @@ public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieReviewFeedback() throws Exception {
 
-        MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
-        create.setIsLiked(true);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieReviewId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        MovieReviewFeedbackCreateDTO create = generateObject(MovieReviewFeedbackCreateDTO.class);
 
-        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
-        read.setPortalUserId(create.getPortalUserId());
-        read.setMovieReviewId(create.getMovieReviewId());
-        read.setMovieId(create.getMovieId());
+        MovieReviewFeedbackReadDTO read = generateObject(MovieReviewFeedbackReadDTO.class);
 
         Mockito.when(movieReviewFeedbackService.createMovieReviewFeedback(create)).thenReturn(read);
 
@@ -109,10 +95,9 @@ public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieReviewFeedback() throws Exception {
 
-        MovieReviewFeedbackPatchDTO patchDTO = new MovieReviewFeedbackPatchDTO();
-        patchDTO.setIsLiked(true);
+        MovieReviewFeedbackPatchDTO patchDTO = generateObject(MovieReviewFeedbackPatchDTO.class);
 
-        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
+        MovieReviewFeedbackReadDTO read = generateObject(MovieReviewFeedbackReadDTO.class);
 
         Mockito.when(movieReviewFeedbackService.patchMovieReviewFeedback(read.getId(),patchDTO)).thenReturn(read);
 
@@ -139,16 +124,9 @@ public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieReviewFeedback() throws Exception {
 
-        MovieReviewFeedbackPutDTO putDTO = new MovieReviewFeedbackPutDTO();
-        putDTO.setIsLiked(true);
-        putDTO.setMovieId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setMovieReviewId(UUID.randomUUID());
+        MovieReviewFeedbackPutDTO putDTO = generateObject(MovieReviewFeedbackPutDTO.class);
 
-        MovieReviewFeedbackReadDTO read = createMovieReviewFeedbackRead();
-        read.setPortalUserId(putDTO.getPortalUserId());
-        read.setMovieId(putDTO.getMovieId());
-        read.setMovieReviewId(putDTO.getMovieReviewId());
+        MovieReviewFeedbackReadDTO read = generateObject(MovieReviewFeedbackReadDTO.class);
 
         Mockito.when(movieReviewFeedbackService.updateMovieReviewFeedback(read.getId(),putDTO)).thenReturn(read);
 

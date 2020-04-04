@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
+import solvve.course.domain.Crew;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.CrewTypeCreateDTO;
 import solvve.course.dto.CrewTypePatchDTO;
@@ -39,8 +40,8 @@ public class CrewTypeServiceTest extends BaseTest {
 
     @Test
     public void testCreateCrewType() {
-        CrewTypeCreateDTO create = new CrewTypeCreateDTO();
-        create.setName("Director");
+        CrewTypeCreateDTO create = testObjectsFactory.createCrewTypeCreateDTO();
+        create.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.createCrewType(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -52,8 +53,8 @@ public class CrewTypeServiceTest extends BaseTest {
     public void testPatchCrewType() {
         CrewType crewType = testObjectsFactory.createCrewType();
 
-        CrewTypePatchDTO patch = new CrewTypePatchDTO();
-        patch.setName("Director");
+        CrewTypePatchDTO patch = testObjectsFactory.createCrewTypePatchDTO();
+        patch.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.patchCrewType(crewType.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -95,8 +96,8 @@ public class CrewTypeServiceTest extends BaseTest {
     public void testPutCrewType() {
         CrewType crewType = testObjectsFactory.createCrewType();
 
-        CrewTypePutDTO put = new CrewTypePutDTO();
-        put.setName("Director");
+        CrewTypePutDTO put = testObjectsFactory.createCrewTypePutDTO();
+        put.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.updateCrewType(crewType.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

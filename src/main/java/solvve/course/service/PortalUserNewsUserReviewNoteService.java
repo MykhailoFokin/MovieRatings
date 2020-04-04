@@ -19,22 +19,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class PortalUserNewsUserReviewNoteService {
+public class PortalUserNewsUserReviewNoteService extends AbstractService {
 
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
-
-    @Autowired
-    private TranslationService translationService;
 
     @Autowired
     private NewsService newsService;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Autowired
     private NewsUserReviewService newsUserReviewService;
@@ -50,7 +44,8 @@ public class PortalUserNewsUserReviewNoteService {
     public NewsUserReviewNoteReadDTO patchPortalUserNewsUserReviewNote(UUID portalUserId, UUID newsUserReviewNoteId,
                                                                    NewsUserReviewNotePatchDTO patch) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
-        NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
+        NewsUserReviewNote newsUserReviewNote =
+                repositoryHelper.getByIdRequired(NewsUserReviewNote.class, newsUserReviewNoteId);
         if (patch.getModeratorId() != null) {
             newsUserReviewNote.setModerator(null);
         }
@@ -83,7 +78,8 @@ public class PortalUserNewsUserReviewNoteService {
     public NewsUserReviewNoteReadDTO updatePortalUserNewsUserReviewNote(UUID portalUserId, UUID newsUserReviewNoteId,
                                                                     NewsUserReviewNotePutDTO put) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
-        NewsUserReviewNote newsUserReviewNote = getUserReviewNoteRequired(newsUserReviewNoteId);
+        NewsUserReviewNote newsUserReviewNote =
+                repositoryHelper.getByIdRequired(NewsUserReviewNote.class, newsUserReviewNoteId);
 
         checkAlreadyFixedUserReviewNote(newsUserReviewNote.getModeratorTypoReviewStatusType(),
                 put.getModeratorTypoReviewStatusType(), newsUserReviewNoteId);
@@ -113,13 +109,6 @@ public class PortalUserNewsUserReviewNoteService {
     private List<NewsUserReviewNote> getNewsUserReviewNotesRequired(UUID moderatorId) {
         return newsUserReviewNoteRepository.findUserReviewNotesByModeratorOrRequiredAttention(moderatorId,
                 List.of(ModeratorTypoReviewStatusType.IN_REVIEW, ModeratorTypoReviewStatusType.NEED_TO_FIX));
-    }
-
-    private NewsUserReviewNote getUserReviewNoteRequired(UUID id) {
-        return newsUserReviewNoteRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new EntityNotFoundException(NewsUserReviewNote.class, id);
-                });
     }
 
     private void checkAlreadyFixedUserReviewNote(ModeratorTypoReviewStatusType entityModeratorTypoReviewStatusType,

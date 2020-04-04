@@ -30,17 +30,9 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @MockBean
     private RoleReviewService roleReviewService;
 
-    private RoleReviewReadDTO createRoleReviewRead() {
-        RoleReviewReadDTO roleReview = new RoleReviewReadDTO();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        return roleReview;
-    }
-
     @Test
     public void testGetRoleReview() throws Exception {
-        RoleReviewReadDTO roleReview = createRoleReviewRead();
+        RoleReviewReadDTO roleReview = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.getRoleReview(roleReview.getId())).thenReturn(roleReview);
 
@@ -82,15 +74,9 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleReview() throws Exception {
 
-        RoleReviewCreateDTO create = new RoleReviewCreateDTO();
-        create.setTextReview("This role can be described as junk.");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
+        RoleReviewCreateDTO create = generateObject(RoleReviewCreateDTO.class);
 
-        RoleReviewReadDTO read = createRoleReviewRead();
-        read.setPortalUserId(create.getPortalUserId());
-        read.setRoleId(create.getRoleId());
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.createRoleReview(create)).thenReturn(read);
 
@@ -107,11 +93,9 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleReview() throws Exception {
 
-        RoleReviewPatchDTO patchDTO = new RoleReviewPatchDTO();
-        patchDTO.setTextReview("This role can be described as junk.");
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        RoleReviewPatchDTO patchDTO = generateObject(RoleReviewPatchDTO.class);
 
-        RoleReviewReadDTO read = createRoleReviewRead();
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.patchRoleReview(read.getId(),patchDTO)).thenReturn(read);
 
@@ -137,15 +121,9 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleReview() throws Exception {
 
-        RoleReviewPutDTO putDTO = new RoleReviewPutDTO();
-        putDTO.setTextReview("This role can be described as junk.");
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setRoleId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
+        RoleReviewPutDTO putDTO = generateObject(RoleReviewPutDTO.class);
 
-        RoleReviewReadDTO read = createRoleReviewRead();
-        read.setRoleId(putDTO.getRoleId());
-        read.setPortalUserId(putDTO.getPortalUserId());
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.updateRoleReview(read.getId(),putDTO)).thenReturn(read);
 
@@ -191,13 +169,10 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleReviewCheckLimitBorders() throws Exception {
 
-        RoleReviewPutDTO putDTO = new RoleReviewPutDTO();
+        RoleReviewPutDTO putDTO = generateObject(RoleReviewPutDTO.class);
         putDTO.setTextReview(StringUtils.repeat("*", 1));
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setRoleId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
 
-        RoleReviewReadDTO read = createRoleReviewRead();
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.updateRoleReview(read.getId(),putDTO)).thenReturn(read);
 
@@ -212,9 +187,6 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setTextReview(StringUtils.repeat("*", 1000));
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setRoleId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
 
         resultJson = mvc.perform(put("/api/v1/rolereviews/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -228,11 +200,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RoleReviewPutDTO put = new RoleReviewPutDTO();
+        RoleReviewPutDTO put = generateObject(RoleReviewPutDTO.class);
         put.setTextReview("");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setRoleId(UUID.randomUUID());
-        put.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/rolereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -247,11 +216,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RoleReviewPutDTO put = new RoleReviewPutDTO();
+        RoleReviewPutDTO put = generateObject(RoleReviewPutDTO.class);
         put.setTextReview(StringUtils.repeat("*", 1001));
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setRoleId(UUID.randomUUID());
-        put.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/rolereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -266,11 +232,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RoleReviewCreateDTO create = new RoleReviewCreateDTO();
+        RoleReviewCreateDTO create = generateObject(RoleReviewCreateDTO.class);
         create.setTextReview("");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(post("/api/v1/rolereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -284,11 +247,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RoleReviewCreateDTO create = new RoleReviewCreateDTO();
+        RoleReviewCreateDTO create = generateObject(RoleReviewCreateDTO.class);
         create.setTextReview(StringUtils.repeat("*", 1001));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(post("/api/v1/rolereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -303,12 +263,9 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleReviewCheckStingBorders() throws Exception {
 
-        RoleReviewCreateDTO create = new RoleReviewCreateDTO();
+        RoleReviewCreateDTO create = generateObject(RoleReviewCreateDTO.class);
         create.setTextReview(StringUtils.repeat("*", 1));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
-        RoleReviewReadDTO read = createRoleReviewRead();
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.createRoleReview(create)).thenReturn(read);
 
@@ -322,9 +279,6 @@ public class RoleReviewControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualRoleReview).isEqualToComparingFieldByField(read);
 
         create.setTextReview(StringUtils.repeat("*", 1000));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
 
         resultJson = mvc.perform(post("/api/v1/rolereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -339,13 +293,10 @@ public class RoleReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleReviewCheckStringBorders() throws Exception {
 
-        RoleReviewPatchDTO patchDTO = new RoleReviewPatchDTO();
+        RoleReviewPatchDTO patchDTO = generateObject(RoleReviewPatchDTO.class);
         patchDTO.setTextReview(StringUtils.repeat("*", 1));
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patchDTO.setRoleId(UUID.randomUUID());
-        patchDTO.setPortalUserId(UUID.randomUUID());
 
-        RoleReviewReadDTO read = createRoleReviewRead();
+        RoleReviewReadDTO read = generateObject(RoleReviewReadDTO.class);
 
         Mockito.when(roleReviewService.patchRoleReview(read.getId(),patchDTO)).thenReturn(read);
 
@@ -359,9 +310,6 @@ public class RoleReviewControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualRoleReview);
 
         patchDTO.setTextReview(StringUtils.repeat("*", 1000));
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patchDTO.setRoleId(UUID.randomUUID());
-        patchDTO.setPortalUserId(UUID.randomUUID());
 
         resultJson = mvc.perform(patch("/api/v1/rolereviews/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -375,11 +323,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
+        RoleReviewPatchDTO patch = generateObject(RoleReviewPatchDTO.class);
         patch.setTextReview("");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setRoleId(UUID.randomUUID());
-        patch.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/rolereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -394,11 +339,8 @@ public class RoleReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RoleReviewPatchDTO patch = new RoleReviewPatchDTO();
+        RoleReviewPatchDTO patch = generateObject(RoleReviewPatchDTO.class);
         patch.setTextReview(StringUtils.repeat("*", 1001));
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setRoleId(UUID.randomUUID());
-        patch.setPortalUserId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/rolereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))

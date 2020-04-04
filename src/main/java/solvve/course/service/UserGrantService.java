@@ -8,23 +8,19 @@ import solvve.course.dto.UserGrantCreateDTO;
 import solvve.course.dto.UserGrantPatchDTO;
 import solvve.course.dto.UserGrantPutDTO;
 import solvve.course.dto.UserGrantReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.UserGrantRepository;
 
 import java.util.UUID;
 
 @Service
-public class UserGrantService {
+public class UserGrantService extends AbstractService {
 
     @Autowired
     private UserGrantRepository userGrantRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public UserGrantReadDTO getGrants(UUID id) {
-        UserGrant userGrant = getGrantsRequired(id);
+        UserGrant userGrant = repositoryHelper.getByIdRequired(UserGrant.class, id);
         return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class UserGrantService {
     }
 
     public UserGrantReadDTO patchGrants(UUID id, UserGrantPatchDTO patch) {
-        UserGrant userGrant = getGrantsRequired(id);
+        UserGrant userGrant = repositoryHelper.getByIdRequired(UserGrant.class, id);
 
         translationService.map(patch, userGrant);
 
@@ -44,18 +40,12 @@ public class UserGrantService {
         return translationService.translate(userGrant, UserGrantReadDTO.class);
     }
 
-    private UserGrant getGrantsRequired(UUID id) {
-        return userGrantRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(UserGrant.class, id);
-        });
-    }
-
     public void deleteGrants(UUID id) {
-        userGrantRepository.delete(getGrantsRequired(id));
+        userGrantRepository.delete(repositoryHelper.getByIdRequired(UserGrant.class, id));
     }
 
     public UserGrantReadDTO updateGrants(UUID id, UserGrantPutDTO put) {
-        UserGrant userGrant = getGrantsRequired(id);
+        UserGrant userGrant = repositoryHelper.getByIdRequired(UserGrant.class, id);
 
         translationService.updateEntity(put, userGrant);
 

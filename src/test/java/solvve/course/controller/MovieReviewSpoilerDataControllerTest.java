@@ -29,24 +29,14 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
     private MovieReviewSpoilerDataService movieSpoilerDataService;
 
     private MovieSpoilerDataReadDTO createMovieSpoilerDataRead(UUID movieReviewId) {
-        MovieSpoilerDataReadDTO movieSpoilerData = new MovieSpoilerDataReadDTO();
-        movieSpoilerData.setId(UUID.randomUUID());
-        movieSpoilerData.setStartIndex(100);
-        movieSpoilerData.setEndIndex(150);
+        MovieSpoilerDataReadDTO movieSpoilerData = generateObject(MovieSpoilerDataReadDTO.class);
         movieSpoilerData.setMovieReviewId(movieReviewId);
         return movieSpoilerData;
     }
 
-    private MovieReviewReadDTO createMovieReview() {
-        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setTextReview("Review");
-        return movieReview;
-    }
-
     @Test
     public void testGetMovieSpoilerData() throws Exception {
-        MovieReviewReadDTO movieReview = createMovieReview();
+        MovieReviewReadDTO movieReview = generateObject(MovieReviewReadDTO.class);
         List<MovieSpoilerDataReadDTO> movieSpoilerData = List.of(createMovieSpoilerDataRead(movieReview.getId()));
 
         Mockito.when(movieSpoilerDataService.getMovieReviewSpoilerDatas(movieReview.getId()))
@@ -82,10 +72,8 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieSpoilerData() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
-        create.setStartIndex(100);
-        create.setEndIndex(150);
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieSpoilerDataCreateDTO create = generateObject(MovieSpoilerDataCreateDTO.class);
         create.setMovieReviewId(movieReviewReadDTO.getId());
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead(movieReviewReadDTO.getId());
@@ -108,11 +96,10 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieSpoilerData() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieSpoilerDataPatchDTO patchDTO = new MovieSpoilerDataPatchDTO();
-        patchDTO.setStartIndex(100);
-        patchDTO.setEndIndex(150);
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieSpoilerDataPatchDTO patchDTO = generateObject(MovieSpoilerDataPatchDTO.class);
         patchDTO.setMovieReviewId(movieReviewReadDTO.getId());
+        patchDTO.setStartIndex(0);
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead(movieReviewReadDTO.getId());
 
@@ -144,10 +131,8 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieSpoilerData() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
-        MovieSpoilerDataPutDTO putDTO = new MovieSpoilerDataPutDTO();
-        putDTO.setStartIndex(100);
-        putDTO.setEndIndex(150);
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
+        MovieSpoilerDataPutDTO putDTO = generateObject(MovieSpoilerDataPutDTO.class);
         putDTO.setMovieReviewId(movieReviewReadDTO.getId());
 
         MovieSpoilerDataReadDTO read = createMovieSpoilerDataRead(movieReviewReadDTO.getId());
@@ -201,10 +186,7 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateMovieSpoilerDataWrongIndexes() throws Exception {
-        MovieSpoilerDataCreateDTO movieSpoilerDataCreate = new MovieSpoilerDataCreateDTO();
-        movieSpoilerDataCreate.setMovieReviewId(UUID.randomUUID());
-        movieSpoilerDataCreate.setStartIndex(100);
-        movieSpoilerDataCreate.setEndIndex(10);
+        MovieSpoilerDataCreateDTO movieSpoilerDataCreate = generateObject(MovieSpoilerDataCreateDTO.class);
 
         String resultJson = mvc.perform(post("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas",
                 UUID.randomUUID())
@@ -223,8 +205,7 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchMovieSpoilerDataWrongIndexes() throws Exception {
-        MovieSpoilerDataPatchDTO movieSpoilerDataPatch = new MovieSpoilerDataPatchDTO();
-        movieSpoilerDataPatch.setMovieReviewId(UUID.randomUUID());
+        MovieSpoilerDataPatchDTO movieSpoilerDataPatch = generateObject(MovieSpoilerDataPatchDTO.class);
         movieSpoilerDataPatch.setStartIndex(100);
         movieSpoilerDataPatch.setEndIndex(10);
 
@@ -245,10 +226,7 @@ public class MovieReviewSpoilerDataControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutMovieSpoilerDataWrongIndexes() throws Exception {
-        MovieSpoilerDataPutDTO movieSpoilerDataPut = new MovieSpoilerDataPutDTO();
-        movieSpoilerDataPut.setMovieReviewId(UUID.randomUUID());
-        movieSpoilerDataPut.setStartIndex(100);
-        movieSpoilerDataPut.setEndIndex(10);
+        MovieSpoilerDataPutDTO movieSpoilerDataPut = generateObject(MovieSpoilerDataPutDTO.class);
 
         String resultJson = mvc.perform(put("/api/v1/movie-reviews/{movieReviewId}/movie-spoiler-datas/{id}",
                 UUID.randomUUID(), UUID.randomUUID())

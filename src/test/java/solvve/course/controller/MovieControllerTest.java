@@ -30,25 +30,10 @@ public class MovieControllerTest extends BaseControllerTest {
     @MockBean
     private MovieService movieService;
 
-    private MovieReadDTO createMovieRead() {
-        MovieReadDTO movie = new MovieReadDTO();
-        movie.setId(UUID.randomUUID());
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setSoundMix("DolbySurround");
-        return movie;
-    }
-
     @Test
     public void testGetMovie() throws Exception {
 
-        MovieReadDTO movie = createMovieRead();
+        MovieReadDTO movie = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.getMovie(movie.getId())).thenReturn(movie);
 
@@ -91,18 +76,9 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovie() throws Exception {
 
-        MovieCreateDTO create = new MovieCreateDTO();
-        create.setTitle("Movie Test");
-        create.setYear((short) 2019);
-        create.setAspectRatio("1:10");
-        create.setCamera("Panasonic");
-        create.setColour("Black");
-        create.setCritique("123");
-        create.setDescription("Description");
-        create.setLaboratory("CaliforniaDreaming");
-        create.setSoundMix("DolbySurround");
+        MovieCreateDTO create = generateObject(MovieCreateDTO.class);
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.createMovie(create)).thenReturn(read);
 
@@ -119,18 +95,10 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovie() throws Exception {
 
-        MoviePatchDTO patchDTO = new MoviePatchDTO();
-        patchDTO.setTitle("Movie Test");
-        patchDTO.setYear((short) 2019);
-        patchDTO.setAspectRatio("1:10");
-        patchDTO.setCamera("Panasonic");
-        patchDTO.setColour("Black");
-        patchDTO.setCritique("123");
-        patchDTO.setDescription("Description");
-        patchDTO.setLaboratory("CaliforniaDreaming");
-        patchDTO.setSoundMix("DolbySurround");
+        MoviePatchDTO patchDTO = generateObject(MoviePatchDTO.class);
+        patchDTO.setDescription("DescriptionMinimal");
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.patchMovie(read.getId(),patchDTO)).thenReturn(read);
 
@@ -156,16 +124,10 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovie() throws Exception {
 
-        MoviePutDTO putDTO = new MoviePutDTO();
-        putDTO.setAspectRatio("1:10");
-        putDTO.setCamera("Panasonic");
-        putDTO.setColour("Black");
-        putDTO.setCritique("123");
-        putDTO.setDescription("Description");
-        putDTO.setLaboratory("CaliforniaDreaming");
-        putDTO.setSoundMix("DolbySurround");
+        MoviePutDTO putDTO = generateObject(MoviePutDTO.class);
+        putDTO.setDescription("DescriptionMinimal");
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.updateMovie(read.getId(),putDTO)).thenReturn(read);
 
@@ -211,7 +173,7 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieCheckLimitBorders() throws Exception {
 
-        MoviePutDTO putDTO = new MoviePutDTO();
+        MoviePutDTO putDTO = generateObject(MoviePutDTO.class);
         putDTO.setAspectRatio(StringUtils.repeat("*", 1));
         putDTO.setCamera(StringUtils.repeat("*", 1));
         putDTO.setColour(StringUtils.repeat("*", 1));
@@ -220,7 +182,7 @@ public class MovieControllerTest extends BaseControllerTest {
         putDTO.setLaboratory(StringUtils.repeat("*", 1));
         putDTO.setSoundMix(StringUtils.repeat("*", 1));
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.updateMovie(read.getId(),putDTO)).thenReturn(read);
 
@@ -254,7 +216,7 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MoviePutDTO put = new MoviePutDTO();
+        MoviePutDTO put = generateObject(MoviePutDTO.class);
         put.setAspectRatio("");
         put.setCamera("");
         put.setColour("");
@@ -276,7 +238,7 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MoviePutDTO put = new MoviePutDTO();
+        MoviePutDTO put = generateObject(MoviePutDTO.class);
         put.setAspectRatio(StringUtils.repeat("*", 256));
         put.setCamera(StringUtils.repeat("*", 256));
         put.setColour(StringUtils.repeat("*", 256));
@@ -298,9 +260,8 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieCreateDTO create = new MovieCreateDTO();
+        MovieCreateDTO create = generateObject(MovieCreateDTO.class);
         create.setTitle("");
-        create.setYear((short) 2019);
         create.setAspectRatio("");
         create.setCamera("");
         create.setColour("");
@@ -321,9 +282,8 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieCreateDTO create = new MovieCreateDTO();
+        MovieCreateDTO create = generateObject(MovieCreateDTO.class);
         create.setTitle(StringUtils.repeat("*", 256));
-        create.setYear((short) 2019);
         create.setAspectRatio(StringUtils.repeat("*", 256));
         create.setCamera(StringUtils.repeat("*", 256));
         create.setColour(StringUtils.repeat("*", 256));
@@ -346,9 +306,8 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieCheckStingBorders() throws Exception {
 
-        MovieCreateDTO create = new MovieCreateDTO();
+        MovieCreateDTO create = generateObject(MovieCreateDTO.class);
         create.setTitle(StringUtils.repeat("*", 1));
-        create.setYear((short) 2019);
         create.setAspectRatio(StringUtils.repeat("*", 1));
         create.setCamera(StringUtils.repeat("*", 1));
         create.setColour(StringUtils.repeat("*", 1));
@@ -357,7 +316,7 @@ public class MovieControllerTest extends BaseControllerTest {
         create.setLaboratory(StringUtils.repeat("*", 1));
         create.setSoundMix(StringUtils.repeat("*", 1));
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.createMovie(create)).thenReturn(read);
 
@@ -371,7 +330,6 @@ public class MovieControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(read);
 
         create.setTitle(StringUtils.repeat("*", 255));
-        create.setYear((short) 2019);
         create.setAspectRatio(StringUtils.repeat("*", 255));
         create.setCamera(StringUtils.repeat("*", 255));
         create.setColour(StringUtils.repeat("*", 255));
@@ -393,9 +351,8 @@ public class MovieControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieCheckStringBorders() throws Exception {
 
-        MoviePatchDTO patchDTO = new MoviePatchDTO();
+        MoviePatchDTO patchDTO = generateObject(MoviePatchDTO.class);
         patchDTO.setTitle(StringUtils.repeat("*", 1));
-        patchDTO.setYear((short) 2019);
         patchDTO.setAspectRatio(StringUtils.repeat("*", 1));
         patchDTO.setCamera(StringUtils.repeat("*", 1));
         patchDTO.setColour(StringUtils.repeat("*", 1));
@@ -404,7 +361,7 @@ public class MovieControllerTest extends BaseControllerTest {
         patchDTO.setLaboratory(StringUtils.repeat("*", 1));
         patchDTO.setSoundMix(StringUtils.repeat("*", 1));
 
-        MovieReadDTO read = createMovieRead();
+        MovieReadDTO read = generateObject(MovieReadDTO.class);
 
         Mockito.when(movieService.patchMovie(read.getId(),patchDTO)).thenReturn(read);
 
@@ -418,7 +375,6 @@ public class MovieControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualMovie);
 
         patchDTO.setTitle(StringUtils.repeat("*", 255));
-        patchDTO.setYear((short) 2019);
         patchDTO.setAspectRatio(StringUtils.repeat("*", 255));
         patchDTO.setCamera(StringUtils.repeat("*", 255));
         patchDTO.setColour(StringUtils.repeat("*", 255));
@@ -439,9 +395,8 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MoviePatchDTO patch = new MoviePatchDTO();
+        MoviePatchDTO patch = generateObject(MoviePatchDTO.class);
         patch.setTitle("");
-        patch.setYear((short) 2019);
         patch.setAspectRatio("");
         patch.setCamera("");
         patch.setColour("");
@@ -463,9 +418,8 @@ public class MovieControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MoviePatchDTO patch = new MoviePatchDTO();
+        MoviePatchDTO patch = generateObject(MoviePatchDTO.class);
         patch.setTitle(StringUtils.repeat("*", 256));
-        patch.setYear((short) 2019);
         patch.setAspectRatio(StringUtils.repeat("*", 256));
         patch.setCamera(StringUtils.repeat("*", 256));
         patch.setColour(StringUtils.repeat("*", 256));

@@ -32,7 +32,7 @@ public class GenreControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetGenres() throws Exception {
-        GenreReadDTO genre = createGenresRead();
+        GenreReadDTO genre = generateObject(GenreReadDTO.class);
 
         Mockito.when(genreService.getGenre(genre.getId())).thenReturn(genre);
 
@@ -74,11 +74,9 @@ public class GenreControllerTest extends BaseControllerTest {
     @Test
     public void testCreateGenres() throws Exception {
 
-        GenreCreateDTO create = new GenreCreateDTO();
-        create.setName(MovieGenreType.ACTION);
-        create.setMovieId(UUID.randomUUID());
+        GenreCreateDTO create = generateObject(GenreCreateDTO.class);
 
-        GenreReadDTO read = createGenresRead();
+        GenreReadDTO read = generateObject(GenreReadDTO.class);
 
         Mockito.when(genreService.createGenre(create)).thenReturn(read);
 
@@ -95,10 +93,9 @@ public class GenreControllerTest extends BaseControllerTest {
     @Test
     public void testPatchGenres() throws Exception {
 
-        GenrePatchDTO patchDTO = new GenrePatchDTO();
-        patchDTO.setName(MovieGenreType.ACTION);
+        GenrePatchDTO patchDTO = generateObject(GenrePatchDTO.class);
 
-        GenreReadDTO read = createGenresRead();
+        GenreReadDTO read = generateObject(GenreReadDTO.class);
 
         Mockito.when(genreService.patchGenre(read.getId(),patchDTO)).thenReturn(read);
 
@@ -124,11 +121,9 @@ public class GenreControllerTest extends BaseControllerTest {
     @Test
     public void testPutGenres() throws Exception {
 
-        GenrePutDTO putDTO = new GenrePutDTO();
-        putDTO.setName(MovieGenreType.ACTION);
-        putDTO.setMovieId(UUID.randomUUID());
+        GenrePutDTO putDTO = generateObject(GenrePutDTO.class);
 
-        GenreReadDTO read = createGenresRead();
+        GenreReadDTO read = generateObject(GenreReadDTO.class);
         read.setMovieId(putDTO.getMovieId());
 
         Mockito.when(genreService.updateGenre(read.getId(),putDTO)).thenReturn(read);
@@ -193,8 +188,7 @@ public class GenreControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetGenresWithPagingAndSorting() throws Exception {
-        GenreReadDTO read = createGenresRead();
-        read.setMovieId(UUID.randomUUID());
+        GenreReadDTO read = generateObject(GenreReadDTO.class);
         GenreFilter filter = new GenreFilter();
         filter.setMovieId(read.getMovieId());
 
@@ -223,12 +217,5 @@ public class GenreControllerTest extends BaseControllerTest {
                 new TypeReference<PageResult<GenreReadDTO>>() {
                 });
         Assert.assertEquals(resultPage, actualPage);
-    }
-
-    private GenreReadDTO createGenresRead() {
-        GenreReadDTO dto = new GenreReadDTO();
-        dto.setId(UUID.randomUUID());
-        dto.setName(MovieGenreType.ACTION);
-        return dto;
     }
 }

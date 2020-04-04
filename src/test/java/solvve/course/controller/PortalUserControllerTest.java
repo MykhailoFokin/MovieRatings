@@ -30,20 +30,9 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @MockBean
     private PortalUserService portalUserService;
 
-    private PortalUserReadDTO createPortalUserRead() {
-        PortalUserReadDTO portalUser = new PortalUserReadDTO();
-        portalUser.setId(UUID.randomUUID());
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
-        return portalUser;
-    }
-
     @Test
     public void testGetPortalUser() throws Exception {
-        PortalUserReadDTO portalUser = createPortalUserRead();
+        PortalUserReadDTO portalUser = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.getPortalUser(portalUser.getId())).thenReturn(portalUser);
 
@@ -85,14 +74,9 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testCreatePortalUser() throws Exception {
 
-        PortalUserCreateDTO create = new PortalUserCreateDTO();
-        create.setSurname("Surname");
-        create.setName("Name");
-        create.setMiddleName("MiddleName");
-        create.setLogin("Login");
-        create.setUserConfidence(UserConfidenceType.NORMAL);
+        PortalUserCreateDTO create = generateObject(PortalUserCreateDTO.class);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.createPortalUser(create)).thenReturn(read);
 
@@ -109,14 +93,9 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testPatchPortalUser() throws Exception {
 
-        PortalUserPatchDTO patchDTO = new PortalUserPatchDTO();
-        patchDTO.setSurname("Surname");
-        patchDTO.setName("Name");
-        patchDTO.setMiddleName("MiddleName");
-        patchDTO.setLogin("Login");
-        patchDTO.setUserConfidence(UserConfidenceType.NORMAL);
+        PortalUserPatchDTO patchDTO = generateObject(PortalUserPatchDTO.class);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.patchPortalUser(read.getId(),patchDTO)).thenReturn(read);
 
@@ -142,14 +121,9 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testPutPortalUser() throws Exception {
 
-        PortalUserPutDTO putDTO = new PortalUserPutDTO();
-        putDTO.setSurname("Surname");
-        putDTO.setName("Name");
-        putDTO.setMiddleName("MiddleName");
-        putDTO.setLogin("Login");
-        putDTO.setUserConfidence(UserConfidenceType.NORMAL);
+        PortalUserPutDTO putDTO = generateObject(PortalUserPutDTO.class);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.updatePortalUser(read.getId(),putDTO)).thenReturn(read);
 
@@ -195,14 +169,13 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testPutPortalUserCheckLimitBorders() throws Exception {
 
-        PortalUserPutDTO putDTO = new PortalUserPutDTO();
+        PortalUserPutDTO putDTO = generateObject(PortalUserPutDTO.class);
         putDTO.setSurname(StringUtils.repeat("*", 1));
         putDTO.setName(StringUtils.repeat("*", 1));
         putDTO.setMiddleName(StringUtils.repeat("*", 1));
         putDTO.setLogin(StringUtils.repeat("*", 1));
-        putDTO.setUserConfidence(UserConfidenceType.NORMAL);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.updatePortalUser(read.getId(),putDTO)).thenReturn(read);
 
@@ -220,7 +193,6 @@ public class PortalUserControllerTest extends BaseControllerTest {
         putDTO.setName(StringUtils.repeat("*", 255));
         putDTO.setMiddleName(StringUtils.repeat("*", 255));
         putDTO.setLogin(StringUtils.repeat("*", 255));
-        putDTO.setUserConfidence(UserConfidenceType.NORMAL);
 
         resultJson = mvc.perform(put("/api/v1/portalusers/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -234,12 +206,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PortalUserPutDTO put = new PortalUserPutDTO();
+        PortalUserPutDTO put = generateObject(PortalUserPutDTO.class);
         put.setSurname("");
         put.setName("");
         put.setMiddleName("");
         put.setLogin("");
-        put.setUserConfidence(UserConfidenceType.NORMAL);
 
         String resultJson = mvc.perform(put("/api/v1/portalusers/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -254,12 +225,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PortalUserPutDTO put = new PortalUserPutDTO();
+        PortalUserPutDTO put = generateObject(PortalUserPutDTO.class);
         put.setSurname(StringUtils.repeat("*", 256));
         put.setName(StringUtils.repeat("*", 256));
         put.setMiddleName(StringUtils.repeat("*", 256));
         put.setLogin(StringUtils.repeat("*", 256));
-        put.setUserConfidence(UserConfidenceType.NORMAL);
 
         String resultJson = mvc.perform(put("/api/v1/portalusers/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -274,12 +244,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PortalUserCreateDTO create = new PortalUserCreateDTO();
+        PortalUserCreateDTO create = generateObject(PortalUserCreateDTO.class);
         create.setSurname("");
         create.setName("");
         create.setMiddleName("");
         create.setLogin("");
-        create.setUserConfidence(UserConfidenceType.NORMAL);
 
         String resultJson = mvc.perform(post("/api/v1/portalusers")
                 .content(objectMapper.writeValueAsString(create))
@@ -293,12 +262,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PortalUserCreateDTO create = new PortalUserCreateDTO();
+        PortalUserCreateDTO create = generateObject(PortalUserCreateDTO.class);
         create.setSurname(StringUtils.repeat("*", 256));
         create.setName(StringUtils.repeat("*", 256));
         create.setMiddleName(StringUtils.repeat("*", 256));
         create.setLogin(StringUtils.repeat("*", 256));
-        create.setUserConfidence(UserConfidenceType.NORMAL);
 
 
         String resultJson = mvc.perform(post("/api/v1/portalusers")
@@ -314,14 +282,13 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testCreatePortalUserCheckStingBorders() throws Exception {
 
-        PortalUserCreateDTO create = new PortalUserCreateDTO();
+        PortalUserCreateDTO create = generateObject(PortalUserCreateDTO.class);
         create.setSurname(StringUtils.repeat("*", 1));
         create.setName(StringUtils.repeat("*", 1));
         create.setMiddleName(StringUtils.repeat("*", 1));
         create.setLogin(StringUtils.repeat("*", 1));
-        create.setUserConfidence(UserConfidenceType.NORMAL);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.createPortalUser(create)).thenReturn(read);
 
@@ -338,7 +305,6 @@ public class PortalUserControllerTest extends BaseControllerTest {
         create.setName(StringUtils.repeat("*", 255));
         create.setMiddleName(StringUtils.repeat("*", 255));
         create.setLogin(StringUtils.repeat("*", 255));
-        create.setUserConfidence(UserConfidenceType.NORMAL);
 
         resultJson = mvc.perform(post("/api/v1/portalusers")
                 .content(objectMapper.writeValueAsString(create))
@@ -353,14 +319,13 @@ public class PortalUserControllerTest extends BaseControllerTest {
     @Test
     public void testPatchPortalUserCheckStringBorders() throws Exception {
 
-        PortalUserPatchDTO patchDTO = new PortalUserPatchDTO();
+        PortalUserPatchDTO patchDTO = generateObject(PortalUserPatchDTO.class);
         patchDTO.setSurname(StringUtils.repeat("*", 1));
         patchDTO.setName(StringUtils.repeat("*", 1));
         patchDTO.setMiddleName(StringUtils.repeat("*", 1));
         patchDTO.setLogin(StringUtils.repeat("*", 1));
-        patchDTO.setUserConfidence(UserConfidenceType.NORMAL);
 
-        PortalUserReadDTO read = createPortalUserRead();
+        PortalUserReadDTO read = generateObject(PortalUserReadDTO.class);
 
         Mockito.when(portalUserService.patchPortalUser(read.getId(),patchDTO)).thenReturn(read);
 
@@ -377,7 +342,6 @@ public class PortalUserControllerTest extends BaseControllerTest {
         patchDTO.setName(StringUtils.repeat("*", 255));
         patchDTO.setMiddleName(StringUtils.repeat("*", 255));
         patchDTO.setLogin(StringUtils.repeat("*", 255));
-        patchDTO.setUserConfidence(UserConfidenceType.NORMAL);
 
         resultJson = mvc.perform(patch("/api/v1/portalusers/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -391,12 +355,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        PortalUserPatchDTO patch = generateObject(PortalUserPatchDTO.class);
         patch.setSurname("");
         patch.setName("");
         patch.setMiddleName("");
         patch.setLogin("");
-        patch.setUserConfidence(UserConfidenceType.NORMAL);
 
         String resultJson = mvc.perform(patch("/api/v1/portalusers/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -411,12 +374,11 @@ public class PortalUserControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        PortalUserPatchDTO patch = generateObject(PortalUserPatchDTO.class);
         patch.setSurname(StringUtils.repeat("*", 256));
         patch.setName(StringUtils.repeat("*", 256));
         patch.setMiddleName(StringUtils.repeat("*", 256));
         patch.setLogin(StringUtils.repeat("*", 256));
-        patch.setUserConfidence(UserConfidenceType.NORMAL);
 
         String resultJson = mvc.perform(patch("/api/v1/portalusers/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))

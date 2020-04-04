@@ -28,16 +28,9 @@ public class RoleReviewFeedbackControllerTest extends BaseControllerTest {
     @MockBean
     private RoleReviewFeedbackService roleReviewFeedbackService;
 
-    private RoleReviewFeedbackReadDTO createRoleReviewFeedbackRead() {
-        RoleReviewFeedbackReadDTO roleReviewFeedback = new RoleReviewFeedbackReadDTO();
-        roleReviewFeedback.setId(UUID.randomUUID());
-        roleReviewFeedback.setIsLiked(true);
-        return roleReviewFeedback;
-    }
-
     @Test
     public void testGetRoleReviewFeedback() throws Exception {
-        RoleReviewFeedbackReadDTO roleReviewFeedback = createRoleReviewFeedbackRead();
+        RoleReviewFeedbackReadDTO roleReviewFeedback = generateObject(RoleReviewFeedbackReadDTO.class);
 
         Mockito.when(roleReviewFeedbackService.getRoleReviewFeedback(roleReviewFeedback.getId()))
                 .thenReturn(roleReviewFeedback);
@@ -80,14 +73,9 @@ public class RoleReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleReviewFeedback() throws Exception {
 
-        RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
-        create.setIsLiked(true);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setRoleReviewId(UUID.randomUUID());
-        create.setRoleId(UUID.randomUUID());
-        create.setIsLiked(true);
+        RoleReviewFeedbackCreateDTO create = generateObject(RoleReviewFeedbackCreateDTO.class);
 
-        RoleReviewFeedbackReadDTO read =createRoleReviewFeedbackRead();
+        RoleReviewFeedbackReadDTO read =generateObject(RoleReviewFeedbackReadDTO.class);
 
         Mockito.when(roleReviewFeedbackService.createRoleReviewFeedback(create)).thenReturn(read);
 
@@ -105,10 +93,9 @@ public class RoleReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleReviewFeedback() throws Exception {
 
-        RoleReviewFeedbackPatchDTO patchDTO = new RoleReviewFeedbackPatchDTO();
-        patchDTO.setIsLiked(true);
+        RoleReviewFeedbackPatchDTO patchDTO = generateObject(RoleReviewFeedbackPatchDTO.class);
 
-        RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead();
+        RoleReviewFeedbackReadDTO read = generateObject(RoleReviewFeedbackReadDTO.class);
 
         Mockito.when(roleReviewFeedbackService.patchRoleReviewFeedback(read.getId(),patchDTO)).thenReturn(read);
 
@@ -135,16 +122,9 @@ public class RoleReviewFeedbackControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleReviewFeedback() throws Exception {
 
-        RoleReviewFeedbackPutDTO putDTO = new RoleReviewFeedbackPutDTO();
-        putDTO.setIsLiked(true);
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setRoleReviewId(UUID.randomUUID());
-        putDTO.setRoleId(UUID.randomUUID());
+        RoleReviewFeedbackPutDTO putDTO = generateObject(RoleReviewFeedbackPutDTO.class);
 
-        RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead();
-        read.setPortalUserId(putDTO.getPortalUserId());
-        read.setRoleReviewId(putDTO.getRoleReviewId());
-        read.setRoleId(putDTO.getRoleId());
+        RoleReviewFeedbackReadDTO read = generateObject(RoleReviewFeedbackReadDTO.class);
 
         Mockito.when(roleReviewFeedbackService.updateRoleReviewFeedback(read.getId(),putDTO)).thenReturn(read);
 

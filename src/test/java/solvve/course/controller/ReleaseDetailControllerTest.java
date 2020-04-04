@@ -30,16 +30,9 @@ public class ReleaseDetailControllerTest extends BaseControllerTest {
     @MockBean
     private ReleaseDetailService releaseDetailService;
 
-    private ReleaseDetailReadDTO createReleaseDetailRead() {
-        ReleaseDetailReadDTO releaseDetail = new ReleaseDetailReadDTO();
-        releaseDetail.setId(UUID.randomUUID());
-        releaseDetail.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
-        return releaseDetail;
-    }
-
     @Test
     public void testGetReleaseDetail() throws Exception {
-        ReleaseDetailReadDTO releaseDetail = createReleaseDetailRead();
+        ReleaseDetailReadDTO releaseDetail = generateObject(ReleaseDetailReadDTO.class);
 
         Mockito.when(releaseDetailService.getReleaseDetails(releaseDetail.getId())).thenReturn(releaseDetail);
 
@@ -81,12 +74,9 @@ public class ReleaseDetailControllerTest extends BaseControllerTest {
     @Test
     public void testCreateReleaseDetail() throws Exception {
 
-        ReleaseDetailCreateDTO create = new ReleaseDetailCreateDTO();
-        create.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
-        create.setCountryId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        ReleaseDetailCreateDTO create = generateObject(ReleaseDetailCreateDTO.class);
 
-        ReleaseDetailReadDTO read = createReleaseDetailRead();
+        ReleaseDetailReadDTO read = generateObject(ReleaseDetailReadDTO.class);
         read.setCountryId(create.getCountryId());
         read.setMovieId(create.getMovieId());
 
@@ -105,10 +95,9 @@ public class ReleaseDetailControllerTest extends BaseControllerTest {
     @Test
     public void testPatchReleaseDetail() throws Exception {
 
-        ReleaseDetailPatchDTO patchDTO = new ReleaseDetailPatchDTO();
-        patchDTO.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
+        ReleaseDetailPatchDTO patchDTO = generateObject(ReleaseDetailPatchDTO.class);
 
-        ReleaseDetailReadDTO read = createReleaseDetailRead();
+        ReleaseDetailReadDTO read = generateObject(ReleaseDetailReadDTO.class);
 
         Mockito.when(releaseDetailService.patchReleaseDetails(read.getId(),patchDTO)).thenReturn(read);
 
@@ -134,12 +123,9 @@ public class ReleaseDetailControllerTest extends BaseControllerTest {
     @Test
     public void testPutReleaseDetail() throws Exception {
 
-        ReleaseDetailPutDTO putDTO = new ReleaseDetailPutDTO();
-        putDTO.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
-        putDTO.setMovieId(UUID.randomUUID());
-        putDTO.setCountryId(UUID.randomUUID());
+        ReleaseDetailPutDTO putDTO = generateObject(ReleaseDetailPutDTO.class);
 
-        ReleaseDetailReadDTO read = createReleaseDetailRead();
+        ReleaseDetailReadDTO read = generateObject(ReleaseDetailReadDTO.class);
         read.setMovieId(putDTO.getMovieId());
         read.setCountryId(putDTO.getCountryId());
 

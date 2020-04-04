@@ -18,16 +18,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleReviewRoleReviewCompliantService {
-
-    @Autowired
-    private TranslationService translationService;
+public class RoleReviewRoleReviewCompliantService extends AbstractService {
 
     @Autowired
     private RoleReviewCompliantRepository roleReviewCompliantRepository;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<RoleReviewCompliantReadDTO> getRoleReviewRoleReviewCompliant(UUID roleReviewId) {

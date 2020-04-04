@@ -8,22 +8,18 @@ import solvve.course.dto.MovieVoteCreateDTO;
 import solvve.course.dto.MovieVotePatchDTO;
 import solvve.course.dto.MovieVotePutDTO;
 import solvve.course.dto.MovieVoteReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieVoteRepository;
 import java.util.UUID;
 
 @Service
-public class MovieVoteService {
+public class MovieVoteService extends AbstractService {
 
     @Autowired
     private MovieVoteRepository movieVoteRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public MovieVoteReadDTO getMovieVote(UUID id) {
-        MovieVote movieVote = getMovieVoteRequired(id);
+        MovieVote movieVote = repositoryHelper.getByIdRequired(MovieVote.class, id);
         return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 
@@ -35,7 +31,7 @@ public class MovieVoteService {
     }
 
     public MovieVoteReadDTO patchMovieVote(UUID id, MovieVotePatchDTO patch) {
-        MovieVote movieVote = getMovieVoteRequired(id);
+        MovieVote movieVote = repositoryHelper.getByIdRequired(MovieVote.class, id);
 
         translationService.map(patch, movieVote);
 
@@ -43,18 +39,12 @@ public class MovieVoteService {
         return translationService.translate(movieVote, MovieVoteReadDTO.class);
     }
 
-    private MovieVote getMovieVoteRequired(UUID id) {
-        return movieVoteRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieVote.class, id);
-        });
-    }
-
     public void deleteMovieVote(UUID id) {
-        movieVoteRepository.delete(getMovieVoteRequired(id));
+        movieVoteRepository.delete(repositoryHelper.getByIdRequired(MovieVote.class, id));
     }
 
     public MovieVoteReadDTO updateMovieVote(UUID id, MovieVotePutDTO put) {
-        MovieVote movieVote = getMovieVoteRequired(id);
+        MovieVote movieVote = repositoryHelper.getByIdRequired(MovieVote.class, id);
 
         translationService.updateEntity(put, movieVote);
 

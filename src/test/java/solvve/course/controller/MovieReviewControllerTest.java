@@ -30,17 +30,9 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @MockBean
     private MovieReviewService movieReviewService;
 
-    private MovieReviewReadDTO createMovieReviewRead() {
-        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        return movieReview;
-    }
-
     @Test
     public void testGetMovieReview() throws Exception {
-        MovieReviewReadDTO movieReview = createMovieReviewRead();
+        MovieReviewReadDTO movieReview = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.getMovieReview(movieReview.getId())).thenReturn(movieReview);
 
@@ -83,15 +75,9 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieReview() throws Exception {
 
-        MovieReviewCreateDTO create = new MovieReviewCreateDTO();
-        create.setTextReview("This movie can be described as junk.");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        MovieReviewCreateDTO create = generateObject(MovieReviewCreateDTO.class);
 
-        MovieReviewReadDTO read = createMovieReviewRead();
-        read.setPortalUserId(create.getPortalUserId());
-        read.setMovieId(create.getMovieId());
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.createMovieReview(create)).thenReturn(read);
 
@@ -108,11 +94,9 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieReview() throws Exception {
 
-        MovieReviewPatchDTO patchDTO = new MovieReviewPatchDTO();
-        patchDTO.setTextReview("This movie can be described as junk.");
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        MovieReviewPatchDTO patchDTO = generateObject(MovieReviewPatchDTO.class);
 
-        MovieReviewReadDTO read = createMovieReviewRead();
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.patchMovieReview(read.getId(),patchDTO)).thenReturn(read);
 
@@ -138,15 +122,9 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieReview() throws Exception {
 
-        MovieReviewPutDTO putDTO = new MovieReviewPutDTO();
-        putDTO.setTextReview("This movie can be described as junk.");
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setMovieId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
+        MovieReviewPutDTO putDTO = generateObject(MovieReviewPutDTO.class);
 
-        MovieReviewReadDTO read = createMovieReviewRead();
-        read.setMovieId(putDTO.getMovieId());
-        read.setPortalUserId(putDTO.getPortalUserId());
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.updateMovieReview(read.getId(),putDTO)).thenReturn(read);
 
@@ -192,13 +170,10 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPutMovieReviewCheckLimitBorders() throws Exception {
 
-        MovieReviewPutDTO putDTO = new MovieReviewPutDTO();
+        MovieReviewPutDTO putDTO = generateObject(MovieReviewPutDTO.class);
         putDTO.setTextReview("T");
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setMovieId(UUID.randomUUID());
 
-        MovieReviewReadDTO read = createMovieReviewRead();
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.updateMovieReview(read.getId(),putDTO)).thenReturn(read);
 
@@ -213,7 +188,6 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setTextReview(StringUtils.repeat("*", 1000));
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         resultJson = mvc.perform(put("/api/v1/moviereviews/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(putDTO))
@@ -227,9 +201,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewPutDTO put = new MovieReviewPutDTO();
+        MovieReviewPutDTO put = generateObject(MovieReviewPutDTO.class);
         put.setTextReview("");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         String resultJson = mvc.perform(put("/api/v1/moviereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -244,9 +217,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewPutDTO put = new MovieReviewPutDTO();
+        MovieReviewPutDTO put = generateObject(MovieReviewPutDTO.class);
         put.setTextReview(StringUtils.repeat("*", 1001));
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         String resultJson = mvc.perform(put("/api/v1/moviereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(put))
@@ -261,9 +233,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewCreateDTO create = new MovieReviewCreateDTO();
+        MovieReviewCreateDTO create = generateObject(MovieReviewCreateDTO.class);
         create.setTextReview("");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         String resultJson = mvc.perform(post("/api/v1/moviereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -277,10 +248,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewCreateDTO create = new MovieReviewCreateDTO();
+        MovieReviewCreateDTO create = generateObject(MovieReviewCreateDTO.class);
         create.setTextReview(StringUtils.repeat("*", 1001));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-
 
         String resultJson = mvc.perform(post("/api/v1/moviereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -295,13 +264,10 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testCreateMovieReviewCheckStingBorders() throws Exception {
 
-        MovieReviewCreateDTO create = new MovieReviewCreateDTO();
+        MovieReviewCreateDTO create = generateObject(MovieReviewCreateDTO.class);
         create.setTextReview("1");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
 
-        MovieReviewReadDTO read = createMovieReviewRead();
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.createMovieReview(create)).thenReturn(read);
 
@@ -315,7 +281,6 @@ public class MovieReviewControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualMovieReview).isEqualToComparingFieldByField(read);
 
         create.setTextReview(StringUtils.repeat("*", 1000));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         resultJson = mvc.perform(post("/api/v1/moviereviews")
                 .content(objectMapper.writeValueAsString(create))
@@ -330,11 +295,10 @@ public class MovieReviewControllerTest extends BaseControllerTest {
     @Test
     public void testPatchMovieReviewCheckStringBorders() throws Exception {
 
-        MovieReviewPatchDTO patchDTO = new MovieReviewPatchDTO();
+        MovieReviewPatchDTO patchDTO = generateObject(MovieReviewPatchDTO.class);
         patchDTO.setTextReview("1");
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
-        MovieReviewReadDTO read = createMovieReviewRead();
+        MovieReviewReadDTO read = generateObject(MovieReviewReadDTO.class);
 
         Mockito.when(movieReviewService.patchMovieReview(read.getId(),patchDTO)).thenReturn(read);
 
@@ -348,7 +312,6 @@ public class MovieReviewControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualMovieReview);
 
         patchDTO.setTextReview(StringUtils.repeat("*", 1000));
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         resultJson = mvc.perform(patch("/api/v1/moviereviews/{id}", read.getId().toString())
                 .content(objectMapper.writeValueAsString(patchDTO))
@@ -362,9 +325,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
+        MovieReviewPatchDTO patch = generateObject(MovieReviewPatchDTO.class);
         patch.setTextReview("");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         String resultJson = mvc.perform(patch("/api/v1/moviereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))
@@ -379,9 +341,8 @@ public class MovieReviewControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
+        MovieReviewPatchDTO patch = generateObject(MovieReviewPatchDTO.class);
         patch.setTextReview(StringUtils.repeat("*", 1001));
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
 
         String resultJson = mvc.perform(patch("/api/v1/moviereviews/{id}", UUID.randomUUID())
                 .content(objectMapper.writeValueAsString(patch))

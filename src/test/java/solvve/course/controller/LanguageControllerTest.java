@@ -29,16 +29,9 @@ public class LanguageControllerTest extends BaseControllerTest {
     @MockBean
     private LanguageService languageService;
 
-    private LanguageReadDTO createLanguageRead() {
-        LanguageReadDTO language = new LanguageReadDTO();
-        language.setId(UUID.randomUUID());
-        language.setName(LanguageType.ARABIAN);
-        return language;
-    }
-
     @Test
     public void testGetLanguage() throws Exception {
-        LanguageReadDTO language = createLanguageRead();
+        LanguageReadDTO language = generateObject(LanguageReadDTO.class);
 
         Mockito.when(languageService.getLanguage(language.getId())).thenReturn(language);
 
@@ -81,10 +74,9 @@ public class LanguageControllerTest extends BaseControllerTest {
     @Test
     public void testCreateLanguage() throws Exception {
 
-        LanguageCreateDTO create = new LanguageCreateDTO();
-        create.setName(LanguageType.ARABIAN);
+        LanguageCreateDTO create = generateObject(LanguageCreateDTO.class);
 
-        LanguageReadDTO read = createLanguageRead();
+        LanguageReadDTO read = generateObject(LanguageReadDTO.class);
 
         Mockito.when(languageService.createLanguage(create)).thenReturn(read);
 
@@ -101,10 +93,9 @@ public class LanguageControllerTest extends BaseControllerTest {
     @Test
     public void testPatchLanguage() throws Exception {
 
-        LanguagePatchDTO patchDTO = new LanguagePatchDTO();
-        patchDTO.setName(LanguageType.ARABIAN);
+        LanguagePatchDTO patchDTO = generateObject(LanguagePatchDTO.class);
 
-        LanguageReadDTO read = createLanguageRead();
+        LanguageReadDTO read = generateObject(LanguageReadDTO.class);
 
         Mockito.when(languageService.patchLanguage(read.getId(),patchDTO)).thenReturn(read);
 
@@ -130,10 +121,9 @@ public class LanguageControllerTest extends BaseControllerTest {
     @Test
     public void testPutLanguage() throws Exception {
 
-        LanguagePutDTO putDTO = new LanguagePutDTO();
-        putDTO.setName(LanguageType.ARABIAN);
+        LanguagePutDTO putDTO = generateObject(LanguagePutDTO.class);
 
-        LanguageReadDTO read = createLanguageRead();
+        LanguageReadDTO read = generateObject(LanguageReadDTO.class);
 
         Mockito.when(languageService.updateLanguage(read.getId(),putDTO)).thenReturn(read);
 

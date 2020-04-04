@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Country;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CountryRepository;
 
 import java.util.UUID;
 
 @Service
-public class CountryService {
+public class CountryService extends AbstractService {
 
     @Autowired
     private CountryRepository countryRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public CountryReadDTO getCountries(UUID id) {
-        Country country = getCountriesRequired(id);
+        Country country = repositoryHelper.getByIdRequired(Country.class, id);
         return translationService.translate(country, CountryReadDTO.class);
     }
 
@@ -40,7 +36,7 @@ public class CountryService {
     }
 
     public CountryReadDTO patchCountries(UUID id, CountryPatchDTO patch) {
-        Country country = getCountriesRequired(id);
+        Country country = repositoryHelper.getByIdRequired(Country.class, id);
 
         translationService.map(patch, country);
 
@@ -49,21 +45,15 @@ public class CountryService {
     }
 
     public void deleteCountries(UUID id) {
-        countryRepository.delete(getCountriesRequired(id));
+        countryRepository.delete(repositoryHelper.getByIdRequired(Country.class, id));
     }
 
     public CountryReadDTO updateCountries(UUID id, CountryPutDTO put) {
-        Country country = getCountriesRequired(id);
+        Country country = repositoryHelper.getByIdRequired(Country.class, id);
 
         translationService.updateEntity(put, country);
 
         country = countryRepository.save(country);
         return translationService.translate(country, CountryReadDTO.class);
-    }
-
-    private Country getCountriesRequired(UUID id) {
-        return countryRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Country.class, id);
-        });
     }
 }

@@ -568,6 +568,9 @@ public class TranslationService {
         if (put.getName() != null) {
             crewType.setName(put.getName());
         }
+        if(put.getCrewId() != null) {
+            crewType.setCrew(repositoryHelper.getReferenceIfExists(Crew.class, put.getCrewId()));
+        }
     }
 
     public void updateEntity(GenrePutDTO put, Genre genre) {
@@ -879,6 +882,12 @@ public class TranslationService {
         }
         if (put.getNewsId() != null) {
             newsUserReviewNote.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
+        }
+        if (put.getApprovedText() != null) {
+            newsUserReviewNote.setApprovedText(put.getApprovedText());
+        }
+        if (put.getSourceText() != null) {
+            newsUserReviewNote.setSourceText(put.getSourceText());
         }
     }
 

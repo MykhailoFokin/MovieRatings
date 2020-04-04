@@ -51,10 +51,9 @@ public class NewsUserReviewServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         News news = testObjectsFactory.createNews(portalUser);
 
-        NewsUserReviewCreateDTO create = new NewsUserReviewCreateDTO();
+        NewsUserReviewCreateDTO create = testObjectsFactory.createNewsUserReviewCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setNewsId(news.getId());
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.createNewsUserReview(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -74,10 +73,9 @@ public class NewsUserReviewServiceTest extends BaseTest {
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
-        NewsUserReviewPatchDTO patch = new NewsUserReviewPatchDTO();
+        NewsUserReviewPatchDTO patch = testObjectsFactory.createNewsUserReviewPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setNewsId(news.getId());
-        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patch.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.patchNewsUserReview(newsUserReview.getId(), patch);
 
@@ -145,10 +143,9 @@ public class NewsUserReviewServiceTest extends BaseTest {
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
-        NewsUserReviewPutDTO put = new NewsUserReviewPutDTO();
+        NewsUserReviewPutDTO put = testObjectsFactory.createNewsUserReviewPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setNewsId(news.getId());
-        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         put.setModeratorId(portalUser.getId());
         NewsUserReviewReadDTO read = newsUserReviewService.updateNewsUserReview(newsUserReview.getId(), put);
 

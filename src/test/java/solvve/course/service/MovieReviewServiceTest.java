@@ -44,11 +44,9 @@ public class MovieReviewServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         PortalUser portalUser = testObjectsFactory.createPortalUser();
 
-        MovieReviewCreateDTO create = new MovieReviewCreateDTO();
+        MovieReviewCreateDTO create = testObjectsFactory.createMovieReviewCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setMovieId(movie.getId());
-        create.setTextReview("This movie can be described as junk.");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         create.setModeratorId(portalUser.getId());
 
         MovieReviewReadDTO read = movieReviewService.createMovieReview(create);
@@ -68,11 +66,9 @@ public class MovieReviewServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieReviewPatchDTO patch = new MovieReviewPatchDTO();
+        MovieReviewPatchDTO patch = testObjectsFactory.createMovieReviewPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setMovieId(movie.getId());
-        patch.setTextReview("This movie can be described as junk.");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
         MovieReviewReadDTO read = movieReviewService.patchMovieReview(movieReview.getId(), patch);
 
@@ -141,11 +137,9 @@ public class MovieReviewServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieReviewPutDTO put = new MovieReviewPutDTO();
+        MovieReviewPutDTO put = testObjectsFactory.createMovieReviewPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setMovieId(movie.getId());
-        put.setTextReview("This movie can be described as junk.");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         MovieReviewReadDTO read = movieReviewService.updateMovieReview(movieReview.getId(), put);
 

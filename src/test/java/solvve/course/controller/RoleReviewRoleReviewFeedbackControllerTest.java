@@ -28,23 +28,14 @@ public class RoleReviewRoleReviewFeedbackControllerTest extends BaseControllerTe
     private RoleReviewRoleReviewFeedbackService roleReviewFeedbackService;
 
     private RoleReviewFeedbackReadDTO createRoleReviewFeedbackRead(UUID roleReviewId) {
-        RoleReviewFeedbackReadDTO roleReviewFeedback = new RoleReviewFeedbackReadDTO();
-        roleReviewFeedback.setId(UUID.randomUUID());
-        roleReviewFeedback.setIsLiked(true);
+        RoleReviewFeedbackReadDTO roleReviewFeedback = generateObject(RoleReviewFeedbackReadDTO.class);
         roleReviewFeedback.setRoleReviewId(roleReviewId);
         return roleReviewFeedback;
     }
 
-    private RoleReviewReadDTO createRoleReview() {
-        RoleReviewReadDTO roleReview = new RoleReviewReadDTO();
-        roleReview.setId(UUID.randomUUID());
-        roleReview.setTextReview("Review");
-        return roleReview;
-    }
-
     @Test
     public void testGetRoleReviewRoleReviewFeedback() throws Exception {
-        RoleReviewReadDTO roleReview = createRoleReview();
+        RoleReviewReadDTO roleReview = generateObject(RoleReviewReadDTO.class);
         List<RoleReviewFeedbackReadDTO> roleReviewFeedbackReadDTOs =
                 List.of(createRoleReviewFeedbackRead(roleReview.getId()));
 
@@ -93,12 +84,9 @@ public class RoleReviewRoleReviewFeedbackControllerTest extends BaseControllerTe
     @Test
     public void testCreateRoleReviewRoleReviewFeedback() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
-        create.setIsLiked(true);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleReviewFeedbackCreateDTO create = generateObject(RoleReviewFeedbackCreateDTO.class);
         create.setRoleReviewId(roleReviewReadDTO.getId());
-        create.setRoleId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
         read.setRoleId(create.getRoleId());
@@ -122,9 +110,8 @@ public class RoleReviewRoleReviewFeedbackControllerTest extends BaseControllerTe
     @Test
     public void testPatchRoleReviewRoleReviewFeedback() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleReviewFeedbackPatchDTO patchDTO = new RoleReviewFeedbackPatchDTO();
-        patchDTO.setIsLiked(true);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleReviewFeedbackPatchDTO patchDTO = generateObject(RoleReviewFeedbackPatchDTO.class);
         patchDTO.setRoleReviewId(roleReviewReadDTO.getId());
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
@@ -158,12 +145,9 @@ public class RoleReviewRoleReviewFeedbackControllerTest extends BaseControllerTe
     @Test
     public void testPutRoleReviewRoleReviewFeedback() throws Exception {
 
-        RoleReviewReadDTO roleReviewReadDTO = createRoleReview();
-        RoleReviewFeedbackPutDTO putDTO = new RoleReviewFeedbackPutDTO();
-        putDTO.setIsLiked(true);
+        RoleReviewReadDTO roleReviewReadDTO = generateObject(RoleReviewReadDTO.class);
+        RoleReviewFeedbackPutDTO putDTO = generateObject(RoleReviewFeedbackPutDTO.class);
         putDTO.setRoleReviewId(roleReviewReadDTO.getId());
-        putDTO.setRoleId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
 
         RoleReviewFeedbackReadDTO read = createRoleReviewFeedbackRead(roleReviewReadDTO.getId());
         read.setRoleId(putDTO.getRoleId());

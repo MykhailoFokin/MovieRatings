@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class MovieService {
+public class MovieService extends AbstractService {
 
     @Autowired
     private MovieRepository movieRepository;
@@ -25,12 +25,9 @@ public class MovieService {
     @Autowired
     private MovieVoteRepository movieVoteRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public MovieReadDTO getMovie(UUID id) {
-        Movie movie = getMovieRequired(id);
+        Movie movie = repositoryHelper.getByIdRequired(Movie.class, id);
         return translationService.translate(movie, MovieReadDTO.class);
     }
 
@@ -42,7 +39,7 @@ public class MovieService {
     }
 
     public MovieReadDTO patchMovie(UUID id, MoviePatchDTO patch) {
-        Movie movie = getMovieRequired(id);
+        Movie movie = repositoryHelper.getByIdRequired(Movie.class, id);
 
         translationService.map(patch, movie);
 
@@ -51,11 +48,11 @@ public class MovieService {
     }
 
     public void deleteMovie(UUID id) {
-        movieRepository.delete(getMovieRequired(id));
+        movieRepository.delete(repositoryHelper.getByIdRequired(Movie.class, id));
     }
 
     public MovieReadDTO updateMovie(UUID id, MoviePutDTO put) {
-        Movie movie = getMovieRequired(id);
+        Movie movie = repositoryHelper.getByIdRequired(Movie.class, id);
 
         translationService.updateEntity(put, movie);
 
@@ -79,11 +76,5 @@ public class MovieService {
                 movie.getAverageRating(), averageRating);
         movie.setAverageRating(averageRating);
         movieRepository.save(movie);
-    }
-
-    private Movie getMovieRequired(UUID id) {
-        return movieRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Movie.class, id);
-        });
     }
 }

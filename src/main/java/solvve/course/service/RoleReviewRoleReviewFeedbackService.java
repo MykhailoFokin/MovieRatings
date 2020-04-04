@@ -18,16 +18,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleReviewRoleReviewFeedbackService {
-
-    @Autowired
-    private TranslationService translationService;
+public class RoleReviewRoleReviewFeedbackService extends AbstractService {
 
     @Autowired
     private RoleReviewFeedbackRepository roleReviewFeedbackRepository;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<RoleReviewFeedbackReadDTO> getRoleReviewRoleReviewFeedback(UUID roleReviewId) {

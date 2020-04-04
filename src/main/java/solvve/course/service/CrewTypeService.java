@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.CrewType;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewTypeRepository;
 
 import java.util.UUID;
 
 @Service
-public class CrewTypeService {
+public class CrewTypeService extends AbstractService {
 
     @Autowired
     private CrewTypeRepository crewTypeRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public CrewTypeReadDTO getCrewType(UUID id) {
-        CrewType crewType = getCrewTypeRequired(id);
+        CrewType crewType = repositoryHelper.getByIdRequired(CrewType.class, id);
         return translationService.translate(crewType, CrewTypeReadDTO.class);
     }
 
@@ -35,7 +31,7 @@ public class CrewTypeService {
     }
 
     public CrewTypeReadDTO patchCrewType(UUID id, CrewTypePatchDTO patch) {
-        CrewType crewType = getCrewTypeRequired(id);
+        CrewType crewType = repositoryHelper.getByIdRequired(CrewType.class, id);
 
         translationService.map(patch, crewType);
 
@@ -44,11 +40,11 @@ public class CrewTypeService {
     }
 
     public void deleteCrewType(UUID id) {
-        crewTypeRepository.delete(getCrewTypeRequired(id));
+        crewTypeRepository.delete(repositoryHelper.getByIdRequired(CrewType.class, id));
     }
 
     public CrewTypeReadDTO updateCrewType(UUID id, CrewTypePutDTO put) {
-        CrewType crewType = getCrewTypeRequired(id);
+        CrewType crewType = repositoryHelper.getByIdRequired(CrewType.class, id);
 
         translationService.updateEntity(put, crewType);
 
@@ -59,11 +55,5 @@ public class CrewTypeService {
     public PageResult<CrewTypeReadDTO> getCrewTypes(CrewTypeFilter filter, Pageable pageable) {
         Page<CrewType> crewTypes = crewTypeRepository.findByFilter(filter, pageable);
         return translationService.toPageResult(crewTypes, CrewTypeReadDTO.class);
-    }
-
-    private CrewType getCrewTypeRequired(UUID id) {
-        return crewTypeRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(CrewType.class, id);
-        });
     }
 }

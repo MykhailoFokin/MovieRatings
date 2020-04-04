@@ -32,9 +32,7 @@ public class CountryRepositoryTest extends BaseTest {
 
     @Test
     public void testSave() {
-        Movie m = new Movie();
-        m.setTitle("New movie");
-        m.setYear((short) 2010);
+        Movie m = testObjectsFactory.createMovie();
         m = movieRepository.save(m);
         Set<Movie> ms = new HashSet<>();
         ms.add(m);

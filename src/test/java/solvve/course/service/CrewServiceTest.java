@@ -58,11 +58,10 @@ public class CrewServiceTest extends BaseTest {
         Person person = testObjectsFactory.createPerson();
         CrewType crewType = testObjectsFactory.createCrewType();
 
-        CrewCreateDTO create = new CrewCreateDTO();
+        CrewCreateDTO create = testObjectsFactory.createCrewCreateDTO();
         create.setPersonId(person.getId());
         create.setCrewTypeId(crewType.getId());
         create.setMovieId(movie.getId());
-        create.setDescription("Description");
         CrewReadDTO read = crewService.createCrew(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -83,11 +82,10 @@ public class CrewServiceTest extends BaseTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        CrewPatchDTO patch = new CrewPatchDTO();
+        CrewPatchDTO patch = testObjectsFactory.createCrewPatchDTO();
         patch.setPersonId(person.getId());
         patch.setCrewTypeId(crewType.getId());
         patch.setMovieId(movie.getId());
-        patch.setDescription("Description");
         CrewReadDTO read = crewService.patchCrew(crew.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -161,11 +159,10 @@ public class CrewServiceTest extends BaseTest {
         CrewType crewType = testObjectsFactory.createCrewType();
         Crew crew = testObjectsFactory.createCrew(person, crewType, movie);
 
-        CrewPutDTO put = new CrewPutDTO();
+        CrewPutDTO put = testObjectsFactory.createCrewPutDTO();
         put.setPersonId(person.getId());
         put.setCrewTypeId(crewType.getId());
         put.setMovieId(movie.getId());
-        put.setDescription("Description");
         CrewReadDTO read = crewService.updateCrew(crew.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

@@ -50,10 +50,8 @@ public class MovieReviewSpoilerDataServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieSpoilerDataCreateDTO create = new MovieSpoilerDataCreateDTO();
+        MovieSpoilerDataCreateDTO create = testObjectsFactory.createMovieSpoilerDataCreateDTO();
         create.setMovieReviewId(movieReview.getId());
-        create.setStartIndex(100);
-        create.setEndIndex(150);
 
         MovieSpoilerDataReadDTO read = movieReviewSpoilerDataService.createMovieReviewSpoilerData(movieReview.getId()
                 , create);
@@ -72,10 +70,8 @@ public class MovieReviewSpoilerDataServiceTest extends BaseTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
         MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
-        MovieSpoilerDataPatchDTO patch = new MovieSpoilerDataPatchDTO();
+        MovieSpoilerDataPatchDTO patch = testObjectsFactory.createMovieSpoilerDataPatchDTO();
         patch.setMovieReviewId(movieReview.getId());
-        patch.setStartIndex(100);
-        patch.setEndIndex(150);
         MovieSpoilerDataReadDTO read =
                 movieReviewSpoilerDataService.patchMovieReviewSpoilerData(movieReview.getId(),
                         movieSpoilerData.getId(), patch);
@@ -139,10 +135,8 @@ public class MovieReviewSpoilerDataServiceTest extends BaseTest {
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
         MovieSpoilerData movieSpoilerData = testObjectsFactory.createMovieSpoilerData(movieReview);
 
-        MovieSpoilerDataPutDTO put = new MovieSpoilerDataPutDTO();
+        MovieSpoilerDataPutDTO put = testObjectsFactory.createMovieSpoilerDataPutDTO();
         put.setMovieReviewId(movieReview.getId());
-        put.setStartIndex(100);
-        put.setEndIndex(150);
         MovieSpoilerDataReadDTO read =
                 movieReviewSpoilerDataService.updateMovieReviewSpoilerData(movieReview.getId(),
                         movieSpoilerData.getId(), put);

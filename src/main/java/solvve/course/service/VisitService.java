@@ -8,23 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Visit;
 import solvve.course.domain.VisitStatus;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.VisitRepository;
 
 import java.util.UUID;
 
 @Service
-public class VisitService {
+public class VisitService extends AbstractService {
 
     @Autowired
     private VisitRepository visitRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public VisitReadExtendedDTO getVisit(UUID id) {
-        Visit visit = getVisitRequired(id);
+        Visit visit = repositoryHelper.getByIdRequired(Visit.class, id);
         return translationService.translate(visit, VisitReadExtendedDTO.class);
     }
 
@@ -37,7 +33,7 @@ public class VisitService {
     }
 
     public VisitReadDTO patchVisit(UUID id, VisitPatchDTO patch) {
-        Visit visit = getVisitRequired(id);
+        Visit visit = repositoryHelper.getByIdRequired(Visit.class, id);
 
         translationService.map(patch, visit);
 
@@ -46,11 +42,11 @@ public class VisitService {
     }
 
     public void deleteVisit(UUID id) {
-        visitRepository.delete(getVisitRequired(id));
+        visitRepository.delete(repositoryHelper.getByIdRequired(Visit.class, id));
     }
 
     public VisitReadDTO updateVisit(UUID id, VisitPutDTO put) {
-        Visit visit = getVisitRequired(id);
+        Visit visit = repositoryHelper.getByIdRequired(Visit.class, id);
 
         translationService.updateEntity(put, visit);
 
@@ -61,11 +57,5 @@ public class VisitService {
     public PageResult<VisitReadDTO> getVisits(VisitFilter filter, Pageable pageable) {
         Page<Visit> visits = visitRepository.findByFilter(filter, pageable);
         return translationService.toPageResult(visits, VisitReadDTO.class);
-    }
-
-    private Visit getVisitRequired(UUID id) {
-        return visitRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Visit.class, id);
-        });
     }
 }

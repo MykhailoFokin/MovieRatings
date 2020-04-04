@@ -30,18 +30,9 @@ public class RoleControllerTest extends BaseControllerTest {
     @MockBean
     private RoleService roleService;
 
-    private RoleReadDTO createRoleRead() {
-        RoleReadDTO role = new RoleReadDTO();
-        role.setId(UUID.randomUUID());
-        role.setTitle("Actor");
-        role.setRoleType(RoleType.LEAD);
-        role.setDescription("Description test");
-        return role;
-    }
-
     @Test
     public void testGetRole() throws Exception {
-        RoleReadDTO role = createRoleRead();
+        RoleReadDTO role = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.getRole(role.getId())).thenReturn(role);
 
@@ -83,14 +74,9 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRole() throws Exception {
 
-        RoleCreateDTO create = new RoleCreateDTO();
-        create.setTitle("Actor");
-        create.setRoleType(RoleType.LEAD);
-        create.setDescription("Description test");
-        create.setMovieId(UUID.randomUUID());
+        RoleCreateDTO create = generateObject(RoleCreateDTO.class);
 
-        RoleReadDTO read = createRoleRead();
-        read.setMovieId(create.getMovieId());
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.createRole(create)).thenReturn(read);
 
@@ -107,12 +93,9 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRole() throws Exception {
 
-        RolePatchDTO patchDTO = new RolePatchDTO();
-        patchDTO.setTitle("Role Test");
-        patchDTO.setRoleType(RoleType.LEAD);
-        patchDTO.setDescription("Description test");
+        RolePatchDTO patchDTO = generateObject(RolePatchDTO.class);
 
-        RoleReadDTO read = createRoleRead();
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.patchRole(read.getId(),patchDTO)).thenReturn(read);
 
@@ -138,14 +121,9 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testPutRole() throws Exception {
 
-        RolePutDTO putDTO = new RolePutDTO();
-        putDTO.setTitle("Role Test");
-        putDTO.setRoleType(RoleType.LEAD);
-        putDTO.setDescription("Description test");
-        putDTO.setMovieId(UUID.randomUUID());
+        RolePutDTO putDTO = generateObject(RolePutDTO.class);
 
-        RoleReadDTO read = createRoleRead();
-        read.setMovieId(putDTO.getMovieId());
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.updateRole(read.getId(),putDTO)).thenReturn(read);
 
@@ -190,13 +168,11 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleCheckLimitBorders() throws Exception {
 
-        RolePutDTO putDTO = new RolePutDTO();
+        RolePutDTO putDTO = generateObject(RolePutDTO.class);
         putDTO.setTitle(StringUtils.repeat("*", 1));
-        putDTO.setRoleType(RoleType.LEAD);
         putDTO.setDescription(StringUtils.repeat("*", 1));
-        putDTO.setMovieId(UUID.randomUUID());
 
-        RoleReadDTO read = createRoleRead();
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.updateRole(read.getId(),putDTO)).thenReturn(read);
 
@@ -211,7 +187,6 @@ public class RoleControllerTest extends BaseControllerTest {
 
         // Check upper border
         putDTO.setTitle(StringUtils.repeat("*", 255));
-        putDTO.setRoleType(RoleType.LEAD);
         putDTO.setDescription(StringUtils.repeat("*", 1000));
 
         resultJson = mvc.perform(put("/api/v1/roles/{id}", read.getId().toString())
@@ -226,9 +201,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RolePutDTO put = new RolePutDTO();
+        RolePutDTO put = generateObject(RolePutDTO.class);
         put.setTitle("");
-        put.setRoleType(RoleType.LEAD);
         put.setDescription("");
 
         String resultJson = mvc.perform(put("/api/v1/roles/{id}", UUID.randomUUID())
@@ -244,9 +218,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RolePutDTO put = new RolePutDTO();
+        RolePutDTO put = generateObject(RolePutDTO.class);
         put.setTitle(StringUtils.repeat("*", 256));
-        put.setRoleType(RoleType.LEAD);
         put.setDescription(StringUtils.repeat("*", 1001));
 
         String resultJson = mvc.perform(put("/api/v1/roles/{id}", UUID.randomUUID())
@@ -262,9 +235,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RoleCreateDTO create = new RoleCreateDTO();
+        RoleCreateDTO create = generateObject(RoleCreateDTO.class);
         create.setTitle("");
-        create.setRoleType(RoleType.LEAD);
         create.setDescription("");
 
         String resultJson = mvc.perform(post("/api/v1/roles")
@@ -279,9 +251,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RoleCreateDTO create = new RoleCreateDTO();
+        RoleCreateDTO create = generateObject(RoleCreateDTO.class);
         create.setTitle(StringUtils.repeat("*", 256));
-        create.setRoleType(RoleType.LEAD);
         create.setDescription(StringUtils.repeat("*", 1001));
 
 
@@ -298,13 +269,11 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleCheckStingBorders() throws Exception {
 
-        RoleCreateDTO create = new RoleCreateDTO();
+        RoleCreateDTO create = generateObject(RoleCreateDTO.class);
         create.setTitle(StringUtils.repeat("*", 1));
-        create.setRoleType(RoleType.LEAD);
         create.setDescription(StringUtils.repeat("*", 1));
-        create.setMovieId(UUID.randomUUID());
 
-        RoleReadDTO read = createRoleRead();
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.createRole(create)).thenReturn(read);
 
@@ -318,7 +287,6 @@ public class RoleControllerTest extends BaseControllerTest {
         Assertions.assertThat(actualRole).isEqualToComparingFieldByField(read);
 
         create.setTitle(StringUtils.repeat("*", 255));
-        create.setRoleType(RoleType.LEAD);
         create.setDescription(StringUtils.repeat("*", 1000));
 
         resultJson = mvc.perform(post("/api/v1/roles")
@@ -334,12 +302,11 @@ public class RoleControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleCheckStringBorders() throws Exception {
 
-        RolePatchDTO patchDTO = new RolePatchDTO();
+        RolePatchDTO patchDTO = generateObject(RolePatchDTO.class);
         patchDTO.setTitle(StringUtils.repeat("*", 1));
-        patchDTO.setRoleType(RoleType.LEAD);
         patchDTO.setDescription(StringUtils.repeat("*", 1));
 
-        RoleReadDTO read = createRoleRead();
+        RoleReadDTO read = generateObject(RoleReadDTO.class);
 
         Mockito.when(roleService.patchRole(read.getId(),patchDTO)).thenReturn(read);
 
@@ -353,7 +320,6 @@ public class RoleControllerTest extends BaseControllerTest {
         Assert.assertEquals(read, actualRole);
 
         patchDTO.setTitle(StringUtils.repeat("*", 255));
-        patchDTO.setRoleType(RoleType.LEAD);
         patchDTO.setDescription(StringUtils.repeat("*", 1000));
 
         resultJson = mvc.perform(patch("/api/v1/roles/{id}", read.getId().toString())
@@ -368,9 +334,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        RolePatchDTO patch = new RolePatchDTO();
+        RolePatchDTO patch = generateObject(RolePatchDTO.class);
         patch.setTitle("");
-        patch.setRoleType(RoleType.LEAD);
         patch.setDescription("");
 
         String resultJson = mvc.perform(patch("/api/v1/roles/{id}", UUID.randomUUID())
@@ -386,9 +351,8 @@ public class RoleControllerTest extends BaseControllerTest {
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        RolePatchDTO patch = new RolePatchDTO();
+        RolePatchDTO patch = generateObject(RolePatchDTO.class);
         patch.setTitle(StringUtils.repeat("*", 256));
-        patch.setRoleType(RoleType.LEAD);
         patch.setDescription(StringUtils.repeat("*", 1001));
 
         String resultJson = mvc.perform(patch("/api/v1/roles/{id}", UUID.randomUUID())

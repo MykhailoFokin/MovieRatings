@@ -1,5 +1,7 @@
 package solvve.course.utils;
 
+import org.bitbucket.brunneng.br.Configuration;
+import org.bitbucket.brunneng.br.RandomObjectGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -105,18 +107,34 @@ public class TestObjectsFactory {
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
 
+    private RandomObjectGenerator generator = new RandomObjectGenerator();
+
+    private <T extends AbstractEntity> T generateEntityWithoutId(Class<T> entityClass) {
+        T entity = generator.generateRandomObject(entityClass);
+        entity.setId(null);
+        return entity;
+    }
+
+    private <T> T generateObject(Class<T> entityClass) {
+        return generator.generateRandomObject(entityClass);
+    }
+
+    private RandomObjectGenerator flatGenerator;
+    {
+        Configuration c = new Configuration();
+        c.setFlatMode(true);
+        flatGenerator = new RandomObjectGenerator(c);
+    }
+
+    private <T extends AbstractEntity> T generateFlatEntityWithoutId(Class<T> entityClass) {
+        T entity = flatGenerator.generateRandomObject(entityClass);
+        entity.setId(null);
+        return entity;
+    }
+
     public Movie createMovie() {
-        Movie movie = new Movie();
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setSoundMix("DolbySurround");
-        movie.setIsPublished(true);
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(null);
         return movieRepository.save(movie);
     }
 
@@ -142,24 +160,14 @@ public class TestObjectsFactory {
     }
 
     public Movie createMovie(Set<Country> countries) {
-        Movie movie = new Movie();
-        movie.setTitle("Movie Test");
-        movie.setYear((short) 2019);
-        movie.setAspectRatio("1:10");
-        movie.setCamera("Panasonic");
-        movie.setColour("Black");
-        movie.setCritique("123");
-        movie.setDescription("Description");
-        movie.setLaboratory("CaliforniaDreaming");
-        movie.setSoundMix("DolbySurround");
-        movie.setIsPublished(true);
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(null);
         movie.setMovieProdCountries(countries);
         return movieRepository.save(movie);
     }
 
     public Set<Country> createCountries() {
-        Country c = new Country();
-        c.setName("C1");
+        Country c = generateFlatEntityWithoutId(Country.class);
         c = countryRepository.save(c);
         Set<Country> sc = new HashSet<>();
         sc.add(c);
@@ -167,70 +175,37 @@ public class TestObjectsFactory {
     }
 
     public Country createCountry() {
-        Country country = new Country();
-        country.setName("Ukraine");
+        Country country = generateFlatEntityWithoutId(Country.class);
         return countryRepository.save(country);
     }
 
     public Country createCountry(String name) {
-        Country country = new Country();
+        Country country = generateFlatEntityWithoutId(Country.class);
         country.setName(name);
         return countryRepository.save(country);
     }
 
     public MovieCreateDTO createMovieCreateDTO() {
-        MovieCreateDTO create = new MovieCreateDTO();
-        create.setTitle("Movie Test");
-        create.setYear((short) 2019);
-        create.setAspectRatio("1:10");
-        create.setCamera("Panasonic");
-        create.setColour("Black");
-        create.setCritique("123");
-        create.setDescription("Description");
-        create.setLaboratory("CaliforniaDreaming");
-        create.setSoundMix("DolbySurround");
-        create.setIsPublished(true);
+        MovieCreateDTO create = generateObject(MovieCreateDTO.class);
         return create;
     }
 
     public MoviePatchDTO createMoviePatchDTO() {
-        MoviePatchDTO patch = new MoviePatchDTO();
-        patch.setTitle("Movie Test");
-        patch.setYear((short) 2019);
-        patch.setAspectRatio("1:10");
-        patch.setCamera("Panasonic");
-        patch.setColour("Black");
-        patch.setCritique("123");
-        patch.setDescription("Description");
-        patch.setLaboratory("CaliforniaDreaming");
-        patch.setSoundMix("DolbySurround");
-        patch.setIsPublished(true);
-        return patch;
+        return generateObject(MoviePatchDTO.class);
     }
 
     public MoviePutDTO createMoviePutDTO() {
-        MoviePutDTO put = new MoviePutDTO();
-        put.setAspectRatio("1:10");
-        put.setCamera("Panasonic");
-        put.setColour("Black");
-        put.setCritique("123");
-        put.setDescription("Description");
-        put.setLaboratory("CaliforniaDreaming");
-        put.setSoundMix("DolbySurround");
-        put.setIsPublished(true);
-        return put;
+        return generateObject(MoviePutDTO.class);
     }
 
     public Genre createGenre(Movie movie) {
-        Genre genre = new Genre();
+        Genre genre = generateFlatEntityWithoutId(Genre.class);
         genre.setMovie(movie);
-        genre.setName(MovieGenreType.ACTION);
         return genreRepository.save(genre);
     }
 
     public Genre createGenre() {
-        Genre genre = new Genre();
-        genre.setName(MovieGenreType.ACTION);
+        Genre genre = generateFlatEntityWithoutId(Genre.class);
         return genreRepository.save(genre);
     }
 
@@ -242,35 +217,23 @@ public class TestObjectsFactory {
     }
 
     public GenreReadDTO createGenresRead() {
-        GenreReadDTO genre = new GenreReadDTO();
-        genre.setId(UUID.randomUUID());
-        genre.setName(MovieGenreType.ACTION);
-        return genre;
+        return generateObject(GenreReadDTO.class);
     }
 
     public GenreCreateDTO createGenreCreateDTO() {
-        GenreCreateDTO genreCreateDTO = new GenreCreateDTO();
-        genreCreateDTO.setName(MovieGenreType.ACTION);
-        return genreCreateDTO;
+        return generateObject(GenreCreateDTO.class);
     }
 
     public GenrePatchDTO createGenrePatchDTO() {
-        GenrePatchDTO dto = new GenrePatchDTO();
-        dto.setName(MovieGenreType.ACTION);
-        return dto;
+        return generateObject(GenrePatchDTO.class);
     }
 
     public GenrePutDTO createGenrePutDTO() {
-        GenrePutDTO dto = new GenrePutDTO();
-        dto.setName(MovieGenreType.ACTION);
-        return dto;
+        return generateObject(GenrePutDTO.class);
     }
 
     public CompanyDetails createCompanyDetails() {
-        CompanyDetails companyDetails = new CompanyDetails();
-        companyDetails.setName("Paramount");
-        companyDetails.setOverview("Test Test Test");
-        companyDetails.setYearOfFoundation(LocalDate.now());
+        CompanyDetails companyDetails = generateFlatEntityWithoutId(CompanyDetails.class);
         return companyDetailsRepository.save(companyDetails);
     }
 
@@ -283,67 +246,50 @@ public class TestObjectsFactory {
     }
 
     public CompanyDetailsCreateDTO createCompanyDetailsCreateDTO() {
-        CompanyDetailsCreateDTO dto = new CompanyDetailsCreateDTO();
-        dto.setName("Paramount");
-        dto.setOverview("Test Test Test");
-        dto.setYearOfFoundation(LocalDate.now());
-        return dto;
+        return generateObject(CompanyDetailsCreateDTO.class);
     }
 
     public CompanyDetailsPatchDTO createCompanyDetailsPatchDTO() {
-        CompanyDetailsPatchDTO dto = new CompanyDetailsPatchDTO();
-        dto.setName("Paramount");
-        dto.setOverview("Test Test Test");
-        dto.setYearOfFoundation(LocalDate.now());
-        return dto;
+        return generateObject(CompanyDetailsPatchDTO.class);
     }
 
     public CompanyDetailsPutDTO createCompanyDetailsPutDTO() {
-        CompanyDetailsPutDTO dto = new CompanyDetailsPutDTO();
-        dto.setName("Paramount");
-        dto.setOverview("Test Test Test");
-        dto.setYearOfFoundation(LocalDate.now());
-        return dto;
+        return generateObject(CompanyDetailsPutDTO.class);
     }
 
     public MovieCompany createMovieCompany(CompanyDetails companyDetails, MovieProductionType movieProductionType) {
-        MovieCompany movieCompany = new MovieCompany();
+        MovieCompany movieCompany = generateFlatEntityWithoutId(MovieCompany.class);
         movieCompany.setCompanyDetails(companyDetails);
         movieCompany.setMovieProductionType(movieProductionType);
-        movieCompany.setDescription("DescTest");
         return movieCompanyRepository.save(movieCompany);
     }
 
     public MovieCompanyCreateDTO createMovieCompanyCreateDTO(UUID companyDetailId,
                                                              MovieProductionType movieProductionType) {
-        MovieCompanyCreateDTO dto = new MovieCompanyCreateDTO();
+        MovieCompanyCreateDTO dto = generateObject(MovieCompanyCreateDTO.class);
         dto.setCompanyDetailsId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
-        dto.setDescription("DescTest");
         return dto;
     }
 
     public MovieCompanyPatchDTO createMovieCompanyPatchDTO(UUID companyDetailId,
                                                            MovieProductionType movieProductionType) {
-        MovieCompanyPatchDTO dto = new MovieCompanyPatchDTO();
+        MovieCompanyPatchDTO dto = generateObject(MovieCompanyPatchDTO.class);
         dto.setCompanyDetailsId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
-        dto.setDescription("DescTest");
         return dto;
     }
 
     public MovieCompanyPutDTO createMovieCompanyPutDTO(UUID companyDetailId,
                                                        MovieProductionType movieProductionType) {
-        MovieCompanyPutDTO dto = new MovieCompanyPutDTO();
+        MovieCompanyPutDTO dto = generateObject(MovieCompanyPutDTO.class);
         dto.setCompanyDetailsId(companyDetailId);
         dto.setMovieProductionType(movieProductionType);
-        dto.setDescription("DescTest");
         return dto;
     }
 
     public Language createLanguage() {
-        Language language = new Language();
-        language.setName(LanguageType.UKRAINIAN);
+        Language language = generateFlatEntityWithoutId(Language.class);
         return languageRepository.save(language);
     }
 
@@ -354,27 +300,19 @@ public class TestObjectsFactory {
     }
 
     public LanguageReadDTO createLanguageReadDTO() {
-        LanguageReadDTO dto = new LanguageReadDTO();
-        dto.setName(LanguageType.UKRAINIAN);
-        return dto;
+        return generateObject(LanguageReadDTO.class);
     }
 
     public LanguagePatchDTO createLanguagePatchDTO() {
-        LanguagePatchDTO dto = new LanguagePatchDTO();
-        dto.setName(LanguageType.UKRAINIAN);
-        return dto;
+        return generateObject(LanguagePatchDTO.class);
     }
 
     public LanguagePutDTO createLanguagePutDTO() {
-        LanguagePutDTO dto = new LanguagePutDTO();
-        dto.setName(LanguageType.UKRAINIAN);
-        return dto;
+        return generateObject(LanguagePutDTO.class);
     }
 
     public LanguageCreateDTO createLanguageCreateDTO() {
-        LanguageCreateDTO dto = new LanguageCreateDTO();
-        dto.setName(LanguageType.UKRAINIAN);
-        return dto;
+        return generateObject(LanguageCreateDTO.class);
     }
 
     public void inTransaction(Runnable runnable) {
@@ -384,131 +322,88 @@ public class TestObjectsFactory {
     }
 
     public PortalUser createPortalUser() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
+        UserType userType = generateFlatEntityWithoutId(UserType.class);
         userType = userTypeRepository.save(userType);
 
-        PortalUser portalUser = new PortalUser();
+        PortalUser portalUser = generateFlatEntityWithoutId(PortalUser.class);
         portalUser.setUserType(userType);
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
         portalUser = portalUserRepository.save(portalUser);
 
         return portalUser;
     }
 
     public Visit createVisit(PortalUser portalUser) {
-        Visit visit = new Visit();
+        Visit visit = generateFlatEntityWithoutId(Visit.class);
         visit.setPortalUser(portalUser);
-        visit.setStartAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        visit.setFinishAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        visit.setStatus(VisitStatus.FINISHED);
         return visitRepository.save(visit);
     }
 
     public Visit createVisit(PortalUser portalUser, VisitStatus visitStatus) {
-        Visit visit = new Visit();
+        Visit visit = generateFlatEntityWithoutId(Visit.class);
         visit.setPortalUser(portalUser);
-        visit.setStartAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        visit.setFinishAt(LocalDateTime.of(2019, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
         visit.setStatus(visitStatus);
         return visitRepository.save(visit);
     }
 
     public Visit createVisit(PortalUser portalUser, VisitStatus visitStatus, Instant startAt) {
-        Visit visit = new Visit();
+        Visit visit = generateFlatEntityWithoutId(Visit.class);
         visit.setPortalUser(portalUser);
         visit.setStartAt(startAt);
-        visit.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
         visit.setStatus(visitStatus);
         return visitRepository.save(visit);
     }
 
     public VisitCreateDTO createVisitCreateDTO(PortalUser portalUser) {
-        VisitCreateDTO create = new VisitCreateDTO();
+        VisitCreateDTO create = generateObject(VisitCreateDTO.class);
         create.setPortalUserId(portalUser.getId());
-        create.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        create.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        create.setStatus(VisitStatus.SCHEDULED);
         return create;
     }
 
     public VisitPatchDTO createVisitPatchDTO(PortalUser portalUser) {
-        VisitPatchDTO patch = new VisitPatchDTO();
+        VisitPatchDTO patch = generateObject(VisitPatchDTO.class);
         patch.setPortalUserId(portalUser.getId());
-        patch.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        patch.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        patch.setStatus(VisitStatus.FINISHED);
         return patch;
     }
 
     public VisitPutDTO createVisitPutDTO(PortalUser portalUser) {
-        VisitPutDTO put = new VisitPutDTO();
+        VisitPutDTO put = generateObject(VisitPutDTO.class);
         put.setPortalUserId(portalUser.getId());
-        put.setStartAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        put.setFinishAt(LocalDateTime.of(2020, 12, 4, 17, 30, 0)
-                .toInstant(ZoneOffset.UTC));
-        put.setStatus(VisitStatus.FINISHED);
         return put;
     }
 
     public CrewType createCrewType() {
-        CrewType crewType = new CrewType();
-        crewType.setName("Director");
-        crewType = crewTypeRepository.save(crewType);
-        return  crewType;
+        CrewType crewType = generateFlatEntityWithoutId(CrewType.class);
+        return crewTypeRepository.save(crewType);
     }
 
     public Person createPerson() {
-        Person person = new Person();
-        person.setSurname("Surname");
-        person.setName("Name");
-        person.setMiddleName("MiddleName");
-        person = personRepository.save(person);
-        return person;
+        Person person = generateFlatEntityWithoutId(Person.class);
+        return personRepository.save(person);
     }
 
     public Crew createCrew(Person person, CrewType crewType, Movie movie) {
-        Crew crew = new Crew();
+        Crew crew = generateFlatEntityWithoutId(Crew.class);
         crew.setPerson(person);
         crew.setCrewType(crewType);
         crew.setMovie(movie);
-        crew.setDescription("Description");
         return crewRepository.save(crew);
     }
 
     public MovieReviewCompliant createMovieReviewCompliant(PortalUser portalUser,
                                                            Movie movie,
                                                            MovieReview movieReview) {
-        MovieReviewCompliant movieReviewCompliant = new MovieReviewCompliant();
+        MovieReviewCompliant movieReviewCompliant = generateFlatEntityWithoutId(MovieReviewCompliant.class);
         movieReviewCompliant.setPortalUser(portalUser);
         movieReviewCompliant.setMovie(movie);
         movieReviewCompliant.setMovieReview(movieReview);
-        movieReviewCompliant.setDescription("Just punish him!");
-        movieReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         movieReviewCompliant.setModerator(portalUser);
         return movieReviewCompliantRepository.save(movieReviewCompliant);
     }
 
     public MovieReview createMovieReview(PortalUser portalUser, Movie movie) {
-        MovieReview movieReview = new MovieReview();
+        MovieReview movieReview = generateFlatEntityWithoutId(MovieReview.class);
         movieReview.setPortalUser(portalUser);
         movieReview.setMovie(movie);
-        movieReview.setTextReview("This movie can be described as junk.");
-        movieReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         movieReview.setModerator(portalUser);
         movieReview = movieReviewRepository.save(movieReview);
         return movieReview;
@@ -517,27 +412,23 @@ public class TestObjectsFactory {
     public MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser,
                                                          Movie movie,
                                                          MovieReview movieReview) {
-        MovieReviewFeedback movieReviewFeedback = new MovieReviewFeedback();
+        MovieReviewFeedback movieReviewFeedback = generateFlatEntityWithoutId(MovieReviewFeedback.class);
         movieReviewFeedback.setPortalUser(portalUser);
         movieReviewFeedback.setMovie(movie);
         movieReviewFeedback.setMovieReview(movieReview);
-        movieReviewFeedback.setIsLiked(true);
         return movieReviewFeedbackRepository.save(movieReviewFeedback);
     }
 
     public MovieSpoilerData createMovieSpoilerData(MovieReview movieReview) {
-        MovieSpoilerData movieSpoilerData = new MovieSpoilerData();
+        MovieSpoilerData movieSpoilerData = generateFlatEntityWithoutId(MovieSpoilerData.class);
         movieSpoilerData.setMovieReview(movieReview);
-        movieSpoilerData.setStartIndex(100);
-        movieSpoilerData.setEndIndex(150);
         return movieSpoilerDataRepository.save(movieSpoilerData);
     }
 
     public MovieVote createMovieVote(PortalUser portalUser, Movie movie) {
-        MovieVote movieVote = new MovieVote();
+        MovieVote movieVote = generateFlatEntityWithoutId(MovieVote.class);
         movieVote.setMovie(movie);
         movieVote.setPortalUser(portalUser);
-        movieVote.setRating(UserVoteRatingType.R9);
         return movieVoteRepository.save(movieVote);
     }
 
@@ -550,114 +441,86 @@ public class TestObjectsFactory {
     }
 
     public News createNews(PortalUser portalUser) {
-        News news = new News();
+        News news = generateFlatEntityWithoutId(News.class);
         news.setPublisher(portalUser);
-        news.setTopic("Main_News");
-        news.setDescription("Our main news are absent today!");
-        news.setPublished(createInstant(9));
         return newsRepository.save(news);
     }
 
     public News createNews(PortalUser portalUser, String newsText) {
-        News news = new News();
+        News news = generateFlatEntityWithoutId(News.class);
         news.setPublisher(portalUser);
-        news.setTopic("Main_News");
         news.setDescription(newsText);
-        news.setPublished(createInstant(9));
         return newsRepository.save(news);
     }
 
     public UserType createUserType() {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
-        userType = userTypeRepository.save(userType);
-        return userType;
+        UserType userType = generateFlatEntityWithoutId(UserType.class);
+        return userTypeRepository.save(userType);
     }
 
     public PortalUser createPortalUser(UserType userType) {
-        PortalUser portalUser = new PortalUser();
+        PortalUser portalUser = generateFlatEntityWithoutId(PortalUser.class);
         portalUser.setUserType(userType);
-        portalUser.setSurname("Surname");
-        portalUser.setName("Name");
-        portalUser.setMiddleName("MiddleName");
-        portalUser.setLogin("Login");
-        portalUser.setUserConfidence(UserConfidenceType.NORMAL);
         return portalUserRepository.save(portalUser);
     }
 
     public ReleaseDetail createReleaseDetail(Movie movie, Country country) {
-        ReleaseDetail releaseDetail = new ReleaseDetail();
+        ReleaseDetail releaseDetail = generateFlatEntityWithoutId(ReleaseDetail.class);
         releaseDetail.setMovie(movie);
         releaseDetail.setCountry(country);
-        releaseDetail.setReleaseDate(LocalDate.now(ZoneOffset.UTC));
         return releaseDetailRepository.save(releaseDetail);
     }
 
     public RoleReviewCompliant createRoleReviewCompliant(PortalUser portalUser, Role role, RoleReview roleReview) {
-        RoleReviewCompliant roleReviewCompliant = new RoleReviewCompliant();
+        RoleReviewCompliant roleReviewCompliant = generateFlatEntityWithoutId(RoleReviewCompliant.class);
         roleReviewCompliant.setPortalUser(portalUser);
         roleReviewCompliant.setRole(role);
         roleReviewCompliant.setRoleReview(roleReview);
-        roleReviewCompliant.setDescription("Just punish him!");
-        roleReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         roleReviewCompliant.setModerator(portalUser);
         return roleReviewCompliantRepository.save(roleReviewCompliant);
     }
 
     public Role createRole(Person person) {
-        Role role = new Role();
-        role.setTitle("Actor");
-        role.setRoleType(RoleType.LEAD);
-        role.setDescription("Description test");
+        Role role = generateFlatEntityWithoutId(Role.class);
         role.setPerson(person);
-        role = roleRepository.save(role);
-        return role;
+        role.setAverageRating(null);
+        return roleRepository.save(role);
     }
 
     public Role createRole(Person person, Movie movie) {
-        Role role = new Role();
-        role.setTitle("Actor");
-        role.setRoleType(RoleType.LEAD);
-        role.setDescription("Description test");
+        Role role = generateFlatEntityWithoutId(Role.class);
         role.setPerson(person);
         role.setMovie(movie);
-        role = roleRepository.save(role);
-        return role;
+        role.setAverageRating(null);
+        return roleRepository.save(role);
     }
 
     public RoleReview createRoleReview(PortalUser portalUser, Role role) {
-        RoleReview roleReview = new RoleReview();
+        RoleReview roleReview = generateFlatEntityWithoutId(RoleReview.class);
         roleReview.setPortalUser(portalUser);
         roleReview.setRole(role);
-        roleReview.setTextReview("This role can be described as junk.");
-        roleReview.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         roleReview.setModerator(portalUser);
-        roleReview = roleReviewRepository.save(roleReview);
-        return roleReview;
+        return roleReviewRepository.save(roleReview);
     }
 
     public RoleReviewFeedback createRoleReviewFeedback(PortalUser portalUser, Role role, RoleReview roleReview) {
-        RoleReviewFeedback roleReviewFeedback = new RoleReviewFeedback();
+        RoleReviewFeedback roleReviewFeedback = generateFlatEntityWithoutId(RoleReviewFeedback.class);
         roleReviewFeedback.setPortalUser(portalUser);
         roleReviewFeedback.setRole(role);
         roleReviewFeedback.setRoleReview(roleReview);
-        roleReviewFeedback.setIsLiked(true);
         return roleReviewFeedbackRepository.save(roleReviewFeedback);
     }
 
     public RoleSpoilerData createRoleSpoilerData(RoleReview roleReview) {
-        RoleSpoilerData roleSpoilerData = new RoleSpoilerData();
+        RoleSpoilerData roleSpoilerData = generateFlatEntityWithoutId(RoleSpoilerData.class);
         roleSpoilerData.setRoleReview(roleReview);
-        roleSpoilerData.setStartIndex(100);
-        roleSpoilerData.setEndIndex(150);
         return roleSpoilerDataRepository.save(roleSpoilerData);
     }
 
     public RoleVote createRoleVote(PortalUser portalUser, Role role) {
-        RoleVote roleVote = new RoleVote();
+        RoleVote roleVote = generateFlatEntityWithoutId(RoleVote.class);
         roleVote.setRole(role);
         roleVote.setPortalUser(portalUser);
-        roleVote.setRating(UserVoteRatingType.R9);
         return roleVoteRepository.save(roleVote);
     }
 
@@ -670,17 +533,14 @@ public class TestObjectsFactory {
     }
 
     public UserGrant createGrants(UserType userType, PortalUser portalUser) {
-        UserGrant userGrant = new UserGrant();
+        UserGrant userGrant = generateFlatEntityWithoutId(UserGrant.class);
         userGrant.setUserType(userType);
-        userGrant.setObjectName("Movie");
-        userGrant.setUserPermission(UserPermType.READ);
         userGrant.setGrantedBy(portalUser);
         return userGrantRepository.save(userGrant);
     }
 
     public UserType createUserTypeWithGrants(Set<UserGrant> userGrants) {
-        UserType userType = new UserType();
-        userType.setUserGroup(UserGroupType.USER);
+        UserType userType = generateFlatEntityWithoutId(UserType.class);
         userType.setUserGrants(userGrants);
         return userTypeRepository.save(userType);
     }
@@ -697,23 +557,19 @@ public class TestObjectsFactory {
     public CrewType createCrewType(String typeName) {
         CrewType crewType = new CrewType();
         crewType.setName(typeName);
-        crewType = crewTypeRepository.save(crewType);
-        return crewType;
+        return crewTypeRepository.save(crewType);
     }
 
     public UserGrant createUserGrant(UserType userType) {
-        UserGrant userGrant = new UserGrant();
+        UserGrant userGrant = generateFlatEntityWithoutId(UserGrant.class);
         userGrant.setUserType(userType);
-        userGrant.setObjectName("ObjectName");
         return userGrantRepository.save(userGrant);
     }
 
     public UserGrant createUserGrant(UserType userType, PortalUser grantedBy) {
-        UserGrant userGrant = new UserGrant();
+        UserGrant userGrant = generateFlatEntityWithoutId(UserGrant.class);
         userGrant.setUserType(userType);
-        userGrant.setObjectName("ObjectName");
         userGrant.setGrantedBy(grantedBy);
-        userGrant.setUserPermission(UserPermType.READ);
         return userGrantRepository.save(userGrant);
     }
 
@@ -741,7 +597,7 @@ public class TestObjectsFactory {
                                                        Integer startIndex, Integer endIndex, String proposedText,
                                                        ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
                                                        News news, String sourceText) {
-        NewsUserReviewNote newsUserReviewNote = new NewsUserReviewNote();
+        NewsUserReviewNote newsUserReviewNote = generateFlatEntityWithoutId(NewsUserReviewNote.class);
         newsUserReviewNote.setModerator(moderator);
         newsUserReviewNote.setNewsUserReview(newsUserReview);
         newsUserReviewNote.setStartIndex(startIndex);
@@ -750,7 +606,270 @@ public class TestObjectsFactory {
         newsUserReviewNote.setModeratorTypoReviewStatusType(moderatorTypoReviewStatusType);
         newsUserReviewNote.setNews(news);
         newsUserReviewNote.setSourceText(sourceText);
-        newsUserReviewNote.setApprovedText("ApprText");
         return newsUserReviewNoteRepository.save(newsUserReviewNote);
+    }
+
+    public CountryCreateDTO createCountryCreateDTO() {
+        return generateObject(CountryCreateDTO.class);
+    }
+
+    public CountryPatchDTO createCountryPatchDTO() {
+        return generateObject(CountryPatchDTO.class);
+    }
+
+    public CountryPutDTO createCountryPutDTO() {
+        return generateObject(CountryPutDTO.class);
+    }
+
+    public CrewCreateDTO createCrewCreateDTO() {
+        return generateObject(CrewCreateDTO.class);
+    }
+
+    public CrewPatchDTO createCrewPatchDTO() {
+        return generateObject(CrewPatchDTO.class);
+    }
+
+    public CrewPutDTO createCrewPutDTO() {
+        return generateObject(CrewPutDTO.class);
+    }
+
+    public CrewTypeCreateDTO createCrewTypeCreateDTO() {
+        return generateObject(CrewTypeCreateDTO.class);
+    }
+
+    public CrewTypePatchDTO createCrewTypePatchDTO() {
+        return generateObject(CrewTypePatchDTO.class);
+    }
+
+    public CrewTypePutDTO createCrewTypePutDTO() {
+        return generateObject(CrewTypePutDTO.class);
+    }
+
+    public MovieReviewCompliantCreateDTO createMovieReviewCompliantCreateDTO() {
+        return generateObject(MovieReviewCompliantCreateDTO.class);
+    }
+
+    public MovieReviewCompliantPatchDTO createMovieReviewCompliantPatchDTO() {
+        return generateObject(MovieReviewCompliantPatchDTO.class);
+    }
+
+    public MovieReviewCompliantPutDTO createMovieReviewCompliantPutDTO() {
+        return generateObject(MovieReviewCompliantPutDTO.class);
+    }
+
+    public MovieReviewFeedbackCreateDTO createMovieReviewFeedbackCreateDTO() {
+        return generateObject(MovieReviewFeedbackCreateDTO.class);
+    }
+
+    public MovieReviewFeedbackPatchDTO createMovieReviewFeedbackPatchDTO() {
+        return generateObject(MovieReviewFeedbackPatchDTO.class);
+    }
+
+    public MovieReviewFeedbackPutDTO createMovieReviewFeedbackPutDTO() {
+        return generateObject(MovieReviewFeedbackPutDTO.class);
+    }
+
+    public MovieReviewCreateDTO createMovieReviewCreateDTO() {
+        return generateObject(MovieReviewCreateDTO.class);
+    }
+
+    public MovieReviewPatchDTO createMovieReviewPatchDTO() {
+        return generateObject(MovieReviewPatchDTO.class);
+    }
+
+    public MovieReviewPutDTO createMovieReviewPutDTO() {
+        return generateObject(MovieReviewPutDTO.class);
+    }
+
+    public MovieSpoilerDataCreateDTO createMovieSpoilerDataCreateDTO() {
+        return generateObject(MovieSpoilerDataCreateDTO.class);
+    }
+
+    public MovieSpoilerDataPatchDTO createMovieSpoilerDataPatchDTO() {
+        return generateObject(MovieSpoilerDataPatchDTO.class);
+    }
+
+    public MovieSpoilerDataPutDTO createMovieSpoilerDataPutDTO() {
+        return generateObject(MovieSpoilerDataPutDTO.class);
+    }
+
+    public MovieVoteCreateDTO createMovieVoteCreateDTO() {
+        return generateObject(MovieVoteCreateDTO.class);
+    }
+
+    public MovieVotePatchDTO createMovieVotePatchDTO() {
+        return generateObject(MovieVotePatchDTO.class);
+    }
+
+    public MovieVotePutDTO createMovieVotePutDTO() {
+        return generateObject(MovieVotePutDTO.class);
+    }
+
+    public NewsCreateDTO createNewsCreateDTO() {
+        return generateObject(NewsCreateDTO.class);
+    }
+
+    public NewsPatchDTO createNewsPatchDTO() {
+        return generateObject(NewsPatchDTO.class);
+    }
+
+    public NewsPutDTO createNewsPutDTO() {
+        return generateObject(NewsPutDTO.class);
+    }
+
+    public NewsUserReviewNoteCreateDTO createNewsUserReviewNoteCreateDTO() {
+        return generateObject(NewsUserReviewNoteCreateDTO.class);
+    }
+
+    public NewsUserReviewNotePatchDTO createNewsUserReviewNotePatchDTO() {
+        return generateObject(NewsUserReviewNotePatchDTO.class);
+    }
+
+    public NewsUserReviewNotePutDTO createNewsUserReviewNotePutDTO() {
+        return generateObject(NewsUserReviewNotePutDTO.class);
+    }
+
+    public NewsUserReviewCreateDTO createNewsUserReviewCreateDTO() {
+        return generateObject(NewsUserReviewCreateDTO.class);
+    }
+
+    public NewsUserReviewPatchDTO createNewsUserReviewPatchDTO() {
+        return generateObject(NewsUserReviewPatchDTO.class);
+    }
+
+    public NewsUserReviewPutDTO createNewsUserReviewPutDTO() {
+        return generateObject(NewsUserReviewPutDTO.class);
+    }
+
+    public PersonCreateDTO createPersonCreateDTO() {
+        return generateObject(PersonCreateDTO.class);
+    }
+
+    public PersonPatchDTO createPersonPatchDTO() {
+        return generateObject(PersonPatchDTO.class);
+    }
+
+    public PersonPutDTO createPersonPutDTO() {
+        return generateObject(PersonPutDTO.class);
+    }
+
+    public RoleReviewCreateDTO createRoleReviewCreateDTO() {
+        return generateObject(RoleReviewCreateDTO.class);
+    }
+
+    public RoleReviewPatchDTO createRoleReviewPatchDTO() {
+        return generateObject(RoleReviewPatchDTO.class);
+    }
+
+    public RoleReviewPutDTO createRoleReviewPutDTO() {
+        return generateObject(RoleReviewPutDTO.class);
+    }
+
+    public PortalUserCreateDTO createPortalUserCreateDTO() {
+        return generateObject(PortalUserCreateDTO.class);
+    }
+
+    public PortalUserPatchDTO createPortalUserPatchDTO() {
+        return generateObject(PortalUserPatchDTO.class);
+    }
+
+    public PortalUserPutDTO createPortalUserPutDTO() {
+        return generateObject(PortalUserPutDTO.class);
+    }
+
+    public ReleaseDetailCreateDTO createReleaseDetailCreateDTO() {
+        return generateObject(ReleaseDetailCreateDTO.class);
+    }
+
+    public ReleaseDetailPatchDTO createReleaseDetailPatchDTO() {
+        return generateObject(ReleaseDetailPatchDTO.class);
+    }
+
+    public ReleaseDetailPutDTO createReleaseDetailPutDTO() {
+        return generateObject(ReleaseDetailPutDTO.class);
+    }
+
+    public RoleReviewCompliantCreateDTO createRoleReviewCompliantCreateDTO() {
+        return generateObject(RoleReviewCompliantCreateDTO.class);
+    }
+
+    public RoleReviewCompliantPatchDTO createRoleReviewCompliantPatchDTO() {
+        return generateObject(RoleReviewCompliantPatchDTO.class);
+    }
+
+    public RoleReviewCompliantPutDTO createRoleReviewCompliantPutDTO() {
+        return generateObject(RoleReviewCompliantPutDTO.class);
+    }
+
+    public RoleReviewFeedbackCreateDTO createRoleReviewFeedbackCreateDTO() {
+        return generateObject(RoleReviewFeedbackCreateDTO.class);
+    }
+
+    public RoleReviewFeedbackPatchDTO createRoleReviewFeedbackPatchDTO() {
+        return generateObject(RoleReviewFeedbackPatchDTO.class);
+    }
+
+    public RoleReviewFeedbackPutDTO createRoleReviewFeedbackPutDTO() {
+        return generateObject(RoleReviewFeedbackPutDTO.class);
+    }
+
+    public RoleSpoilerDataCreateDTO createRoleSpoilerDataCreateDTO() {
+        return generateObject(RoleSpoilerDataCreateDTO.class);
+    }
+
+    public RoleSpoilerDataPatchDTO createRoleSpoilerDataPatchDTO() {
+        return generateObject(RoleSpoilerDataPatchDTO.class);
+    }
+
+    public RoleSpoilerDataPutDTO createRoleSpoilerDataPutDTO() {
+        return generateObject(RoleSpoilerDataPutDTO.class);
+    }
+
+    public RoleCreateDTO createRoleCreateDTO() {
+        return generateObject(RoleCreateDTO.class);
+    }
+
+    public RolePatchDTO createRolePatchDTO() {
+        return generateObject(RolePatchDTO.class);
+    }
+
+    public RolePutDTO createRolePutDTO() {
+        return generateObject(RolePutDTO.class);
+    }
+
+    public RoleVoteCreateDTO createRoleVoteCreateDTO() {
+        return generateObject(RoleVoteCreateDTO.class);
+    }
+
+    public RoleVotePatchDTO createRoleVotePatchDTO() {
+        return generateObject(RoleVotePatchDTO.class);
+    }
+
+    public RoleVotePutDTO createRoleVotePutDTO() {
+        return generateObject(RoleVotePutDTO.class);
+    }
+
+    public UserGrantCreateDTO createUserGrantCreateDTO() {
+        return generateObject(UserGrantCreateDTO.class);
+    }
+
+    public UserGrantPatchDTO createUserGrantPatchDTO() {
+        return generateObject(UserGrantPatchDTO.class);
+    }
+
+    public UserGrantPutDTO createUserGrantPutDTO() {
+        return generateObject(UserGrantPutDTO.class);
+    }
+
+    public UserTypeCreateDTO createUserTypeCreateDTO() {
+        return generateObject(UserTypeCreateDTO.class);
+    }
+
+    public UserTypePatchDTO createUserTypePatchDTO() {
+        return generateObject(UserTypePatchDTO.class);
+    }
+
+    public UserTypePutDTO createUserTypePutDTO() {
+        return generateObject(UserTypePutDTO.class);
     }
 }

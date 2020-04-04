@@ -8,23 +8,19 @@ import solvve.course.dto.PersonCreateDTO;
 import solvve.course.dto.PersonPatchDTO;
 import solvve.course.dto.PersonPutDTO;
 import solvve.course.dto.PersonReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PersonRepository;
 
 import java.util.UUID;
 
 @Service
-public class PersonService {
+public class PersonService extends AbstractService {
 
     @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public PersonReadDTO getPersons(UUID id) {
-        Person person = getPersonsRequired(id);
+        Person person = repositoryHelper.getByIdRequired(Person.class, id);
         return translationService.translate(person, PersonReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class PersonService {
     }
 
     public PersonReadDTO patchPersons(UUID id, PersonPatchDTO patch) {
-        Person person = getPersonsRequired(id);
+        Person person = repositoryHelper.getByIdRequired(Person.class, id);
 
         translationService.map(patch, person);
 
@@ -45,21 +41,15 @@ public class PersonService {
     }
 
     public void deletePersons(UUID id) {
-        personRepository.delete(getPersonsRequired(id));
+        personRepository.delete(repositoryHelper.getByIdRequired(Person.class, id));
     }
 
     public PersonReadDTO updatePersons(UUID id, PersonPutDTO put) {
-        Person person = getPersonsRequired(id);
+        Person person = repositoryHelper.getByIdRequired(Person.class, id);
 
         translationService.updateEntity(put, person);
 
         person = personRepository.save(person);
         return translationService.translate(person, PersonReadDTO.class);
-    }
-
-    private Person getPersonsRequired(UUID id) {
-        return personRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Person.class, id);
-        });
     }
 }

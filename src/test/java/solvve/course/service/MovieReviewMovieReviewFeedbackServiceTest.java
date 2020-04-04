@@ -51,11 +51,10 @@ public class MovieReviewMovieReviewFeedbackServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieReviewFeedbackCreateDTO create = new MovieReviewFeedbackCreateDTO();
+        MovieReviewFeedbackCreateDTO create = testObjectsFactory.createMovieReviewFeedbackCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setMovieId(movie.getId());
         create.setMovieReviewId(movieReview.getId());
-        create.setIsLiked(true);
 
         MovieReviewFeedbackReadDTO read =
                 movieReviewMovieReviewFeedbackService.createMovieReviewMovieReviewFeedback(movieReview.getId(), create);
@@ -77,11 +76,10 @@ public class MovieReviewMovieReviewFeedbackServiceTest extends BaseTest {
         MovieReviewFeedback movieReviewFeedback =
                 testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
-        MovieReviewFeedbackPatchDTO patch = new MovieReviewFeedbackPatchDTO();
+        MovieReviewFeedbackPatchDTO patch = testObjectsFactory.createMovieReviewFeedbackPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setMovieId(movie.getId());
         patch.setMovieReviewId(movieReview.getId());
-        patch.setIsLiked(true);
         MovieReviewFeedbackReadDTO read =
                 movieReviewMovieReviewFeedbackService.patchMovieReviewMovieReviewFeedback(movieReview.getId(),
                         movieReviewFeedback.getId(), patch);
@@ -159,11 +157,10 @@ public class MovieReviewMovieReviewFeedbackServiceTest extends BaseTest {
         MovieReviewFeedback movieReviewFeedback =
                 testObjectsFactory.createMovieReviewFeedback(portalUser, movie, movieReview);
 
-        MovieReviewFeedbackPutDTO put = new MovieReviewFeedbackPutDTO();
+        MovieReviewFeedbackPutDTO put = testObjectsFactory.createMovieReviewFeedbackPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setMovieId(movie.getId());
         put.setMovieReviewId(movieReview.getId());
-        put.setIsLiked(true);
         MovieReviewFeedbackReadDTO read =
                 movieReviewMovieReviewFeedbackService.updateMovieReviewMovieReviewFeedback(movieReview.getId(),
                         movieReviewFeedback.getId(), put);

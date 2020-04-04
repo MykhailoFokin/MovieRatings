@@ -8,23 +8,19 @@ import solvve.course.dto.NewsUserReviewNoteCreateDTO;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
 import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.NewsUserReviewNoteRepository;
 
 import java.util.UUID;
 
 @Service
-public class NewsUserReviewNoteService {
+public class NewsUserReviewNoteService extends AbstractService {
 
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public NewsUserReviewNoteReadDTO getNewsUserReviewNote(UUID id) {
-        NewsUserReviewNote newsUserReviewNote = getNewsUserReviewNotesRequired(id);
+        NewsUserReviewNote newsUserReviewNote = repositoryHelper.getByIdRequired(NewsUserReviewNote.class, id);
         return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class NewsUserReviewNoteService {
     }
 
     public NewsUserReviewNoteReadDTO patchNewsUserReviewNote(UUID id, NewsUserReviewNotePatchDTO patch) {
-        NewsUserReviewNote newsUserReviewNote = getNewsUserReviewNotesRequired(id);
+        NewsUserReviewNote newsUserReviewNote = repositoryHelper.getByIdRequired(NewsUserReviewNote.class, id);
 
         translationService.map(patch, newsUserReviewNote);
 
@@ -45,21 +41,15 @@ public class NewsUserReviewNoteService {
     }
 
     public void deleteNewsUserReviewNote(UUID id) {
-        newsUserReviewNoteRepository.delete(getNewsUserReviewNotesRequired(id));
+        newsUserReviewNoteRepository.delete(repositoryHelper.getByIdRequired(NewsUserReviewNote.class, id));
     }
 
     public NewsUserReviewNoteReadDTO updateNewsUserReviewNote(UUID id, NewsUserReviewNotePutDTO put) {
-        NewsUserReviewNote newsUserReviewNote = getNewsUserReviewNotesRequired(id);
+        NewsUserReviewNote newsUserReviewNote = repositoryHelper.getByIdRequired(NewsUserReviewNote.class, id);
 
         translationService.updateEntity(put, newsUserReviewNote);
 
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
         return translationService.translate(newsUserReviewNote, NewsUserReviewNoteReadDTO.class);
-    }
-
-    private NewsUserReviewNote getNewsUserReviewNotesRequired(UUID id) {
-        return newsUserReviewNoteRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(NewsUserReviewNote.class, id);
-        });
     }
 }

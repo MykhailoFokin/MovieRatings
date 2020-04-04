@@ -8,23 +8,19 @@ import solvve.course.dto.LanguageCreateDTO;
 import solvve.course.dto.LanguagePatchDTO;
 import solvve.course.dto.LanguagePutDTO;
 import solvve.course.dto.LanguageReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.LanguageRepository;
 
 import java.util.UUID;
 
 @Service
-public class LanguageService {
+public class LanguageService extends AbstractService {
 
     @Autowired
     private LanguageRepository languageRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public LanguageReadDTO getLanguage(UUID id) {
-        Language language = getLanguageRequired(id);
+        Language language = repositoryHelper.getByIdRequired(Language.class, id);
         return translationService.translate(language, LanguageReadDTO.class);
     }
 
@@ -36,7 +32,7 @@ public class LanguageService {
     }
 
     public LanguageReadDTO patchLanguage(UUID id, LanguagePatchDTO patch) {
-        Language language = getLanguageRequired(id);
+        Language language = repositoryHelper.getByIdRequired(Language.class, id);
 
         translationService.map(patch, language);
 
@@ -45,22 +41,15 @@ public class LanguageService {
     }
 
     public void deleteLanguage(UUID id) {
-        languageRepository.delete(getLanguageRequired(id));
+        languageRepository.delete(repositoryHelper.getByIdRequired(Language.class, id));
     }
 
     public LanguageReadDTO updateLanguage(UUID id, LanguagePutDTO put) {
-        Language language = getLanguageRequired(id);
+        Language language = repositoryHelper.getByIdRequired(Language.class, id);
 
         translationService.updateEntity(put, language);
 
         language = languageRepository.save(language);
         return translationService.translate(language, LanguageReadDTO.class);
     }
-
-    private Language getLanguageRequired(UUID id) {
-        return languageRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Language.class, id);
-        });
-    }
-
 }

@@ -11,23 +11,19 @@ import solvve.course.dto.MovieReviewCompliantPutDTO;
 import solvve.course.dto.MovieReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieReviewCompliantRepository;
-import solvve.course.repository.RepositoryHelper;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class MovieReviewMovieReviewCompliantService {
+public class MovieReviewMovieReviewCompliantService extends AbstractService {
 
     @Autowired
     private TranslationService translationService;
 
     @Autowired
     private MovieReviewCompliantRepository movieReviewCompliantRepository;
-
-    @Autowired
-    private RepositoryHelper repositoryHelper;
 
     @Transactional(readOnly = true)
     public List<MovieReviewCompliantReadDTO> getMovieReviewMovieReviewCompliant(UUID movieReviewId) {
@@ -48,7 +44,7 @@ public class MovieReviewMovieReviewCompliantService {
 
     public MovieReviewCompliantReadDTO patchMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id,
                                                                             MovieReviewCompliantPatchDTO patch) {
-        MovieReviewCompliant movieReviewCompliant = getMovieReviewMovieReviewCompliantRequired(movieReviewId, id);
+        MovieReviewCompliant movieReviewCompliant = repositoryHelper.getByIdRequired(MovieReviewCompliant.class, id);
 
         translationService.map(patch, movieReviewCompliant);
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
@@ -57,22 +53,16 @@ public class MovieReviewMovieReviewCompliantService {
     }
 
     public void deleteMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id) {
-        movieReviewCompliantRepository.delete(getMovieReviewMovieReviewCompliantRequired(movieReviewId, id));
+        movieReviewCompliantRepository.delete(repositoryHelper.getByIdRequired(MovieReviewCompliant.class, id));
     }
 
     public MovieReviewCompliantReadDTO updateMovieReviewMovieReviewCompliant(UUID movieReviewId, UUID id,
                                                                              MovieReviewCompliantPutDTO put) {
-        MovieReviewCompliant movieReviewCompliant = getMovieReviewMovieReviewCompliantRequired(movieReviewId, id);
+        MovieReviewCompliant movieReviewCompliant = repositoryHelper.getByIdRequired(MovieReviewCompliant.class, id);
         translationService.updateEntity(put, movieReviewCompliant);
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
 
         return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);
-    }
-
-    private MovieReviewCompliant getMovieReviewMovieReviewCompliantRequired(UUID movieReviewId, UUID id) {
-        return movieReviewCompliantRepository.findByMovieReviewIdAndId(movieReviewId, id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieReviewCompliant.class, movieReviewId, id);
-        });
     }
 
     private List<MovieReviewCompliant> getMovieReviewMovieReviewCompliantsRequired(UUID movieReviewId) {

@@ -38,9 +38,10 @@ public class UserTypeServiceTest extends BaseTest {
 
     @Test
     public void testCreateUserTypes() {
-        UserTypeCreateDTO create = new UserTypeCreateDTO();
-        create.setUserGroup(UserGroupType.USER);
+        UserTypeCreateDTO create = testObjectsFactory.createUserTypeCreateDTO();
+        create.setPortalUserId(null);
         UserTypeReadDTO read = userTypeService.createUserTypes(create);
+
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
         UserType userType = userTypeRepository.findById(read.getId()).get();
@@ -51,8 +52,8 @@ public class UserTypeServiceTest extends BaseTest {
     public void testPatchUserTypes() {
         UserType userType = testObjectsFactory.createUserType();
 
-        UserTypePatchDTO patch = new UserTypePatchDTO();
-        patch.setUserGroup(UserGroupType.USER);
+        UserTypePatchDTO patch = testObjectsFactory.createUserTypePatchDTO();
+        patch.setPortalUserId(null);
         UserTypeReadDTO read = userTypeService.patchUserTypes(userType.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -94,8 +95,8 @@ public class UserTypeServiceTest extends BaseTest {
     public void testPutUserTypes() {
         UserType userType = testObjectsFactory.createUserType();
 
-        UserTypePutDTO put = new UserTypePutDTO();
-        put.setUserGroup(UserGroupType.USER);
+        UserTypePutDTO put = testObjectsFactory.createUserTypePutDTO();
+        put.setPortalUserId(null);
         UserTypeReadDTO read = userTypeService.updateUserTypes(userType.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

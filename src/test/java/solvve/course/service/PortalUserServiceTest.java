@@ -46,13 +46,8 @@ public class PortalUserServiceTest extends BaseTest {
     public void testCreatePortalUsers() {
         UserType userType = testObjectsFactory.createUserType();
 
-        PortalUserCreateDTO create = new PortalUserCreateDTO();
+        PortalUserCreateDTO create = testObjectsFactory.createPortalUserCreateDTO();
         create.setUserTypeId(userType.getId());
-        create.setSurname("Surname");
-        create.setName("Name");
-        create.setMiddleName("MiddleName");
-        create.setLogin("Login");
-        create.setUserConfidence(UserConfidenceType.NORMAL);
         PortalUserReadDTO read = portalUserService.createPortalUser(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -66,13 +61,8 @@ public class PortalUserServiceTest extends BaseTest {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
-        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        PortalUserPatchDTO patch = testObjectsFactory.createPortalUserPatchDTO();
         patch.setUserTypeId(userType.getId());
-        patch.setSurname("Surname");
-        patch.setName("Name");
-        patch.setMiddleName("MiddleName");
-        patch.setLogin("Login");
-        patch.setUserConfidence(UserConfidenceType.NORMAL);
         PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -138,13 +128,8 @@ public class PortalUserServiceTest extends BaseTest {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
-        PortalUserPutDTO put = new PortalUserPutDTO();
+        PortalUserPutDTO put = testObjectsFactory.createPortalUserPutDTO();
         put.setUserTypeId(userType.getId());
-        put.setSurname("Surname");
-        put.setName("Name");
-        put.setMiddleName("MiddleName");
-        put.setLogin("Login");
-        put.setUserConfidence(UserConfidenceType.NORMAL);
         PortalUserReadDTO read = portalUserService.updatePortalUser(portalUser.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

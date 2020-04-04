@@ -44,8 +44,7 @@ public class GenreServiceTest extends BaseTest {
     @Test
     public void testCreateGenres() {
         Movie movie = testObjectsFactory.createMovie();
-        GenreCreateDTO create = new GenreCreateDTO();
-        create.setName(MovieGenreType.ACTION);
+        GenreCreateDTO create = testObjectsFactory.createGenreCreateDTO();
         create.setMovieId(movie.getId());
         GenreReadDTO read = genreService.createGenre(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -62,8 +61,7 @@ public class GenreServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Genre genre = testObjectsFactory.createGenre(movie);
 
-        GenrePatchDTO patch = new GenrePatchDTO();
-        patch.setName(MovieGenreType.ACTION);
+        GenrePatchDTO patch = testObjectsFactory.createGenrePatchDTO();
         patch.setMovieId(movie.getId());
         GenreReadDTO read = genreService.patchGenre(genre.getId(), patch);
 
@@ -122,8 +120,7 @@ public class GenreServiceTest extends BaseTest {
         Genre genre = testObjectsFactory.createGenre(movie);
 
         Movie movie2 = testObjectsFactory.createMovie();
-        GenrePutDTO put = new GenrePutDTO();
-        put.setName(MovieGenreType.ACTION);
+        GenrePutDTO put = testObjectsFactory.createGenrePutDTO();
         put.setMovieId(movie2.getId());
         GenreReadDTO read = genreService.updateGenre(genre.getId(), put);
 

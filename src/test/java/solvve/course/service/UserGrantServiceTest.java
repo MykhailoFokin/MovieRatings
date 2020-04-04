@@ -43,10 +43,8 @@ public class UserGrantServiceTest extends BaseTest {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
-        UserGrantCreateDTO create = new UserGrantCreateDTO();
+        UserGrantCreateDTO create = testObjectsFactory.createUserGrantCreateDTO();
         create.setUserTypeId(userType.getId());
-        create.setObjectName("Movie");
-        create.setUserPermission(UserPermType.READ);
         create.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.createGrants(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -64,10 +62,8 @@ public class UserGrantServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
         UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
-        UserGrantPatchDTO patch = new UserGrantPatchDTO();
+        UserGrantPatchDTO patch = testObjectsFactory.createUserGrantPatchDTO();
         patch.setUserTypeId(userType.getId());
-        patch.setObjectName("Movie");
-        patch.setUserPermission(UserPermType.READ);
         patch.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.patchGrants(userGrant.getId(), patch);
 
@@ -130,10 +126,8 @@ public class UserGrantServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
         UserGrant userGrant = testObjectsFactory.createGrants(userType, portalUser);
 
-        UserGrantPutDTO put = new UserGrantPutDTO();
+        UserGrantPutDTO put = testObjectsFactory.createUserGrantPutDTO();
         put.setUserTypeId(userType.getId());
-        put.setObjectName("Movie");
-        put.setUserPermission(UserPermType.READ);
         put.setGrantedById(portalUser.getId());
         UserGrantReadDTO read = userGrantService.updateGrants(userGrant.getId(), put);
 

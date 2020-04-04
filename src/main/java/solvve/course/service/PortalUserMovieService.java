@@ -11,13 +11,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class PortalUserMovieService {
+public class PortalUserMovieService extends AbstractService {
 
     @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
-    private TranslationService translationService;
 
     public List<MovieReadDTO> getPortalUserMovies(UUID portalUserId, Instant startFrom, Instant startTo) {
         return movieRepository.findPortalUserTouchedMoviesInGivenInterval(portalUserId,

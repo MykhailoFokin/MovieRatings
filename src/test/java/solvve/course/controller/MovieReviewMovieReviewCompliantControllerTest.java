@@ -31,7 +31,7 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testGetMovieReviewCompliant() throws Exception {
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
         List<MovieReviewCompliantReadDTO> movieReviewCompliant = List.of(
                 createMovieReviewCompliantRead(movieReviewReadDTO.getId()));
 
@@ -80,14 +80,10 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testCreateMovieReviewCompliant() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
 
-        MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
-        create.setDescription("Just punish him!");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setMovieReviewId(movieReviewReadDTO.getId());
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
+        MovieReviewCompliantCreateDTO create = generateObject(MovieReviewCompliantCreateDTO.class);
+        
         MovieReviewCompliantReadDTO read =
                 createMovieReviewCompliantRead(movieReviewReadDTO.getId());
 
@@ -109,11 +105,9 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testPatchMovieReviewCompliant() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
 
-        MovieReviewCompliantPatchDTO patchDTO = new MovieReviewCompliantPatchDTO();
-        patchDTO.setDescription("Just punish him!");
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        MovieReviewCompliantPatchDTO patchDTO = generateObject(MovieReviewCompliantPatchDTO.class);
         patchDTO.setMovieReviewId(movieReviewReadDTO.getId());
         MovieReviewCompliantReadDTO read =
                 createMovieReviewCompliantRead(movieReviewReadDTO.getId());
@@ -147,14 +141,10 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testPutMovieReviewCompliant() throws Exception {
 
-        MovieReviewReadDTO movieReviewReadDTO = createMovieReview();
+        MovieReviewReadDTO movieReviewReadDTO = generateObject(MovieReviewReadDTO.class);
 
-        MovieReviewCompliantPutDTO putDTO = new MovieReviewCompliantPutDTO();
-        putDTO.setDescription("Just punish him!");
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        MovieReviewCompliantPutDTO putDTO = generateObject(MovieReviewCompliantPutDTO.class);
         putDTO.setMovieReviewId(movieReviewReadDTO.getId());
-        putDTO.setMovieId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
 
         MovieReviewCompliantReadDTO read =
                 createMovieReviewCompliantRead(movieReviewReadDTO.getId());
@@ -212,12 +202,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testPutMovieReviewCompliantCheckLimitBorders() throws Exception {
 
-        MovieReviewCompliantPutDTO putDTO = new MovieReviewCompliantPutDTO();
+        MovieReviewCompliantPutDTO putDTO = generateObject(MovieReviewCompliantPutDTO.class);
         putDTO.setDescription("D");
-        putDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        putDTO.setMovieReviewId(UUID.randomUUID());
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setMovieId(UUID.randomUUID());
 
         MovieReviewCompliantReadDTO read = createMovieReviewCompliantRead(putDTO.getMovieReviewId());
 
@@ -251,12 +237,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testPutCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
+        MovieReviewCompliantPutDTO put = generateObject(MovieReviewCompliantPutDTO.class);
         put.setDescription("");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setMovieReviewId(UUID.randomUUID());
-        put.setPortalUserId(UUID.randomUUID());
-        put.setMovieId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}",
                 UUID.randomUUID(),
@@ -274,12 +256,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testPutCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
+        MovieReviewCompliantPutDTO put = generateObject(MovieReviewCompliantPutDTO.class);
         put.setDescription(StringUtils.repeat("*", 1001));
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        put.setMovieReviewId(UUID.randomUUID());
-        put.setPortalUserId(UUID.randomUUID());
-        put.setMovieId(UUID.randomUUID());
 
         String resultJson = mvc.perform(put("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}",
                 UUID.randomUUID(),
@@ -297,12 +275,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testCreateCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
+        MovieReviewCompliantCreateDTO create = generateObject(MovieReviewCompliantCreateDTO.class);
         create.setDescription("");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setMovieReviewId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
 
         String resultJson = mvc.perform(post("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants",
                 UUID.randomUUID())
@@ -318,12 +292,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testCreateCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
+        MovieReviewCompliantCreateDTO create = generateObject(MovieReviewCompliantCreateDTO.class);
         create.setDescription(StringUtils.repeat("*", 1001));
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setMovieReviewId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
 
 
         String resultJson = mvc.perform(post("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants",
@@ -341,12 +311,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testCreateMovieReviewCompliantCheckStingBorders() throws Exception {
 
-        MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
+        MovieReviewCompliantCreateDTO create = generateObject(MovieReviewCompliantCreateDTO.class);
         create.setDescription("D");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        create.setMovieReviewId(UUID.randomUUID());
-        create.setPortalUserId(UUID.randomUUID());
-        create.setMovieId(UUID.randomUUID());
 
         MovieReviewCompliantReadDTO read = createMovieReviewCompliantRead(create.getMovieReviewId());
 
@@ -380,12 +346,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     @Test
     public void testPatchMovieReviewCompliantCheckStringBorders() throws Exception {
 
-        MovieReviewCompliantPatchDTO patchDTO = new MovieReviewCompliantPatchDTO();
+        MovieReviewCompliantPatchDTO patchDTO = generateObject(MovieReviewCompliantPatchDTO.class);
         patchDTO.setDescription("D");
-        patchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patchDTO.setMovieReviewId(UUID.randomUUID());
-        patchDTO.setPortalUserId(UUID.randomUUID());
-        patchDTO.setMovieId(UUID.randomUUID());
 
         MovieReviewCompliantReadDTO read = createMovieReviewCompliantRead(patchDTO.getMovieReviewId());
 
@@ -419,12 +381,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testPatchCompanyDetailDescriptionEmptyValidationFailed() throws Exception {
-        MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
+        MovieReviewCompliantPatchDTO patch = generateObject(MovieReviewCompliantPatchDTO.class);
         patch.setDescription("");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setMovieReviewId(UUID.randomUUID());
-        patch.setPortalUserId(UUID.randomUUID());
-        patch.setMovieId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}",
                 UUID.randomUUID(), UUID.randomUUID())
@@ -441,12 +399,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
 
     @Test
     public void testPatchCompanyDetailDescriptionLimitValidationFailed() throws Exception {
-        MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
+        MovieReviewCompliantPatchDTO patch = generateObject(MovieReviewCompliantPatchDTO.class);
         patch.setDescription(StringUtils.repeat("*", 1001));
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
-        patch.setMovieReviewId(UUID.randomUUID());
-        patch.setPortalUserId(UUID.randomUUID());
-        patch.setMovieId(UUID.randomUUID());
 
         String resultJson = mvc.perform(patch("/api/v1/movie-reviews/{movieReviewId}/movie-review-compliants/{id}",
                 UUID.randomUUID(), UUID.randomUUID())
@@ -462,18 +416,8 @@ public class MovieReviewMovieReviewCompliantControllerTest extends BaseControlle
     }
 
     private MovieReviewCompliantReadDTO createMovieReviewCompliantRead(UUID movieReviewId) {
-        MovieReviewCompliantReadDTO movieReviewCompliant = new MovieReviewCompliantReadDTO();
-        movieReviewCompliant.setId(UUID.randomUUID());
-        movieReviewCompliant.setDescription("Just punish him!");
-        movieReviewCompliant.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+        MovieReviewCompliantReadDTO movieReviewCompliant = generateObject(MovieReviewCompliantReadDTO.class);
         movieReviewCompliant.setMovieReviewId(movieReviewId);
         return movieReviewCompliant;
-    }
-
-    private MovieReviewReadDTO createMovieReview() {
-        MovieReviewReadDTO movieReview = new MovieReviewReadDTO();
-        movieReview.setId(UUID.randomUUID());
-        movieReview.setTextReview("Review");
-        return movieReview;
     }
 }

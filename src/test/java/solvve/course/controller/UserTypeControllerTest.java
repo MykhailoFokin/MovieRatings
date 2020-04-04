@@ -29,16 +29,9 @@ public class UserTypeControllerTest extends BaseControllerTest {
     @MockBean
     private UserTypeService userTypeService;
 
-    private UserTypeReadDTO createUserTypesRead() {
-        UserTypeReadDTO userTypes = new UserTypeReadDTO();
-        userTypes.setId(UUID.randomUUID());
-        userTypes.setUserGroup(UserGroupType.USER);
-        return userTypes;
-    }
-
     @Test
     public void testGetUserTypes() throws Exception {
-        UserTypeReadDTO userTypes = createUserTypesRead();
+        UserTypeReadDTO userTypes = generateObject(UserTypeReadDTO.class);
 
         Mockito.when(userTypeService.getUserTypes(userTypes.getId())).thenReturn(userTypes);
 
@@ -80,10 +73,9 @@ public class UserTypeControllerTest extends BaseControllerTest {
     @Test
     public void testCreateUserTypes() throws Exception {
 
-        UserTypeCreateDTO create = new UserTypeCreateDTO();
-        create.setUserGroup(UserGroupType.USER);
+        UserTypeCreateDTO create = generateObject(UserTypeCreateDTO.class);
 
-        UserTypeReadDTO read = createUserTypesRead();
+        UserTypeReadDTO read = generateObject(UserTypeReadDTO.class);
 
         Mockito.when(userTypeService.createUserTypes(create)).thenReturn(read);
 
@@ -100,10 +92,9 @@ public class UserTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPatchUserTypes() throws Exception {
 
-        UserTypePatchDTO patchDTO = new UserTypePatchDTO();
-        patchDTO.setUserGroup(UserGroupType.USER);
+        UserTypePatchDTO patchDTO = generateObject(UserTypePatchDTO.class);
 
-        UserTypeReadDTO read =createUserTypesRead();
+        UserTypeReadDTO read =generateObject(UserTypeReadDTO.class);
 
         Mockito.when(userTypeService.patchUserTypes(read.getId(),patchDTO)).thenReturn(read);
 
@@ -129,10 +120,9 @@ public class UserTypeControllerTest extends BaseControllerTest {
     @Test
     public void testPutUserTypes() throws Exception {
 
-        UserTypePutDTO putDTO = new UserTypePutDTO();
-        putDTO.setUserGroup(UserGroupType.USER);
+        UserTypePutDTO putDTO = generateObject(UserTypePutDTO.class);
 
-        UserTypeReadDTO read =createUserTypesRead();
+        UserTypeReadDTO read =generateObject(UserTypeReadDTO.class);
 
         Mockito.when(userTypeService.updateUserTypes(read.getId(),putDTO)).thenReturn(read);
 

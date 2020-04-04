@@ -39,4 +39,12 @@ public class RepositoryHelper {
         query.setParameter("moderatorTypoReviewStatusType", moderatorTypoReviewStatusType);
         return ((Number) query.getSingleResult()).intValue() > 0;
     }
+
+    public <E> E getByIdRequired(Class<E> entityClass, UUID id) {
+        E res = entityManager.find(entityClass, id);
+        if (res == null) {
+            throw new EntityNotFoundException(entityClass, id);
+        }
+        return res;
+    }
 }

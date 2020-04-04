@@ -53,15 +53,10 @@ public class NewsUserReviewNoteServiceTest extends BaseTest {
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
-        NewsUserReviewNoteCreateDTO create = new NewsUserReviewNoteCreateDTO();
+        NewsUserReviewNoteCreateDTO create = testObjectsFactory.createNewsUserReviewNoteCreateDTO();
         create.setNewsUserReviewId(newsUserReview.getId());
-        create.setStartIndex(10);
-        create.setEndIndex(50);
-        create.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        create.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         create.setModeratorId(portalUser.getId());
         create.setNewsId(news.getId());
-        create.setSourceText("Ich reise viel");
         NewsUserReviewNoteReadDTO read = newsUserReviewNoteService.createNewsUserReviewNote(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -83,15 +78,9 @@ public class NewsUserReviewNoteServiceTest extends BaseTest {
                 newsUserReview, 10, 50, "Ich reise viel, ich reise gern. Fern und nah und nah und fern",
                 ModeratorTypoReviewStatusType.IN_REVIEW, news, "Ich reise viel");
 
-        NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();
+        NewsUserReviewNotePatchDTO patch = testObjectsFactory.createNewsUserReviewNotePatchDTO();
         patch.setNewsUserReviewId(newsUserReview.getId());
-        patch.setStartIndex(10);
-        patch.setEndIndex(50);
-        patch.setProposedText("Ich reise viel, ich reise gern. Fern und nah und nah und fern");
-        patch.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
         patch.setModeratorId(portalUser.getId());
-        patch.setApprovedText("ApprText");
-        patch.setSourceText("Ich reise viel");
         patch.setNewsId(news.getId());
         NewsUserReviewNoteReadDTO read =
                 newsUserReviewNoteService.patchNewsUserReviewNote(newsUserReviewNote.getId(), patch);

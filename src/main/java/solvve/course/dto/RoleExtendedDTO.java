@@ -21,7 +21,7 @@ public class RoleExtendedDTO {
 
     private UUID movieId;
 
-    private Set<RoleReview> roleReviewSet;
+    private Set<RoleReview> roleReviews;
 
     private Set<RoleReviewCompliant> roleReviewCompliants;
 

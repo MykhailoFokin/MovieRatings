@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Crew;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.CrewRepository;
 
 import java.util.UUID;
 
 @Service
-public class CrewService {
+public class CrewService extends AbstractService {
 
     @Autowired
     private CrewRepository crewRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public CrewReadExtendedDTO getCrew(UUID id) {
-        Crew crew = getCrewRequired(id);
+        Crew crew = repositoryHelper.getByIdRequired(Crew.class, id);
         return translationService.translate(crew, CrewReadExtendedDTO.class);
     }
 
@@ -35,7 +31,7 @@ public class CrewService {
     }
 
     public CrewReadDTO patchCrew(UUID id, CrewPatchDTO patch) {
-        Crew crew = getCrewRequired(id);
+        Crew crew = repositoryHelper.getByIdRequired(Crew.class, id);
 
         translationService.map(patch, crew);
 
@@ -44,11 +40,11 @@ public class CrewService {
     }
 
     public void deleteCrew(UUID id) {
-        crewRepository.delete(getCrewRequired(id));
+        crewRepository.delete(repositoryHelper.getByIdRequired(Crew.class, id));
     }
 
     public CrewReadDTO updateCrew(UUID id, CrewPutDTO put) {
-        Crew crew = getCrewRequired(id);
+        Crew crew = repositoryHelper.getByIdRequired(Crew.class, id);
 
         translationService.updateEntity(put, crew);
 
@@ -59,11 +55,5 @@ public class CrewService {
     public PageResult<CrewReadDTO> getCrews(CrewFilter filter, Pageable pageable) {
         Page<Crew> crews = crewRepository.findByFilter(filter, pageable);
         return translationService.toPageResult(crews, CrewReadDTO.class);
-    }
-
-    private Crew getCrewRequired(UUID id) {
-        return crewRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(Crew.class, id);
-        });
     }
 }

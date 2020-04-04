@@ -57,12 +57,10 @@ public class RoleReviewCompliantServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
-        RoleReviewCompliantCreateDTO create = new RoleReviewCompliantCreateDTO();
+        RoleReviewCompliantCreateDTO create = testObjectsFactory.createRoleReviewCompliantCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setRoleId(role.getId());
         create.setRoleReviewId(roleReview.getId());
-        create.setDescription("Just punish him!");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         create.setModeratorId(portalUser.getId());
 
         RoleReviewCompliantReadDTO read = roleReviewCompliantService.createRoleReviewCompliant(create);
@@ -91,12 +89,10 @@ public class RoleReviewCompliantServiceTest extends BaseTest {
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
-        RoleReviewCompliantPatchDTO patch = new RoleReviewCompliantPatchDTO();
+        RoleReviewCompliantPatchDTO patch = testObjectsFactory.createRoleReviewCompliantPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setRoleId(role.getId());
         patch.setRoleReviewId(roleReview.getId());
-        patch.setDescription("Just punish him!");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
         RoleReviewCompliantReadDTO read =
                 roleReviewCompliantService.patchRoleReviewCompliant(roleReviewCompliant.getId(), patch);
@@ -188,12 +184,10 @@ public class RoleReviewCompliantServiceTest extends BaseTest {
         RoleReviewCompliant roleReviewCompliant =
                 testObjectsFactory.createRoleReviewCompliant(portalUser, role, roleReview);
 
-        RoleReviewCompliantPutDTO put = new RoleReviewCompliantPutDTO();
+        RoleReviewCompliantPutDTO put = testObjectsFactory.createRoleReviewCompliantPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setRoleId(role.getId());
         put.setRoleReviewId(roleReview.getId());
-        put.setDescription("Just punish him!");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         RoleReviewCompliantReadDTO read =
                 roleReviewCompliantService.updateRoleReviewCompliant(roleReviewCompliant.getId(), put);

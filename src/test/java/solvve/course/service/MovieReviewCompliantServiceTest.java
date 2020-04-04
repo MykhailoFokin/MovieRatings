@@ -52,12 +52,10 @@ public class MovieReviewCompliantServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         MovieReview movieReview = testObjectsFactory.createMovieReview(portalUser, movie);
 
-        MovieReviewCompliantCreateDTO create = new MovieReviewCompliantCreateDTO();
+        MovieReviewCompliantCreateDTO create = testObjectsFactory.createMovieReviewCompliantCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setMovieId(movie.getId());
         create.setMovieReviewId(movieReview.getId());
-        create.setDescription("Just punish him!");
-        create.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         create.setModeratorId(portalUser.getId());
 
         MovieReviewCompliantReadDTO read = movieReviewCompliantService.createMovieReviewCompliant(create);
@@ -80,12 +78,10 @@ public class MovieReviewCompliantServiceTest extends BaseTest {
         MovieReviewCompliant movieReviewCompliant =
                 testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
-        MovieReviewCompliantPatchDTO patch = new MovieReviewCompliantPatchDTO();
+        MovieReviewCompliantPatchDTO patch = testObjectsFactory.createMovieReviewCompliantPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setMovieId(movie.getId());
         patch.setMovieReviewId(movieReview.getId());
-        patch.setDescription("Just punish him!");
-        patch.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         patch.setModeratorId(portalUser.getId());
         MovieReviewCompliantReadDTO read =
                 movieReviewCompliantService.patchMovieReviewCompliant(movieReviewCompliant.getId(), patch);
@@ -168,12 +164,10 @@ public class MovieReviewCompliantServiceTest extends BaseTest {
         MovieReviewCompliant movieReviewCompliant =
                 testObjectsFactory.createMovieReviewCompliant(portalUser, movie, movieReview);
 
-        MovieReviewCompliantPutDTO put = new MovieReviewCompliantPutDTO();
+        MovieReviewCompliantPutDTO put = testObjectsFactory.createMovieReviewCompliantPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setMovieId(movie.getId());
         put.setMovieReviewId(movieReview.getId());
-        put.setDescription("Just punish him!");
-        put.setModeratedStatus(UserModeratedStatusType.SUCCESS);
         put.setModeratorId(portalUser.getId());
         MovieReviewCompliantReadDTO read =
                 movieReviewCompliantService.updateMovieReviewCompliant(movieReviewCompliant.getId(), put);

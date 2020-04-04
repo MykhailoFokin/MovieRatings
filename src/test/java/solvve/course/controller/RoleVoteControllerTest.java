@@ -29,16 +29,9 @@ public class RoleVoteControllerTest extends BaseControllerTest {
     @MockBean
     private RoleVoteService roleVoteService;
 
-    private RoleVoteReadDTO createRoleVoteRead() {
-        RoleVoteReadDTO roleVote = new RoleVoteReadDTO();
-        roleVote.setId(UUID.randomUUID());
-        roleVote.setRating(UserVoteRatingType.R9);
-        return roleVote;
-    }
-
     @Test
     public void testGetRoleVote() throws Exception {
-        RoleVoteReadDTO roleVote = createRoleVoteRead();
+        RoleVoteReadDTO roleVote = generateObject(RoleVoteReadDTO.class);
 
         Mockito.when(roleVoteService.getRoleVote(roleVote.getId())).thenReturn(roleVote);
 
@@ -80,14 +73,9 @@ public class RoleVoteControllerTest extends BaseControllerTest {
     @Test
     public void testCreateRoleVote() throws Exception {
 
-        RoleVoteCreateDTO create = new RoleVoteCreateDTO();
-        create.setRating(UserVoteRatingType.R9);
-        create.setPortalUserId(UUID.randomUUID());
-        create.setRoleId(UUID.randomUUID());
+        RoleVoteCreateDTO create = generateObject(RoleVoteCreateDTO.class);
 
-        RoleVoteReadDTO read = createRoleVoteRead();
-        read.setRoleId(create.getRoleId());
-        read.setPortalUserId(create.getPortalUserId());
+        RoleVoteReadDTO read = generateObject(RoleVoteReadDTO.class);
 
         Mockito.when(roleVoteService.createRoleVote(create)).thenReturn(read);
 
@@ -104,10 +92,9 @@ public class RoleVoteControllerTest extends BaseControllerTest {
     @Test
     public void testPatchRoleVote() throws Exception {
 
-        RoleVotePatchDTO patchDTO = new RoleVotePatchDTO();
-        patchDTO.setRating(UserVoteRatingType.R9);
+        RoleVotePatchDTO patchDTO = generateObject(RoleVotePatchDTO.class);
 
-        RoleVoteReadDTO read = createRoleVoteRead();
+        RoleVoteReadDTO read = generateObject(RoleVoteReadDTO.class);
 
         Mockito.when(roleVoteService.patchRoleVote(read.getId(),patchDTO)).thenReturn(read);
 
@@ -133,14 +120,9 @@ public class RoleVoteControllerTest extends BaseControllerTest {
     @Test
     public void testPutRoleVote() throws Exception {
 
-        RoleVotePutDTO putDTO = new RoleVotePutDTO();
-        putDTO.setRating(UserVoteRatingType.R9);
-        putDTO.setPortalUserId(UUID.randomUUID());
-        putDTO.setRoleId(UUID.randomUUID());
+        RoleVotePutDTO putDTO = generateObject(RoleVotePutDTO.class);
 
-        RoleVoteReadDTO read = createRoleVoteRead();
-        read.setPortalUserId(putDTO.getPortalUserId());
-        read.setRoleId(putDTO.getRoleId());
+        RoleVoteReadDTO read = generateObject(RoleVoteReadDTO.class);
 
         Mockito.when(roleVoteService.updateRoleVote(read.getId(),putDTO)).thenReturn(read);
 

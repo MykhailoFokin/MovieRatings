@@ -52,11 +52,10 @@ public class RoleReviewFeedbackServiceTest extends BaseTest {
         Role role = testObjectsFactory.createRole(person,movie);
         RoleReview roleReview = testObjectsFactory.createRoleReview(portalUser, role);
 
-        RoleReviewFeedbackCreateDTO create = new RoleReviewFeedbackCreateDTO();
+        RoleReviewFeedbackCreateDTO create = testObjectsFactory.createRoleReviewFeedbackCreateDTO();
         create.setPortalUserId(portalUser.getId());
         create.setRoleId(role.getId());
         create.setRoleReviewId(roleReview.getId());
-        create.setIsLiked(true);
 
         RoleReviewFeedbackReadDTO read = roleReviewFeedbackService.createRoleReviewFeedback(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
@@ -79,11 +78,10 @@ public class RoleReviewFeedbackServiceTest extends BaseTest {
         RoleReviewFeedback roleReviewFeedback =
                 testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
-        RoleReviewFeedbackPatchDTO patch = new RoleReviewFeedbackPatchDTO();
+        RoleReviewFeedbackPatchDTO patch = testObjectsFactory.createRoleReviewFeedbackPatchDTO();
         patch.setPortalUserId(portalUser.getId());
         patch.setRoleId(role.getId());
         patch.setRoleReviewId(roleReview.getId());
-        patch.setIsLiked(true);
         RoleReviewFeedbackReadDTO read =
                 roleReviewFeedbackService.patchRoleReviewFeedback(roleReviewFeedback.getId(), patch);
 
@@ -163,11 +161,10 @@ public class RoleReviewFeedbackServiceTest extends BaseTest {
         RoleReviewFeedback roleReviewFeedback =
                 testObjectsFactory.createRoleReviewFeedback(portalUser, role, roleReview);
 
-        RoleReviewFeedbackPutDTO put = new RoleReviewFeedbackPutDTO();
+        RoleReviewFeedbackPutDTO put = testObjectsFactory.createRoleReviewFeedbackPutDTO();
         put.setPortalUserId(portalUser.getId());
         put.setRoleId(role.getId());
         put.setRoleReviewId(roleReview.getId());
-        put.setIsLiked(true);
         RoleReviewFeedbackReadDTO read =
                 roleReviewFeedbackService.updateRoleReviewFeedback(roleReviewFeedback.getId(), put);
 

@@ -45,10 +45,7 @@ public class RoleServiceTest extends BaseTest {
         Person person = testObjectsFactory.createPerson();
         Movie movie = testObjectsFactory.createMovie();
 
-        RoleCreateDTO create = new RoleCreateDTO();
-        create.setTitle("Actor");
-        create.setRoleType(RoleType.LEAD);
-        create.setDescription("Description test");
+        RoleCreateDTO create = testObjectsFactory.createRoleCreateDTO();
         create.setPersonId(person.getId());
         create.setMovieId(movie.getId());
         RoleReadDTO read = roleService.createRole(create);
@@ -66,10 +63,7 @@ public class RoleServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
 
-        RolePatchDTO patch = new RolePatchDTO();
-        patch.setTitle("Actor");
-        patch.setRoleType(RoleType.LEAD);
-        patch.setDescription("Description test");
+        RolePatchDTO patch = testObjectsFactory.createRolePatchDTO();
         patch.setPersonId(person.getId());
         patch.setMovieId(movie.getId());
         RoleReadDTO read = roleService.patchRole(role.getId(), patch);
@@ -128,10 +122,7 @@ public class RoleServiceTest extends BaseTest {
         Movie movie = testObjectsFactory.createMovie();
         Role role = testObjectsFactory.createRole(person,movie);
 
-        RolePutDTO put = new RolePutDTO();
-        put.setTitle("Actor");
-        put.setRoleType(RoleType.LEAD);
-        put.setDescription("Description test");
+        RolePutDTO put = testObjectsFactory.createRolePutDTO();
         put.setPersonId(person.getId());
         put.setMovieId(movie.getId());
         RoleReadDTO read = roleService.updateRole(role.getId(), put);

@@ -14,17 +14,14 @@ import solvve.course.repository.MovieSpoilerDataRepository;
 import java.util.UUID;
 
 @Service
-public class MovieSpoilerDataService {
+public class MovieSpoilerDataService extends AbstractService {
 
     @Autowired
     private MovieSpoilerDataRepository movieSpoilerDataRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public MovieSpoilerDataReadDTO getMovieSpoilerData(UUID id) {
-        MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
+        MovieSpoilerData movieSpoilerData = repositoryHelper.getByIdRequired(MovieSpoilerData.class, id);
         return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
     }
 
@@ -36,7 +33,7 @@ public class MovieSpoilerDataService {
     }
 
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(UUID id, MovieSpoilerDataPatchDTO patch) {
-        MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
+        MovieSpoilerData movieSpoilerData = repositoryHelper.getByIdRequired(MovieSpoilerData.class, id);
 
         translationService.map(patch, movieSpoilerData);
 
@@ -45,21 +42,15 @@ public class MovieSpoilerDataService {
     }
 
     public void deleteMovieSpoilerData(UUID id) {
-        movieSpoilerDataRepository.delete(getMovieSpoilerDataRequired(id));
+        movieSpoilerDataRepository.delete(repositoryHelper.getByIdRequired(MovieSpoilerData.class, id));
     }
 
     public MovieSpoilerDataReadDTO updateMovieSpoilerData(UUID id, MovieSpoilerDataPutDTO put) {
-        MovieSpoilerData movieSpoilerData = getMovieSpoilerDataRequired(id);
+        MovieSpoilerData movieSpoilerData = repositoryHelper.getByIdRequired(MovieSpoilerData.class, id);
 
         translationService.updateEntity(put, movieSpoilerData);
 
         movieSpoilerData = movieSpoilerDataRepository.save(movieSpoilerData);
         return translationService.translate(movieSpoilerData, MovieSpoilerDataReadDTO.class);
-    }
-
-    private MovieSpoilerData getMovieSpoilerDataRequired(UUID id) {
-        return movieSpoilerDataRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieSpoilerData.class, id);
-        });
     }
 }

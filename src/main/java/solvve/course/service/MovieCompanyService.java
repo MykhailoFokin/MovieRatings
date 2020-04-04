@@ -7,23 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieCompany;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieCompanyRepository;
 
 import java.util.UUID;
 
 @Service
-public class MovieCompanyService {
+public class MovieCompanyService extends AbstractService {
 
     @Autowired
     private MovieCompanyRepository movieCompanyRepository;
 
-    @Autowired
-    private TranslationService translationService;
-
     @Transactional(readOnly = true)
     public MovieCompanyReadDTO getMovieCompany(UUID id) {
-        MovieCompany movieCompany = getMovieCompanyRequired(id);
+        MovieCompany movieCompany = repositoryHelper.getByIdRequired(MovieCompany.class, id);
         return translationService.translate(movieCompany, MovieCompanyReadDTO.class);
     }
 
@@ -35,7 +31,7 @@ public class MovieCompanyService {
     }
 
     public MovieCompanyReadDTO patchMovieCompany(UUID id, MovieCompanyPatchDTO patch) {
-        MovieCompany movieCompany = getMovieCompanyRequired(id);
+        MovieCompany movieCompany = repositoryHelper.getByIdRequired(MovieCompany.class, id);
 
         translationService.map(patch, movieCompany);
 
@@ -44,11 +40,11 @@ public class MovieCompanyService {
     }
 
     public void deleteMovieCompany(UUID id) {
-        movieCompanyRepository.delete(getMovieCompanyRequired(id));
+        movieCompanyRepository.delete(repositoryHelper.getByIdRequired(MovieCompany.class, id));
     }
 
     public MovieCompanyReadDTO updateMovieCompany(UUID id, MovieCompanyPutDTO put) {
-        MovieCompany movieCompany = getMovieCompanyRequired(id);
+        MovieCompany movieCompany = repositoryHelper.getByIdRequired(MovieCompany.class, id);
 
         translationService.updateEntity(put, movieCompany);
 
@@ -59,11 +55,5 @@ public class MovieCompanyService {
     public PageResult<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter, Pageable pageable) {
         Page<MovieCompany> movieCompanies = movieCompanyRepository.findByFilter(filter, pageable);
         return translationService.toPageResult(movieCompanies, MovieCompanyReadDTO.class);
-    }
-
-    private MovieCompany getMovieCompanyRequired(UUID id) {
-        return movieCompanyRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(MovieCompany.class, id);
-        });
     }
 }

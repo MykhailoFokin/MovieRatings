@@ -8,23 +8,20 @@ import solvve.course.dto.RoleVoteCreateDTO;
 import solvve.course.dto.RoleVotePatchDTO;
 import solvve.course.dto.RoleVotePutDTO;
 import solvve.course.dto.RoleVoteReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleVoteRepository;
 
 import java.util.UUID;
 
 @Service
-public class RoleVoteService {
+public class RoleVoteService extends AbstractService {
 
     @Autowired
     private RoleVoteRepository roleVoteRepository;
 
-    @Autowired
-    private TranslationService translationService;
 
     @Transactional(readOnly = true)
     public RoleVoteReadDTO getRoleVote(UUID id) {
-        RoleVote roleVote = getRoleVoteRequired(id);
+        RoleVote roleVote = repositoryHelper.getByIdRequired(RoleVote.class, id);
         return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 
@@ -36,7 +33,7 @@ public class RoleVoteService {
     }
 
     public RoleVoteReadDTO patchRoleVote(UUID id, RoleVotePatchDTO patch) {
-        RoleVote roleVote = getRoleVoteRequired(id);
+        RoleVote roleVote = repositoryHelper.getByIdRequired(RoleVote.class, id);
 
         translationService.map(patch, roleVote);
 
@@ -44,18 +41,12 @@ public class RoleVoteService {
         return translationService.translate(roleVote, RoleVoteReadDTO.class);
     }
 
-    private RoleVote getRoleVoteRequired(UUID id) {
-        return roleVoteRepository.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(RoleVote.class, id);
-        });
-    }
-
     public void deleteRoleVote(UUID id) {
-        roleVoteRepository.delete(getRoleVoteRequired(id));
+        roleVoteRepository.delete(repositoryHelper.getByIdRequired(RoleVote.class, id));
     }
 
     public RoleVoteReadDTO updateRoleVote(UUID id, RoleVotePutDTO put) {
-        RoleVote roleVote = getRoleVoteRequired(id);
+        RoleVote roleVote = repositoryHelper.getByIdRequired(RoleVote.class, id);
 
         translationService.updateEntity(put, roleVote);
 
