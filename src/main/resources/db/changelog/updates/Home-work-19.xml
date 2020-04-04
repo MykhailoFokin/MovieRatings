@@ -1,0 +1,73 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="add not null constraints company_details" author="mykhailo">
+        <addNotNullConstraint tableName="company_details" columnName="name" />
+        <addNotNullConstraint tableName="country" columnName="name" />
+        <addNotNullConstraint tableName="crew" columnName="movie_id" />
+        <addNotNullConstraint tableName="crew" columnName="crew_type_id" />
+        <addNotNullConstraint tableName="crew_type" columnName="name" />
+        <addNotNullConstraint tableName="genre" columnName="movie_id" />
+        <addNotNullConstraint tableName="genre" columnName="name" />
+        <addNotNullConstraint tableName="language" columnName="name" />
+        <addNotNullConstraint tableName="movie" columnName="title" />
+        <addNotNullConstraint tableName="movie" columnName="year" />
+        <addNotNullConstraint tableName="movie_company" columnName="company_details_id" />
+        <addNotNullConstraint tableName="movie_review" columnName="movie_id" />
+        <addNotNullConstraint tableName="movie_review" columnName="user_id" />
+        <addNotNullConstraint tableName="movie_review" columnName="text_review" />
+        <addNotNullConstraint tableName="movie_review_compliant" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="movie_review_compliant" columnName="movie_id" />
+        <addNotNullConstraint tableName="movie_review_compliant" columnName="movie_review_id" />
+        <addNotNullConstraint tableName="movie_review_feedback" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="movie_review_feedback" columnName="movie_id" />
+        <addNotNullConstraint tableName="movie_review_feedback" columnName="movie_review_id" />
+        <addNotNullConstraint tableName="movie_spoiler_data" columnName="movie_review_id" />
+        <addNotNullConstraint tableName="movie_vote" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="movie_vote" columnName="movie_id" />
+        <addNotNullConstraint tableName="movie_vote" columnName="rating" />
+        <addNotNullConstraint tableName="news" columnName="topic" />
+        <addNotNullConstraint tableName="news" columnName="description" />
+        <addNotNullConstraint tableName="news_user_review" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="news_user_review" columnName="news_id" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="proposed_text" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="source_text" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="start_index" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="end_index" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="news_id" />
+        <addNotNullConstraint tableName="news_user_review_note" columnName="news_user_review_id" />
+        <addNotNullConstraint tableName="person" columnName="name" />
+        <addNotNullConstraint tableName="portal_user" columnName="login" />
+        <addNotNullConstraint tableName="release_detail" columnName="movie_id" />
+        <addNotNullConstraint tableName="role" columnName="role_type" />
+        <addNotNullConstraint tableName="role" columnName="movie_id" />
+        <addNotNullConstraint tableName="role_review" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="role_review" columnName="role_id" />
+        <addNotNullConstraint tableName="role_review_compliant" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="role_review_compliant" columnName="role_id" />
+        <addNotNullConstraint tableName="role_review_compliant" columnName="role_review_id" />
+        <addNotNullConstraint tableName="role_review_feedback" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="role_review_feedback" columnName="role_id" />
+        <addNotNullConstraint tableName="role_review_feedback" columnName="role_review_id" />
+        <addNotNullConstraint tableName="role_spoiler_data" columnName="role_review_id" />
+        <addNotNullConstraint tableName="role_vote" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="role_vote" columnName="role_id" />
+        <addNotNullConstraint tableName="role_vote" columnName="rating" />
+        <addNotNullConstraint tableName="user_grant" columnName="user_type_id" />
+        <addNotNullConstraint tableName="user_grant" columnName="user_permission" />
+        <addNotNullConstraint tableName="user_grant" columnName="object_name" />
+        <addNotNullConstraint tableName="user_type" columnName="user_group" />
+        <addNotNullConstraint tableName="user_typo_request" columnName="moderator_typo_review_status_type" />
+        <addNotNullConstraint tableName="user_typo_request" columnName="source_text" />
+        <addNotNullConstraint tableName="user_typo_request" columnName="proposed_text" />
+        <addNotNullConstraint tableName="visit" columnName="portal_user_id" />
+        <addNotNullConstraint tableName="visit" columnName="start_at" />
+        <addNotNullConstraint tableName="visit" columnName="finish_at" />
+    </changeSet>
+
+</databaseChangeLog>

@@ -9,10 +9,8 @@ import solvve.course.domain.NewsUserReview;
 import solvve.course.domain.NewsUserReviewNote;
 import solvve.course.domain.PortalUser;
 import solvve.course.dto.*;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.exception.UnprocessableEntityException;
 import solvve.course.repository.NewsUserReviewNoteRepository;
-import solvve.course.repository.RepositoryHelper;
 
 import java.util.List;
 import java.util.UUID;

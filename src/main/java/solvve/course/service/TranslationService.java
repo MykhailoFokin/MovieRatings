@@ -568,7 +568,7 @@ public class TranslationService {
         if (put.getName() != null) {
             crewType.setName(put.getName());
         }
-        if(put.getCrewId() != null) {
+        if (put.getCrewId() != null) {
             crewType.setCrew(repositoryHelper.getReferenceIfExists(Crew.class, put.getCrewId()));
         }
     }

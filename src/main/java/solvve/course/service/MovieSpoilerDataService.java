@@ -8,7 +8,6 @@ import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
 import solvve.course.dto.MovieSpoilerDataPutDTO;
 import solvve.course.dto.MovieSpoilerDataReadDTO;
-import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieSpoilerDataRepository;
 
 import java.util.UUID;

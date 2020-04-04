@@ -10,7 +10,6 @@ import solvve.course.dto.RoleSpoilerDataPatchDTO;
 import solvve.course.dto.RoleSpoilerDataPutDTO;
 import solvve.course.dto.RoleSpoilerDataReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleSpoilerDataRepository;
 
 import java.util.List;

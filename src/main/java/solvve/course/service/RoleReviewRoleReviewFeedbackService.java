@@ -10,7 +10,6 @@ import solvve.course.dto.RoleReviewFeedbackPatchDTO;
 import solvve.course.dto.RoleReviewFeedbackPutDTO;
 import solvve.course.dto.RoleReviewFeedbackReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleReviewFeedbackRepository;
 
 import java.util.List;

@@ -10,7 +10,6 @@ import solvve.course.dto.RoleReviewCompliantPatchDTO;
 import solvve.course.dto.RoleReviewCompliantPutDTO;
 import solvve.course.dto.RoleReviewCompliantReadDTO;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.repository.RepositoryHelper;
 import solvve.course.repository.RoleReviewCompliantRepository;
 
 import java.util.List;

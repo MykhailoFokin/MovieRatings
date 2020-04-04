@@ -1,7 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.VisitStatus;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
