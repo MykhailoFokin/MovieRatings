@@ -1,0 +1,18 @@
+<dataset>
+    <USER_TYPE ID="uuid'dd4986f5-2b25-46ca-a1bd-e4609aa22582'"
+               USER_GROUP="ADMIN"/>
+    <PORTAL_USER ID="uuid'c05d51bd-c481-4e8d-bf08-b0a0270f7269'"
+                 USER_TYPE_ID="uuid'dd4986f5-2b25-46ca-a1bd-e4609aa22582'"
+                 LOGIN="login"/>
+    <MOVIE ID="uuid'6cd81a37-0e32-4282-8c88-8ff01f9c3aca'"
+           TITLE="title"
+           YEAR="2020"/>
+    <MOVIE_VOTE ID="uuid'5e866ef8-3781-4e62-b8ed-280fce49e8bc'"
+               MOVIE_ID="uuid'6cd81a37-0e32-4282-8c88-8ff01f9c3aca'"
+               PORTAL_USER_ID="uuid'c05d51bd-c481-4e8d-bf08-b0a0270f7269'"
+               RATING="3.0"/>
+    <MOVIE_VOTE ID="uuid'a152aecd-c69a-435a-857e-1e3ba90737a8'"
+               MOVIE_ID="uuid'6cd81a37-0e32-4282-8c88-8ff01f9c3aca'"
+               PORTAL_USER_ID="uuid'c05d51bd-c481-4e8d-bf08-b0a0270f7269'"
+               RATING="5.0"/>
+</dataset>

@@ -14,8 +14,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class TestObjectsFactory {
@@ -138,6 +141,12 @@ public class TestObjectsFactory {
         return movieRepository.save(movie);
     }
 
+    public Movie createMovieWithRating(Double rating) {
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(rating);
+        return movieRepository.save(movie);
+    }
+
     public Movie createMovie(Set<Country> countries, String title, Short year, String aspectRatio,
                              String camera, String colour, String critique, String description,
                              String laboratory, String soundMix, Boolean isPublished,
@@ -155,6 +164,33 @@ public class TestObjectsFactory {
         movie.setIsPublished(isPublished);
         movie.setMovieProdCountries(countries);
         movie.setMovieProdLanguages(languages);
+        movie.setMovieProdCompanies(movieCompanies);
+        return movieRepository.save(movie);
+    }
+
+    public Movie createMovieWithLanguages(List<UUID> languageIds) {
+        Set<Language> languages =
+                languageIds.stream().map(e -> languageRepository.findById(e).get()).collect(Collectors.toSet());
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(null);
+        movie.setMovieProdLanguages(languages);
+        return movieRepository.save(movie);
+    }
+
+    public Movie createMovieWithCountries(List<UUID> countriesIds) {
+        Set<Country> countries =
+                countriesIds.stream().map(e -> countryRepository.findById(e).get()).collect(Collectors.toSet());
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(null);
+        movie.setMovieProdCountries(countries);
+        return movieRepository.save(movie);
+    }
+
+    public Movie createMovieWithCompanies(List<UUID> companiesIds) {
+        Set<MovieCompany> movieCompanies =
+                companiesIds.stream().map(e -> movieCompanyRepository.findById(e).get()).collect(Collectors.toSet());
+        Movie movie = generateFlatEntityWithoutId(Movie.class);
+        movie.setAverageRating(null);
         movie.setMovieProdCompanies(movieCompanies);
         return movieRepository.save(movie);
     }
@@ -261,6 +297,7 @@ public class TestObjectsFactory {
         MovieCompany movieCompany = generateFlatEntityWithoutId(MovieCompany.class);
         movieCompany.setCompanyDetails(companyDetails);
         movieCompany.setMovieProductionType(movieProductionType);
+        movieCompany.setDescription("Desc");
         return movieCompanyRepository.save(movieCompany);
     }
 
@@ -440,6 +477,18 @@ public class TestObjectsFactory {
         return movieVoteRepository.save(movieVote);
     }
 
+    public MovieVote createMovieVote(PortalUser portalUser, Movie movie, Boolean withMark) {
+        MovieVote movieVote = new MovieVote();
+        movieVote.setMovie(movie);
+        movieVote.setPortalUser(portalUser);
+        if (withMark) {
+            movieVote.setRating(UserVoteRatingType.R5);
+        } else {
+            movieVote.setRating(UserVoteRatingType.R1);
+        }
+        return movieVoteRepository.save(movieVote);
+    }
+
     public News createNews(PortalUser portalUser) {
         News news = generateFlatEntityWithoutId(News.class);
         news.setPublisher(portalUser);
@@ -495,6 +544,14 @@ public class TestObjectsFactory {
         return roleRepository.save(role);
     }
 
+    public Role createRoleWithRating(Person person, Movie movie, Double rating) {
+        Role role = generateFlatEntityWithoutId(Role.class);
+        role.setPerson(person);
+        role.setMovie(movie);
+        role.setAverageRating(rating);
+        return roleRepository.save(role);
+    }
+
     public RoleReview createRoleReview(PortalUser portalUser, Role role) {
         RoleReview roleReview = generateFlatEntityWithoutId(RoleReview.class);
         roleReview.setPortalUser(portalUser);
@@ -529,6 +586,18 @@ public class TestObjectsFactory {
         roleVote.setRole(role);
         roleVote.setPortalUser(portalUser);
         roleVote.setRating(userVoteRatingType);
+        return roleVoteRepository.save(roleVote);
+    }
+
+    public RoleVote createRoleVote(PortalUser portalUser, Role role, Boolean withRating) {
+        RoleVote roleVote = new RoleVote();
+        roleVote.setRole(role);
+        roleVote.setPortalUser(portalUser);
+        if (withRating) {
+            roleVote.setRating(UserVoteRatingType.R5);
+        } else {
+            roleVote.setRating(UserVoteRatingType.R1);
+        }
         return roleVoteRepository.save(roleVote);
     }
 

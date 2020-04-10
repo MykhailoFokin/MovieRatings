@@ -14,7 +14,6 @@ import solvve.course.dto.MovieCompanyPutDTO;
 import solvve.course.dto.MovieCompanyReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.MovieCompanyRepository;
-import solvve.course.utils.TestObjectsFactory;
 
 import java.util.UUID;
 

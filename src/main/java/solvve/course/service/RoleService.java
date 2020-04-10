@@ -6,14 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.Role;
-import solvve.course.dto.RoleCreateDTO;
-import solvve.course.dto.RolePatchDTO;
-import solvve.course.dto.RolePutDTO;
-import solvve.course.dto.RoleReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.RoleRepository;
 import solvve.course.repository.RoleVoteRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -71,5 +69,9 @@ public class RoleService extends AbstractService {
                 role.getAverageRating(), averageRating);
         role.setAverageRating(averageRating);
         roleRepository.save(role);
+    }
+
+    public List<RoleInLeaderBoardReadDTO> getRolesLeaderBoard() {
+        return roleRepository.getRolesLeaderBoard();
     }
 }

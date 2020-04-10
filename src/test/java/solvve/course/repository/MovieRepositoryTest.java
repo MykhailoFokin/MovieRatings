@@ -5,18 +5,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.TransactionSystemException;
 import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.MovieFilter;
+import solvve.course.dto.MovieInLeaderBoardReadDTO;
 import solvve.course.service.MovieService;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MovieRepositoryTest extends BaseTest {
@@ -50,7 +49,7 @@ public class MovieRepositoryTest extends BaseTest {
         Movie m4 = testObjectsFactory.createMovie(Set.of(c2,c3));
 
         MovieFilter filter = new MovieFilter();
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m3.getId(), m4.getId());
     }
 
@@ -79,7 +78,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setTitle("Title1");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId());
     }
 
@@ -108,7 +107,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setYear((short) 2015);
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m2.getId(), m3.getId());
     }
 
@@ -141,7 +140,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setGenres(List.of(g1.getName(), g2.getName()));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId());
     }
 
@@ -170,7 +169,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setDescription("Description1");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
@@ -206,7 +205,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setCompanyType(mc1.getMovieProductionType());
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
@@ -242,7 +241,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setCompanyName(cd1.getName());
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
@@ -271,7 +270,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setSoundMix("WindowsMovieMaker");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m2.getId(), m3.getId());
     }
 
@@ -300,7 +299,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setColour("RGB");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m2.getId(), m3.getId());
     }
 
@@ -329,7 +328,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setAspectRatio("1:10");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId());
     }
 
@@ -358,7 +357,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setCamera("Panasonic");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m4.getId());
     }
 
@@ -387,7 +386,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setLaboratory("Lab3");
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m3.getId(), m4.getId());
     }
 
@@ -419,7 +418,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setLanguage(l1.getName());
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m4.getId());
     }
 
@@ -448,7 +447,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setIsPublished(Boolean.TRUE);
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m3.getId(), m4.getId());
     }
 
@@ -477,7 +476,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setTitles(List.of("Title2", "Title3"));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m3.getId(), m4.getId());
     }
 
@@ -506,7 +505,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setYears(List.of((short) 2011, (short) 2015));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m3.getId());
     }
 
@@ -542,7 +541,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setCompanyTypes(List.of(MovieProductionType.PRODUCTION_COMPANIES));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m3.getId());
     }
 
@@ -574,7 +573,7 @@ public class MovieRepositoryTest extends BaseTest {
 
         MovieFilter filter = new MovieFilter();
         filter.setLanguages(List.of(l1.getName()));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m1.getId(), m2.getId(), m4.getId());
     }
 
@@ -635,7 +634,7 @@ public class MovieRepositoryTest extends BaseTest {
         filter.setYears(List.of((short) 2011, (short) 2015, (short) 2019));
         filter.setTitles(List.of("Title1","Title2"));
         filter.setGenres(List.of(g3.getName()));
-        Assertions.assertThat(movieService.getMovies(filter)).extracting("Id")
+        Assertions.assertThat(movieService.getMovies(filter, Pageable.unpaged()).getData()).extracting("Id")
                 .containsExactlyInAnyOrder(m3.getId());
     }
 
@@ -696,5 +695,33 @@ public class MovieRepositoryTest extends BaseTest {
     public void testSaveMovieValidation() {
         Movie entity = new Movie();
         movieRepository.save(entity);
+    }
+
+    @Test
+    public void testGetMoviesLeaderBoard() {
+        int moviesCount = 3;
+        Set<UUID> movieIds = new HashSet<>();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        for (int i =0; i < moviesCount; ++i) {
+            Movie movie = testObjectsFactory.createMovieWithRating(15D);
+            movieIds.add(movie.getId());
+
+            testObjectsFactory.createMovieVote(portalUser, movie, true);
+            testObjectsFactory.createMovieVote(portalUser, movie, true);
+            testObjectsFactory.createMovieVote(portalUser, movie, false);
+        }
+
+        List<MovieInLeaderBoardReadDTO> moviesLeaderBoard = movieRepository.getMoviesLeaderBoard();
+        Assertions.assertThat(moviesLeaderBoard).isSortedAccordingTo(
+                Comparator.comparing(MovieInLeaderBoardReadDTO::getAverageRating).reversed());
+
+        Assert.assertEquals(movieIds, moviesLeaderBoard.stream().map(MovieInLeaderBoardReadDTO::getId)
+                .collect(Collectors.toSet()));
+
+        for (MovieInLeaderBoardReadDTO m : moviesLeaderBoard) {
+            Assert.assertNotNull(m.getTitle());
+            Assert.assertNotNull(m.getAverageRating());
+            Assert.assertEquals(2, m.getVotesCount());
+        }
     }
 }

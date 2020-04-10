@@ -41,7 +41,6 @@ public class MovieControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         MovieReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(movie);
 

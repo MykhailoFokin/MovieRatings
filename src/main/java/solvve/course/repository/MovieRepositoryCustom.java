@@ -1,11 +1,11 @@
 package solvve.course.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import solvve.course.domain.Movie;
 import solvve.course.dto.MovieFilter;
 
-import java.util.List;
-
 public interface MovieRepositoryCustom {
 
-    List<Movie> findByFilter(MovieFilter filter);
+    Page<Movie> findByFilter(MovieFilter filter, Pageable pageable);
 }

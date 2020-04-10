@@ -1,0 +1,24 @@
+<dataset>
+    <USER_TYPE ID="uuid'5bd19fff-503e-432e-a262-84043710447c'"
+               USER_GROUP="ADMIN"/>
+    <PORTAL_USER ID="uuid'a1b6fab2-4ebb-4e32-98de-68445ae82a14'"
+                 USER_TYPE_ID="uuid'5bd19fff-503e-432e-a262-84043710447c'"
+                 LOGIN="login"/>
+    <PERSON ID="uuid'6801dcfc-c8ae-43a3-ae04-fcf1382d94f2'"
+            NAME="name"/>
+    <MOVIE ID="uuid'c2ac2bab-f73a-49bb-804f-30b71d687ea5'"
+           TITLE="title"
+           YEAR="2020"/>
+    <ROLE ID="uuid'c02c5981-7ced-4102-833c-c132986ccfff'"
+          ROLE_TYPE="LEAD"
+          MOVIE_ID="uuid'c2ac2bab-f73a-49bb-804f-30b71d687ea5'"
+          PERSON_ID="uuid'6801dcfc-c8ae-43a3-ae04-fcf1382d94f2'"/>
+    <ROLE_VOTE ID="uuid'45ef7755-2ee3-4766-87db-07c504032719'"
+               ROLE_ID="uuid'c02c5981-7ced-4102-833c-c132986ccfff'"
+               PORTAL_USER_ID="uuid'a1b6fab2-4ebb-4e32-98de-68445ae82a14'"
+               RATING="3.0"/>
+    <ROLE_VOTE ID="uuid'f4b9bb25-54f6-4555-a1c3-a68a247cd2cb'"
+               ROLE_ID="uuid'c02c5981-7ced-4102-833c-c132986ccfff'"
+               PORTAL_USER_ID="uuid'a1b6fab2-4ebb-4e32-98de-68445ae82a14'"
+               RATING="5.0"/>
+</dataset>

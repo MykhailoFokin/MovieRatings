@@ -2,6 +2,8 @@ package solvve.course.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,6 @@ import solvve.course.repository.MovieVoteRepository;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -60,10 +61,9 @@ public class MovieService extends AbstractService {
         return translationService.translate(movie, MovieReadDTO.class);
     }
 
-    public List<MovieReadDTO> getMovies(MovieFilter filter) {
-        List<Movie> movies = movieRepository.findByFilter(filter);
-        return movies.stream().map(e -> translationService.translate(e, MovieReadDTO.class))
-                .collect(Collectors.toList());
+    public PageResult<MovieReadDTO> getMovies(MovieFilter filter, Pageable pageable) {
+        Page<Movie> movies = movieRepository.findByFilter(filter, pageable);
+        return translationService.toPageResult(movies, MovieReadDTO.class);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -76,5 +76,9 @@ public class MovieService extends AbstractService {
                 movie.getAverageRating(), averageRating);
         movie.setAverageRating(averageRating);
         movieRepository.save(movie);
+    }
+
+    public List<MovieInLeaderBoardReadDTO> getMoviesLeaderBoard() {
+        return movieRepository.getMoviesLeaderBoard();
     }
 }

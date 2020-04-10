@@ -2,13 +2,11 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.MovieCreateDTO;
-import solvve.course.dto.MoviePatchDTO;
-import solvve.course.dto.MoviePutDTO;
-import solvve.course.dto.MovieReadDTO;
+import solvve.course.dto.*;
 import solvve.course.service.MovieService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -41,5 +39,10 @@ public class MovieController {
     @PutMapping("/{id}")
     public MovieReadDTO putMovie(@PathVariable UUID id, @RequestBody @Valid MoviePutDTO put) {
         return movieService.updateMovie(id, put);
+    }
+
+    @GetMapping("/leader-board")
+    public List<MovieInLeaderBoardReadDTO> getMovieLeaderBoard() {
+        return movieService.getMoviesLeaderBoard();
     }
 }

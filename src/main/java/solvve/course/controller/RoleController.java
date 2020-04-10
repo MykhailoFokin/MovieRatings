@@ -2,13 +2,11 @@ package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import solvve.course.dto.RoleCreateDTO;
-import solvve.course.dto.RolePatchDTO;
-import solvve.course.dto.RolePutDTO;
-import solvve.course.dto.RoleReadDTO;
+import solvve.course.dto.*;
 import solvve.course.service.RoleService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -41,5 +39,10 @@ public class RoleController {
     @PutMapping("/{id}")
     public RoleReadDTO putRole(@PathVariable UUID id, @RequestBody @Valid RolePutDTO put) {
         return roleService.updateRole(id, put);
+    }
+
+    @GetMapping("/leader-board")
+    public List<RoleInLeaderBoardReadDTO> getMovieLeaderBoard() {
+        return roleService.getRolesLeaderBoard();
     }
 }

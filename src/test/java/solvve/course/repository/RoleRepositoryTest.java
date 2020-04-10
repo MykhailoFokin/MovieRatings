@@ -1,5 +1,6 @@
 package solvve.course.repository;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,12 @@ import org.springframework.transaction.TransactionSystemException;
 import solvve.course.BaseTest;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
+import solvve.course.domain.PortalUser;
 import solvve.course.domain.Role;
+import solvve.course.dto.RoleInLeaderBoardReadDTO;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
@@ -97,5 +98,36 @@ public class RoleRepositoryTest extends BaseTest {
     public void testSaveRoleValidation() {
         Role entity = new Role();
         roleRepository.save(entity);
+    }
+
+    @Test
+    public void testGetRolesLeaderBoard() {
+        int rolesCount = 3;
+        Set<UUID> roleIds = new HashSet<>();
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Person person = testObjectsFactory.createPerson();
+        Movie movie = testObjectsFactory.createMovie();
+        for (int i =0; i < rolesCount; ++i) {
+            Role role = testObjectsFactory.createRoleWithRating(person, movie, 15D);
+            roleIds.add(role.getId());
+
+            testObjectsFactory.createRoleVote(portalUser, role, true);
+            testObjectsFactory.createRoleVote(portalUser, role, true);
+            testObjectsFactory.createRoleVote(portalUser, role, false);
+        }
+
+        List<RoleInLeaderBoardReadDTO> rolesLeaderBoard = roleRepository.getRolesLeaderBoard();
+        Assertions.assertThat(rolesLeaderBoard).isSortedAccordingTo(
+                Comparator.comparing(RoleInLeaderBoardReadDTO::getAverageRating).reversed());
+
+        Assert.assertEquals(roleIds, rolesLeaderBoard.stream().map(RoleInLeaderBoardReadDTO::getId)
+                .collect(Collectors.toSet()));
+
+        for (RoleInLeaderBoardReadDTO r : rolesLeaderBoard) {
+            Assert.assertNotNull(r.getRoleTitle());
+            Assert.assertNotNull(r.getMovieTitle());
+            Assert.assertNotNull(r.getAverageRating());
+            Assert.assertEquals(2, r.getVotesCount());
+        }
     }
 }

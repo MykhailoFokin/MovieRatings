@@ -137,6 +137,19 @@
             <version>1.0.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.database-rider</groupId>
+            <artifactId>rider-spring</artifactId>
+            <version>1.11.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bitbucket.brunneng.qb</groupId>
+            <artifactId>query-builder</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <reporting>

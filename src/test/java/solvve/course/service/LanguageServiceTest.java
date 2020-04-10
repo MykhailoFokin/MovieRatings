@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
 import solvve.course.domain.Language;
+import solvve.course.domain.LanguageType;
 import solvve.course.dto.LanguageCreateDTO;
 import solvve.course.dto.LanguagePatchDTO;
 import solvve.course.dto.LanguagePutDTO;
@@ -26,7 +27,7 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testGetLanguage() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         LanguageReadDTO readDTO = languageService.getLanguage(language.getId());
         Assertions.assertThat(readDTO).isEqualToComparingFieldByField(language);
@@ -40,6 +41,7 @@ public class LanguageServiceTest extends BaseTest {
     @Test
     public void testCreateLanguage() {
         LanguageCreateDTO create = testObjectsFactory.createLanguageCreateDTO();
+        create.setName(LanguageType.DUTCH);
         LanguageReadDTO read = languageService.createLanguage(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -49,9 +51,10 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testPatchLanguage() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         LanguagePatchDTO patch = testObjectsFactory.createLanguagePatchDTO();
+        patch.setName(LanguageType.UKRAINIAN);
         LanguageReadDTO read = languageService.patchLanguage(language.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -63,7 +66,7 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testPatchLanguageEmptyPatch() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         LanguagePatchDTO patch = new LanguagePatchDTO();
         LanguageReadDTO read = languageService.patchLanguage(language.getId(), patch);
@@ -80,7 +83,7 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testDeleteLanguage() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         languageService.deleteLanguage(language.getId());
         Assert.assertFalse(languageRepository.existsById(language.getId()));
@@ -93,9 +96,10 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testPutLanguage() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         LanguagePutDTO put = testObjectsFactory.createLanguagePutDTO();
+        put.setName(LanguageType.UKRAINIAN);
         LanguageReadDTO read = languageService.updateLanguage(language.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
@@ -107,7 +111,7 @@ public class LanguageServiceTest extends BaseTest {
 
     @Test
     public void testPutLanguageEmptyPut() {
-        Language language = testObjectsFactory.createLanguage();
+        Language language = testObjectsFactory.createLanguage(LanguageType.DUTCH);
 
         LanguagePutDTO put = new LanguagePutDTO();
         LanguageReadDTO read = languageService.updateLanguage(language.getId(), put);

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import solvve.course.domain.Movie;
+import solvve.course.dto.MovieInLeaderBoardReadDTO;
 
 import java.time.Instant;
 import java.util.List;
@@ -40,4 +41,9 @@ public interface MovieRepository extends CrudRepository<Movie, UUID>, MovieRepos
 
     @Query("select m.id from Movie m")
     Stream<UUID> getIdsOfMovies();
+
+    @Query("select new solvve.course.dto.MovieInLeaderBoardReadDTO(m.id, m.title, m.averageRating,"
+            + " (select count(v) from MovieVote v where v.movie.id = m.id and v.rating > 1))"
+            + " from Movie m order by m.averageRating desc")
+    List<MovieInLeaderBoardReadDTO> getMoviesLeaderBoard();
 }

@@ -18,7 +18,7 @@ import solvve.course.utils.TestObjectsFactory;
         "delete from movie_company","delete from role_review_compliant","delete from role_review_feedback",
         "delete from role_vote","delete from role_spoiler_data","delete from role_review","delete from role",
         "delete from user_grant","delete from person","delete from country",
-        "delete from company_details","delete from portal_user","delete from user_type", "delete from language",
+        "delete from company_details","delete from portal_user","delete from user_type",
         "delete from release_detail","delete from movie"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public abstract class BaseTest {
