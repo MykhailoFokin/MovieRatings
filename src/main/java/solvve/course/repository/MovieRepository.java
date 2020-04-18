@@ -46,4 +46,6 @@ public interface MovieRepository extends CrudRepository<Movie, UUID>, MovieRepos
             + " (select count(v) from MovieVote v where v.movie.id = m.id and v.rating > 1))"
             + " from Movie m order by m.averageRating desc")
     List<MovieInLeaderBoardReadDTO> getMoviesLeaderBoard();
+
+    Movie findByTitle(String title);
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -28,4 +29,22 @@ public class Person extends AbstractEntity {
 
     @OneToOne(mappedBy = "person")
     private Role role;
+
+    private LocalDate birthday;
+
+    private String knownForDepartment;
+
+    private LocalDate deathday;
+
+    private Short gender;
+
+    private String biography;
+
+    private String placeOfBirth;
+
+    private Boolean adult;
+
+    private String imdbId;
+
+    private String homepage;
 }

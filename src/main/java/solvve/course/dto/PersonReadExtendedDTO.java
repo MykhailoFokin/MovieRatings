@@ -5,6 +5,7 @@ import solvve.course.domain.Crew;
 import solvve.course.domain.Role;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,4 +27,22 @@ public class PersonReadExtendedDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private LocalDate birthday;
+
+    private String knownForDepartment;
+
+    private LocalDate deathday;
+
+    private Short gender;
+
+    private String biography;
+
+    private String placeOfBirth;
+
+    private Boolean adult;
+
+    private String imdbId;
+
+    private String homepage;
 }

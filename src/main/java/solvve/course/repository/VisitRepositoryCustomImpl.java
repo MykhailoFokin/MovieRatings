@@ -21,9 +21,9 @@ public class VisitRepositoryCustomImpl implements VisitRepositoryCustom {
 
         qb.append("select v from Visit v where 1=1");
         qb.append("and v.portalUser.id = :portalUserId", filter.getPortalUserId());
-        qb.append("and v.status in (:statuses)", filter.getStatuses());
-        qb.append("and v.startAt >= (:startAtFrom)", filter.getStartAtFrom());
-        qb.append("and v.startAt < (:startAtTo)", filter.getStartAtTo());
+        qb.append("and v.status in :statuses", filter.getStatuses());
+        qb.append("and v.startAt >= :startAtFrom", filter.getStartAtFrom());
+        qb.append("and v.startAt < :startAtTo", filter.getStartAtTo());
 
         return SpringQueryBuilderUtils.loadPage(qb, pageable, "id");
     }

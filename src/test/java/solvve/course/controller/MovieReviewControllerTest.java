@@ -14,7 +14,6 @@ import solvve.course.dto.MovieReviewCreateDTO;
 import solvve.course.dto.MovieReviewPatchDTO;
 import solvve.course.dto.MovieReviewPutDTO;
 import solvve.course.dto.MovieReviewReadDTO;
-import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.MovieReviewService;
@@ -40,7 +39,6 @@ public class MovieReviewControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         MovieReviewReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReviewReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(movieReview);
 

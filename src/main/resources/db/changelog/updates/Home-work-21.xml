@@ -1,0 +1,78 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="new entity for external import" author="mykhailo">
+        <createTable tableName="external_system_import">
+            <column name="id" type="uuid"/>
+            <column name="entity_type" type="varchar(255)"/>
+            <column name="entity_id" type="uuid"/>
+            <column name="id_in_external_system" type="varchar(255)"/>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="add a few columns to movie table" author="mykhailo">
+        <addColumn tableName="movie">
+            <column name="adult" type="boolean"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="original_language" type="varchar(10)"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="original_title" type="varchar(1000)"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="budget" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="homepage" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="imdb_id" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="revenue" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="runtime" type="int"/>
+        </addColumn>
+        <addColumn tableName="movie">
+            <column name="tagline" type="varchar(1000)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add a few columns to person table" author="mykhailo">
+        <addColumn tableName="person">
+            <column name="adult" type="boolean"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="biography" type="varchar(1000)"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="birthday" type="date"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="deathday" type="date"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="gender" type="smallint"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="place_of_birth" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="imdb_id" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="homepage" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="known_for_department" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

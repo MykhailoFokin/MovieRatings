@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface CrewTypeRepository extends CrudRepository<CrewType, UUID>, CrewTypeRepositoryCustom {
 
+    CrewType findByName(String name);
 }

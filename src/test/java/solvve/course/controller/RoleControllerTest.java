@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -11,14 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import solvve.course.domain.Role;
 import solvve.course.domain.RoleType;
-import solvve.course.dto.RoleCreateDTO;
-import solvve.course.dto.RolePatchDTO;
-import solvve.course.dto.RolePutDTO;
-import solvve.course.dto.RoleReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.RoleService;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -364,5 +363,22 @@ public class RoleControllerTest extends BaseControllerTest {
         objectMapper.readValue(resultJson, ErrorInfo.class);
         Mockito.verify(roleService, Mockito.never()).patchRole(ArgumentMatchers.any(),
                 ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testGetMoviesLeaderBoard() throws Exception {
+        RoleInLeaderBoardReadDTO dto = generateObject(RoleInLeaderBoardReadDTO.class);
+        List<RoleInLeaderBoardReadDTO> board = List.of(dto);
+
+        Mockito.when(roleService.getRolesLeaderBoard()).thenReturn(board);
+
+        String resultJson = mvc.perform(get("/api/v1/roles/leader-board"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<RoleInLeaderBoardReadDTO> actualBoard = objectMapper.readValue(resultJson,
+                new TypeReference<List<RoleInLeaderBoardReadDTO>>() {
+                });
+        Assert.assertEquals(actualBoard, board);
     }
 }

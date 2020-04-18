@@ -22,4 +22,6 @@ public interface RoleRepository extends CrudRepository<Role, UUID> {
             + " join Movie m on r.movie.id = m.id"
             + " order by r.averageRating desc")
     List<RoleInLeaderBoardReadDTO> getRolesLeaderBoard();
+
+    Role findByTitle(String title);
 }

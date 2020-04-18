@@ -110,6 +110,9 @@ public class TestObjectsFactory {
     @Autowired
     private NewsUserReviewNoteRepository newsUserReviewNoteRepository;
 
+    @Autowired
+    private UserTypoRequestRepository userTypoRequestRepository;
+
     private RandomObjectGenerator generator = new RandomObjectGenerator();
 
     private <T extends AbstractEntity> T generateEntityWithoutId(Class<T> entityClass) {
@@ -118,7 +121,7 @@ public class TestObjectsFactory {
         return entity;
     }
 
-    private <T> T generateObject(Class<T> entityClass) {
+    public <T> T generateObject(Class<T> entityClass) {
         return generator.generateRandomObject(entityClass);
     }
 
@@ -129,7 +132,7 @@ public class TestObjectsFactory {
         flatGenerator = new RandomObjectGenerator(c);
     }
 
-    private <T extends AbstractEntity> T generateFlatEntityWithoutId(Class<T> entityClass) {
+    public <T extends AbstractEntity> T generateFlatEntityWithoutId(Class<T> entityClass) {
         T entity = flatGenerator.generateRandomObject(entityClass);
         entity.setId(null);
         return entity;

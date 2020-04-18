@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
+import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
 import solvve.course.exception.UnprocessableEntityException;
 import solvve.course.repository.NewsRepository;
@@ -118,6 +119,27 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
         Assertions.assertThatThrownBy(()->
                 portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUser.getId(),
                 newsUserReviewNote.getId(), patch)).isInstanceOf(UnprocessableEntityException.class);
+    }
+
+    @Test
+    public void testUpdatePortalUserNewsUserReviewNoteInFixedStatus() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        News news = testObjectsFactory.createNews(portalUser,
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+        NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
+                ModeratorTypoReviewStatusType.IN_REVIEW);
+        NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
+                newsUserReview, 0, 14, "Ivh reide vie;",
+                ModeratorTypoReviewStatusType.FIXED, news,
+                "Ich reise viel, ich reise gern. Fern und nah und nah und fern");
+
+        NewsUserReviewNotePutDTO put = new NewsUserReviewNotePutDTO();
+        put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
+        put.setApprovedText("new approved text");
+
+        Assertions.assertThatThrownBy(()->
+                portalUserNewsUserReviewNoteService.updatePortalUserNewsUserReviewNote(portalUser.getId(),
+                        newsUserReviewNote.getId(), put)).isInstanceOf(UnprocessableEntityException.class);
     }
 
     private Boolean getNewsUserReviewNotesWithSameIndexes(UUID newsId,

@@ -33,4 +33,22 @@ public class MoviePatchDTO {
     private String colour;
 
     private Boolean isPublished;
+
+    private Boolean adult;
+
+    private String originalLanguage;
+
+    private String originalTitle;
+
+    private Long budget;
+
+    private String homepage;
+
+    private String imdbId;
+
+    private Long revenue;
+
+    private Integer runtime;
+
+    private String tagline;
 }

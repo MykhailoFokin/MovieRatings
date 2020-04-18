@@ -33,7 +33,8 @@ public class MovieMovieCompanyControllerTest extends BaseControllerTest {
         MovieMovieCompanyReadDTO read = new MovieMovieCompanyReadDTO();
         read.setId(movieCompanyId);
         List<MovieMovieCompanyReadDTO> expectedCompanies = List.of(read);
-        Mockito.when(movieMovieCompanyService.addMovieCompanyToMovie(movieId, movieCompanyId)).thenReturn(expectedCompanies);
+        Mockito.when(movieMovieCompanyService.addMovieCompanyToMovie(movieId, movieCompanyId))
+                .thenReturn(expectedCompanies);
 
         String resultJson = mvc.perform(post("/api/v1/movies/{movieId}/movie-companies/{id}", movieId, movieCompanyId))
                 .andExpect(status().isOk())

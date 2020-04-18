@@ -86,7 +86,8 @@ public class PortalUserNewsUserReviewNoteService extends AbstractService {
         newsUserReviewNote = newsUserReviewNoteRepository.save(newsUserReviewNote);
         UUID newsUserReviewId = newsUserReviewNote.getNewsUserReview().getId();
 
-        fixNewsByUserReviewNote(put.getNewsId(), put.getStartIndex(), put.getEndIndex(), put.getApprovedText());
+        fixNewsByUserReviewNote(newsUserReviewNote.getNews().getId(), put.getStartIndex(), put.getEndIndex(),
+                put.getApprovedText());
 
         if (newsUserReviewNote.getModeratorTypoReviewStatusType() == ModeratorTypoReviewStatusType.FIXED) {
             transactionTemplate.executeWithoutResult(status -> {

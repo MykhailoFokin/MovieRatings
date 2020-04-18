@@ -7,4 +7,6 @@ import java.util.UUID;
 
 @Repository
 public interface CrewRepository extends CrudRepository<Crew, UUID>, CrewRepositoryCustom {
+
+    Crew findByDescription(String description);
 }

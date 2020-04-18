@@ -36,7 +36,8 @@ public class MovieMovieCompanyServiceTest extends BaseTest {
         UUID movieCompanyId = testObjectsFactory.createMovieCompany(companyDetails, 
                 MovieProductionType.PRODUCTION_COMPANIES).getId();
 
-        List<MovieMovieCompanyReadDTO> res = movieMovieCompanyService.addMovieCompanyToMovie(movie.getId(), movieCompanyId);
+        List<MovieMovieCompanyReadDTO> res =
+                movieMovieCompanyService.addMovieCompanyToMovie(movie.getId(), movieCompanyId);
 
         MovieMovieCompanyReadDTO expectedRead = new MovieMovieCompanyReadDTO();
         expectedRead.setId(movieCompanyId);
@@ -106,8 +107,8 @@ public class MovieMovieCompanyServiceTest extends BaseTest {
                 MovieProductionType.PRODUCTION_COMPANIES).getId();
         movieMovieCompanyService.addMovieCompanyToMovie(movie.getId(), movieCompanyId);
 
-        List<MovieMovieCompanyReadDTO> remainingCompanies = movieMovieCompanyService.removeMovieCompanyFromMovie(movie.getId(),
-                movieCompanyId);
+        List<MovieMovieCompanyReadDTO> remainingCompanies =
+                movieMovieCompanyService.removeMovieCompanyFromMovie(movie.getId(), movieCompanyId);
         Assert.assertTrue(remainingCompanies.isEmpty());
 
         testObjectsFactory.inTransaction(() -> {

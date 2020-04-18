@@ -9,24 +9,24 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/movies/{movieId}/countries")
 public class MovieCountryController {
 
     @Autowired
     private MovieCountryService movieCountryService;
 
-    @GetMapping("/movies/{movieId}/countries")
+    @GetMapping
     public List<MovieCountryReadDTO> getMovieCountries(@PathVariable UUID movieId) {
         return movieCountryService.getMovieCountries(movieId);
     }
 
-    @PostMapping("/movies/{movieId}/countries/{id}")
+    @PostMapping("/{id}")
     public List<MovieCountryReadDTO> addCountryToMovie(@PathVariable UUID movieId,
                                                          @PathVariable UUID id) {
         return movieCountryService.addCountryToMovie(movieId, id);
     }
 
-    @DeleteMapping("/movies/{movieId}/countries/{id}")
+    @DeleteMapping("/{id}")
     public List<MovieCountryReadDTO> deleteMovie(@PathVariable UUID movieId, @PathVariable UUID id) {
         return movieCountryService.removeCountryFromMovie(movieId, id);
     }

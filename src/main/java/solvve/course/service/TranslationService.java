@@ -678,6 +678,15 @@ public class TranslationService {
         movie.setLaboratory(put.getLaboratory());
         movie.setCritique(put.getCritique());
         movie.setIsPublished(put.getIsPublished());
+        movie.setAdult(put.getAdult());
+        movie.setBudget(put.getBudget());
+        movie.setHomepage(put.getHomepage());
+        movie.setImdbId(put.getImdbId());
+        movie.setOriginalTitle(put.getOriginalTitle());
+        movie.setOriginalLanguage(put.getOriginalLanguage());
+        movie.setRevenue(put.getRevenue());
+        movie.setRuntime(put.getRuntime());
+        movie.setTagline(put.getTagline());
     }
 
     public void updateEntity(MovieSpoilerDataPutDTO put, MovieSpoilerData movieSpoilerData) {
@@ -720,6 +729,15 @@ public class TranslationService {
         }
         person.setMiddleName(put.getMiddleName());
         person.setSurname(put.getSurname());
+        person.setBirthday(put.getBirthday());
+        person.setKnownForDepartment(put.getKnownForDepartment());
+        person.setDeathday(put.getDeathday());
+        person.setGender(put.getGender());
+        person.setBiography(put.getBiography());
+        person.setPlaceOfBirth(put.getPlaceOfBirth());
+        person.setAdult(put.getAdult());
+        person.setImdbId(put.getImdbId());
+        person.setHomepage(put.getHomepage());
     }
 
     public void updateEntity(PortalUserPutDTO put, PortalUser portalUser) {

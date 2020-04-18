@@ -1,5 +1,6 @@
 package solvve.course.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import liquibase.util.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -11,10 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import solvve.course.domain.Movie;
-import solvve.course.dto.MovieCreateDTO;
-import solvve.course.dto.MoviePatchDTO;
-import solvve.course.dto.MoviePutDTO;
-import solvve.course.dto.MovieReadDTO;
+import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.exception.handler.ErrorInfo;
 import solvve.course.service.MovieService;
@@ -22,6 +20,7 @@ import solvve.course.service.MovieService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.UUID;
 
 @WebMvcTest(controllers = MovieController.class)
@@ -436,5 +435,22 @@ public class MovieControllerTest extends BaseControllerTest {
         objectMapper.readValue(resultJson, ErrorInfo.class);
         Mockito.verify(movieService, Mockito.never()).patchMovie(ArgumentMatchers.any(),
                 ArgumentMatchers.any());
+    }
+
+    @Test
+    public void testGetMoviesLeaderBoard() throws Exception {
+        MovieInLeaderBoardReadDTO dto = generateObject(MovieInLeaderBoardReadDTO.class);
+        List<MovieInLeaderBoardReadDTO> board = List.of(dto);
+
+        Mockito.when(movieService.getMoviesLeaderBoard()).thenReturn(board);
+
+        String resultJson = mvc.perform(get("/api/v1/movies/leader-board"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<MovieInLeaderBoardReadDTO> actualBoard = objectMapper.readValue(resultJson,
+                new TypeReference<List<MovieInLeaderBoardReadDTO>>() {
+                });
+        Assert.assertEquals(actualBoard, board);
     }
 }

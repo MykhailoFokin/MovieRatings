@@ -89,4 +89,22 @@ public class Movie extends AbstractEntity {
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<UserTypoRequest> userTypoRequests;
+
+    private Boolean adult;
+
+    private String originalLanguage;
+
+    private String originalTitle;
+
+    private Long budget;
+
+    private String homepage;
+
+    private String imdbId;
+
+    private Long revenue;
+
+    private Integer runtime;
+
+    private String tagline;
 }
