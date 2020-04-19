@@ -41,6 +41,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
         UserTypoRequest userTypoRequest = repositoryHelper.getByIdRequired(UserTypoRequest.class, userTypoRequestId);
 
         translationService.map(patch, userTypoRequest);
+        userTypoRequest = userTypoRequestRepository.save(userTypoRequest);
 
         return translationService.translate(userTypoRequest, UserTypoRequestReadDTO.class);
     }

@@ -681,6 +681,32 @@ public class TestObjectsFactory {
         return newsUserReviewNoteRepository.save(newsUserReviewNote);
     }
 
+    public UserTypoRequest createUserTypoRequest(PortalUser moderator, PortalUser portalUser,
+                                                 Movie movie, Role role,
+                                                 Instant fixAppliedDate, String approvedText,
+                                                 String proposedText,
+                                                 ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
+                                                 News news, String sourceText) {
+        UserTypoRequest userTypoRequest = generateFlatEntityWithoutId(UserTypoRequest.class);
+        userTypoRequest.setModerator(moderator);
+        userTypoRequest.setRequester(portalUser);
+        if (news != null) {
+            userTypoRequest.setNews(news);
+        }
+        if (movie != null) {
+            userTypoRequest.setMovie(movie);
+        }
+        if (role != null) {
+            userTypoRequest.setRole(role);
+        }
+        userTypoRequest.setFixAppliedDate(fixAppliedDate);
+        userTypoRequest.setSourceText(sourceText);
+        userTypoRequest.setProposedText(proposedText);
+        userTypoRequest.setApprovedText(approvedText);
+        userTypoRequest.setModeratorTypoReviewStatusType(moderatorTypoReviewStatusType);
+        return userTypoRequestRepository.save(userTypoRequest);
+    }
+
     public CountryCreateDTO createCountryCreateDTO() {
         return generateObject(CountryCreateDTO.class);
     }
