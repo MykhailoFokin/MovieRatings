@@ -21,7 +21,7 @@ public class RoleServiceDbRiderTest extends BaseTest {
     private RoleRepository roleRepository;
 
     @Test
-    @DataSet(value = "/datasets/testUpdateAverageRatingOfRole.xml", cleanAfter = true, skipCleaningFor = {"LANGUAGE"})
+    @DataSet(value = "/datasets/testUpdateAverageRatingOfRole.xml")
     @ExpectedDataSet(value = "/datasets/testUpdateAverageRatingOfRole_result.xml")
     public void testUpdateAverageRatingOfRole() {
         UUID roleId = UUID.fromString("c02c5981-7ced-4102-833c-c132986ccfff");
