@@ -74,11 +74,14 @@ public class RoleRepositoryTest extends BaseTest {
 
         entity.setDescription("NewNameTest");
         roleRepository.save(entity);
-        entity = roleRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            Role entityAtAfterReload = roleRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test

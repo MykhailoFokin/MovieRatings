@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
-import solvve.course.domain.PortalUser;
+import solvve.course.domain.*;
 import solvve.course.exception.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
@@ -41,5 +41,25 @@ public class RepositoryHelperTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
         PortalUser userReference = repositoryHelper.getReferenceIfExists(PortalUser.class, portalUser.getId());
         Assertions.assertThatThrownBy(()-> userReference.getName()).isInstanceOf(LazyInitializationException.class);
+    }
+
+    @Test
+    public void testValidateIfExistsNotNewsUserReviewStatusIsAbsent() {
+        Assert.assertFalse(repositoryHelper.validateIfExistsNotNewsUserReviewStatus(NewsUserReview.class,
+                UUID.randomUUID(),
+                ModeratorTypoReviewStatusType.FIXED));
+    }
+
+    @Test
+    public void testValidateIfExistsNotNewsUserReviewStatusIsExist() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        News news = testObjectsFactory.createNews(portalUser,
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+        NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
+                ModeratorTypoReviewStatusType.IN_REVIEW);
+
+        Assert.assertTrue(repositoryHelper.validateIfExistsNotNewsUserReviewStatus(NewsUserReview.class,
+                newsUserReview.getId(),
+                ModeratorTypoReviewStatusType.FIXED));
     }
 }

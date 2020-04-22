@@ -5,9 +5,12 @@ import org.bitbucket.brunneng.br.RandomObjectGenerator;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import solvve.course.security.UserDetailsServiceImpl;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -18,6 +21,9 @@ public abstract class BaseControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Value("${spring.data.web.pageable.default-page-size}")
     protected int defaultPageSize;

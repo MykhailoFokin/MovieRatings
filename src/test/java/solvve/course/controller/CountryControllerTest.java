@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MvcResult;
 import solvve.course.domain.Country;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -26,6 +28,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = CountryController.class)
 public class CountryControllerTest extends BaseControllerTest {
 
@@ -410,5 +413,17 @@ public class CountryControllerTest extends BaseControllerTest {
                 new TypeReference<PageResult<CountryReadDTO>>() {
                 });
         Assert.assertEquals(resultPage, actualPage);
+    }
+
+    @Test
+    public void testNoSession() throws Exception {
+        UUID wrongId = UUID.randomUUID();
+
+        Mockito.when(countryService.getCountries(wrongId)).thenReturn(new CountryReadDTO());
+
+        MvcResult mvcResult = mvc.perform(get("/api/v1/countries/{id}", wrongId))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assert.assertNull(mvcResult.getRequest().getSession(false));
     }
 }

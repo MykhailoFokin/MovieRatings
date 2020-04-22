@@ -62,11 +62,14 @@ public class UserTypeRepositoryTest extends BaseTest {
 
         entity.setUserGroup(UserGroupType.CONTENTMANAGER);
         userTypeRepository.save(entity);
-        entity = userTypeRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            UserType entityAtAfterReload = userTypeRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

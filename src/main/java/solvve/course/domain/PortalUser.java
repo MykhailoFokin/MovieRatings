@@ -6,7 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -87,4 +89,14 @@ public class PortalUser extends AbstractEntity {
 
     @OneToMany(mappedBy = "moderator", cascade = CascadeType.PERSIST)
     private Set<NewsUserReviewNote> newsUserReviewNotes = new HashSet<NewsUserReviewNote>();
+
+    private String email;
+
+    private String encodedPassword;
+
+    @ManyToMany
+    @JoinTable(name = "portal_user_user_role",
+            joinColumns = {@JoinColumn(name = "portal_user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_role_id")})
+    private List<UserRole> userRoles = new ArrayList<>();
 }

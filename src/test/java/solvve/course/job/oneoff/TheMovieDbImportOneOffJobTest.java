@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import solvve.course.BaseTest;
 import solvve.course.client.themoviedb.TheMovieDbClient;
 import solvve.course.client.themoviedb.dto.MovieReadShortDTO;
@@ -53,6 +54,53 @@ public class TheMovieDbImportOneOffJobTest extends BaseTest {
         Mockito.when(client.getTopRatedMovies()).thenReturn(page);
         Mockito.when(movieImporterService.importMovie(page.getResults().get(0).getId(), null))
                 .thenThrow(RuntimeException.class);
+
+        job.doImport();
+
+        for (MovieReadShortDTO m : page.getResults()) {
+            Mockito.verify(movieImporterService).importMovie(m.getId(), null);
+        }
+    }
+
+    @Test
+    public void testDoImportImportedEntityAlreadyExistException()
+            throws ImportedEntityAlreadyExistException, ImportAlreadyPerformedException {
+
+        MoviesPageDTO page = generatePageWith2Results();
+        Mockito.when(client.getTopRatedMovies()).thenReturn(page);
+        Mockito.when(movieImporterService.importMovie(page.getResults().get(0).getId(), null))
+                .thenThrow(ImportedEntityAlreadyExistException.class);
+
+        job.doImport();
+
+        for (MovieReadShortDTO m : page.getResults()) {
+            Mockito.verify(movieImporterService).importMovie(m.getId(), null);
+        }
+    }
+
+    @Test
+    public void testDoImportImportAlreadyPerformedException()
+            throws ImportedEntityAlreadyExistException, ImportAlreadyPerformedException {
+
+        MoviesPageDTO page = generatePageWith2Results();
+        Mockito.when(client.getTopRatedMovies()).thenReturn(page);
+        Mockito.when(movieImporterService.importMovie(page.getResults().get(0).getId(), null))
+                .thenThrow(ImportAlreadyPerformedException.class);
+
+        job.doImport();
+
+        for (MovieReadShortDTO m : page.getResults()) {
+            Mockito.verify(movieImporterService).importMovie(m.getId(), null);
+        }
+    }
+
+    @Test
+    public void testDoImportWithSetAsyncToDisabled() throws ImportedEntityAlreadyExistException,
+            ImportAlreadyPerformedException {
+        ReflectionTestUtils.setField(job, "enabled", true);
+
+        MoviesPageDTO page = generatePageWith2Results();
+        Mockito.when(client.getTopRatedMovies()).thenReturn(page);
 
         job.doImport();
 

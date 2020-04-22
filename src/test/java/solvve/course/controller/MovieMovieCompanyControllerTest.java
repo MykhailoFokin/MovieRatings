@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.dto.MovieMovieCompanyReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.service.MovieMovieCompanyService;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = MovieMovieCompanyController.class)
 public class MovieMovieCompanyControllerTest extends BaseControllerTest {
 

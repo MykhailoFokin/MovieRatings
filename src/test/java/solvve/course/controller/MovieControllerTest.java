@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.domain.Movie;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.UUID;
 
+@WithMockUser
 @WebMvcTest(controllers = MovieController.class)
 public class MovieControllerTest extends BaseControllerTest {
 

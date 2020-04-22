@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.domain.MovieVote;
 import solvve.course.domain.UserVoteRatingType;
 import solvve.course.dto.MovieVoteCreateDTO;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = MovieVoteController.class)
 public class MovieVoteControllerTest extends BaseControllerTest {
 

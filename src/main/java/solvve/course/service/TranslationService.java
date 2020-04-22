@@ -751,6 +751,8 @@ public class TranslationService {
             portalUser.setUserType(repositoryHelper.getReferenceIfExists(UserType.class, put.getUserTypeId()));
         }
         portalUser.setUserConfidence(put.getUserConfidence());
+        portalUser.setEmail(put.getEmail());
+        portalUser.setEncodedPassword(put.getEncodedPassword());
     }
 
     public void updateEntity(ReleaseDetailPutDTO put, ReleaseDetail releaseDetail) {

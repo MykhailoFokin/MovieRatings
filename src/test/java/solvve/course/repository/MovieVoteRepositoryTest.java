@@ -77,11 +77,14 @@ public class MovieVoteRepositoryTest extends BaseTest {
 
         entity.setRating(R2);
         movieVoteRepository.save(entity);
-        entity = movieVoteRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            MovieVote entityAtAfterReload = movieVoteRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test

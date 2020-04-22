@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.dto.MovieReadDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.service.PortalUserMovieService;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = PortalUserMovieController.class)
 public class PortalUserMovieControllerTest extends BaseControllerTest {
 

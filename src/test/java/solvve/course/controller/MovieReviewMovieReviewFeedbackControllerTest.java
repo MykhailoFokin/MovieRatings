@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.domain.MovieReviewFeedback;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = MovieReviewMovieReviewFeedbackController.class)
 public class MovieReviewMovieReviewFeedbackControllerTest extends BaseControllerTest {
 

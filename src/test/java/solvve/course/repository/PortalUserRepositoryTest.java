@@ -65,11 +65,14 @@ public class PortalUserRepositoryTest extends BaseTest {
 
         entity.setName("NewNameTest");
         portalUserRepository.save(entity);
-        entity = portalUserRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            PortalUser entityAtAfterReload = portalUserRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

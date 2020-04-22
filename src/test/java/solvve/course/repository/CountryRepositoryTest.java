@@ -104,11 +104,14 @@ public class CountryRepositoryTest extends BaseTest {
 
         country.setName("NewNameTest");
         countryRepository.save(country);
-        country = countryRepository.findById(country.getId()).get();
 
-        Instant updatedAtAfterReload = country.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            Country countryAtAfterReload = countryRepository.findById(country.getId()).get();
+
+            Instant updatedAtAfterReload = countryAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

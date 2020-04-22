@@ -73,7 +73,7 @@ public class PortalUserServiceTest extends BaseTest {
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
                 ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
-                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator","userRoles");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserTypeId());
     }
 
@@ -106,7 +106,7 @@ public class PortalUserServiceTest extends BaseTest {
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
                 ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
-                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator","userRoles");
     }
 
     @Test
@@ -140,7 +140,7 @@ public class PortalUserServiceTest extends BaseTest {
                 "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks",
                 "roleReviews","roleReviewsModerator","roleReviewCompliants",
                 "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
-                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator");
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator","userRoles");
         Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserTypeId());
     }
 

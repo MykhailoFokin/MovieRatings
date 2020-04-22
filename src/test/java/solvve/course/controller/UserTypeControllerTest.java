@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.domain.UserGroupType;
 import solvve.course.domain.UserType;
 import solvve.course.dto.UserTypeCreateDTO;
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = UserTypeController.class)
 public class UserTypeControllerTest extends BaseControllerTest {
 

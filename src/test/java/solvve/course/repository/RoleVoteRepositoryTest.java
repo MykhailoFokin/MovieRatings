@@ -84,11 +84,14 @@ public class RoleVoteRepositoryTest extends BaseTest {
 
         entity.setRating(UserVoteRatingType.R2);
         roleVoteRepository.save(entity);
-        entity = roleVoteRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            RoleVote entityAfterSave = roleVoteRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAfterSave.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test

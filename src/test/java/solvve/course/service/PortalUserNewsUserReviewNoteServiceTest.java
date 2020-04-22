@@ -69,10 +69,10 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
                 "Ivh reide vie;");
 
         NewsUserReview newsUserReview3 = testObjectsFactory.createNewsUserReview(portalUser2, news, portalUser1,
-                ModeratorTypoReviewStatusType.IN_REVIEW);
+                ModeratorTypoReviewStatusType.NEED_TO_FIX);
         NewsUserReviewNote newsUserReviewNote3 = testObjectsFactory.createNewsUserReviewNote(portalUser1,
                 newsUserReview3, 0, 14, "Ivh reide vie;",
-                ModeratorTypoReviewStatusType.IN_REVIEW, news,
+                ModeratorTypoReviewStatusType.NEED_TO_FIX, news,
                 "Ivh reide vie;");
 
         NewsUserReviewNotePatchDTO patch = new NewsUserReviewNotePatchDTO();

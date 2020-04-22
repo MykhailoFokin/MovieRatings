@@ -26,4 +26,8 @@ public class PortalUserCreateDTO {
     private UUID userTypeId;
 
     private UserConfidenceType userConfidence;
+
+    private String email;
+
+    private String encodedPassword;
 }

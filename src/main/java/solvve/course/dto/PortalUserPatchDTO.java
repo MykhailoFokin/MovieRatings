@@ -24,4 +24,8 @@ public class PortalUserPatchDTO {
     private UUID userTypeId;
 
     private UserConfidenceType userConfidence;
+
+    private String email;
+
+    private String encodedPassword;
 }

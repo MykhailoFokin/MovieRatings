@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import solvve.course.domain.LanguageType;
 import solvve.course.domain.MovieReviewCompliant;
 import solvve.course.dto.MovieLanguageReadDTO;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser
 @WebMvcTest(controllers = MovieLanguageController.class)
 public class MovieLanguageControllerTest extends BaseControllerTest {
 

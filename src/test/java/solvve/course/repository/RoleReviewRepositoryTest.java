@@ -84,11 +84,14 @@ public class RoleReviewRepositoryTest extends BaseTest {
 
         entity.setTextReview("NewNameTest");
         roleReviewRepository.save(entity);
-        entity = roleReviewRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            RoleReview entityAtAfterReload = roleReviewRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

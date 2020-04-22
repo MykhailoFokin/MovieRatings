@@ -10,6 +10,7 @@ import solvve.course.domain.MovieReview;
 import solvve.course.domain.PortalUser;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -89,11 +90,15 @@ public class MovieReviewRepositoryTest extends BaseTest {
 
         entity.setTextReview("NewNameTest");
         movieReviewRepository.save(entity);
-        entity = movieReviewRepository.findById(entity.getId()).get();
+        UUID entityId = entity.getId();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            MovieReview entityAtAfterReload = movieReviewRepository.findById(entityId).get();
+
+            Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)
