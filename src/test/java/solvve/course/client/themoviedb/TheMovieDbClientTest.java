@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
 import solvve.course.client.themoviedb.dto.*;
 
+import java.time.LocalDate;
+
 public class TheMovieDbClientTest extends BaseTest {
 
     @Autowired
@@ -59,7 +61,7 @@ public class TheMovieDbClientTest extends BaseTest {
         String personId = "1100";
         PersonReadDTO person = theMovieDbClient.getPerson(personId);
         Assert.assertEquals(personId, person.getId());
-        Assert.assertEquals("1947-07-30", person.getBirthday());
+        Assert.assertEquals(LocalDate.of(1947, 07, 30), person.getBirthday());//"1947-07-30"
         Assert.assertEquals("Acting", person.getKnownForDepartment());
         Assert.assertNull(person.getDeathday());
         Assert.assertEquals("Arnold Schwarzenegger", person.getName());

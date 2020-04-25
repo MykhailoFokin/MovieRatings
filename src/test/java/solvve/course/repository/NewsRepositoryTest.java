@@ -74,11 +74,14 @@ public class NewsRepositoryTest extends BaseTest {
 
         entity.setTopic("NewNameTest");
         newsRepository.save(entity);
-        entity = newsRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            News entityAfterReload = newsRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

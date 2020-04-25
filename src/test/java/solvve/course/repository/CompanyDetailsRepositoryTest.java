@@ -149,11 +149,14 @@ public class CompanyDetailsRepositoryTest extends BaseTest {
 
         company.setName("NewNameTest");
         companyDetailsRepository.save(company);
-        company = companyDetailsRepository.findById(company.getId()).get();
 
-        Instant updatedAtAfterReload = company.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            CompanyDetails companyAfterReload = companyDetailsRepository.findById(company.getId()).get();
+
+            Instant updatedAtAfterReload = companyAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

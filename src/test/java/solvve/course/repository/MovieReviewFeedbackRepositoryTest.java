@@ -76,11 +76,16 @@ public class MovieReviewFeedbackRepositoryTest extends BaseTest {
 
         entity.setIsLiked(false);
         movieReviewFeedbackRepository.save(entity);
-        entity = movieReviewFeedbackRepository.findById(entity.getId()).get();
+        entity.setIsLiked(true);
+        movieReviewFeedbackRepository.save(entity);
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            MovieReviewFeedback entityAfterReload = movieReviewFeedbackRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

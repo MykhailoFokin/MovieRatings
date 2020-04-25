@@ -87,11 +87,14 @@ public class RoleSpoilerDataRepositoryTest extends BaseTest {
 
         entity.setEndIndex(3333);
         roleSpoilerDataRepository.save(entity);
-        entity = roleSpoilerDataRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            RoleSpoilerData entityAfterReload = roleSpoilerDataRepository.findById(entity.getId()).get();
+
+            Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

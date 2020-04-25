@@ -181,9 +181,10 @@ public class CrewTypeRepositoryTest extends BaseTest {
 
         entity.setName("NewNameTest");
         crewTypeRepository.save(entity);
-        entity = crewTypeRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        CrewType entityAfterReload = crewTypeRepository.findById(entity.getId()).get();
+
+        Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }

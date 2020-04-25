@@ -165,9 +165,9 @@ public class MovieImporterService {
 
     private Person createPerson(PersonReadDTO externalPerson) {
         Person person = new Person();
-        person.setBirthday(LocalDate.parse(externalPerson.getBirthday()));
+        person.setBirthday(externalPerson.getBirthday());
         person.setKnownForDepartment(externalPerson.getKnownForDepartment());
-        person.setDeathday(LocalDate.parse(externalPerson.getDeathday()));
+        person.setDeathday(externalPerson.getDeathday());
         person.setName(externalPerson.getName());
         person.setGender(externalPerson.getGender());
         person.setBiography(externalPerson.getBiography());

@@ -269,11 +269,14 @@ public class CrewRepositoryTest extends BaseTest {
 
         crew.setDescription("NewTest");
         crewRepository.save(crew);
-        crew = crewRepository.findById(crew.getId()).get();
 
-        Instant updatedAtAfterReload = crew.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            Crew crewAfterReload = crewRepository.findById(crew.getId()).get();
+
+            Instant updatedAtAfterReload = crewAfterReload.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

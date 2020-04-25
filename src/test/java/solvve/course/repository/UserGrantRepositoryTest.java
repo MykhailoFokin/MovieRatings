@@ -71,9 +71,10 @@ public class UserGrantRepositoryTest extends BaseTest {
 
         entity.setObjectName("NewNameTest");
         userGrantRepository.save(entity);
-        entity = userGrantRepository.findById(entity.getId()).get();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
+        UserGrant entityAfterReload = userGrantRepository.findById(entity.getId()).get();
+
+        Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
         Assert.assertNotNull(updatedAtAfterReload);
         Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
     }
