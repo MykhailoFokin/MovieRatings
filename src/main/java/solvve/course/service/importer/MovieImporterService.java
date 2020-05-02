@@ -13,7 +13,6 @@ import solvve.course.exception.ImportAlreadyPerformedException;
 import solvve.course.exception.ImportedEntityAlreadyExistException;
 import solvve.course.repository.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
