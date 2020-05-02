@@ -16,9 +16,9 @@ import java.lang.annotation.Target;
         @ApiImplicitParam(name = "size", dataType = "int", paramType = "query",
                 value = "Number of records per page. Max value is 500", defaultValue = "50"),
         @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                value = "Sorting criteria in the format: property(,asc|desc). " +
-                        "Default sort order is ascending. " +
-                        "Multiple sort criteria are supported.")
+                value = "Sorting criteria in the format: property(,asc|desc). "
+                        + "Default sort order is ascending. "
+                        + "Multiple sort criteria are supported.")
 })
 public @interface ApiPageable {
 }
