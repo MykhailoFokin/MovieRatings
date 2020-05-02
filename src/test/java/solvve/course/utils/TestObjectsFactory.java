@@ -456,6 +456,7 @@ public class TestObjectsFactory {
         movieReviewFeedback.setPortalUser(portalUser);
         movieReviewFeedback.setMovie(movie);
         movieReviewFeedback.setMovieReview(movieReview);
+        movieReviewFeedback.setIsLiked(true);
         return movieReviewFeedbackRepository.save(movieReviewFeedback);
     }
 

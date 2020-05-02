@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
@@ -19,11 +21,13 @@ public class RoleSpoilerDataController {
     @Autowired
     private RoleSpoilerDataService roleSpoilerDataService;
 
+    @AdminOrModerator
     @GetMapping("/{id}")
     public RoleSpoilerDataReadDTO getRoleSpoilerData(@PathVariable UUID id) {
         return roleSpoilerDataService.getRoleSpoilerData(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public RoleSpoilerDataReadDTO createRoleSpoilerData(@RequestBody @Valid RoleSpoilerDataCreateDTO createDTO) {
         ControllerValidationUtil.validateLessThan(createDTO.getStartIndex(), createDTO.getEndIndex(),
@@ -31,6 +35,7 @@ public class RoleSpoilerDataController {
         return roleSpoilerDataService.createRoleSpoilerData(createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID id,
                                                        @RequestBody RoleSpoilerDataPatchDTO patch) {
@@ -39,11 +44,13 @@ public class RoleSpoilerDataController {
         return roleSpoilerDataService.patchRoleSpoilerData(id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteRoleSpoilerData(@PathVariable UUID id) {
         roleSpoilerDataService.deleteRoleSpoilerData(id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID id,
                                                      @RequestBody @Valid RoleSpoilerDataPutDTO put) {

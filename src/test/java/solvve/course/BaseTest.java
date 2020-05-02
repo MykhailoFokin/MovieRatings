@@ -19,7 +19,7 @@ import solvve.course.utils.TestObjectsFactory;
         "delete from role_vote","delete from role_spoiler_data","delete from role_review","delete from role",
         "delete from user_grant","delete from person","delete from country",
         "delete from company_details","delete from portal_user","delete from user_type",
-        "delete from release_detail","delete from movie","delete from external_system_import"},
+        "delete from release_detail","delete from movie","delete from external_system_import","delete from user_role"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public abstract class BaseTest {
 

@@ -6,7 +6,7 @@ import solvve.course.domain.Role;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -20,7 +20,7 @@ public class PersonReadExtendedDTO {
 
     private String middleName;
 
-    private Set<Crew> crews;
+    private List<Crew> crews;
 
     private Role role;
 

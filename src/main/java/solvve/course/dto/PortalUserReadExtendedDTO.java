@@ -4,7 +4,7 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,35 +24,35 @@ public class PortalUserReadExtendedDTO {
 
     private UserConfidenceType userConfidence;
 
-    private Set<UserGrant> userGrants;
+    private List<UserGrant> userGrants;
 
-    private Set<MovieReview> movieReview;
+    private List<MovieReview> movieReview;
 
-    private Set<MovieReview> movieReviewModerator;
+    private List<MovieReview> movieReviewModerator;
 
-    private  Set<MovieReviewCompliant> movieReviewCompliants;
+    private  List<MovieReviewCompliant> movieReviewCompliants;
 
-    private  Set<MovieReviewCompliant> movieReviewCompliantsModerator;
+    private  List<MovieReviewCompliant> movieReviewCompliantsModerator;
 
-    private  Set<MovieReviewFeedback> movieReviewFeedbacks;
+    private  List<MovieReviewFeedback> movieReviewFeedbacks;
 
-    private Set<RoleReview> roleReviews;
+    private List<RoleReview> roleReviews;
 
-    private Set<RoleReview> roleReviewsModerator;
+    private List<RoleReview> roleReviewsModerator;
 
-    private  Set<RoleReviewCompliant> roleReviewCompliants;
+    private  List<RoleReviewCompliant> roleReviewCompliants;
 
-    private  Set<RoleReviewCompliant> roleReviewCompliantsModerator;
+    private  List<RoleReviewCompliant> roleReviewCompliantsModerator;
 
-    private  Set<RoleReviewFeedback> roleReviewFeedbacks;
+    private  List<RoleReviewFeedback> roleReviewFeedbacks;
 
-    private Set<MovieVote> movieVotes;
+    private List<MovieVote> movieVotes;
 
-    private Set<News> news;
+    private List<News> news;
 
-    private Set<RoleVote> roleVotes;
+    private List<RoleVote> roleVotes;
 
-    private Set<Visit> visits;
+    private List<Visit> visits;
 
     private Instant createdAt;
 

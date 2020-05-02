@@ -8,6 +8,7 @@ import solvve.course.BaseTest;
 import solvve.course.domain.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -83,10 +84,11 @@ public class RoleReviewRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setTextReview("NewNameTest");
-        roleReviewRepository.save(entity);
+        entity = roleReviewRepository.save(entity);
+        UUID entityId = entity.getId();
 
         testObjectsFactory.inTransaction(() -> {
-            RoleReview entityAtAfterReload = roleReviewRepository.findById(entity.getId()).get();
+            RoleReview entityAtAfterReload = roleReviewRepository.findById(entityId).get();
 
             Instant updatedAtAfterReload = entityAtAfterReload.getUpdatedAt();
             Assert.assertNotNull(updatedAtAfterReload);

@@ -14,6 +14,7 @@ import solvve.course.service.CompanyDetailsService;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class CompanyDetailsRepositoryTest extends BaseTest {
 
@@ -148,10 +149,11 @@ public class CompanyDetailsRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         company.setName("NewNameTest");
-        companyDetailsRepository.save(company);
+        company = companyDetailsRepository.save(company);
+        UUID companyId = company.getId();
 
         testObjectsFactory.inTransaction(() -> {
-            CompanyDetails companyAfterReload = companyDetailsRepository.findById(company.getId()).get();
+            CompanyDetails companyAfterReload = companyDetailsRepository.findById(companyId).get();
 
             Instant updatedAtAfterReload = companyAfterReload.getUpdatedAt();
             Assert.assertNotNull(updatedAtAfterReload);

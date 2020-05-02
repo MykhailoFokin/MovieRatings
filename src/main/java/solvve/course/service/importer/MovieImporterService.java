@@ -57,7 +57,7 @@ public class MovieImporterService {
 
         Movie movie = new Movie();
         movie.setTitle(read.getTitle());
-        movie.setYear((short) LocalDate.parse(read.getReleaseDate()).getYear());
+        movie.setYear((short) read.getReleaseDate().getYear());
         movie.setAdult(read.getAdult());
         movie.setOriginalTitle(read.getOriginalTitle());
         movie.setOriginalLanguage(read.getOriginalLanguage());

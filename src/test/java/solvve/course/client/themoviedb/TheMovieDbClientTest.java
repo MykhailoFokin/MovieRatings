@@ -38,7 +38,7 @@ public class TheMovieDbClientTest extends BaseTest {
                 "termination by a cyborg from the future. Now her son, John, the future leader of the resistance, is " +
                 "the target for a newer, more deadly terminator. Once again, the resistance has managed to send a " +
                 "protector back to attempt to save John and his mother Sarah.");
-        Assert.assertEquals(movie.getReleaseDate(), "1991-07-03");
+        Assert.assertEquals(movie.getReleaseDate(), LocalDate.of(1991,07,03));
         Assert.assertEquals(movie.getRevenue().longValue(), 520000000L);
         Assert.assertEquals(movie.getRuntime().intValue(), 137);
         Assert.assertEquals(movie.getTagline(), "It's nothing personal.");

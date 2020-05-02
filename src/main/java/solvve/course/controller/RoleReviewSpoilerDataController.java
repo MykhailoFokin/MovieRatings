@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.RoleSpoilerDataCreateDTO;
 import solvve.course.dto.RoleSpoilerDataPatchDTO;
@@ -20,12 +22,14 @@ public class RoleReviewSpoilerDataController {
     @Autowired
     private RoleReviewSpoilerDataService roleSpoilerDataService;
 
+    @AdminOrModerator
     @GetMapping
     public List<RoleSpoilerDataReadDTO> getRoleReviewSpoilerData(
             @PathVariable UUID roleReviewId) {
         return roleSpoilerDataService.getRoleReviewSpoilerData(roleReviewId);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public RoleSpoilerDataReadDTO createRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                         @RequestBody @Valid RoleSpoilerDataCreateDTO createDTO) {
@@ -34,6 +38,7 @@ public class RoleReviewSpoilerDataController {
         return roleSpoilerDataService.createRoleReviewSpoilerData(roleReviewId, createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public RoleSpoilerDataReadDTO patchRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                        @PathVariable (value = "id") UUID id,
@@ -43,12 +48,14 @@ public class RoleReviewSpoilerDataController {
         return roleSpoilerDataService.patchRoleReviewSpoilerData(roleReviewId, id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteRoleSpoilerData(@PathVariable UUID roleReviewId,
                                       @PathVariable (value = "id") UUID id) {
         roleSpoilerDataService.deleteRoleReviewSpoilerData(roleReviewId, id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public RoleSpoilerDataReadDTO putRoleSpoilerData(@PathVariable UUID roleReviewId,
                                                      @PathVariable (value = "id") UUID id,

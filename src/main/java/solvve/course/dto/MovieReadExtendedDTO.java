@@ -4,8 +4,8 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -33,23 +33,23 @@ public class MovieReadExtendedDTO {
 
     private Boolean isPublished;
 
-    private Set<Country> movieProdCountries = new HashSet<Country>();
+    private List<Country> movieProdCountries = new ArrayList<>();
 
-    private Set<Crew> crews = new HashSet<Crew>();
+    private List<Crew> crews = new ArrayList<>();
 
-    private Set<MovieReview> movieReview = new HashSet<MovieReview>();
+    private List<MovieReview> movieReview = new ArrayList<>();
 
-    private Set<MovieReviewCompliant> movieReviewCompliants = new HashSet<MovieReviewCompliant>();
+    private List<MovieReviewCompliant> movieReviewCompliants = new ArrayList<>();
 
-    private Set<MovieReviewFeedback> movieReviewFeedbacks = new HashSet<MovieReviewFeedback>();
+    private List<MovieReviewFeedback> movieReviewFeedbacks = new ArrayList<>();
 
-    private Set<MovieVote> movieVotes = new HashSet<MovieVote>();
+    private List<MovieVote> movieVotes = new ArrayList<>();
 
-    private Set<ReleaseDetail> releaseDetails = new HashSet<ReleaseDetail>();
+    private List<ReleaseDetail> releaseDetails = new ArrayList<>();
 
-    private Set<Language> languages = new HashSet<Language>();
+    private List<Language> languages = new ArrayList<>();
 
-    private Set<MovieCompany> movieCompanies = new HashSet<MovieCompany>();
+    private List<MovieCompany> movieCompanies = new ArrayList<>();
 
     private Instant createdAt;
 

@@ -131,7 +131,7 @@ public class MovieCompanyRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setDescription("NewNameTest");
-        movieCompanyRepository.save(entity);
+        entity = movieCompanyRepository.save(entity);
         entity = movieCompanyRepository.findById(entity.getId()).get();
 
         Instant updatedAtAfterReload = entity.getUpdatedAt();

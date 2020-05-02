@@ -4,7 +4,7 @@ import lombok.Data;
 import solvve.course.domain.*;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -22,11 +22,11 @@ public class RoleReviewReadExtendedDTO {
 
     private PortalUser moderator;
 
-    private Set<RoleReviewCompliant> roleReviewCompliants;
+    private List<RoleReviewCompliant> roleReviewCompliants;
 
-    private Set<RoleReviewFeedback> roleReviewFeedbacks;
+    private List<RoleReviewFeedback> roleReviewFeedbacks;
 
-    private Set<RoleSpoilerData> roleSpoilerData;
+    private List<RoleSpoilerData> roleSpoilerData;
 
     private Instant createdAt;
 

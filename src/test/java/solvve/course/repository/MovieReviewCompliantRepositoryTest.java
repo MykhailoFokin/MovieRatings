@@ -8,6 +8,7 @@ import solvve.course.BaseTest;
 import solvve.course.domain.*;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -78,12 +79,16 @@ public class MovieReviewCompliantRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setDescription("NewNameTest");
-        movieReviewCompliantRepository.save(entity);
-        entity = movieReviewCompliantRepository.findById(entity.getId()).get();
+        entity = movieReviewCompliantRepository.save(entity);
+        UUID entityId = entity.getId();
 
-        Instant updatedAtAfterReload = entity.getUpdatedAt();
-        Assert.assertNotNull(updatedAtAfterReload);
-        Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        testObjectsFactory.inTransaction(() -> {
+            MovieReviewCompliant entityAfterUpdate = movieReviewCompliantRepository.findById(entityId).get();
+
+            Instant updatedAtAfterReload = entityAfterUpdate.getUpdatedAt();
+            Assert.assertNotNull(updatedAtAfterReload);
+            Assert.assertTrue(updatedAtBeforeReload.isBefore(updatedAtAfterReload));
+        });
     }
 
     @Test(expected = TransactionSystemException.class)

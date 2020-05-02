@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.dto.RoleReviewFeedbackCreateDTO;
 import solvve.course.dto.RoleReviewFeedbackPatchDTO;
 import solvve.course.dto.RoleReviewFeedbackPutDTO;
@@ -19,12 +21,14 @@ public class RoleReviewRoleReviewFeedbackController {
     @Autowired
     private RoleReviewRoleReviewFeedbackService roleReviewFeedbackService;
 
+    @AdminOrModerator
     @GetMapping
     public List<RoleReviewFeedbackReadDTO> getRoleReviewSpoilerData(
             @PathVariable UUID roleReviewId) {
         return roleReviewFeedbackService.getRoleReviewRoleReviewFeedback(roleReviewId);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public RoleReviewFeedbackReadDTO createRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                               @RequestBody
@@ -32,6 +36,7 @@ public class RoleReviewRoleReviewFeedbackController {
         return roleReviewFeedbackService.createRoleReviewRoleReviewFeedback(roleReviewId, createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public RoleReviewFeedbackReadDTO patchRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                              @PathVariable (value = "id") UUID id,
@@ -39,12 +44,14 @@ public class RoleReviewRoleReviewFeedbackController {
         return roleReviewFeedbackService.patchRoleReviewRoleReviewFeedback(roleReviewId, id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                          @PathVariable (value = "id") UUID id) {
         roleReviewFeedbackService.deleteRoleReviewRoleReviewFeedback(roleReviewId, id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public RoleReviewFeedbackReadDTO putRoleReviewFeedback(@PathVariable UUID roleReviewId,
                                                            @PathVariable (value = "id") UUID id,

@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
@@ -20,12 +22,14 @@ public class MovieReviewSpoilerDataController {
     @Autowired
     private MovieReviewSpoilerDataService movieSpoilerDataService;
 
+    @AdminOrModerator
     @GetMapping
     public List<MovieSpoilerDataReadDTO> getMovieReviewSpoilerData(
             @PathVariable UUID movieReviewId) {
         return movieSpoilerDataService.getMovieReviewSpoilerDatas(movieReviewId);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public MovieSpoilerDataReadDTO createMovieSpoilerData(@PathVariable UUID movieReviewId,
                                                           @RequestBody @Valid MovieSpoilerDataCreateDTO createDTO) {
@@ -34,6 +38,7 @@ public class MovieReviewSpoilerDataController {
         return movieSpoilerDataService.createMovieReviewSpoilerData(movieReviewId, createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID movieReviewId,
                                                          @PathVariable (value = "id") UUID id,
@@ -43,12 +48,14 @@ public class MovieReviewSpoilerDataController {
         return movieSpoilerDataService.patchMovieReviewSpoilerData(movieReviewId, id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteMovieSpoilerData(@PathVariable UUID movieReviewId,
                                        @PathVariable (value = "id") UUID id) {
         movieSpoilerDataService.deleteMovieReviewSpoilerData(movieReviewId, id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID movieReviewId,
                                                        @PathVariable (value = "id") UUID id,

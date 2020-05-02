@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
 import solvve.course.dto.MovieReviewCompliantPutDTO;
@@ -19,12 +21,14 @@ public class MovieReviewMovieReviewCompliantController {
     @Autowired
     private MovieReviewMovieReviewCompliantService movieReviewCompliantService;
 
+    @AdminOrModerator
     @GetMapping
     public List<MovieReviewCompliantReadDTO> getMovieReviewSpoilerData(
             @PathVariable UUID movieReviewId) {
         return movieReviewCompliantService.getMovieReviewMovieReviewCompliant(movieReviewId);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public MovieReviewCompliantReadDTO createMovieReviewCompliant(
             @PathVariable UUID movieReviewId,
@@ -32,6 +36,7 @@ public class MovieReviewMovieReviewCompliantController {
         return movieReviewCompliantService.createMovieReviewMovieReviewCompliant(movieReviewId, createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public MovieReviewCompliantReadDTO patchMovieReviewCompliant(
             @PathVariable UUID movieReviewId,
@@ -40,12 +45,14 @@ public class MovieReviewMovieReviewCompliantController {
         return movieReviewCompliantService.patchMovieReviewMovieReviewCompliant(movieReviewId, id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteMovieReviewCompliant(@PathVariable UUID movieReviewId,
                                            @PathVariable (value = "id") UUID id) {
         movieReviewCompliantService.deleteMovieReviewMovieReviewCompliant(movieReviewId, id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public MovieReviewCompliantReadDTO putMovieReviewCompliant(
             @PathVariable UUID movieReviewId,

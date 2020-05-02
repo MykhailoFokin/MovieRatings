@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface PortalUserRepository extends CrudRepository<PortalUser, UUID> {
 
     PortalUser findByEmail(String email);
+
+    boolean existsByIdAndEmail(UUID id, String email);
 }

@@ -3,6 +3,7 @@ package solvve.course.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.CurrentUser;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
 import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
@@ -19,11 +20,13 @@ public class PortalUserNewsUserReviewNoteController {
     @Autowired
     private PortalUserNewsUserReviewNoteService portalUserNewsUserReviewNoteService;
 
+    @CurrentUser
     @GetMapping
     public List<NewsUserReviewNoteReadDTO> getNewsUserReviewUserReviewNote(@PathVariable UUID portalUserId) {
         return portalUserNewsUserReviewNoteService.getModeratorUserReviewNotes(portalUserId);
     }
 
+    @CurrentUser
     @PatchMapping("/{id}")
     public NewsUserReviewNoteReadDTO patchNewsUserReviewNote(@PathVariable UUID portalUserId,
                                                              @PathVariable UUID newsUserReviewNoteId,
@@ -32,6 +35,7 @@ public class PortalUserNewsUserReviewNoteController {
                 newsUserReviewNoteId, patch);
     }
 
+    @CurrentUser
     @PutMapping("/{id}")
     public NewsUserReviewNoteReadDTO putNewsUserReviewNote(@PathVariable UUID portalUserId,
                                                            @PathVariable UUID newsUserReviewNoteId,

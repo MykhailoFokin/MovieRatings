@@ -24,6 +24,7 @@ import solvve.course.repository.MovieRepository;
 import solvve.course.repository.PersonRepository;
 import solvve.course.repository.RoleRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class MovieImporterServiceTest extends BaseTest {
         String movieExternalId = "id1";
 
         MovieReadDTO read = testObjectsFactory.generateObject(MovieReadDTO.class);
-        read.setReleaseDate("2020-01-01");
+        read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
 
         MovieCreditsCastReadDTO movieCreditsCastReadDTO =
@@ -103,7 +104,7 @@ public class MovieImporterServiceTest extends BaseTest {
         String movieExternalId = "id3";
 
         MovieReadDTO read = testObjectsFactory.generateObject(MovieReadDTO.class);
-        read.setReleaseDate("2020-01-01");
+        read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
 
         MovieCreditsCastReadDTO movieCreditsCastReadDTO =
@@ -131,7 +132,7 @@ public class MovieImporterServiceTest extends BaseTest {
         String movieExternalId = "id4";
 
         MovieReadDTO read = testObjectsFactory.generateObject(MovieReadDTO.class);
-        read.setReleaseDate("2020-01-01");
+        read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
 
         MovieCreditsCastReadDTO movieCreditsCastReadDTO =

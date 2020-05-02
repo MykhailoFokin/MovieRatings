@@ -89,7 +89,7 @@ public class MovieReviewRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setTextReview("NewNameTest");
-        movieReviewRepository.save(entity);
+        entity = movieReviewRepository.save(entity);
         UUID entityId = entity.getId();
 
         testObjectsFactory.inTransaction(() -> {

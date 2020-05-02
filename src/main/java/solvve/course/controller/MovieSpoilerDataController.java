@@ -1,7 +1,9 @@
 package solvve.course.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import solvve.course.controller.security.AdminOrModerator;
 import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.MovieSpoilerDataCreateDTO;
 import solvve.course.dto.MovieSpoilerDataPatchDTO;
@@ -19,11 +21,13 @@ public class MovieSpoilerDataController {
     @Autowired
     private MovieSpoilerDataService movieSpoilerDataService;
 
+    @AdminOrModerator
     @GetMapping("/{id}")
     public MovieSpoilerDataReadDTO getMovieSpoilerData(@PathVariable UUID id) {
         return movieSpoilerDataService.getMovieSpoilerData(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping
     public MovieSpoilerDataReadDTO createMovieSpoilerData(@RequestBody @Valid MovieSpoilerDataCreateDTO createDTO) {
         ControllerValidationUtil.validateLessThan(createDTO.getStartIndex(), createDTO.getEndIndex(),
@@ -31,6 +35,7 @@ public class MovieSpoilerDataController {
         return movieSpoilerDataService.createMovieSpoilerData(createDTO);
     }
 
+    @AdminOrModerator
     @PatchMapping("/{id}")
     public MovieSpoilerDataReadDTO patchMovieSpoilerData(@PathVariable UUID id,
                                                          @RequestBody MovieSpoilerDataPatchDTO patch) {
@@ -39,11 +44,13 @@ public class MovieSpoilerDataController {
         return movieSpoilerDataService.patchMovieSpoilerData(id, patch);
     }
 
+    @AdminOrModerator
     @DeleteMapping("/{id}")
     public void deleteMovieSpoilerData(@PathVariable UUID id) {
         movieSpoilerDataService.deleteMovieSpoilerData(id);
     }
 
+    @AdminOrModerator
     @PutMapping("/{id}")
     public MovieSpoilerDataReadDTO putMovieSpoilerData(@PathVariable UUID id,
                                                        @RequestBody @Valid MovieSpoilerDataPutDTO put) {

@@ -10,6 +10,7 @@ import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserType;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -73,10 +74,11 @@ public class NewsRepositoryTest extends BaseTest {
         Assert.assertNotNull(updatedAtBeforeReload);
 
         entity.setTopic("NewNameTest");
-        newsRepository.save(entity);
+        entity = newsRepository.save(entity);
+        UUID entityId = entity.getId();
 
         testObjectsFactory.inTransaction(() -> {
-            News entityAfterReload = newsRepository.findById(entity.getId()).get();
+            News entityAfterReload = newsRepository.findById(entityId).get();
 
             Instant updatedAtAfterReload = entityAfterReload.getUpdatedAt();
             Assert.assertNotNull(updatedAtAfterReload);
