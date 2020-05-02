@@ -40,7 +40,7 @@ public class TheMovieDbClientTest extends BaseTest {
                 "protector back to attempt to save John and his mother Sarah.");
         Assert.assertEquals(movie.getReleaseDate(), LocalDate.of(1991,07,03));
         Assert.assertEquals(movie.getRevenue().longValue(), 520000000L);
-        Assert.assertEquals(movie.getRuntime().intValue(), 137);
+        Assert.assertEquals(movie.getRuntime().intValue(), 156);
         Assert.assertEquals(movie.getTagline(), "It's nothing personal.");
     }
 
