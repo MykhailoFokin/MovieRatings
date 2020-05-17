@@ -7,6 +7,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.security.PublicAccess;
 import solvve.course.dto.*;
 import solvve.course.service.CountryService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class CountryController {
 
     @PublicAccess
     @GetMapping
-    public PageResult<CountryReadDTO> getCountries(CountryFilter countryFilter, Pageable pageable) {
+    public PageResult<CountryReadDTO> getCountries(CountryFilter countryFilter, @ApiIgnore Pageable pageable) {
         return countryService.getCountries(countryFilter, pageable);
     }
 

@@ -38,10 +38,6 @@ public class UserDetailsServiceImplTest extends BaseTest {
 
     @Test
     public void testLoadUserByUserName() {
-        UserRole userRole = new UserRole();
-        userRole.setType(UserGroupType.USER);
-        userRoleRepository.save(userRole);
-
         PortalUser portalUser = transactionTemplate.execute(status -> {
             UserType userType = testObjectsFactory.createUserType();
             PortalUser u = testObjectsFactory.generateFlatEntityWithoutId(PortalUser.class);
@@ -56,7 +52,7 @@ public class UserDetailsServiceImplTest extends BaseTest {
         Assert.assertFalse(userDetails.getAuthorities().isEmpty());
         Assertions.assertThat(userDetails.getAuthorities())
                 .extracting("authority").containsExactlyInAnyOrder(
-                portalUser.getUserRoles().stream().map(ur -> ur.getType().toString()).toArray());
+                portalUser.getUserRoles().stream().map(ur -> ur.getUserGroupType().toString()).toArray());
     }
 
     @Test(expected = UsernameNotFoundException.class)

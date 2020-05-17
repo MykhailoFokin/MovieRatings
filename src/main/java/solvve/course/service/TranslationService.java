@@ -61,6 +61,7 @@ public class TranslationService {
         configureForUserType(c);
         configureForUserTypoRequest(c);
         configureForVisit(c);
+        configureForNewsFeedback(c);
 
         return c;
     }
@@ -506,6 +507,25 @@ public class TranslationService {
         c.beanOfClass(VisitPatchDTO.class).translationTo(Visit.class).mapOnlyNotNullProperties();
     }
 
+    private void configureForNewsFeedback(Configuration c) {
+        Configuration.Translation t =
+                c.beanOfClass(NewsFeedback.class).translationTo(NewsFeedbackReadDTO.class);
+        t.srcProperty("portalUser.id").translatesTo("portalUserId");
+        t.srcProperty("news.id").translatesTo("newsId");
+
+        Configuration.Translation fromCreateToEntity =
+                c.beanOfClass(NewsFeedbackCreateDTO.class).translationTo(NewsFeedback.class);
+        fromCreateToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromCreateToEntity.srcProperty("newsId").translatesTo("news.id");
+
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(NewsFeedbackPatchDTO.class).translationTo(NewsFeedback.class);
+        fromPatchToEntity.srcProperty("portalUserId").translatesTo("portalUser.id");
+        fromPatchToEntity.srcProperty("newsId").translatesTo("news.id");
+        c.beanOfClass(NewsFeedbackPatchDTO.class)
+                .translationTo(NewsFeedback.class).mapOnlyNotNullProperties();
+    }
+
     public <T> T translate(Object srcObject, Class<T> targetClass) {
         try {
             return objectTranslator.translate(srcObject, targetClass);
@@ -927,6 +947,21 @@ public class TranslationService {
         if (put.getFixAppliedDate() != null) {
             userTypoRequest.setFixAppliedDate(put.getFixAppliedDate());
         }
+    }
+
+    public void updateEntity(NewsFeedbackPutDTO put, NewsFeedback newsFeedback) {
+        if (put.getPortalUserId() != null) {
+            newsFeedback.setPortalUser(repositoryHelper.getReferenceIfExists(PortalUser.class,
+                    put.getPortalUserId()));
+        }
+        if (put.getNewsId() != null) {
+            newsFeedback.setNews(repositoryHelper.getReferenceIfExists(News.class, put.getNewsId()));
+        }
+        if (put.getNewsId() != null) {
+            newsFeedback.setNews(repositoryHelper
+                    .getReferenceIfExists(News.class, put.getNewsId()));
+        }
+        newsFeedback.setIsLiked(put.getIsLiked());
     }
 
     public <E, T> PageResult<T> toPageResult(Page<E> page, Class<T> dtoType) {

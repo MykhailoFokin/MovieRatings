@@ -1,6 +1,7 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Gender;
 import solvve.course.domain.UserConfidenceType;
 
 import javax.validation.constraints.NotNull;
@@ -30,4 +31,6 @@ public class PortalUserCreateDTO {
     private String email;
 
     private String encodedPassword;
+
+    private Gender gender;
 }

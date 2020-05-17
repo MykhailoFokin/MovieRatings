@@ -8,6 +8,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.security.PublicAccess;
 import solvve.course.dto.*;
 import solvve.course.service.CompanyDetailsService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -54,7 +55,8 @@ public class CompanyDetailsController {
     @ApiPageable
     @PublicAccess
     @GetMapping
-    public PageResult<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter, Pageable pageable) {
+    public PageResult<CompanyDetailsReadDTO> getCompanyDetails(CompanyDetailsFilter filter,
+                                                               @ApiIgnore Pageable pageable) {
         return companyDetailsService.getCompanyDetails(filter, pageable);
     }
 }

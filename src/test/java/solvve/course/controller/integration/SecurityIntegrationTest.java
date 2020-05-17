@@ -15,12 +15,12 @@ import org.springframework.web.client.RestTemplate;
 import solvve.course.BaseTest;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
-import solvve.course.repository.NewsRepository;
 import solvve.course.repository.PortalUserRepository;
 import solvve.course.repository.UserRoleRepository;
 import solvve.course.repository.VisitRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @ActiveProfiles({"test", "integration-test"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -155,7 +155,8 @@ public class SecurityIntegrationTest extends BaseTest {
         portalUser.setEmail(email);
         portalUser.setEncodedPassword(passwordEncoder.encode(password));
         portalUser.setUserType(userType);
-        portalUserRepository.save(portalUser);
+        portalUser = portalUserRepository.save(portalUser);
+        UUID portalUserId = portalUser.getId();
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -164,7 +165,7 @@ public class SecurityIntegrationTest extends BaseTest {
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
         Assertions.assertThatThrownBy(() -> restTemplate.exchange(
-                "http://localhost:8080//api/v1/portal-user/" + portalUser.getId() + "/movies/recommendations",
+                "http://localhost:8080//api/v1/portal-user/" + portalUserId + "/movies/recommendations",
                 HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<MovieReadDTO>>() {}))
                 .isInstanceOf(HttpClientErrorException.class).extracting("statusCode").isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -261,7 +262,8 @@ public class SecurityIntegrationTest extends BaseTest {
         Assertions.assertThatThrownBy(() -> restTemplate.exchange(
                 "http://localhost:8080//api/v1/portal-user/" + portalUser1.getId() + "/movies/recommendations",
                 HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<MovieReadDTO>>() {}))
-                .isInstanceOf(HttpClientErrorException.class).extracting("statusCode").isEqualTo(HttpStatus.FORBIDDEN);
+                .isInstanceOf(HttpClientErrorException.class).extracting("statusCode").isEqualTo(HttpStatus
+                .FORBIDDEN);
     }
 
     private String getBasicAuthorizationHeaderValue(String userName, String password) {
@@ -269,9 +271,7 @@ public class SecurityIntegrationTest extends BaseTest {
     }
 
     private PortalUser createPortalUser(String email, String password, UserGroupType userGroupType) {
-        UserRole userRole = new UserRole();
-        userRole.setType(userGroupType);
-        userRole = userRoleRepository.save(userRole);
+        UserRole userRole = userRoleRepository.findByUserGroupType(userGroupType);
 
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.generateFlatEntityWithoutId(PortalUser.class);

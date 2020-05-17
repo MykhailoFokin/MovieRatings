@@ -57,4 +57,8 @@ public class PortalUserReadExtendedDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private Gender gender;
+
+    private List<UUID> userRoleIds;
 }

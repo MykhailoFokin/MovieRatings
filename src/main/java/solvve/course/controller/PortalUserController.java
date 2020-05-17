@@ -3,6 +3,7 @@ package solvve.course.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import solvve.course.controller.security.Admin;
+import solvve.course.controller.security.AdminOrCurrentUser;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
 import solvve.course.dto.PortalUserPutDTO;
@@ -31,7 +32,7 @@ public class PortalUserController {
         return portalUserService.createPortalUser(createDTO);
     }
 
-    @Admin
+    @AdminOrCurrentUser
     @PatchMapping("/{id}")
     public PortalUserReadDTO patchPortalUser(@PathVariable UUID id, @RequestBody @Valid PortalUserPatchDTO patch) {
         return portalUserService.patchPortalUser(id, patch);

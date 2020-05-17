@@ -5,17 +5,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
-import solvve.course.domain.PortalUser;
-import solvve.course.domain.UserConfidenceType;
-import solvve.course.domain.UserType;
+import solvve.course.domain.*;
 import solvve.course.dto.PortalUserCreateDTO;
 import solvve.course.dto.PortalUserPatchDTO;
 import solvve.course.dto.PortalUserPutDTO;
 import solvve.course.dto.PortalUserReadDTO;
 import solvve.course.exception.EntityNotFoundException;
 import solvve.course.repository.PortalUserRepository;
+import solvve.course.repository.UserRoleRepository;
 import solvve.course.utils.TestObjectsFactory;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class PortalUserServiceTest extends BaseTest {
@@ -26,13 +26,16 @@ public class PortalUserServiceTest extends BaseTest {
     @Autowired
     private PortalUserService portalUserService;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     @Test
     public void testGetPortalUsers() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserReadDTO readDTO = portalUserService.getPortalUser(portalUser.getId());
-        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userTypeId");
+        Assertions.assertThat(readDTO).isEqualToIgnoringGivenFields(portalUser,"userTypeId","userRoleIds");
         Assertions.assertThat(readDTO.getUserTypeId())
                 .isEqualToComparingFieldByField(portalUser.getUserType().getId());
     }
@@ -44,15 +47,15 @@ public class PortalUserServiceTest extends BaseTest {
 
     @Test
     public void testCreatePortalUsers() {
-        UserType userType = testObjectsFactory.createUserType();
+        //UserType userType = testObjectsFactory.createUserType();
 
         PortalUserCreateDTO create = testObjectsFactory.createPortalUserCreateDTO();
-        create.setUserTypeId(userType.getId());
+        //create.setUserTypeId(userType.getId());
         PortalUserReadDTO read = portalUserService.createPortalUser(create);
-        Assertions.assertThat(create).isEqualToComparingFieldByField(read);
+        Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "userTypeId", "userRoleIds");
 
         PortalUser portalUser = portalUserRepository.findById(read.getId()).get();
-        Assertions.assertThat(read).isEqualToIgnoringGivenFields(portalUser,"userTypeId");
+        Assertions.assertThat(read).isEqualToIgnoringGivenFields(portalUser,"userTypeId", "userRoleIds");
         Assertions.assertThat(read.getUserTypeId()).isEqualTo(portalUser.getUserType().getId());
     }
 
@@ -62,6 +65,7 @@ public class PortalUserServiceTest extends BaseTest {
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
 
         PortalUserPatchDTO patch = testObjectsFactory.createPortalUserPatchDTO();
+        patch.setUserRoleIds(null);
         patch.setUserTypeId(userType.getId());
         PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
 
@@ -130,6 +134,7 @@ public class PortalUserServiceTest extends BaseTest {
 
         PortalUserPutDTO put = testObjectsFactory.createPortalUserPutDTO();
         put.setUserTypeId(userType.getId());
+        put.setUserRoleIds(null);
         PortalUserReadDTO read = portalUserService.updatePortalUser(portalUser.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
@@ -167,5 +172,26 @@ public class PortalUserServiceTest extends BaseTest {
         Assert.assertNull(portalUserAfterUpdate.getMiddleName());
         Assert.assertNotNull(portalUserAfterUpdate.getLogin());
         Assert.assertNull(portalUserAfterUpdate.getUserConfidence());
+    }
+
+    @Test
+    public void testPatchPortalUserAddNewRole() {
+        UserType userType = testObjectsFactory.createUserType();
+        PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+
+        UserRole userRole = userRoleRepository.findByUserGroupType(UserGroupType.ADMIN);
+
+        PortalUserPatchDTO patch = new PortalUserPatchDTO();
+        patch.getUserRoleIds().add(userRole.getId());
+        PortalUserReadDTO read = portalUserService.patchPortalUser(portalUser.getId(), patch);
+
+        portalUser = portalUserRepository.findById(read.getId()).get();
+        Assertions.assertThat(portalUser).isEqualToIgnoringGivenFields(read,
+                "userType", "userGrants","movieReview","movieReviewModerator",
+                "movieReviewCompliants","movieReviewCompliantsModerator","movieReviewFeedbacks"
+                ,"roleReviews","roleReviewsModerator","roleReviewCompliants",
+                "roleReviewCompliantsModerator","roleReviewFeedbacks","movieVotes","news","roleVotes","visits",
+                "newsUserReviews","newsUserReviewNotes","newsUserReviewsModerator","userRoles");
+        Assertions.assertThat(portalUser.getUserType().getId()).isEqualTo(read.getUserTypeId());
     }
 }

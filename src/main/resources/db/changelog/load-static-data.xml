@@ -10,5 +10,11 @@
 			<column name = "name" type="string"/>
 		</loadUpdateData>
 	</changeSet>
+	<changeSet id="preload static data for user_role table" author="mykhailo" runOnChange="true">
+		<loadUpdateData tableName="user_role" file="db/data/user-role-static.csv" separator=";" primaryKey="Id">
+			<column name = "id" type="uuid"/>
+			<column name = "user_group_type" type="string"/>
+		</loadUpdateData>
+	</changeSet>
 
 </databaseChangeLog>

@@ -9,6 +9,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.validation.ControllerValidationUtil;
 import solvve.course.dto.*;
 import solvve.course.service.VisitService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class VisitController {
     @ApiPageable
     @AdminOrContentManager
     @GetMapping
-    public PageResult<VisitReadDTO> getVisits(VisitFilter filter, Pageable pageable) {
+    public PageResult<VisitReadDTO> getVisits(VisitFilter filter, @ApiIgnore Pageable pageable) {
         return visitService.getVisits(filter, pageable);
     }
 }

@@ -99,4 +99,7 @@ public class PortalUser extends AbstractEntity {
             joinColumns = {@JoinColumn(name = "portal_user_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_role_id")})
     private List<UserRole> userRoles = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 }

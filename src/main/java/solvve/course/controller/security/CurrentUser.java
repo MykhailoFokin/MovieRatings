@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAuthority('USER') and @currentUserValidator.isCurrentUser(#id)")
+@PreAuthorize("hasAuthority('USER') and principal.id==#id")
 public @interface CurrentUser {
 }

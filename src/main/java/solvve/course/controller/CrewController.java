@@ -8,6 +8,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.security.PublicAccess;
 import solvve.course.dto.*;
 import solvve.course.service.CrewService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class CrewController {
     @ApiPageable
     @PublicAccess
     @GetMapping
-    public PageResult<CrewReadDTO> getCrews(CrewFilter filter, Pageable pageable) {
+    public PageResult<CrewReadDTO> getCrews(CrewFilter filter, @ApiIgnore Pageable pageable) {
         return crewService.getCrews(filter, pageable);
     }
 }

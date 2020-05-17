@@ -3,10 +3,7 @@ package solvve.course.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +13,8 @@ import java.util.List;
 public class UserRole extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
-    private UserGroupType type;
+    private UserGroupType userGroupType;
 
-    @ManyToMany(mappedBy = "userRoles")
+    @ManyToMany(mappedBy = "userRoles", cascade = CascadeType.PERSIST)
     private List<PortalUser> users = new ArrayList<>();
 }

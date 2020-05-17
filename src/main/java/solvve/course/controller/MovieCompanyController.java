@@ -8,6 +8,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.security.PublicAccess;
 import solvve.course.dto.*;
 import solvve.course.service.MovieCompanyService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -53,7 +54,7 @@ public class MovieCompanyController {
     @ApiPageable
     @PublicAccess
     @GetMapping
-    public PageResult<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter, Pageable pageable) {
+    public PageResult<MovieCompanyReadDTO> getMovieCompanies(MovieCompanyFilter filter, @ApiIgnore Pageable pageable) {
         return movieCompanyService.getMovieCompanies(filter, pageable);
     }
 }

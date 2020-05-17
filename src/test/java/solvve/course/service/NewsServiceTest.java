@@ -65,7 +65,7 @@ public class NewsServiceTest extends BaseTest {
 
         news = newsRepository.findById(read.getId()).get();
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
-                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests", "newsFeedbacks");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -90,7 +90,7 @@ public class NewsServiceTest extends BaseTest {
         Assert.assertNotNull(newsAfterUpdate.getPublished());
 
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher",
-                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests", "newsFeedbacks");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 
@@ -121,7 +121,7 @@ public class NewsServiceTest extends BaseTest {
 
         news = newsRepository.findById(read.getId()).get();
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(read, "publisher",
-                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
+                "newsUserReviews", "newsUserReviewNotes", "userTypoRequests", "newsFeedbacks");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(read.getPublisherId());
     }
 
@@ -146,7 +146,8 @@ public class NewsServiceTest extends BaseTest {
         Assert.assertNull(newsAfterUpdate.getPublished());
 
         Assertions.assertThat(news).isEqualToIgnoringGivenFields(newsAfterUpdate, "publisher", "topic","description",
-                "published", "updatedAt", "newsUserReviews", "newsUserReviewNotes", "userTypoRequests");
+                "published", "updatedAt", "newsUserReviews", "newsUserReviewNotes", "userTypoRequests",
+                "newsFeedbacks");
         Assertions.assertThat(news.getPublisher().getId()).isEqualTo(newsAfterUpdate.getPublisher().getId());
     }
 }

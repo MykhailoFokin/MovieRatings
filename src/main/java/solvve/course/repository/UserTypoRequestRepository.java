@@ -8,6 +8,7 @@ import solvve.course.domain.UserTypoRequest;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserTypoRequestRepository extends CrudRepository<UserTypoRequest, UUID> {
@@ -49,4 +50,8 @@ public interface UserTypoRequestRepository extends CrudRepository<UserTypoReques
     void updateUserTypoRequestOfSameContentAsObsolete(Instant updatedAt,
                                                 ModeratorTypoReviewStatusType moderatorTypoReviewStatusType,
                                               UUID moderatorId, List<UUID> userTypoRequestsId);
+
+    Optional<UserTypoRequest> findByNewsIdAndRequesterIdAndId(UUID newsId, UUID requesterId, UUID id);
+
+    Optional<List<UserTypoRequest>> findByNewsIdAndRequesterIdOrderByCreatedAt(UUID newsId, UUID requesterId);
 }

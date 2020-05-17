@@ -23,4 +23,8 @@ public class UserTypoRequestCreateDTO {
     private UUID newsId;
 
     private UUID roleId;
+
+    private String sourceText;
+
+    private String proposedText;
 }

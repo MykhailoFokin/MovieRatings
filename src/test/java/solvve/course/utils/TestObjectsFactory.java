@@ -3,6 +3,7 @@ package solvve.course.utils;
 import org.bitbucket.brunneng.br.Configuration;
 import org.bitbucket.brunneng.br.RandomObjectGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import solvve.course.domain.*;
@@ -112,6 +113,15 @@ public class TestObjectsFactory {
 
     @Autowired
     private UserTypoRequestRepository userTypoRequestRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private NewsFeedbackRepository newsFeedbackRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private RandomObjectGenerator generator = new RandomObjectGenerator();
 
@@ -460,6 +470,15 @@ public class TestObjectsFactory {
         return movieReviewFeedbackRepository.save(movieReviewFeedback);
     }
 
+    public NewsFeedback createNewsFeedback(PortalUser portalUser,
+                                                  News news) {
+        NewsFeedback newsFeedback = generateFlatEntityWithoutId(NewsFeedback.class);
+        newsFeedback.setPortalUser(portalUser);
+        newsFeedback.setNews(news);
+        newsFeedback.setIsLiked(true);
+        return newsFeedbackRepository.save(newsFeedback);
+    }
+
     public MovieSpoilerData createMovieSpoilerData(MovieReview movieReview) {
         MovieSpoilerData movieSpoilerData = generateFlatEntityWithoutId(MovieSpoilerData.class);
         movieSpoilerData.setMovieReview(movieReview);
@@ -508,6 +527,7 @@ public class TestObjectsFactory {
 
     public UserType createUserType() {
         UserType userType = generateFlatEntityWithoutId(UserType.class);
+        userType.setUserGroup(UserGroupType.USER);
         return userTypeRepository.save(userType);
     }
 
@@ -760,6 +780,10 @@ public class TestObjectsFactory {
         return generateObject(MovieReviewFeedbackCreateDTO.class);
     }
 
+    public NewsFeedbackCreateDTO createNewsFeedbackCreateDTO() {
+        return generateObject(NewsFeedbackCreateDTO.class);
+    }
+
     public MovieReviewFeedbackPatchDTO createMovieReviewFeedbackPatchDTO() {
         return generateObject(MovieReviewFeedbackPatchDTO.class);
     }
@@ -865,7 +889,16 @@ public class TestObjectsFactory {
     }
 
     public PortalUserCreateDTO createPortalUserCreateDTO() {
-        return generateObject(PortalUserCreateDTO.class);
+        PortalUserCreateDTO portalUserCreateDTO = generateObject(PortalUserCreateDTO.class);
+        portalUserCreateDTO.setUserTypeId(null);
+        return portalUserCreateDTO;
+    }
+
+    public PortalUserCreateDTO createPortalUserCreateDTOWithEncodedPassword(String password) {
+        PortalUserCreateDTO portalUserCreateDTO = generateObject(PortalUserCreateDTO.class);
+        portalUserCreateDTO.setUserTypeId(null);
+        portalUserCreateDTO.setEncodedPassword(passwordEncoder.encode(password));
+        return portalUserCreateDTO;
     }
 
     public PortalUserPatchDTO createPortalUserPatchDTO() {
@@ -970,5 +1003,25 @@ public class TestObjectsFactory {
 
     public UserTypePutDTO createUserTypePutDTO() {
         return generateObject(UserTypePutDTO.class);
+    }
+
+    public UserRole createUserRole(UserGroupType userGroupType) {
+        return userRoleRepository.findByUserGroupType(userGroupType);
+    }
+
+    public UserRole getUserRole(UserGroupType userGroupType) {
+        return userRoleRepository.findByUserGroupType(userGroupType);
+    }
+
+    public PortalUser createPortalUserWithUserRoles(List<UUID> userRoleIds) {
+        UserType userType = generateFlatEntityWithoutId(UserType.class);
+        userType.setUserGroup(UserGroupType.USER);
+        userType = userTypeRepository.save(userType);
+        List<UserRole> userRoles =
+                userRoleIds.stream().map(e -> userRoleRepository.findById(e).get()).collect(Collectors.toList());
+        PortalUser portalUser = generateFlatEntityWithoutId(PortalUser.class);
+        portalUser.setUserRoles(userRoles);
+        portalUser.setUserType(userType);
+        return portalUserRepository.save(portalUser);
     }
 }

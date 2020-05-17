@@ -9,5 +9,6 @@ public enum RoleType {
     STUNT_DOUBLE,
     STAND_IN,
     UNDERSTUDY,
-    NOT_DEFINED
+    NOT_DEFINED,
+    SECOND
 }

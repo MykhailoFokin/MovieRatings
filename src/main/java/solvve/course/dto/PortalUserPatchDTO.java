@@ -1,9 +1,12 @@
 package solvve.course.dto;
 
 import lombok.Data;
+import solvve.course.domain.Gender;
 import solvve.course.domain.UserConfidenceType;
 
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -28,4 +31,8 @@ public class PortalUserPatchDTO {
     private String email;
 
     private String encodedPassword;
+
+    private List<UUID> userRoleIds = new ArrayList<>();
+
+    private Gender gender;
 }

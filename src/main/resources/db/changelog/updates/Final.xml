@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create table news_feedback" author="mykhailo">
+        <createTable tableName="news_feedback">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" />
+            </column>
+            <column name = "portal_user_id" type="uuid"/>
+            <column name = "news_id" type="uuid"/>
+            <column name = "is_liked" type="boolean"/>
+            <column name = "created_at" type="datetime"/>
+            <column name = "updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="add a few columns to portal_user table" author="mykhailo">
+        <addColumn tableName="portal_user">
+            <column name="gender" type="varchar(15)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="rename type to user_group_type in user_role" author="mykhailo">
+        <renameColumn tableName="user_role" oldColumnName="type" newColumnName="user_group_type" />
+    </changeSet>
+    <changeSet id="drop createdAt and updatedAt columns from portal_user_user_role" author="mykhailo">
+        <dropColumn tableName="portal_user_user_role">
+            <column name="created_at"/>
+            <column name="updated_at"/>
+        </dropColumn>
+    </changeSet>
+
+</databaseChangeLog>

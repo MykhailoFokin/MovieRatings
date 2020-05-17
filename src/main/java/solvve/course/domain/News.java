@@ -36,4 +36,7 @@ public class News extends AbstractEntity {
 
     @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
     private Set<UserTypoRequest> userTypoRequests;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
+    private Set<NewsFeedback> newsFeedbacks;
 }

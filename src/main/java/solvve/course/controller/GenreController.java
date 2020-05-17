@@ -8,6 +8,7 @@ import solvve.course.controller.security.AdminOrContentManager;
 import solvve.course.controller.security.PublicAccess;
 import solvve.course.dto.*;
 import solvve.course.service.GenreService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class GenreController {
     @ApiPageable
     @PublicAccess
     @GetMapping
-    public PageResult<GenreReadDTO> getGenres(GenreFilter genreFilter, Pageable pageable) {
+    public PageResult<GenreReadDTO> getGenres(GenreFilter genreFilter, @ApiIgnore Pageable pageable) {
         return genreService.getGenres(genreFilter, pageable);
     }
 }
