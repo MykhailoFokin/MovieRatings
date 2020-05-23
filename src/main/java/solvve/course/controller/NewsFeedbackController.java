@@ -20,7 +20,7 @@ public class NewsFeedbackController {
     @Autowired
     private NewsFeedbackService newsFeedbackService;
 
-    @AdminOrModerator
+    @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping("/{id}")
     public NewsFeedbackReadDTO getNewsFeedback(@PathVariable UUID id) {
         return newsFeedbackService.getNewsFeedback(id);

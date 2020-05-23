@@ -24,4 +24,9 @@ public interface RoleRepository extends CrudRepository<Role, UUID> {
     List<RoleInLeaderBoardReadDTO> getRolesLeaderBoard();
 
     Role findByTitle(String title);
+
+    @Query("select r from Role r where r.person.id = :personId")
+    List<Role> findByPersonId(UUID personId);
+
+    List<Role> findByMovieId(UUID movieId);
 }

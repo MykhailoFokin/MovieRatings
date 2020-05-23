@@ -39,4 +39,14 @@ public class News extends AbstractEntity {
 
     @OneToMany(mappedBy = "news", cascade = CascadeType.PERSIST)
     private Set<NewsFeedback> newsFeedbacks;
+
+    @ManyToOne
+    @JoinColumn
+    private Movie movie;
+
+    private Double newsRating;
+
+    private Integer likesCount;
+
+    private Integer dislikesCount;
 }

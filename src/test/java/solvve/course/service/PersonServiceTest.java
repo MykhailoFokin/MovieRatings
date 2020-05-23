@@ -56,7 +56,7 @@ public class PersonServiceTest extends BaseTest {
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
 
         person = personRepository.findById(read.getId()).get();
-        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","roles");
     }
 
     @Test
@@ -76,7 +76,7 @@ public class PersonServiceTest extends BaseTest {
         Assert.assertNotNull(personAfterUpdate.getSurname());
         Assert.assertNotNull(personAfterUpdate.getMiddleName());
 
-        Assertions.assertThat(person).isEqualToIgnoringGivenFields(personAfterUpdate,"crews");
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(personAfterUpdate,"crews", "roles");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PersonServiceTest extends BaseTest {
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);
 
         person = personRepository.findById(read.getId()).get();
-        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","role");
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(read,"crews","roles");
     }
 
     @Test

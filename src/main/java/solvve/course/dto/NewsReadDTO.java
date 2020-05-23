@@ -21,4 +21,12 @@ public class NewsReadDTO {
     private Instant createdAt;
 
     private Instant updatedAt;
+
+    private UUID movieId;
+
+    private Integer likesCount;
+
+    private Double newsRating;
+
+    private Integer dislikesCount;
 }

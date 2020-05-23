@@ -167,7 +167,7 @@ public class MovieReviewServiceTest extends BaseTest {
         Assert.assertNotNull(read.getMovieId());
         Assert.assertNotNull(read.getTextReview());
         Assert.assertNull(read.getModeratorId());
-        Assert.assertNull(read.getModeratedStatus());
+        Assert.assertNotNull(read.getModeratedStatus());
 
         MovieReview movieReviewAfterUpdate = movieReviewRepository.findById(read.getId()).get();
 
@@ -175,6 +175,6 @@ public class MovieReviewServiceTest extends BaseTest {
         Assert.assertNotNull(movieReviewAfterUpdate.getMovie());
         Assert.assertNotNull(movieReviewAfterUpdate.getTextReview());
         Assert.assertNull(movieReviewAfterUpdate.getModerator());
-        Assert.assertNull(movieReviewAfterUpdate.getModeratedStatus());
+        Assert.assertNotNull(movieReviewAfterUpdate.getModeratedStatus());
     }
 }

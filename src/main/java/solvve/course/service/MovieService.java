@@ -34,6 +34,7 @@ public class MovieService extends AbstractService {
 
     public MovieReadDTO createMovie(MovieCreateDTO create) {
         Movie movie = translationService.translate(create, Movie.class);
+        movie.setAverageRating(0.0);
 
         movie = movieRepository.save(movie);
         return translationService.translate(movie, MovieReadDTO.class);
@@ -74,8 +75,10 @@ public class MovieService extends AbstractService {
 
         log.info("Setting new average rating of movie: {}. Old value: {}, new value: {}", movieId,
                 movie.getAverageRating(), averageRating);
-        movie.setAverageRating(averageRating);
-        movieRepository.save(movie);
+        if (averageRating != null) {
+            movie.setAverageRating(averageRating);
+            movieRepository.save(movie);
+        }
     }
 
     public List<MovieInLeaderBoardReadDTO> getMoviesLeaderBoard() {

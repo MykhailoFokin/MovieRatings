@@ -47,10 +47,8 @@ public class PortalUserServiceTest extends BaseTest {
 
     @Test
     public void testCreatePortalUsers() {
-        //UserType userType = testObjectsFactory.createUserType();
-
         PortalUserCreateDTO create = testObjectsFactory.createPortalUserCreateDTO();
-        //create.setUserTypeId(userType.getId());
+        create.setUserConfidence(UserConfidenceType.NORMAL);
         PortalUserReadDTO read = portalUserService.createPortalUser(create);
         Assertions.assertThat(create).isEqualToIgnoringGivenFields(read, "userTypeId", "userRoleIds");
 

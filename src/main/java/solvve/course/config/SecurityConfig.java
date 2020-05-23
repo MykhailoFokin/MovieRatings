@@ -25,6 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui.html", "/webjars/springfox-swagger-ui/*", "/swagger-resources/**", "/",
                         "/csrf").anonymous()
                 .antMatchers("/api/v1/registration").anonymous()
+                .antMatchers("/api/v1/news/*").permitAll()
+                .antMatchers("/api/v1/movies/*").permitAll()
+                .antMatchers("/api/v1/persons/*").permitAll()
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().csrf().disable();

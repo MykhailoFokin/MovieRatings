@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,6 +17,6 @@ public class CrewType extends AbstractEntity {
     @Size(min = 1, max = 255)
     private String name;
 
-    @OneToOne(mappedBy = "crewType")
-    private Crew crew;
+    @OneToMany(mappedBy = "crewType", cascade = CascadeType.PERSIST)
+    private Set<Crew> crew;
 }

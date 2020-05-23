@@ -128,11 +128,11 @@ public class CrewServiceTest extends BaseTest {
             Assertions.assertThat(crew.getMovie()).isEqualToIgnoringGivenFields(crewAfterUpdate.getMovie(),
                     "genres","movieProdCountries","movieProdCompanies","movieProdLanguages",
                     "crews","movieReview","movieReviewCompliants","movieReviewFeedbacks","movieVotes","releaseDetails",
-                    "userTypoRequests");
+                    "userTypoRequests", "news", "roles");
             Assertions.assertThat(crew.getCrewType()).isEqualToIgnoringGivenFields(crewAfterUpdate.getCrewType(),
                     "crew");
             Assertions.assertThat(crew.getPerson()).isEqualToIgnoringGivenFields(crewAfterUpdate.getPerson(),
-                    "crews");
+                    "crews","roles");
         });
     }
 

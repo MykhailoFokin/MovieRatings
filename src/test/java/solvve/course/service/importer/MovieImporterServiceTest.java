@@ -9,17 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import solvve.course.BaseTest;
 import solvve.course.client.themoviedb.TheMovieDbClient;
-import solvve.course.client.themoviedb.dto.MovieCreditsCastReadDTO;
-import solvve.course.client.themoviedb.dto.MovieCreditsCrewReadDTO;
-import solvve.course.client.themoviedb.dto.MovieCreditsReadDTO;
-import solvve.course.client.themoviedb.dto.MovieReadDTO;
+import solvve.course.client.themoviedb.dto.*;
 import solvve.course.domain.Movie;
 import solvve.course.domain.Person;
 import solvve.course.domain.Role;
 import solvve.course.domain.RoleType;
+import solvve.course.dto.PersonCreateDTO;
 import solvve.course.exception.ImportAlreadyPerformedException;
 import solvve.course.exception.ImportedEntityAlreadyExistException;
-import solvve.course.repository.CrewRepository;
 import solvve.course.repository.MovieRepository;
 import solvve.course.repository.PersonRepository;
 import solvve.course.repository.RoleRepository;
@@ -53,6 +50,7 @@ public class MovieImporterServiceTest extends BaseTest {
         read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
 
+        PersonReadDTO person = testObjectsFactory.generateObject(PersonReadDTO.class);
         MovieCreditsCastReadDTO movieCreditsCastReadDTO =
                 testObjectsFactory.generateObject(MovieCreditsCastReadDTO.class);
         MovieCreditsCrewReadDTO movieCreditsCrewReadDTO =
@@ -62,6 +60,8 @@ public class MovieImporterServiceTest extends BaseTest {
         movieCreditsReadDTO.setCrew(List.of(movieCreditsCrewReadDTO));
         movieCreditsReadDTO.setId(movieExternalId);
         Mockito.when(movieDbClient.getMovieCredits(movieExternalId, null)).thenReturn(movieCreditsReadDTO);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCastReadDTO.getId())).thenReturn(person);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCrewReadDTO.getId())).thenReturn(person);
 
         UUID movieId = movieImporterService.importMovie(movieExternalId, null);
         Movie movie = movieRepository.findById(movieId).get();
@@ -72,6 +72,8 @@ public class MovieImporterServiceTest extends BaseTest {
     @Test
     public void testMovieImportAlreadyExist() {
         String movieExternalId = "id2";
+
+        PersonReadDTO person = testObjectsFactory.generateObject(PersonReadDTO.class);
 
         Movie existingMovie = testObjectsFactory.generateFlatEntityWithoutId(Movie.class);
         existingMovie = movieRepository.save(existingMovie);
@@ -89,6 +91,8 @@ public class MovieImporterServiceTest extends BaseTest {
         movieCreditsReadDTO.setCrew(List.of(movieCreditsCrewReadDTO));
         movieCreditsReadDTO.setId(movieExternalId);
         Mockito.when(movieDbClient.getMovieCredits(movieExternalId, null)).thenReturn(movieCreditsReadDTO);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCastReadDTO.getId())).thenReturn(person);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCrewReadDTO.getId())).thenReturn(person);
 
         ImportedEntityAlreadyExistException ex =
                 Assertions.catchThrowableOfType(() -> movieImporterService.importMovie(movieExternalId, null),
@@ -103,6 +107,8 @@ public class MovieImporterServiceTest extends BaseTest {
 
         String movieExternalId = "id3";
 
+        PersonReadDTO person = testObjectsFactory.generateObject(PersonReadDTO.class);
+
         MovieReadDTO read = testObjectsFactory.generateObject(MovieReadDTO.class);
         read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
@@ -116,6 +122,8 @@ public class MovieImporterServiceTest extends BaseTest {
         movieCreditsReadDTO.setCrew(List.of(movieCreditsCrewReadDTO));
         movieCreditsReadDTO.setId(movieExternalId);
         Mockito.when(movieDbClient.getMovieCredits(movieExternalId, null)).thenReturn(movieCreditsReadDTO);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCastReadDTO.getId())).thenReturn(person);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCrewReadDTO.getId())).thenReturn(person);
 
         movieImporterService.importMovie(movieExternalId, null);
         Mockito.verify(movieDbClient).getMovie(movieExternalId, null);
@@ -131,6 +139,8 @@ public class MovieImporterServiceTest extends BaseTest {
     public void testMovieImporterCast() throws ImportedEntityAlreadyExistException, ImportAlreadyPerformedException {
         String movieExternalId = "id4";
 
+        PersonReadDTO person = testObjectsFactory.generateObject(PersonReadDTO.class);
+
         MovieReadDTO read = testObjectsFactory.generateObject(MovieReadDTO.class);
         read.setReleaseDate(LocalDate.of(2020,01,01));
         Mockito.when(movieDbClient.getMovie(movieExternalId, null)).thenReturn(read);
@@ -144,6 +154,8 @@ public class MovieImporterServiceTest extends BaseTest {
         movieCreditsReadDTO.setCrew(List.of(movieCreditsCrewReadDTO));
         movieCreditsReadDTO.setId(movieExternalId);
         Mockito.when(movieDbClient.getMovieCredits(movieExternalId, null)).thenReturn(movieCreditsReadDTO);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCastReadDTO.getId())).thenReturn(person);
+        Mockito.when(movieDbClient.getPerson(movieCreditsCrewReadDTO.getId())).thenReturn(person);
 
         UUID movieId = movieImporterService.importMovie(movieExternalId, null);
         Movie movie = movieRepository.findById(movieId).get();
@@ -176,13 +188,18 @@ public class MovieImporterServiceTest extends BaseTest {
         Assert.assertEquals(movie.getRuntime().intValue(), 137);
         Assert.assertEquals(movie.getTagline(), "It's nothing personal.");
 
-        Person person = personRepository.findById(movie.getRole().getPerson().getId()).get();
-        Assert.assertEquals("1947-07-30", person.getBirthday());
-        Assert.assertEquals("Acting", person.getKnownForDepartment());
-        Assert.assertNull(person.getDeathday());
-        Assert.assertEquals("Arnold Schwarzenegger", person.getName());
-        Assert.assertEquals((short) 2, person.getGender().shortValue());
-        Assert.assertEquals("An Austrian-American former professional bodybuilder, actor, model, businessman and " +
+        Assert.assertEquals(1, movie.getRoles().size());
+
+        movie.getRoles().stream().forEach(r -> {
+
+            //Person person = personRepository.findById(movie.getRoles().getPerson().getId()).get();
+            Person person = personRepository.findById(r.getPerson().getId()).get();
+            Assert.assertEquals("1947-07-30", person.getBirthday());
+            Assert.assertEquals("Acting", person.getKnownForDepartment());
+            Assert.assertNull(person.getDeathday());
+            Assert.assertEquals("Arnold Schwarzenegger", person.getName());
+            Assert.assertEquals((short) 2, person.getGender().shortValue());
+            Assert.assertEquals("An Austrian-American former professional bodybuilder, actor, model, businessman and " +
                 "politician who served as the 38th Governor of California (2003–2011). Schwarzenegger began weight " +
                 "training at 15. He was awarded the title of Mr. Universe at age 20 and went on to win the Mr. " +
                 "Olympia contest a total of seven times. Schwarzenegger has remained a prominent presence in the " +
@@ -211,15 +228,16 @@ public class MovieImporterServiceTest extends BaseTest {
                 "(2015)  Aftermath as Roman Melnik (2017)  Killing Gunther as Gunther (2017)  Journey to China: The " +
                 "Mystery of Iron Mask (2017)  Triplets as Julius Benedict (2018)  The Expendables 4 as Trench (2018) " +
                 " Terminator 6 as The Terminator/T-800 Model 101 (2019)", person.getBiography());
-        Assert.assertEquals("Thal, Styria, Austria", person.getPlaceOfBirth());
-        Assert.assertEquals(false, person.getAdult());
-        Assert.assertEquals("nm0000216", person.getImdbId());
-        Assert.assertEquals("http://www.schwarzenegger.com", person.getHomepage());
+            Assert.assertEquals("Thal, Styria, Austria", person.getPlaceOfBirth());
+            Assert.assertEquals(false, person.getAdult());
+            Assert.assertEquals("nm0000216", person.getImdbId());
+            Assert.assertEquals("http://www.schwarzenegger.com", person.getHomepage());
 
-        Role role = roleRepository.findById(movie.getRole().getId()).get();
-        Assert.assertEquals(role.getRoleType(),RoleType.NOT_DEFINED);
-        Assert.assertEquals(role.getTitle(),"The Terminator");
-        Assert.assertEquals(role.getPerson(),person);
-        Assert.assertEquals(role.getMovie(),movie);
+            Role role = roleRepository.findById(r.getId()).get();
+            Assert.assertEquals(role.getRoleType(), RoleType.NOT_DEFINED);
+            Assert.assertEquals(role.getTitle(), "The Terminator");
+            Assert.assertEquals(role.getPerson(), person);
+            Assert.assertEquals(role.getMovie(), movie);
+        });
     }
 }

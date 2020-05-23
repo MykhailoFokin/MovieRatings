@@ -27,8 +27,8 @@ public class Person extends AbstractEntity {
     @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
     private Set<Crew> crews;
 
-    @OneToOne(mappedBy = "person")
-    private Role role;
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
+    private Set<Role> roles;
 
     private LocalDate birthday;
 
@@ -47,4 +47,8 @@ public class Person extends AbstractEntity {
     private String imdbId;
 
     private String homepage;
+
+    private Double averageMovieRating;
+
+    private Double averageRoleRating;
 }

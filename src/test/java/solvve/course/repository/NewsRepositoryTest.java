@@ -5,12 +5,16 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
 import solvve.course.BaseTest;
+import solvve.course.domain.Movie;
 import solvve.course.domain.News;
 import solvve.course.domain.PortalUser;
 import solvve.course.domain.UserType;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,11 +28,13 @@ public class NewsRepositoryTest extends BaseTest {
     public void testSave() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
+        Movie movie = testObjectsFactory.createMovie();
 
         News r = new News();
         r.setPublisher(portalUser);
         r.setTopic("Topic");
         r.setDescription("Desc");
+        r.setMovie(movie);
         r = newsRepository.save(r);
         assertNotNull(r.getId());
         assertTrue(newsRepository.findById(r.getId()).isPresent());
@@ -38,7 +44,8 @@ public class NewsRepositoryTest extends BaseTest {
     public void testCreatedAtIsSet() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
-        News entity = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News entity = testObjectsFactory.createNews(portalUser, movie);
 
         Instant createdAtBeforeReload = entity.getCreatedAt();
         Assert.assertNotNull(createdAtBeforeReload);
@@ -53,7 +60,8 @@ public class NewsRepositoryTest extends BaseTest {
     public void testUpdatedAtIsSet() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
-        News entity = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News entity = testObjectsFactory.createNews(portalUser, movie);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtBeforeReload);
@@ -68,7 +76,8 @@ public class NewsRepositoryTest extends BaseTest {
     public void testUpdatedAtIsModified() {
         UserType userType = testObjectsFactory.createUserType();
         PortalUser portalUser = testObjectsFactory.createPortalUser(userType);
-        News entity = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News entity = testObjectsFactory.createNews(portalUser, movie);
 
         Instant updatedAtBeforeReload = entity.getUpdatedAt();
         Assert.assertNotNull(updatedAtBeforeReload);
@@ -90,5 +99,18 @@ public class NewsRepositoryTest extends BaseTest {
     public void testSaveNewsValidation() {
         News entity = new News();
         newsRepository.save(entity);
+    }
+
+    @Test
+    public void testGetIdsOfNews() {
+        PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
+        Set<UUID> expectedIdsOfNews = new HashSet<>();
+        expectedIdsOfNews.add(testObjectsFactory.createNews(portalUser, movie).getId());
+        expectedIdsOfNews.add(testObjectsFactory.createNews(portalUser, movie).getId());
+
+        testObjectsFactory.inTransaction(()-> {
+            Assert.assertEquals(expectedIdsOfNews, newsRepository.getIdsOfNews().collect(Collectors.toSet()));
+        });
     }
 }

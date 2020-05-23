@@ -1,7 +1,6 @@
 package solvve.course.dto;
 
 import lombok.Data;
-import solvve.course.domain.UserModeratedStatusType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,8 +18,6 @@ public class MovieReviewCreateDTO {
     @NotNull
     @Size(min = 1, max = 1000)
     private String textReview;
-
-    private UserModeratedStatusType moderatedStatus;
 
     private UUID moderatorId;
 }

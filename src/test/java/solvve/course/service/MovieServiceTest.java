@@ -62,7 +62,7 @@ public class MovieServiceTest extends BaseTest {
         Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
                 "movieProdCountries","crews","movieReview","movieReviewCompliants"
                 ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
-                ,"movieProdLanguages","role", "userTypoRequests");
+                ,"movieProdLanguages","role", "userTypoRequests","news","roles");
     }
 
     @Test
@@ -100,7 +100,7 @@ public class MovieServiceTest extends BaseTest {
         Assertions.assertThat(movie).isEqualToIgnoringGivenFields(movieAfterUpdate,
                 "movieProdCountries","crews","movieReview","movieReviewCompliants"
                 ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
-                ,"movieProdLanguages","role", "userTypoRequests");
+                ,"movieProdLanguages","role", "userTypoRequests","news", "roles");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class MovieServiceTest extends BaseTest {
         Assertions.assertThat(movie).isEqualToIgnoringGivenFields(read,
                 "movieProdCountries","crews","movieReview","movieReviewCompliants"
                         ,"movieReviewFeedbacks","movieVotes","releaseDetails","genres","movieProdCompanies"
-                        ,"movieProdLanguages","role", "userTypoRequests");
+                        ,"movieProdLanguages","role", "userTypoRequests","news","roles");
     }
 
     @Test

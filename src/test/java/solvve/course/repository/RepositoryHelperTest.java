@@ -53,8 +53,9 @@ public class RepositoryHelperTest extends BaseTest {
     @Test
     public void testValidateIfExistsNotNewsUserReviewStatusIsExist() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         News news = testObjectsFactory.createNews(portalUser,
-                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern", movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 

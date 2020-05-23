@@ -23,7 +23,7 @@ public class MovieReviewMovieReviewCompliantController {
 
     @AdminOrModerator
     @GetMapping
-    public List<MovieReviewCompliantReadDTO> getMovieReviewSpoilerData(
+    public List<MovieReviewCompliantReadDTO> getMovieReviewCompliants(
             @PathVariable UUID movieReviewId) {
         return movieReviewCompliantService.getMovieReviewMovieReviewCompliant(movieReviewId);
     }

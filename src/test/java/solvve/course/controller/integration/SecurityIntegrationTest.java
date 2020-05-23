@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +23,7 @@ import solvve.course.repository.VisitRepository;
 import java.util.List;
 import java.util.UUID;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles({"test", "integration-test"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class SecurityIntegrationTest extends BaseTest {

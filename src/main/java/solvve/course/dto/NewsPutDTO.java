@@ -21,4 +21,6 @@ public class NewsPutDTO {
     @NotNull
     @Size(min = 1, max = 1000)
     private String description;
+
+    private UUID movieId;
 }

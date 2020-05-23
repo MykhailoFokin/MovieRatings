@@ -2,11 +2,12 @@ package solvve.course.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.*;
 import solvve.course.dto.*;
 import solvve.course.exception.EntityNotFoundException;
-import solvve.course.exception.UnprocessableEntityException;
+import solvve.course.exception.LinkageCorruptedEntityException;
 import solvve.course.repository.*;
 
 import java.time.Instant;
@@ -46,9 +47,11 @@ public class ModeratorUserTypoRequestService extends AbstractService {
         return translationService.translate(userTypoRequest, UserTypoRequestReadDTO.class);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public UserTypoRequestReadDTO fixNewsTypo(UUID portalUserId, UUID userTypoRequestId,
                                                                     UserTypoRequestPutDTO put) {
         repositoryHelper.validateIFExists(PortalUser.class, portalUserId);
+
         UserTypoRequest userTypoRequest = repositoryHelper.getByIdRequired(UserTypoRequest.class, userTypoRequestId);
 
         checkAlreadyFixedUserTypoRequest(userTypoRequest.getModeratorTypoReviewStatusType(),
@@ -64,7 +67,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
             fixRoleByUserTypoRequest(userTypoRequest.getRole().getId(), userTypoRequest.getSourceText(),
                     put.getApprovedText());
         } else {
-            throw new UnprocessableEntityException(UserTypoRequest.class, userTypoRequestId);
+            throw new LinkageCorruptedEntityException(UserTypoRequest.class, userTypoRequestId);
         }
         put.setFixAppliedDate(Instant.now());
         put.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
@@ -86,7 +89,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
                                                  UUID id) {
         if (entityModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED
                 && newModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED) {
-            throw new UnprocessableEntityException(UserTypoRequest.class, id);
+            throw new LinkageCorruptedEntityException(UserTypoRequest.class, id);
         }
     }
 
@@ -111,11 +114,13 @@ public class ModeratorUserTypoRequestService extends AbstractService {
                             userTypoRequest.getSourceText(),
                             List.of(ModeratorTypoReviewStatusType.NEED_TO_FIX));
         } else {
-            throw new UnprocessableEntityException(UserTypoRequest.class, userTypoRequest.getId());
+            throw new LinkageCorruptedEntityException(UserTypoRequest.class, userTypoRequest.getId());
         }
 
-        userTypoRequestRepository.updateUserTypoRequestOfSameContentAsObsolete(userTypoRequest.getFixAppliedDate(),
-                ModeratorTypoReviewStatusType.REJECTED, userTypoRequest.getModerator().getId(), userTypoRequestsIds);
+        if (!userTypoRequestsIds.isEmpty()) {
+            userTypoRequestRepository.updateUserTypoRequestOfSameContentAsObsolete(userTypoRequest.getFixAppliedDate(),
+                    ModeratorTypoReviewStatusType.FIXED, userTypoRequest.getModerator().getId(), userTypoRequestsIds);
+        }
     }
 
     private void fixNewsByUserTypoRequest(UUID newsId, String sourceText, String approvedText) {
@@ -123,7 +128,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
             throw new EntityNotFoundException(News.class, newsId);
         });
         if (news.getDescription().indexOf(sourceText) == -1) {
-            throw new UnprocessableEntityException(News.class, newsId);
+            throw new LinkageCorruptedEntityException(News.class, newsId);
         } else {
             news.setDescription(news.getDescription().replace(sourceText, approvedText));
         }
@@ -135,7 +140,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
             throw new EntityNotFoundException(Movie.class, movieId);
         });
         if (movie.getDescription().indexOf(sourceText) == -1) {
-            throw new UnprocessableEntityException(Movie.class, movieId);
+            throw new LinkageCorruptedEntityException(Movie.class, movieId);
         } else {
             movie.setDescription(movie.getDescription().replace(sourceText, approvedText));
         }
@@ -147,7 +152,7 @@ public class ModeratorUserTypoRequestService extends AbstractService {
             throw new EntityNotFoundException(News.class, roleId);
         });
         if (role.getDescription().indexOf(sourceText) == -1) {
-            throw new UnprocessableEntityException(News.class, roleId);
+            throw new LinkageCorruptedEntityException(News.class, roleId);
         } else {
             role.setDescription(role.getDescription().replace(sourceText, approvedText));
         }

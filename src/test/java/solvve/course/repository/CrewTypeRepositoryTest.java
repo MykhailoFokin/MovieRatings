@@ -77,24 +77,6 @@ public class CrewTypeRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void testGetCrewTypesByCrew() {
-        CrewType ct1 = testObjectsFactory.createCrewType("Type1");
-        CrewType ct2 = testObjectsFactory.createCrewType("Type1");
-        CrewType ct3 = testObjectsFactory.createCrewType("Type2");
-        Person p = testObjectsFactory.createPerson();
-        Movie m = testObjectsFactory.createMovie();
-        testObjectsFactory.createCrew(p, ct1, m);
-        Crew c2 = testObjectsFactory.createCrew(p, ct2, m);
-        Crew c3 = testObjectsFactory.createCrew(p, ct3, m);
-
-        CrewTypeFilter filter = new CrewTypeFilter();
-        filter.setCrewId(c2.getId());
-        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
-                .extracting("Id")
-                .containsExactlyInAnyOrder(ct2.getId());
-    }
-
-    @Test
     public void testGetCrewTypesByNames() {
         CrewType ct1 = testObjectsFactory.createCrewType("Type1");
         CrewType ct2 = testObjectsFactory.createCrewType("Type2");
@@ -105,24 +87,6 @@ public class CrewTypeRepositoryTest extends BaseTest {
         Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
                 .extracting("Id")
                 .containsExactlyInAnyOrder(ct1.getId(), ct2.getId());
-    }
-
-    @Test
-    public void testGetCrewTypesByCrews() {
-        CrewType ct1 = testObjectsFactory.createCrewType("Type1");
-        CrewType ct2 = testObjectsFactory.createCrewType("Type1");
-        CrewType ct3 = testObjectsFactory.createCrewType("Type2");
-        Person p = testObjectsFactory.createPerson();
-        Movie m = testObjectsFactory.createMovie();
-        testObjectsFactory.createCrew(p, ct1, m);
-        Crew c2 = testObjectsFactory.createCrew(p, ct2, m);
-        Crew c3 = testObjectsFactory.createCrew(p, ct3, m);
-
-        CrewTypeFilter filter = new CrewTypeFilter();
-        filter.setCrewIds(List.of(c2.getId(), c3.getId()));
-        Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
-                .extracting("Id")
-                .containsExactlyInAnyOrder(ct3.getId(), ct2.getId());
     }
 
     @Test
@@ -138,12 +102,10 @@ public class CrewTypeRepositoryTest extends BaseTest {
 
         CrewTypeFilter filter = new CrewTypeFilter();
         filter.setName("Type1");
-        filter.setCrewId(c2.getId());
-        filter.setCrewIds(List.of(c2.getId(), c1.getId()));
         filter.setNames(List.of("Type1", "Test", "Type2"));
         Assertions.assertThat(crewTypeService.getCrewTypes(filter, Pageable.unpaged()).getData())
                 .extracting("Id")
-                .containsExactlyInAnyOrder(ct2.getId());
+                .containsExactlyInAnyOrder(ct2.getId(), ct1.getId());
     }
 
     @Test

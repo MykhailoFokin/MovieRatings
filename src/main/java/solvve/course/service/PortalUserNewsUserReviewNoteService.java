@@ -9,7 +9,7 @@ import solvve.course.domain.NewsUserReview;
 import solvve.course.domain.NewsUserReviewNote;
 import solvve.course.domain.PortalUser;
 import solvve.course.dto.*;
-import solvve.course.exception.UnprocessableEntityException;
+import solvve.course.exception.LinkageCorruptedEntityException;
 import solvve.course.repository.NewsUserReviewNoteRepository;
 
 import java.util.List;
@@ -115,7 +115,7 @@ public class PortalUserNewsUserReviewNoteService extends AbstractService {
                                                  UUID id) {
         if (entityModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED
                 && newModeratorTypoReviewStatusType == ModeratorTypoReviewStatusType.FIXED) {
-            throw new UnprocessableEntityException(NewsUserReviewNote.class, id);
+            throw new LinkageCorruptedEntityException(NewsUserReviewNote.class, id);
         }
     }
 

@@ -20,9 +20,7 @@ public class CrewTypeRepositoryCustomImpl implements CrewTypeRepositoryCustom {
         JpaQueryBuilder qb = new JpaQueryBuilder(entityManager);
         qb.append("select c from CrewType c where 1=1");
         qb.append(" and c.name = :name", filter.getName());
-        qb.append(" and c.crew.id = :crewId", filter.getCrewId());
         qb.appendIn(" and c.name in (:names)", filter.getNames());
-        qb.appendIn(" and c.crew.id in (:crewIds)", filter.getCrewIds());
 
         return SpringQueryBuilderUtils.loadPage(qb, pageable, "id");
     }

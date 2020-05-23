@@ -38,4 +38,8 @@ public class PersonReadDTO {
     private String imdbId;
 
     private String homepage;
+
+    private Double averageMovieRating;
+
+    private Double averageRoleRating;
 }

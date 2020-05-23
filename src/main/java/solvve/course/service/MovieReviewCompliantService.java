@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solvve.course.domain.MovieReviewCompliant;
+import solvve.course.domain.UserModeratedStatusType;
 import solvve.course.dto.MovieReviewCompliantCreateDTO;
 import solvve.course.dto.MovieReviewCompliantPatchDTO;
 import solvve.course.dto.MovieReviewCompliantPutDTO;
@@ -26,6 +27,8 @@ public class MovieReviewCompliantService extends AbstractService {
 
     public MovieReviewCompliantReadDTO createMovieReviewCompliant(MovieReviewCompliantCreateDTO create) {
         MovieReviewCompliant movieReviewCompliant = translationService.translate(create, MovieReviewCompliant.class);
+
+        movieReviewCompliant.setModeratedStatus(UserModeratedStatusType.CREATED);
 
         movieReviewCompliant = movieReviewCompliantRepository.save(movieReviewCompliant);
         return translationService.translate(movieReviewCompliant, MovieReviewCompliantReadDTO.class);

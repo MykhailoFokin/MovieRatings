@@ -41,7 +41,6 @@ public class CrewTypeServiceTest extends BaseTest {
     @Test
     public void testCreateCrewType() {
         CrewTypeCreateDTO create = testObjectsFactory.createCrewTypeCreateDTO();
-        create.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.createCrewType(create);
         Assertions.assertThat(create).isEqualToComparingFieldByField(read);
 
@@ -54,7 +53,6 @@ public class CrewTypeServiceTest extends BaseTest {
         CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePatchDTO patch = testObjectsFactory.createCrewTypePatchDTO();
-        patch.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.patchCrewType(crewType.getId(), patch);
 
         Assertions.assertThat(patch).isEqualToComparingFieldByField(read);
@@ -76,7 +74,7 @@ public class CrewTypeServiceTest extends BaseTest {
 
         Assert.assertNotNull(crewTypeAfterUpdate.getName());
 
-        Assertions.assertThat(crewType).isEqualToComparingFieldByField(crewTypeAfterUpdate);
+        Assertions.assertThat(crewType).isEqualToIgnoringGivenFields(crewTypeAfterUpdate, "crew");
     }
 
     @Test
@@ -97,7 +95,6 @@ public class CrewTypeServiceTest extends BaseTest {
         CrewType crewType = testObjectsFactory.createCrewType();
 
         CrewTypePutDTO put = testObjectsFactory.createCrewTypePutDTO();
-        put.setCrewId(null);
         CrewTypeReadDTO read = crewTypeService.updateCrewType(crewType.getId(), put);
 
         Assertions.assertThat(put).isEqualToComparingFieldByField(read);

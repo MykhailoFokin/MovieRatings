@@ -382,6 +382,18 @@ public class TestObjectsFactory {
         return portalUser;
     }
 
+    public PortalUser createPortalUser(UserConfidenceType userConfidenceType) {
+        UserType userType = generateFlatEntityWithoutId(UserType.class);
+        userType = userTypeRepository.save(userType);
+
+        PortalUser portalUser = generateFlatEntityWithoutId(PortalUser.class);
+        portalUser.setUserType(userType);
+        portalUser.setUserConfidence(userConfidenceType);
+        portalUser = portalUserRepository.save(portalUser);
+
+        return portalUser;
+    }
+
     public Visit createVisit(PortalUser portalUser) {
         Visit visit = generateFlatEntityWithoutId(Visit.class);
         visit.setPortalUser(portalUser);
@@ -428,6 +440,8 @@ public class TestObjectsFactory {
 
     public Person createPerson() {
         Person person = generateFlatEntityWithoutId(Person.class);
+        person.setAverageMovieRating(0.0);
+        person.setAverageRoleRating(0.0);
         return personRepository.save(person);
     }
 
@@ -459,6 +473,16 @@ public class TestObjectsFactory {
         return movieReview;
     }
 
+    public MovieReview createMovieReview(PortalUser portalUser, Movie movie, UserModeratedStatusType status) {
+        MovieReview movieReview = generateFlatEntityWithoutId(MovieReview.class);
+        movieReview.setPortalUser(portalUser);
+        movieReview.setMovie(movie);
+        movieReview.setModerator(portalUser);
+        movieReview.setModeratedStatus(status);
+        movieReview = movieReviewRepository.save(movieReview);
+        return movieReview;
+    }
+
     public MovieReviewFeedback createMovieReviewFeedback(PortalUser portalUser,
                                                          Movie movie,
                                                          MovieReview movieReview) {
@@ -476,6 +500,16 @@ public class TestObjectsFactory {
         newsFeedback.setPortalUser(portalUser);
         newsFeedback.setNews(news);
         newsFeedback.setIsLiked(true);
+        return newsFeedbackRepository.save(newsFeedback);
+    }
+
+    public NewsFeedback createNewsFeedback(PortalUser portalUser,
+                                           News news,
+                                           Boolean isLiked) {
+        NewsFeedback newsFeedback = generateFlatEntityWithoutId(NewsFeedback.class);
+        newsFeedback.setPortalUser(portalUser);
+        newsFeedback.setNews(news);
+        newsFeedback.setIsLiked(isLiked);
         return newsFeedbackRepository.save(newsFeedback);
     }
 
@@ -512,16 +546,37 @@ public class TestObjectsFactory {
         return movieVoteRepository.save(movieVote);
     }
 
-    public News createNews(PortalUser portalUser) {
+    public News createNews(PortalUser portalUser, Movie movie) {
         News news = generateFlatEntityWithoutId(News.class);
         news.setPublisher(portalUser);
+        news.setMovie(movie);
         return newsRepository.save(news);
     }
 
-    public News createNews(PortalUser portalUser, String newsText) {
+    public News createNews(PortalUser portalUser, String newsText, Movie movie) {
         News news = generateFlatEntityWithoutId(News.class);
         news.setPublisher(portalUser);
         news.setDescription(newsText);
+        news.setMovie(movie);
+        return newsRepository.save(news);
+    }
+
+    public News createNews(PortalUser portalUser, String topic, String newsText, Movie movie, Instant published) {
+        News news = generateFlatEntityWithoutId(News.class);
+        news.setPublisher(portalUser);
+        news.setDescription(newsText);
+        news.setMovie(movie);
+        news.setTopic(topic);
+        news.setPublished(published);
+        return newsRepository.save(news);
+    }
+
+    public News createNewsWithoutRating(PortalUser portalUser, Movie movie) {
+        News news = generateFlatEntityWithoutId(News.class);
+        news.setPublisher(portalUser);
+        news.setMovie(movie);
+        news.setNewsRating(null);
+        news.setLikesCount(null);
         return newsRepository.save(news);
     }
 
@@ -897,6 +952,7 @@ public class TestObjectsFactory {
     public PortalUserCreateDTO createPortalUserCreateDTOWithEncodedPassword(String password) {
         PortalUserCreateDTO portalUserCreateDTO = generateObject(PortalUserCreateDTO.class);
         portalUserCreateDTO.setUserTypeId(null);
+        portalUserCreateDTO.setUserConfidence(UserConfidenceType.NORMAL);
         portalUserCreateDTO.setEncodedPassword(passwordEncoder.encode(password));
         return portalUserCreateDTO;
     }

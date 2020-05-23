@@ -19,5 +19,6 @@ public class UserDetailsImpl extends org.springframework.security.core.userdetai
                 user.getUserRoles().stream().map(r -> new SimpleGrantedAuthority(r.getUserGroupType().toString()))
                     .collect(Collectors.toList()));
         id = user.getId();
+
     }
 }

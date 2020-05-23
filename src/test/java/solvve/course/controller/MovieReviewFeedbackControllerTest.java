@@ -42,7 +42,6 @@ public class MovieReviewFeedbackControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println(resultJson);
         MovieReviewFeedbackReadDTO actualMovie = objectMapper.readValue(resultJson, MovieReviewFeedbackReadDTO.class);
         Assertions.assertThat(actualMovie).isEqualToComparingFieldByField(movieReviewFeedback);
 

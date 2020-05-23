@@ -8,4 +8,8 @@ import java.util.UUID;
 
 @Repository
 public interface NewsFeedbackRepository extends CrudRepository<NewsFeedback, UUID> {
+
+    Integer countByNewsIdAndIsLikedTrue(UUID newsId);
+
+    Integer countByNewsId(UUID newsId);
 }

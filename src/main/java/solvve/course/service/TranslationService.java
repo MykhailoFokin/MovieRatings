@@ -240,14 +240,17 @@ public class TranslationService {
     private void configureForNews(Configuration c) {
         Configuration.Translation t = c.beanOfClass(News.class).translationTo(NewsReadDTO.class);
         t.srcProperty("publisher.id").translatesTo("publisherId");
+        t.srcProperty("movie.id").translatesTo("movieId");
 
         Configuration.Translation fromCreateToEntity =
                 c.beanOfClass(NewsCreateDTO.class).translationTo(News.class);
         fromCreateToEntity.srcProperty("publisherId").translatesTo("publisher.id");
+        fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
 
         Configuration.Translation fromPatchToEntity =
                 c.beanOfClass(NewsPatchDTO.class).translationTo(News.class);
         fromPatchToEntity.srcProperty("publisherId").translatesTo("publisher.id");
+        fromPatchToEntity.srcProperty("movieId").translatesTo("movie.id");
         c.beanOfClass(NewsPatchDTO.class).translationTo(News.class).mapOnlyNotNullProperties();
     }
 
@@ -490,6 +493,10 @@ public class TranslationService {
         fromCreateToEntity.srcProperty("movieId").translatesTo("movie.id");
         fromCreateToEntity.srcProperty("roleId").translatesTo("role.id");
 
+        Configuration.Translation fromPatchToEntity =
+                c.beanOfClass(UserTypoRequestPatchDTO.class).translationTo(UserTypoRequest.class);
+        fromPatchToEntity.srcProperty("moderatorId").translatesTo("moderator.id");
+
         c.beanOfClass(UserTypoRequestPatchDTO.class).translationTo(UserTypoRequest.class).mapOnlyNotNullProperties();
     }
 
@@ -590,9 +597,6 @@ public class TranslationService {
         if (put.getName() != null) {
             crewType.setName(put.getName());
         }
-        if (put.getCrewId() != null) {
-            crewType.setCrew(repositoryHelper.getReferenceIfExists(Crew.class, put.getCrewId()));
-        }
     }
 
     public void updateEntity(GenrePutDTO put, Genre genre) {
@@ -681,7 +685,9 @@ public class TranslationService {
         if (put.getTextReview() != null) {
             movieReview.setTextReview(put.getTextReview());
         }
-        movieReview.setModeratedStatus(put.getModeratedStatus());
+        if (put.getModeratedStatus() != null) {
+            movieReview.setModeratedStatus(put.getModeratedStatus());
+        }
         if (put.getModeratorId() != null) {
             movieReview.setModerator(repositoryHelper.getReferenceIfExists(PortalUser.class, put.getModeratorId()));
         } else {
@@ -740,6 +746,11 @@ public class TranslationService {
         }
         if (put.getDescription() != null) {
             news.setDescription(put.getDescription());
+        }
+        if (put.getMovieId() != null) {
+            news.setMovie(repositoryHelper.getReferenceIfExists(Movie.class, put.getMovieId()));
+        } else {
+            news.setMovie(null);
         }
     }
 

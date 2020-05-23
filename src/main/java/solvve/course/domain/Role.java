@@ -22,12 +22,12 @@ public class Role extends AbstractEntity {
     @Size(min = 1, max = 1000)
     private String description;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     @NotNull
     private Movie movie;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     private Person person;
 

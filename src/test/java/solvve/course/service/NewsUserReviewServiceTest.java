@@ -5,10 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
-import solvve.course.domain.ModeratorTypoReviewStatusType;
-import solvve.course.domain.News;
-import solvve.course.domain.NewsUserReview;
-import solvve.course.domain.PortalUser;
+import solvve.course.domain.*;
 import solvve.course.dto.NewsUserReviewCreateDTO;
 import solvve.course.dto.NewsUserReviewPatchDTO;
 import solvve.course.dto.NewsUserReviewPutDTO;
@@ -29,7 +26,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testGetNewsUserReview() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -49,7 +47,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testCreateNewsUserReview() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
 
         NewsUserReviewCreateDTO create = testObjectsFactory.createNewsUserReviewCreateDTO();
         create.setPortalUserId(portalUser.getId());
@@ -69,7 +68,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testPatchNewsUserReview() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -92,7 +92,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testPatchNewsUserReviewEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -123,7 +124,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testDeleteNewsUserReview() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -139,7 +141,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testPutNewsUserReview() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -162,7 +165,8 @@ public class NewsUserReviewServiceTest extends BaseTest {
     @Test
     public void testPutNewsUserReviewEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 

@@ -82,8 +82,8 @@ public class Movie extends AbstractEntity {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
     private Set<ReleaseDetail> releaseDetails;
 
-    @OneToOne(mappedBy = "movie")
-    private Role role;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
+    private Set<Role> roles;
 
     private Double averageRating;
 
@@ -107,4 +107,7 @@ public class Movie extends AbstractEntity {
     private Integer runtime;
 
     private String tagline;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.PERSIST)
+    private Set<News> news = new HashSet<>();
 }

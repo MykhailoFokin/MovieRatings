@@ -32,5 +32,51 @@
             <column name="updated_at"/>
         </dropColumn>
     </changeSet>
+    <changeSet id="add a few columns to news table" author="mykhailo">
+        <addColumn tableName="news">
+            <column name="movie_id" type="uuid"/>
+        </addColumn>
+        <addColumn tableName="news">
+            <column name="news_rating" type="double"/>
+        </addColumn>
+        <addColumn tableName="news">
+            <column name="likes_count" type="int"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="drop constraint for userTypoRequest" author="mykhailo">
+        <dropNotNullConstraint tableName="user_typo_request" columnName="proposed_text"/>
+    </changeSet>
+    <changeSet id="add dislikes_count column to news table" author="mykhailo">
+        <addColumn tableName="news">
+            <column name="dislikes_count" type="int"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add constraint cascade delete for MovieReview" author="mykhailo">
+        <dropForeignKeyConstraint baseTableName="movie_review_feedback" constraintName="fk_mrfeedback_mreview"/>
+        <dropForeignKeyConstraint baseTableName="movie_review_compliant" constraintName="fk_mrcompliant_mreview"/>
+        <addForeignKeyConstraint baseTableName="movie_review_feedback"
+                                 baseColumnNames="movie_review_id"
+                                 constraintName="mrf_mr_cascade_delete"
+                                 referencedTableName="movie_review"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="movie_review_compliant"
+                                 baseColumnNames="movie_review_id"
+                                 constraintName="mrc_mr_cascade_delete"
+                                 referencedTableName="movie_review"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true" onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="add a few columns to person table" author="mykhailo">
+        <addColumn tableName="person">
+            <column name="average_movie_rating" type="double"/>
+        </addColumn>
+        <addColumn tableName="person">
+            <column name="average_role_rating" type="double"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="change type for biography of person" author="mykhailo">
+        <modifyDataType tableName="person" columnName="biography" newDataType="varchar(3000)"/>
+    </changeSet>
 
 </databaseChangeLog>

@@ -30,7 +30,6 @@ public class UserTypoRequest extends AbstractEntity {
     @NotNull
     private String sourceText;
 
-    @NotNull
     private String proposedText;
 
     @Size(min = 1, max = 1000)

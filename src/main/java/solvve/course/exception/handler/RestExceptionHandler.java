@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import solvve.course.exception.UnprocessableEntityException;
+import solvve.course.exception.LinkageCorruptedEntityException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -32,8 +32,8 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ UnprocessableEntityException.class })
-    public ResponseEntity<Object> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+    @ExceptionHandler({ LinkageCorruptedEntityException.class })
+    public ResponseEntity<Object> handleLinkageCorruptedEntityException(LinkageCorruptedEntityException ex) {
 
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.UNPROCESSABLE_ENTITY, ex.getClass(), ex.getMessage());
         return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY);

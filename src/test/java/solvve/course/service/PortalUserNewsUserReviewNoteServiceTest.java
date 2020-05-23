@@ -9,7 +9,7 @@ import solvve.course.domain.*;
 import solvve.course.dto.NewsUserReviewNotePatchDTO;
 import solvve.course.dto.NewsUserReviewNotePutDTO;
 import solvve.course.dto.NewsUserReviewNoteReadDTO;
-import solvve.course.exception.UnprocessableEntityException;
+import solvve.course.exception.LinkageCorruptedEntityException;
 import solvve.course.repository.NewsRepository;
 import solvve.course.repository.NewsUserReviewNoteRepository;
 
@@ -35,7 +35,8 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
     @Test
     public void testGetNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -52,8 +53,9 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
     public void testPatchPortalUserNewsUserReviewNote() {
         PortalUser portalUser1 = testObjectsFactory.createPortalUser();
         PortalUser portalUser2 = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         News news = testObjectsFactory.createNews(portalUser1,
-                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern", movie);
         NewsUserReview newsUserReview1 = testObjectsFactory.createNewsUserReview(portalUser1, news, portalUser1,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote1 = testObjectsFactory.createNewsUserReviewNote(portalUser1,
@@ -103,8 +105,9 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
     @Test
     public void testPatchPortalUserNewsUserReviewNoteInFixedStatus() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         News news = testObjectsFactory.createNews(portalUser,
-                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern", movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -118,14 +121,15 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
 
         Assertions.assertThatThrownBy(()->
                 portalUserNewsUserReviewNoteService.patchPortalUserNewsUserReviewNote(portalUser.getId(),
-                newsUserReviewNote.getId(), patch)).isInstanceOf(UnprocessableEntityException.class);
+                newsUserReviewNote.getId(), patch)).isInstanceOf(LinkageCorruptedEntityException.class);
     }
 
     @Test
     public void testUpdatePortalUserNewsUserReviewNoteInFixedStatus() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
+        Movie movie = testObjectsFactory.createMovie();
         News news = testObjectsFactory.createNews(portalUser,
-                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern");
+                "Ivh reide vie;, ich reise gern. Fern und nah und nah und fern", movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -139,7 +143,7 @@ public class PortalUserNewsUserReviewNoteServiceTest extends BaseTest {
 
         Assertions.assertThatThrownBy(()->
                 portalUserNewsUserReviewNoteService.updatePortalUserNewsUserReviewNote(portalUser.getId(),
-                        newsUserReviewNote.getId(), put)).isInstanceOf(UnprocessableEntityException.class);
+                        newsUserReviewNote.getId(), put)).isInstanceOf(LinkageCorruptedEntityException.class);
     }
 
     private Boolean getNewsUserReviewNotesWithSameIndexes(UUID newsId,

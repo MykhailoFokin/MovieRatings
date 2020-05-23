@@ -1,6 +1,5 @@
 package solvve.course.controller.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -12,7 +11,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import solvve.course.BaseTest;
@@ -24,9 +25,16 @@ import solvve.course.utils.TestObjectsFactory;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles({"test", "integration-test"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestPropertySource(properties = {
+        "update.average.rating.of.movies.job.cron=* * * * * *",
+        "update.average.rating.of.roles.job.cron=* * * * * *",
+        "update.average.rating.of.movies.for.person.job.cron=*/2 * * * * *",
+        "update.average.rating.of.roles.for.person.job.cron=* * * * * *"})
 public class WorkingScenarioIntegrationTest extends BaseTest {
 
     @Autowired
@@ -42,7 +50,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void testWorkingScenarioIntegration() throws JsonProcessingException {
+    public void testWorkingScenarioIntegration() throws InterruptedException {
 
         String a1Password = "pjd#1~!93kFDfx";
         String m1Password = "sd33k2k3kr44g4";
@@ -244,7 +252,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
 
         //Movie 1. Character 2
         PersonCreateDTO movie1Person2CreateDTO = new PersonCreateDTO();
-        movie1Person2CreateDTO.setName("Sigourney");
+        movie1Person2CreateDTO.setName("Sigourney Weaver");
         movie1Person2CreateDTO.setSurname("Weaver");
 
         PersonReadDTO movie1Person2 = performRequest("persons",
@@ -289,7 +297,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role3CreateDTO = new RoleCreateDTO();
         movie1Role3CreateDTO.setTitle("Lambert");
         movie1Role3CreateDTO.setMovieId(movie1.getId());
-        movie1Role3CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role3CreateDTO.setPersonId(movie1Person3.getId());
         movie1Role3CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role3CreateDTO.setDescription("Crew member.");
 
@@ -320,7 +328,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role4CreateDTO = new RoleCreateDTO();
         movie1Role4CreateDTO.setTitle("Brett");
         movie1Role4CreateDTO.setMovieId(movie1.getId());
-        movie1Role4CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role4CreateDTO.setPersonId(movie1Person4.getId());
         movie1Role4CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role4CreateDTO.setDescription("Crew member. Repairman.");
 
@@ -350,7 +358,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role5CreateDTO = new RoleCreateDTO();
         movie1Role5CreateDTO.setTitle("Kane");
         movie1Role5CreateDTO.setMovieId(movie1.getId());
-        movie1Role5CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role5CreateDTO.setPersonId(movie1Person5.getId());
         movie1Role5CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role5CreateDTO.setDescription("Crew member.");
 
@@ -380,7 +388,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role6CreateDTO = new RoleCreateDTO();
         movie1Role6CreateDTO.setTitle("Ash");
         movie1Role6CreateDTO.setMovieId(movie1.getId());
-        movie1Role6CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role6CreateDTO.setPersonId(movie1Person6.getId());
         movie1Role6CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role6CreateDTO.setDescription("Crew member. Android.");
 
@@ -410,7 +418,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role7CreateDTO = new RoleCreateDTO();
         movie1Role7CreateDTO.setTitle("Parker");
         movie1Role7CreateDTO.setMovieId(movie1.getId());
-        movie1Role7CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role7CreateDTO.setPersonId(movie1Person7.getId());
         movie1Role7CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role7CreateDTO.setDescription("Crew member. Repairman.");
 
@@ -440,7 +448,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role8CreateDTO = new RoleCreateDTO();
         movie1Role8CreateDTO.setTitle("Alien");
         movie1Role8CreateDTO.setMovieId(movie1.getId());
-        movie1Role8CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role8CreateDTO.setPersonId(movie1Person8.getId());
         movie1Role8CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role8CreateDTO.setDescription("Alien. New life form.");
 
@@ -470,7 +478,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         RoleCreateDTO movie1Role9CreateDTO = new RoleCreateDTO();
         movie1Role9CreateDTO.setTitle("Mother");
         movie1Role9CreateDTO.setMovieId(movie1.getId());
-        movie1Role9CreateDTO.setPersonId(movie1Person2.getId());
+        movie1Role9CreateDTO.setPersonId(movie1Person9.getId());
         movie1Role9CreateDTO.setRoleType(RoleType.SECOND);
         movie1Role9CreateDTO.setDescription("AI. Main computer - voice control.");
 
@@ -1239,7 +1247,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         String newsTopic = "Movie Alien released";
         NewsCreateDTO newsCreateDTO = new NewsCreateDTO();
         newsCreateDTO.setTopic(newsTopic);
-        newsCreateDTO.setDescription("In the distant future, the crew of the commercial spaceship Nostromo are on " +
+        newsCreateDTO.setDescription("In the distant future, the crew of the commercial spaceship Nostrom are on " +
                 "their way home when they pick up a distress call from a distant moon. The crew are under obligation " +
                 "to investigate and the spaceship descends on the moon afterwards. After a rough landing, three crew " +
                 "members leave the spaceship to explore the area on the moon. At the same time as they discover a " +
@@ -1248,6 +1256,7 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 "the spaceship and they must deal with the consequences.");
         newsCreateDTO.setPublisherId(c1.getId());
         newsCreateDTO.setPublished(Instant.now());
+        newsCreateDTO.setMovieId(movie1.getId());
 
         NewsReadDTO news = performRequest("news",
                 HttpMethod.POST,
@@ -1272,6 +1281,18 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
 
         // FINAL_10
         // u1 и u2 отмечают, что новость им нравится.
+
+        // Check rating before feedback
+        news = performRequest("news/" + news.getId(),
+                HttpMethod.GET,
+                null,
+                u2.getEmail(),
+                u2Password,
+                NewsReadDTO.class);
+
+        Assert.assertEquals(0, news.getNewsRating(), Double.MIN_NORMAL);
+        Assert.assertEquals(0, news.getLikesCount(), Double.MIN_NORMAL);
+
         NewsFeedbackCreateDTO newsFeedbackCreateDTO = new NewsFeedbackCreateDTO();
         newsFeedbackCreateDTO.setPortalUserId(u1.getId());
         newsFeedbackCreateDTO.setNewsId(news.getId());
@@ -1285,7 +1306,6 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 NewsFeedbackReadDTO.class);
 
         Assertions.assertThat(newsFeedbackCreateDTO).isEqualToComparingFieldByField(u1Feedback);
-        //Assert.assertEquals(newsFeedbackReadResponseU1.getBody().getNewsId(), newsResponse.getBody().getId());
 
         newsFeedbackCreateDTO = new NewsFeedbackCreateDTO();
         newsFeedbackCreateDTO.setPortalUserId(u2.getId());
@@ -1300,6 +1320,17 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 NewsFeedbackReadDTO.class);
 
         Assertions.assertThat(newsFeedbackCreateDTO).isEqualToComparingFieldByField(u2Feedback);
+
+        // Check rating after feedback
+        news = performRequest("news/" + news.getId(),
+                HttpMethod.GET,
+                null,
+                u2.getEmail(),
+                u2Password,
+                NewsReadDTO.class);
+
+        Assert.assertEquals(1, news.getNewsRating(), Double.MIN_NORMAL);
+        Assert.assertEquals(2, news.getLikesCount(), Double.MIN_NORMAL);
 
         // FINAL_11
         // Пользователь u3 - ошибочно отмечает, что новость ей нравится, а потом отменяет оценку
@@ -1324,15 +1355,16 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 u3Password,
                 Void.class);
 
+        // Check that feedback was cancelled (deleted)
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", getBasicAuthorizationHeaderValue(u3.getEmail(), u3Password));
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
         Assertions.assertThatThrownBy(() -> new RestTemplate().exchange("http://localhost:8080/api/v1/news-feedbacks/"
                 + u3Feedback.getId(),
-                HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<NewsFeedbackReadDTO>() {}))
+                HttpMethod.GET, httpEntity, new ParameterizedTypeReference<NewsFeedbackReadDTO>() {}))
                 .isInstanceOf(HttpClientErrorException.class).extracting("statusCode")
-                .isEqualTo(HttpStatus.UNAUTHORIZED);
+                .isEqualTo(HttpStatus.NOT_FOUND);
 
         // FINAL_12
         // Пользователь u3 - отмечает, что новость ей не нравится
@@ -1349,18 +1381,15 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 NewsFeedbackReadDTO.class);
 
         Assertions.assertThat(newsFeedbackCreateDTO12U3).isEqualToComparingFieldByField(u3FeedbackDislike);
-/*
+
         // FINAL_13
         // u3 помечает слово в новости, что в нем есть ошибка, без указания правильного варианта
         UserTypoRequestCreateDTO userTypoRequestCreateDTO13U3 = new UserTypoRequestCreateDTO();
         userTypoRequestCreateDTO13U3.setNewsId(news.getId());
         userTypoRequestCreateDTO13U3.setRequesterId(u3.getId());
-        userTypoRequestCreateDTO13U3.setMovieId(movie1.getId());
-        userTypoRequestCreateDTO13U3.setSourceText("Nostromo");
-        userTypoRequestCreateDTO13U3.setProposedText("");
+        userTypoRequestCreateDTO13U3.setSourceText("Nostrom");
 
-        UserTypoRequestReadDTO u3TypoRequest = performRequest("news/" + news.getId() + "/user-typo-requests/" +
-                u3.getId(),
+        UserTypoRequestReadDTO u3TypoRequest = performRequest("news/" + news.getId() + "/user-typo-requests",
                 HttpMethod.POST,
                 userTypoRequestCreateDTO13U3,
                 u3.getEmail(),
@@ -1368,39 +1397,579 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
                 UserTypoRequestReadDTO.class);
 
         Assertions.assertThat(userTypoRequestCreateDTO13U3).isEqualToComparingFieldByField(u3TypoRequest);
-*/
-        /*
-        13. u3 помечает слово в новости, что в нем есть ошибка, без указания правильного варианта
-        14. с1 просматривает сигналы от пользователей и замечает новый сигнал
-        15. c1 начинает рассмотрение сигнала и исправляет ошибку
-        16. c1 просматривает сигналы от пользователей - теперь список сигналов пуст
-        17. Незарегистрированный пользователь просматривает контент новости и также видит,
-            что двоим она понравилась и одному не понравилась.
-        18. u1 просматривает фильм.
-        19. u1 пишет отзыв на фильм и ставит высокую оценку. В отзыве один из фрагментов помечается как спойлер.
-        20. u2 просматривает фильм, отзыв не виден, т.к. он пока на модерации.
-        21. u2 ставит оценку фильму.
-        22. m1 просматривает неподтвержденные отзывы и замечает один.
-        23. m1 начинает просмотр отзыва и подтверждает, что он хороший. Пользователь u1 помечается как
-            заслуживающий доверия, так что последующие его отзывы будут публиковаться сразу.
-        24. u3 просматривает фильм и ставит оценку. Она видит подтвержденный отзыв.
-        25. u3 помечает, что отзыв ей нравится.
-        26. Незарегистрированный пользователь просматривает фильм и видит его среднюю оценку
-            (если у вас расчет среднего выполняется по cron джобе, то поставьте, чтобы для теста
-            она запускалась раз в пару секунд)
-        27. c1 импортирует другой фильм, такой, чтобы один из актеров играл в первом, персонажей, актеров, crew и тд.
-            Для этого создать эндпонт контент менеджера для импорта фильма по id во внешней системе.
-        28. u1 ставит фильму низкую оценку, и пишет гневный отзыв.
-        29. u2, u3 оценивают фильм. Отзыв виден сразу. Оба отправляют сигнал модератору, что в отзыве есть маты.
-        30. m1 просматривает список сигналов к нему, у видит 2 новых сигнала.
-        31. m1 начинает рассмотрение одного из сигналов. Видит маты, удаляет обзор и банит u1.
-        32. m1 просматривает список сигналов к модераторам - теперь этот список пуст.
-        33. u2, u3 оценивают роли актера, являющегося общим для двух фильмов. Роли оцениваются в 2 фильмах.
-        34. u1 пытается оценить роль актера, но запрос выдает ему ошибку 403, т.к. он забанен.
-        35. Незарегистрированный пользователь заходит на страницу актера, являющегося общим для 2 фильмов,
-            читает информацию о нем и видит среднюю оценку по 2 фильмам в которых он играл.
-            Также видит среднюю оценку по ролям этого актера.
-        */
+
+        // FINAL_14
+        // 14. с1 просматривает сигналы от пользователей и замечает новый сигнал
+        List<UserTypoRequestReadDTO> allTypoRequests = performRequestForList("news/" + news.getId() +
+                        "/user-typo-requests",
+                        HttpMethod.GET,
+                        null,
+                        c1.getEmail(),
+                        c1Password,
+                        new ParameterizedTypeReference<List<UserTypoRequestReadDTO>>() {});
+
+        Assertions.assertThat(allTypoRequests).extracting(UserTypoRequestReadDTO::getId)
+                .containsAnyOf(u3TypoRequest.getId());
+
+        // FINAL_15
+        // 15. c1 начинает рассмотрение сигнала и исправляет ошибку
+
+        UserTypoRequestPatchDTO userTypoRequestPatchDTO = new UserTypoRequestPatchDTO();
+        userTypoRequestPatchDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.IN_REVIEW);
+        userTypoRequestPatchDTO.setModeratorId(c1.getId());
+
+        UserTypoRequestReadDTO c1TypoForFix = performRequest("news/" + news.getId() + "/user-typo-requests/"
+                        + u3TypoRequest.getId(),
+                        HttpMethod.PATCH,
+                        userTypoRequestPatchDTO,
+                        c1.getEmail(),
+                        c1Password,
+                        UserTypoRequestReadDTO.class);
+
+        Assertions.assertThat(c1TypoForFix).extracting(UserTypoRequestReadDTO::getModeratorTypoReviewStatusType)
+                .isEqualTo(ModeratorTypoReviewStatusType.IN_REVIEW);
+        Assertions.assertThat(c1TypoForFix).extracting(UserTypoRequestReadDTO::getModeratorId)
+                .isEqualTo(c1.getId());
+
+        UserTypoRequestPutDTO userTypoRequestPutDTO = new UserTypoRequestPutDTO();
+        userTypoRequestPutDTO.setApprovedText("Nostromo");
+        userTypoRequestPutDTO.setModeratorTypoReviewStatusType(ModeratorTypoReviewStatusType.FIXED);
+        userTypoRequestPutDTO.setFixAppliedDate(Instant.now());
+
+        UserTypoRequestReadDTO c1TypoFix = performRequest("moderator/" + c1.getId() + "/user-typo-requests/"
+                        + u3TypoRequest.getId(),
+                        HttpMethod.PUT,
+                        userTypoRequestPutDTO,
+                        c1.getEmail(),
+                        c1Password,
+                        UserTypoRequestReadDTO.class);
+
+        NewsReadDTO newsAfterFix = performRequest("news/" + news.getId(),
+                HttpMethod.GET,
+                null,
+                c1.getEmail(),
+                c1Password,
+                NewsReadDTO.class);
+
+        Assertions.assertThat(newsAfterFix.getDescription()).contains(userTypoRequestPutDTO.getApprovedText());
+
+        // FINAL_16
+        // 16. c1 просматривает сигналы от пользователей - теперь список сигналов пуст
+        allTypoRequests = performRequestForList("/user-typo-requests",
+                HttpMethod.GET,
+                null,
+                c1.getEmail(),
+                c1Password,
+                new ParameterizedTypeReference<List<UserTypoRequestReadDTO>>() {});
+
+        Assert.assertTrue(allTypoRequests.isEmpty());
+
+        // FINAL_17
+        // 17. Незарегистрированный пользователь просматривает контент новости и также видит,
+        // что двоим она понравилась и одному не понравилась.
+        NewsReadDTO guestNewsRead = performRequest("news/" + news.getId(),
+                HttpMethod.GET,
+                null,
+                null,
+                null,
+                NewsReadDTO.class);
+
+        Assert.assertEquals(1, guestNewsRead.getDislikesCount(), Double.MIN_NORMAL);
+        Assert.assertEquals(2, guestNewsRead.getLikesCount(), Double.MIN_NORMAL);
+
+        // FINAL_18
+        // 18. u1 просматривает фильм.
+        MovieReadDTO u1Movie = performRequest("movies/" + movie1.getId(),
+                HttpMethod.GET,
+                null,
+                u1.getEmail(),
+                u1Password,
+                MovieReadDTO.class);
+
+        Assertions.assertThat(movie1).isEqualToIgnoringGivenFields(u1Movie, "updatedAt");
+
+        // FINAL_19
+        // 19. u1 пишет отзыв на фильм и ставит высокую оценку. В отзыве один из фрагментов помечается как спойлер.
+        MovieReviewCreateDTO movieReviewCreateDTO = new MovieReviewCreateDTO();
+        movieReviewCreateDTO.setMovieId(u1Movie.getId());
+        movieReviewCreateDTO.setPortalUserId(u1.getId());
+        movieReviewCreateDTO.setTextReview("Good movie. Only one person survives. Ripley.");
+
+        MovieReviewReadDTO movieReview = performRequest("moviereviews",
+                HttpMethod.POST,
+                movieReviewCreateDTO,
+                u1.getEmail(),
+                u1Password,
+                MovieReviewReadDTO.class);
+
+        Assertions.assertThat(movieReviewCreateDTO).isEqualToComparingFieldByField(movieReview);
+
+        MovieVoteCreateDTO movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(u1Movie.getId());
+        movieVoteCreateDTO.setPortalUserId(u1.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R10);
+
+        MovieVoteReadDTO u1Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u1.getEmail(),
+                u1Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u1Vote);
+
+        MovieSpoilerDataCreateDTO spoilerDataCreateDTO = new MovieSpoilerDataCreateDTO();
+        spoilerDataCreateDTO.setMovieReviewId(movieReview.getId());
+        spoilerDataCreateDTO.setStartIndex(38);
+        spoilerDataCreateDTO.setEndIndex(44);
+
+        MovieSpoilerDataReadDTO u1Spoiler = performRequest("moviespoilerdata",
+                HttpMethod.POST,
+                spoilerDataCreateDTO,
+                u1.getEmail(),
+                u1Password,
+                MovieSpoilerDataReadDTO.class);
+
+        Assertions.assertThat(spoilerDataCreateDTO).isEqualToComparingFieldByField(u1Spoiler);
+
+        // FINAL_20
+        // 20. u2 просматривает фильм, отзыв не виден, т.к. он пока на модерации.
+        List<MovieReviewReadDTO> movieReviewReadDTO = performRequestForList("movies/" + movie1.getId()
+                        + "/movie-reviews",
+                        HttpMethod.GET,
+                        null,
+                        u2.getEmail(),
+                        u2Password,
+                        new ParameterizedTypeReference<List<MovieReviewReadDTO>>() {});
+
+        Assert.assertTrue(movieReviewReadDTO.isEmpty());
+
+        // FINAL_21
+        // 21. u2 ставит оценку фильму.
+        movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(u1Movie.getId());
+        movieVoteCreateDTO.setPortalUserId(u1.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R9);
+
+        MovieVoteReadDTO u2Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u2.getEmail(),
+                u2Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u2Vote);
+
+        // FINAL_22
+        // 22. m1 просматривает неподтвержденные отзывы и замечает один.
+        movieReviewReadDTO = performRequestForList("movies/" + movie1.getId()
+                        + "/movie-reviews/unmoderated",
+                HttpMethod.GET,
+                null,
+                m1.getEmail(),
+                m1Password,
+                new ParameterizedTypeReference<List<MovieReviewReadDTO>>() {});
+
+        Assertions.assertThat(movieReviewReadDTO.size()).isEqualTo(1);
+
+        // FINAL_23
+        // 23. m1 начинает просмотр отзыва и подтверждает, что он хороший. Пользователь u1 помечается как
+        //     заслуживающий доверия, так что последующие его отзывы будут публиковаться сразу.
+        MovieReviewPatchDTO movieReviewPatchDTO = new MovieReviewPatchDTO();
+        movieReviewPatchDTO.setModeratedStatus(UserModeratedStatusType.INREVIEW);
+
+        movieReview = performRequest("moviereviews/" + movieReview.getId(),
+                HttpMethod.PATCH,
+                movieReviewPatchDTO,
+                m1.getEmail(),
+                m1Password,
+                MovieReviewReadDTO.class);
+
+        Assert.assertEquals(movieReviewPatchDTO.getModeratedStatus(), movieReview.getModeratedStatus());
+
+        movieReviewPatchDTO = new MovieReviewPatchDTO();
+        movieReviewPatchDTO.setModeratedStatus(UserModeratedStatusType.SUCCESS);
+
+        movieReview = performRequest("moviereviews/" + movieReview.getId(),
+                HttpMethod.PATCH,
+                movieReviewPatchDTO,
+                m1.getEmail(),
+                m1Password,
+                MovieReviewReadDTO.class);
+
+        Assert.assertEquals(movieReviewPatchDTO.getModeratedStatus(), movieReview.getModeratedStatus());
+
+        // FINAL_24
+        // 24. u3 просматривает фильм и ставит оценку. Она видит подтвержденный отзыв.
+        MovieReadDTO u3Movie = performRequest("movies/" + movie1.getId(),
+                HttpMethod.GET,
+                null,
+                u3.getEmail(),
+                u3Password,
+                MovieReadDTO.class);
+
+        Assertions.assertThat(u3Movie).isEqualToIgnoringGivenFields(movie1,"updatedAt", "averageRating");
+
+        movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(u3Movie.getId());
+        movieVoteCreateDTO.setPortalUserId(u3.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R8);
+
+        MovieVoteReadDTO u3Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u3.getEmail(),
+                u3Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u3Vote);
+
+        movieReviewReadDTO = performRequestForList("movies/" + movie1.getId()
+                        + "/movie-reviews",
+                HttpMethod.GET,
+                null,
+                u3.getEmail(),
+                u3Password,
+                new ParameterizedTypeReference<List<MovieReviewReadDTO>>() {});
+
+        Assertions.assertThat(movieReviewReadDTO.size()).isEqualTo(1);
+
+        // FINAL_25
+        // 25. u3 помечает, что отзыв ей нравится.
+        MovieReviewFeedbackCreateDTO movieReviewFeedbackCreateDTO = new MovieReviewFeedbackCreateDTO();
+        movieReviewFeedbackCreateDTO.setMovieId(movie1.getId());
+        movieReviewFeedbackCreateDTO.setMovieReviewId(movieReview.getId());
+        movieReviewFeedbackCreateDTO.setPortalUserId(u3.getId());
+        movieReviewFeedbackCreateDTO.setIsLiked(true);
+
+        MovieReviewFeedbackReadDTO u3MovieReviewFeedback = performRequest("movie-reviews/" + movieReview.getId()
+                + "/movie-review-feedbacks",
+                HttpMethod.POST,
+                movieReviewFeedbackCreateDTO,
+                u3.getEmail(),
+                u3Password,
+                MovieReviewFeedbackReadDTO.class);
+
+        Assertions.assertThat(movieReviewFeedbackCreateDTO).isEqualToComparingFieldByField(u3MovieReviewFeedback);
+
+        // FINAL_26
+        // 26. Незарегистрированный пользователь просматривает фильм и видит его среднюю оценку
+        //     (если у вас расчет среднего выполняется по cron джобе, то поставьте, чтобы для теста
+        //     она запускалась раз в пару секунд)
+        MovieReadDTO guestMovie = performRequest("movies/" + movie1.getId(),
+                HttpMethod.GET,
+                null,
+                null,
+                null,
+                MovieReadDTO.class);
+
+        //Assert.assertEquals(8.0, guestMovie.getAverageRating(), Double.MIN_NORMAL);
+        Assert.assertTrue(guestMovie.getAverageRating() >= 8.0);
+
+        // FINAL_27
+        // 27. c1 импортирует другой фильм, такой, чтобы один из актеров играл в первом, персонажей, актеров, crew и тд.
+        //     Для этого создать эндпонт контент менеджера для импорта фильма по id во внешней системе.
+        UUID internalMovieId = performRequest("external-movies-import/679",
+                HttpMethod.GET,
+                null,
+                c1.getEmail(),
+                c1Password,
+                UUID.class);
+
+        Assert.assertNotNull(internalMovieId);
+
+        List<RoleReadDTO> importMovieRoles = performRequestForList("movie/" + internalMovieId + "/roles",
+                HttpMethod.GET,
+                null,
+                c1.getEmail(),
+                c1Password,
+                new ParameterizedTypeReference<List<RoleReadDTO>>() {});
+
+        Assertions.assertThat(importMovieRoles.size()).isEqualTo(27);
+
+        // FINAL_28
+        // 28. u1 ставит фильму низкую оценку, и пишет гневный отзыв.
+        movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(internalMovieId);
+        movieVoteCreateDTO.setPortalUserId(u1.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R2);
+
+        u1Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u1.getEmail(),
+                u1Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u1Vote);
+
+        movieReviewCreateDTO = new MovieReviewCreateDTO();
+        movieReviewCreateDTO.setMovieId(internalMovieId);
+        movieReviewCreateDTO.setPortalUserId(u1.getId());
+        movieReviewCreateDTO.setTextReview("The movie is shit. Fuck the director who made it.");
+
+        movieReview = performRequest("moviereviews",
+                HttpMethod.POST,
+                movieReviewCreateDTO,
+                u1.getEmail(),
+                u1Password,
+                MovieReviewReadDTO.class);
+
+        Assertions.assertThat(movieReviewCreateDTO).isEqualToComparingFieldByField(movieReview);
+
+        // FINAL_29
+        // 29. u2, u3 оценивают фильм. Отзыв виден сразу. Оба отправляют сигнал модератору, что в отзыве есть маты.
+        movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(internalMovieId);
+        movieVoteCreateDTO.setPortalUserId(u2.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R6);
+
+        u2Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u2.getEmail(),
+                u2Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u2Vote);
+
+        movieVoteCreateDTO = new MovieVoteCreateDTO();
+        movieVoteCreateDTO.setMovieId(internalMovieId);
+        movieVoteCreateDTO.setPortalUserId(u3.getId());
+        movieVoteCreateDTO.setRating(UserVoteRatingType.R6);
+
+        u3Vote = performRequest("movievotes",
+                HttpMethod.POST,
+                movieVoteCreateDTO,
+                u3.getEmail(),
+                u3Password,
+                MovieVoteReadDTO.class);
+
+        Assertions.assertThat(movieVoteCreateDTO).isEqualToComparingFieldByField(u3Vote);
+
+        // Both request reviews for movie
+        movieReviewReadDTO = performRequestForList("movies/" + internalMovieId
+                        + "/movie-reviews",
+                HttpMethod.GET,
+                null,
+                u2.getEmail(),
+                u2Password,
+                new ParameterizedTypeReference<List<MovieReviewReadDTO>>() {});
+
+        Assertions.assertThat(movieReviewReadDTO.size()).isEqualTo(1);
+
+        movieReviewReadDTO = performRequestForList("movies/" + internalMovieId
+                        + "/movie-reviews",
+                HttpMethod.GET,
+                null,
+                u3.getEmail(),
+                u3Password,
+                new ParameterizedTypeReference<List<MovieReviewReadDTO>>() {});
+
+        Assertions.assertThat(movieReviewReadDTO.size()).isEqualTo(1);
+
+        // Both send compliant on this review
+        MovieReviewCompliantCreateDTO compliantCreateDTO = new MovieReviewCompliantCreateDTO();
+        compliantCreateDTO.setMovieId(internalMovieId);
+        compliantCreateDTO.setMovieReviewId(movieReview.getId());
+        compliantCreateDTO.setPortalUserId(u2.getId());
+        compliantCreateDTO.setDescription("Review contains filthy language!");
+
+        MovieReviewCompliantReadDTO compliant = performRequest("movie-reviews/" + movieReview.getId()
+                        + "/movie-review-compliants",
+                HttpMethod.POST,
+                compliantCreateDTO,
+                u2.getEmail(),
+                u2Password,
+                MovieReviewCompliantReadDTO.class);
+
+        Assertions.assertThat(compliantCreateDTO).isEqualToComparingFieldByField(compliant);
+        Assert.assertEquals(compliant.getModeratedStatus(), UserModeratedStatusType.CREATED);
+
+        compliantCreateDTO = new MovieReviewCompliantCreateDTO();
+        compliantCreateDTO.setMovieId(internalMovieId);
+        compliantCreateDTO.setMovieReviewId(movieReview.getId());
+        compliantCreateDTO.setPortalUserId(u3.getId());
+        compliantCreateDTO.setDescription("Review contains filthy language!");
+
+        compliant = performRequest("movie-reviews/" + movieReview.getId()
+                        + "/movie-review-compliants",
+                HttpMethod.POST,
+                compliantCreateDTO,
+                u3.getEmail(),
+                u3Password,
+                MovieReviewCompliantReadDTO.class);
+
+        Assertions.assertThat(compliantCreateDTO).isEqualToComparingFieldByField(compliant);
+        Assert.assertEquals(compliant.getModeratedStatus(), UserModeratedStatusType.CREATED);
+
+        // FINAL_30
+        // 30. m1 просматривает список сигналов к нему, у видит 2 новых сигнала.
+        List<MovieReviewCompliantReadDTO> compliants = performRequestForList("moderator/" + m1.getId()
+                        + "/movie-review-compliants",
+                HttpMethod.GET,
+                null,
+                m1.getEmail(),
+                m1Password,
+                new ParameterizedTypeReference<List<MovieReviewCompliantReadDTO>>() {});
+
+        Assertions.assertThat(compliants.size()).isEqualTo(2);
+
+        // FINAL_31
+        // 31. m1 начинает рассмотрение одного из сигналов. Видит маты, удаляет обзор и банит u1.
+        MovieReviewCompliantPatchDTO compliantPatch = new MovieReviewCompliantPatchDTO();
+        compliantPatch.setModeratorId(m1.getId());
+        compliantPatch.setModeratedStatus(UserModeratedStatusType.INREVIEW);
+
+        MovieReviewCompliantReadDTO m1CompliantReview = performRequest("moderator/" + m1.getId()
+                        + "/movie-review-compliants/" + compliant.getId(),
+                HttpMethod.PATCH,
+                compliantPatch,
+                m1.getEmail(),
+                m1Password,
+                MovieReviewCompliantReadDTO.class);
+
+        Assert.assertEquals(compliantPatch.getModeratedStatus(), m1CompliantReview.getModeratedStatus());
+        Assert.assertEquals(compliantPatch.getModeratorId(), m1CompliantReview.getModeratorId());
+
+        m1CompliantReview = performRequest("moderator/" + m1.getId()
+                        + "/movie-review-compliants/" + m1CompliantReview.getId(),
+                HttpMethod.DELETE,
+                null,
+                m1.getEmail(),
+                m1Password,
+                MovieReviewCompliantReadDTO.class);
+
+        // Check that review was deleted - NOT FOUND
+        headers = new HttpHeaders();
+        headers.add("Authorization", getBasicAuthorizationHeaderValue(m1.getEmail(), m1Password));
+        HttpEntity<?> httpEntity2 = new HttpEntity<>(headers);
+        UUID reviewId =  movieReview.getId();
+
+        Assertions.assertThatThrownBy(() -> new RestTemplate().exchange("http://localhost:8080/api/v1/moviereviews/"
+                        + reviewId,
+                HttpMethod.GET, httpEntity2, new ParameterizedTypeReference<MovieReviewReadDTO>() {}))
+                .isInstanceOf(HttpClientErrorException.class).extracting("statusCode")
+                .isEqualTo(HttpStatus.NOT_FOUND);
+
+        PortalUserPatchDTO portalUserPatchDTO = new PortalUserPatchDTO();
+        portalUserPatchDTO.setUserConfidence(UserConfidenceType.BLOCKED);
+
+        u1 = performRequest("moderator/" + m1.getId() + "/portal-users/" + u1.getId(),
+                HttpMethod.PATCH,
+                portalUserPatchDTO,
+                m1.getEmail(),
+                m1Password,
+                PortalUserReadDTO.class);
+
+        // Check confidence level
+        List<PortalUserReadDTO> blockedUsers = performRequestForList("moderator/" + m1.getId() + "/portal-users",
+                HttpMethod.GET,
+                null,
+                m1.getEmail(),
+                m1Password,
+                new ParameterizedTypeReference<List<PortalUserReadDTO>>() {});
+
+        Assertions.assertThat(blockedUsers.size()).isEqualTo(1);
+        Assertions.assertThat(blockedUsers).extracting(PortalUserReadDTO::getUserConfidence)
+                .contains(UserConfidenceType.BLOCKED);
+        Assertions.assertThat(blockedUsers).extracting(PortalUserReadDTO::getId).contains(u1.getId());
+
+        // FINAL_32
+        // 32. m1 просматривает список сигналов к модераторам - теперь этот список пуст.
+        compliants = performRequestForList("moderator/" + m1.getId()
+                        + "/movie-review-compliants",
+                HttpMethod.GET,
+                null,
+                m1.getEmail(),
+                m1Password,
+                new ParameterizedTypeReference<List<MovieReviewCompliantReadDTO>>() {});
+
+        Assertions.assertThat(compliants.size()).isEqualTo(0);
+
+        // FINAL_33
+        // 33. u2, u3 оценивают роли актера, являющегося общим для двух фильмов. Роли оцениваются в 2 фильмах.
+        List<RoleReadDTO> rolesOfOnePerson = performRequestForList("person/" + movie1Person2.getId() + "/roles",
+                HttpMethod.GET,
+                null,
+                u2.getEmail(),
+                u2Password,
+                new ParameterizedTypeReference<List<RoleReadDTO>>() {});
+
+        Assertions.assertThat(rolesOfOnePerson.size()).isEqualTo(2);
+
+        UUID u2Id = u2.getId();
+        String u2Email = u2.getEmail();
+        UUID u3Id = u3.getId();
+        String u3Email = u3.getEmail();
+
+        rolesOfOnePerson.stream().forEach(role -> {
+            RoleVoteCreateDTO roleVoteCreateDTO = new RoleVoteCreateDTO();
+            roleVoteCreateDTO.setRoleId(role.getId());
+            roleVoteCreateDTO.setPortalUserId(u2Id);
+            roleVoteCreateDTO.setRating(UserVoteRatingType.R8);
+
+            RoleVoteReadDTO roleVote = performRequest("rolevotes",
+                    HttpMethod.POST,
+                    roleVoteCreateDTO,
+                    u2Email,
+                    u2Password,
+                    RoleVoteReadDTO.class);
+
+            Assertions.assertThat(roleVoteCreateDTO).isEqualToComparingFieldByField(roleVote);
+
+            roleVoteCreateDTO = new RoleVoteCreateDTO();
+            roleVoteCreateDTO.setRoleId(role.getId());
+            roleVoteCreateDTO.setPortalUserId(u3Id);
+            roleVoteCreateDTO.setRating(UserVoteRatingType.R8);
+
+            roleVote = performRequest("rolevotes",
+                    HttpMethod.POST,
+                    roleVoteCreateDTO,
+                    u3Email,
+                    u3Password,
+                    RoleVoteReadDTO.class);
+
+            Assertions.assertThat(roleVoteCreateDTO).isEqualToComparingFieldByField(roleVote);
+        });
+
+        // FINAL_34
+        // 34. u1 пытается оценить роль актера, но запрос выдает ему ошибку 403, т.к. он забанен.
+        RoleVoteCreateDTO roleVoteCreateDTO = new RoleVoteCreateDTO();
+        roleVoteCreateDTO.setRoleId(movie1Role2.getId()); // Ripley from movie1
+        roleVoteCreateDTO.setPortalUserId(u1.getId());
+        roleVoteCreateDTO.setRating(UserVoteRatingType.R8);
+
+        headers = new HttpHeaders();
+        headers.add("Authorization", getBasicAuthorizationHeaderValue(u1.getEmail(), u1Password));
+        HttpEntity<?> httpEntity34 = new HttpEntity<>(roleVoteCreateDTO, headers);
+
+        UUID u1Id = u1.getId();
+        Assertions.assertThatThrownBy(() -> new RestTemplate().exchange(
+                "http://localhost:8080/api/v1/role/" + movie1Role2.getId() + "/portal-user/" + u1Id +
+                        "/role-votes",
+                HttpMethod.POST,
+                httpEntity34,
+                new ParameterizedTypeReference<RoleVoteReadDTO>() {}))
+                .isInstanceOf(HttpClientErrorException.class).extracting("statusCode")
+                .isEqualTo(HttpStatus.FORBIDDEN);
+
+        // FINAL_35
+        // 35. Незарегистрированный пользователь заходит на страницу актера, являющегося общим для 2 фильмов,
+        //     читает информацию о нем и видит среднюю оценку по 2 фильмам в которых он играл.
+        //     Также видит среднюю оценку по ролям этого актера.
+        Thread.sleep(1000); //There are about 106 Persons(+manual input), job need some time just for iterate through it
+        PersonReadDTO person = performRequest("persons/" + movie1Person2.getId(),
+                HttpMethod.GET,
+                null,
+                null,
+                null,
+                PersonReadDTO.class);
+
+        Assertions.assertThat(person).isEqualToIgnoringGivenFields(movie1Person2,"updatedAt",
+                "averageMovieRating", "averageRoleRating");
+        Assert.assertTrue(person.getAverageMovieRating() >= 5.0);
+        Assert.assertTrue(person.getAverageRoleRating() >= 7.0);
     }
 
     private PortalUser createPortalUserAssignedToRole(UserGroupType userGroupType, String email, String password) {
@@ -1457,10 +2026,6 @@ public class WorkingScenarioIntegrationTest extends BaseTest {
         }
         HttpEntity<?> httpEntity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        /*HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(500);
-        requestFactory.setReadTimeout(500);
-        restTemplate.setRequestFactory(requestFactory);*/
         ResponseEntity<List<T>> response = restTemplate.exchange("http://localhost:8080/api/v1/" + url,
                 httpMethod, httpEntity, returnClass);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());

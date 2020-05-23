@@ -24,7 +24,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testGetNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -44,7 +45,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testCreateNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
 
@@ -69,7 +71,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testPatchNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -97,7 +100,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testPatchNewsUserReviewNoteEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -144,7 +148,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testDeleteNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -165,7 +170,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testPutNewsUserReviewNote() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,
@@ -193,7 +199,8 @@ public class NewsUserReviewReviewNoteServiceTest extends BaseTest {
     @Test
     public void testPutNewsUserReviewNoteEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsUserReview newsUserReview = testObjectsFactory.createNewsUserReview(portalUser, news, portalUser,
                 ModeratorTypoReviewStatusType.IN_REVIEW);
         NewsUserReviewNote newsUserReviewNote = testObjectsFactory.createNewsUserReviewNote(portalUser,

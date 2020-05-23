@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import solvve.course.BaseTest;
+import solvve.course.domain.Movie;
 import solvve.course.domain.News;
 import solvve.course.domain.NewsFeedback;
 import solvve.course.domain.PortalUser;
@@ -29,7 +30,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testGetMovieReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 
@@ -49,7 +51,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testCreateMovieReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
 
         NewsFeedbackCreateDTO create = testObjectsFactory.createNewsFeedbackCreateDTO();
         create.setPortalUserId(portalUser.getId());
@@ -68,7 +71,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testPatchMovieReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 
@@ -91,7 +95,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testPatchNewsFeedbackEmptyPatch() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 
@@ -121,7 +126,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testDeleteMovieReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 
@@ -137,7 +143,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testPutMovieReviewFeedback() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 
@@ -160,7 +167,8 @@ public class NewsFeedbackServiceTest extends BaseTest {
     @Test
     public void testPutMovieReviewFeedbackEmptyPut() {
         PortalUser portalUser = testObjectsFactory.createPortalUser();
-        News news = testObjectsFactory.createNews(portalUser);
+        Movie movie = testObjectsFactory.createMovie();
+        News news = testObjectsFactory.createNews(portalUser, movie);
         NewsFeedback newsFeedback =
                 testObjectsFactory.createNewsFeedback(portalUser, news);
 

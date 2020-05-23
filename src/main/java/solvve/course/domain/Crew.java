@@ -19,7 +19,7 @@ public class Crew extends AbstractEntity {
     @NotNull
     private Movie movie;
 
-    @OneToOne
+    @ManyToOne
     @NotNull
     private CrewType crewType;
 

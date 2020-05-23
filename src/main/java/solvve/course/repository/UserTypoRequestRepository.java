@@ -54,4 +54,12 @@ public interface UserTypoRequestRepository extends CrudRepository<UserTypoReques
     Optional<UserTypoRequest> findByNewsIdAndRequesterIdAndId(UUID newsId, UUID requesterId, UUID id);
 
     Optional<List<UserTypoRequest>> findByNewsIdAndRequesterIdOrderByCreatedAt(UUID newsId, UUID requesterId);
+
+    @Query("select r from UserTypoRequest r where r.moderator.id is null"
+            + " and r.news.id is not null"
+            + " order by r.createdAt asc")
+    Optional<List<UserTypoRequest>> findByRequestedOnNews(UUID newsId);
+
+    List<UserTypoRequest> findByModeratorTypoReviewStatusTypeOrderByCreatedAt(
+            ModeratorTypoReviewStatusType moderatorTypoReviewStatusType);
 }
